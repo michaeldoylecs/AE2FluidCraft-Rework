@@ -20,6 +20,8 @@ public final class ModAndClassUtil {
     public static boolean OC = false;
     public static boolean ThE = false;
     public static boolean WCT = false;
+    public static boolean IC2 = false;
+    public static boolean NEI = false;
     public static boolean GTPP = false;
 
     public static boolean isDoubleButton;
@@ -113,6 +115,10 @@ public final class ModAndClassUtil {
             ThE = true;
         if (Loader.isModLoaded("ae2wct"))
             WCT = true;
+        if (Loader.isModLoaded("IC2"))
+            IC2 = true;
+        if (Loader.isModLoaded("NotEnoughItems"))
+            NEI = true;
         if (Loader.isModLoaded("miscutils"))
             GTPP = true;
     }
