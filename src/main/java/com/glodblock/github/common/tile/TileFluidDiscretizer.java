@@ -129,7 +129,7 @@ public class TileFluidDiscretizer extends AENetworkTile implements IPriorityHost
         updateState();
     }
 
-    @MENetworkEventSubscribe
+    /*@MENetworkEventSubscribe
     public void onBootUp(MENetworkBootingStatusChange event) {
         try {
             IMEInventory<IAEItemStack> inventory = this.getProxy().getStorage().getItemInventory();
@@ -146,7 +146,7 @@ public class TileFluidDiscretizer extends AENetworkTile implements IPriorityHost
             }
         } catch (GridAccessException ignored) {
         }
-    }
+    }*/
 
     private class FluidDiscretizingInventory implements IMEInventory<IAEItemStack>, IMEMonitorHandlerReceiver<IAEFluidStack> {
 
