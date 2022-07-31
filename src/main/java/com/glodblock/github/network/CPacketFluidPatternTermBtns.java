@@ -80,6 +80,9 @@ public class CPacketFluidPatternTermBtns implements IMessage {
                     case "PatternTerminal.Double":
                         cpt.doubleStacks(Value.equals("1"));
                         break;
+                    case "PatternTerminal.Combine":
+                        cpt.getPatternTerminal().setCombineMode(Value.equals("1"));
+                        break;
                 }
             } else if( Name.startsWith( "PatternTerminalEx." ) && (c instanceof ContainerFluidPatternTerminalEx))
             {
@@ -102,6 +105,9 @@ public class CPacketFluidPatternTermBtns implements IMessage {
                         break;
                     case "PatternTerminalEx.Double":
                         cpt.doubleStacks(Value.equals("1"));
+                        break;
+                    case "PatternTerminalEx.Combine":
+                        cpt.getPatternTerminal().setCombineMode(Value.equals("1"));
                         break;
                     case "PatternTerminalEx.ActivePage":
                         cpt.getPatternTerminal().setActivePage(Integer.parseInt(Value));

@@ -2,18 +2,12 @@ package com.glodblock.github.common.tile;
 
 import appeng.api.config.Upgrades;
 import appeng.api.networking.IGridNode;
-import appeng.api.networking.energy.IEnergyGrid;
 import appeng.api.networking.events.MENetworkChannelsChanged;
 import appeng.api.networking.events.MENetworkEventSubscribe;
 import appeng.api.networking.events.MENetworkPowerStatusChange;
-import appeng.api.networking.security.BaseActionSource;
-import appeng.api.networking.security.MachineSource;
-import appeng.api.networking.storage.IStorageGrid;
 import appeng.api.networking.ticking.TickRateModulation;
 import appeng.api.networking.ticking.TickingRequest;
-import appeng.api.storage.IMEMonitor;
 import appeng.api.storage.data.IAEFluidStack;
-import appeng.me.GridAccessException;
 import appeng.tile.TileEvent;
 import appeng.tile.events.TileEventType;
 import appeng.tile.inventory.AppEngInternalAEInventory;
@@ -52,11 +46,13 @@ public class TileFluidInterface extends TileInterface implements IFluidHandler, 
     @MENetworkEventSubscribe
     public void stateChange(final MENetworkChannelsChanged c) {
         fluidDuality.onChannelStateChange(c);
+        super.stateChange(c);
     }
 
     @MENetworkEventSubscribe
     public void stateChange(final MENetworkPowerStatusChange c) {
         fluidDuality.onPowerStateChange(c);
+        super.stateChange(c);
     }
 
     @Override

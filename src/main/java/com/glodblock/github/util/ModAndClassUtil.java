@@ -18,6 +18,10 @@ public final class ModAndClassUtil {
     public static boolean EIO = false;
     public static boolean FTR = false;
     public static boolean OC = false;
+    public static boolean ThE = false;
+    public static boolean WCT = false;
+    public static boolean IC2 = false;
+    public static boolean NEI = false;
     public static boolean GTPP = false;
 
     public static boolean isDoubleButton;
@@ -27,6 +31,8 @@ public final class ModAndClassUtil {
     public static boolean isSearchBar;
     public static boolean isShiftTooltip;
     public static boolean isBigInterface;
+
+    public static Class<?> essentiaGas;
 
     @SuppressWarnings("all")
     public static void init() {
@@ -87,6 +93,12 @@ public final class ModAndClassUtil {
             isCraftStatus = false;
         }
 
+        try {
+            essentiaGas = Class.forName("thaumicenergistics.common.fluids.GaseousEssentia");
+        } catch (ClassNotFoundException e) {
+            essentiaGas = null;
+        }
+
         if (Loader.isModLoaded("gregtech") && !Loader.isModLoaded("gregapi"))
             GT5 = true;
         if (Loader.isModLoaded("gregapi") && Loader.isModLoaded("gregapi_post"))
@@ -99,6 +111,14 @@ public final class ModAndClassUtil {
             FTR = true;
         if (Loader.isModLoaded("OpenComputers"))
             OC = true;
+        if (Loader.isModLoaded("thaumicenergistics"))
+            ThE = true;
+        if (Loader.isModLoaded("ae2wct"))
+            WCT = true;
+        if (Loader.isModLoaded("IC2"))
+            IC2 = true;
+        if (Loader.isModLoaded("NotEnoughItems"))
+            NEI = true;
         if (Loader.isModLoaded("miscutils"))
             GTPP = true;
     }

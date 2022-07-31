@@ -2,7 +2,7 @@ package com.glodblock.github.common.block;
 
 import appeng.block.AEBaseItemBlock;
 import com.glodblock.github.common.tabs.FluidCraftingTabs;
-import com.glodblock.github.common.tile.TileFluidPatternEncoder;
+import com.glodblock.github.common.tile.TileLargeIngredientBuffer;
 import com.glodblock.github.inventory.InventoryHandler;
 import com.glodblock.github.inventory.gui.GuiType;
 import com.glodblock.github.util.BlockPos;
@@ -14,13 +14,14 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.world.World;
 
-public class BlockFluidPatternEncoder extends FCBaseBlock {
+public class BlockLargeIngredientBuffer extends FCBaseBlock {
 
-    public BlockFluidPatternEncoder() {
-        super(Material.iron, NameConst.BLOCK_FLUID_PATTERN_ENCODER);
-        setFullBlock(true);
-        setOpaque(true);
-        setTileEntity(TileFluidPatternEncoder.class);
+    public BlockLargeIngredientBuffer() {
+        super(Material.iron, NameConst.BLOCK_LARGE_INGREDIENT_BUFFER);
+        setTileEntity(TileLargeIngredientBuffer.class);
+        setOpaque(false);
+        setFullBlock(false);
+        this.lightOpacity = 4;
     }
 
     @Override
@@ -28,19 +29,19 @@ public class BlockFluidPatternEncoder extends FCBaseBlock {
         if (player.isSneaking()) {
             return false;
         }
-        TileFluidPatternEncoder tile = getTileEntity(world, x, y, z);
+        TileLargeIngredientBuffer tile = getTileEntity(world, x, y, z);
         if (tile != null) {
             if (!world.isRemote) {
-                InventoryHandler.openGui(player, world, new BlockPos(x, y, z), EnumFacing.getFront(facing), GuiType.FLUID_PATTERN_ENCODER);
+                InventoryHandler.openGui(player, world, new BlockPos(x, y, z), EnumFacing.getFront(facing), GuiType.LARGE_INGREDIENT_BUFFER);
             }
             return true;
         }
         return false;
     }
 
-    public BlockFluidPatternEncoder register() {
-        GameRegistry.registerBlock(this, AEBaseItemBlock.class, NameConst.BLOCK_FLUID_PATTERN_ENCODER);
-        GameRegistry.registerTileEntity(TileFluidPatternEncoder.class, NameConst.BLOCK_FLUID_PATTERN_ENCODER);
+    public BlockLargeIngredientBuffer register() {
+        GameRegistry.registerBlock(this, AEBaseItemBlock.class, NameConst.BLOCK_LARGE_INGREDIENT_BUFFER);
+        GameRegistry.registerTileEntity(TileLargeIngredientBuffer.class, NameConst.BLOCK_LARGE_INGREDIENT_BUFFER);
         setCreativeTab(FluidCraftingTabs.INSTANCE);
         return this;
     }

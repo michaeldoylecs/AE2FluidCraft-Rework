@@ -5,7 +5,6 @@ import codechicken.nei.recipe.IRecipeHandler;
 import codechicken.nei.recipe.TemplateRecipeHandler;
 import com.glodblock.github.nei.object.IRecipeExtractorLegacy;
 import com.glodblock.github.nei.object.OrderStack;
-import com.glodblock.github.util.NEIUtil;
 import forestry.core.recipes.nei.PositionedFluidTank;
 import forestry.core.recipes.nei.RecipeHandlerBase;
 import forestry.factory.recipes.nei.NEIHandlerFabricator;
@@ -55,14 +54,13 @@ public class ForestryRecipeExtractor implements IRecipeExtractorLegacy {
     public List<OrderStack<?>> getInputIngredients(List<PositionedStack> rawInputs, IRecipeHandler recipe, int index) {
         TemplateRecipeHandler tRecipe = (TemplateRecipeHandler) recipe;
         List<OrderStack<?>> tmp = new ArrayList<>();
-        List<PositionedStack> compressed = NEIUtil.compress(rawInputs);
         if (tRecipe.arecipes.get(index) instanceof RecipeHandlerBase.CachedBaseRecipe) {
-            tmp = getInputIngredients(compressed);
+            tmp = getInputIngredients(rawInputs);
             List<PositionedFluidTank> tanks = ((RecipeHandlerBase.CachedBaseRecipe) tRecipe.arecipes.get(index)).getFluidTanks();
             if (tanks.size() > 0 && !(handler instanceof NEIHandlerSqueezer)) {
                 FluidStack fluid = tanks.get(0).tank.getFluid();
                 if (fluid != null) {
-                    tmp.add(new OrderStack<>(fluid, compressed.size()));
+                    tmp.add(new OrderStack<>(fluid, rawInputs.size()));
                 }
             }
         }
@@ -74,20 +72,19 @@ public class ForestryRecipeExtractor implements IRecipeExtractorLegacy {
         TemplateRecipeHandler tRecipe = (TemplateRecipeHandler) recipe;
         removeGlass(rawOutputs);
         List<OrderStack<?>> tmp = new ArrayList<>();
-        List<PositionedStack> compressed = NEIUtil.compress(rawOutputs);
         if (tRecipe.arecipes.get(index) instanceof RecipeHandlerBase.CachedBaseRecipe) {
-            tmp = getOutputIngredients(compressed);
+            tmp = getOutputIngredients(rawOutputs);
             List<PositionedFluidTank> tanks = ((RecipeHandlerBase.CachedBaseRecipe) tRecipe.arecipes.get(index)).getFluidTanks();
             if (tanks.size() > 0 && handler instanceof NEIHandlerSqueezer) {
                 FluidStack fluid = tanks.get(0).tank.getFluid();
                 if (fluid != null) {
-                    tmp.add(new OrderStack<>(fluid, compressed.size()));
+                    tmp.add(new OrderStack<>(fluid, rawOutputs.size()));
                 }
             }
             else if (tanks.size() > 1) {
                 FluidStack fluid = tanks.get(1).tank.getFluid();
                 if (fluid != null) {
-                    tmp.add(new OrderStack<>(fluid, compressed.size()));
+                    tmp.add(new OrderStack<>(fluid, rawOutputs.size()));
                 }
             }
         }

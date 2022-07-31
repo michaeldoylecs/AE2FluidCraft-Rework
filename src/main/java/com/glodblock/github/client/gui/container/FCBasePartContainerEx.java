@@ -60,6 +60,8 @@ public class FCBasePartContainerEx extends FCBaseMonitorContain implements IAEAp
     protected final ProcessingSlotFake[] outputSlots = new ProcessingSlotFake[CRAFTING_GRID_SLOTS * CRAFTING_GRID_PAGES];
     protected final SlotRestrictedInput patternSlotIN;
     protected final SlotRestrictedInput patternSlotOUT;
+    @GuiSync( 96 + (17-9) + 11 )
+    public boolean combine = false;
     @GuiSync( 96 + (17-9) + 12 )
     public boolean substitute = false;
     @GuiSync( 96 + (17-9) + 16 )
@@ -248,7 +250,7 @@ public class FCBasePartContainerEx extends FCBaseMonitorContain implements IAEAp
 
         if( hasValue )
         {
-            return list.toArray( new ItemStack[list.size()] );
+            return list.toArray(new ItemStack[0]);
         }
 
         return null;
@@ -303,6 +305,7 @@ public class FCBasePartContainerEx extends FCBaseMonitorContain implements IAEAp
         if( Platform.isServer() )
         {
             this.substitute = this.patternTerminal.isSubstitution();
+            this.combine = this.patternTerminal.shouldCombine();
             if (inverted != patternTerminal.isInverted() || activePage != patternTerminal.getActivePage()) {
                 inverted = patternTerminal.isInverted();
                 activePage = patternTerminal.getActivePage();

@@ -34,13 +34,15 @@ public class GuiBaseFluidPatternTerminalEx extends GuiFCBaseMonitor {
     private GuiImgButton clearBtn;
     private GuiImgButton doubleBtn;
 
+    private GuiFCImgButton combineEnableBtn;
+    private GuiFCImgButton combineDisableBtn;
     private final GuiScrollbar processingScrollBar = new GuiScrollbar();
 
     public GuiBaseFluidPatternTerminalEx(final InventoryPlayer inventoryPlayer, final ITerminalHost te )
     {
         super( inventoryPlayer, te, new FCBasePartContainerEx( inventoryPlayer, te ) );
         this.container = (FCBasePartContainerEx) this.inventorySlots;
-        Ae2ReflectClient.setReservedSpace(this, 81);
+        setReservedSpace(81);
 
         processingScrollBar.setHeight(70).setWidth(7).setLeft(6).setRange(0, 1, 1);
         processingScrollBar.setTexture(FluidCraft.MODID, "gui/pattern3.png", 242, 0);
@@ -66,6 +68,10 @@ public class GuiBaseFluidPatternTerminalEx extends GuiFCBaseMonitor {
         else if( this.invertBtn == btn )
         {
             FluidCraft.proxy.netHandler.sendToServer( new CPacketFluidPatternTermBtns( "PatternTerminalEx.Invert", container.inverted ? "0" : "1" ) );
+        }
+        else if( this.combineDisableBtn == btn || this.combineEnableBtn == btn )
+        {
+            FluidCraft.proxy.netHandler.sendToServer( new CPacketFluidPatternTermBtns( "PatternTerminalEx.Combine", this.combineDisableBtn == btn ? "1" : "0" ) );
         }
         else if (ModAndClassUtil.isDoubleButton && doubleBtn == btn)
         {
@@ -104,6 +110,14 @@ public class GuiBaseFluidPatternTerminalEx extends GuiFCBaseMonitor {
             this.buttonList.add( this.doubleBtn );
         }
 
+        this.combineEnableBtn = new GuiFCImgButton( this.guiLeft + 87, this.guiTop + this.ySize - 143, "FORCE_COMBINE", "DO_COMBINE" );
+        this.combineEnableBtn.setHalfSize( true );
+        this.buttonList.add( this.combineEnableBtn );
+
+        this.combineDisableBtn = new GuiFCImgButton( this.guiLeft + 87, this.guiTop + this.ySize - 143, "NOT_COMBINE", "DONT_COMBINE" );
+        this.combineDisableBtn.setHalfSize( true );
+        this.buttonList.add( this.combineDisableBtn );
+
         processingScrollBar.setTop(this.ySize - 164);
     }
 
@@ -124,8 +138,19 @@ public class GuiBaseFluidPatternTerminalEx extends GuiFCBaseMonitor {
             this.substitutionsDisabledBtn.visible = true;
         }
 
+        if ( this.container.combine )
+        {
+            this.combineEnableBtn.visible = true;
+            this.combineDisableBtn.visible = false;
+        }
+        else
+        {
+            this.combineEnableBtn.visible = false;
+            this.combineDisableBtn.visible = true;
+        }
+
         super.drawFG( offsetX, offsetY, mouseX, mouseY );
-        this.fontRendererObj.drawString( StatCollector.translateToLocal(NameConst.GUI_FLUID_PATTERN_TERMINAL_EX), 8, this.ySize - 96 + 2 - Ae2ReflectClient.getReservedSpace(this), 4210752 );
+        this.fontRendererObj.drawString( StatCollector.translateToLocal(NameConst.GUI_FLUID_PATTERN_TERMINAL_EX), 8, this.ySize - 96 + 2 - getReservedSpace(), 4210752 );
         this.processingScrollBar.draw(this);
     }
 
@@ -167,6 +192,8 @@ public class GuiBaseFluidPatternTerminalEx extends GuiFCBaseMonitor {
         doubleBtn.xPosition = this.guiLeft + 97 + offset;
         clearBtn.xPosition  = this.guiLeft + 87 + offset;
         invertBtn.xPosition = this.guiLeft + 87 + offset;
+        combineEnableBtn.xPosition = this.guiLeft + 87 + offset;
+        combineDisableBtn.xPosition = this.guiLeft + 87 + offset;
 
         processingScrollBar.setCurrentScroll(container.activePage);
 
