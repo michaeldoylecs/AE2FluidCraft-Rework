@@ -34,6 +34,7 @@ public class GuiFCPriority extends AEBaseGui
     private GuiButton plus10;
     private GuiButton plus100;
     private GuiButton plus1000;
+    private GuiButton plus10000;
     private GuiButton minus1;
     private GuiButton minus10;
     private GuiButton minus100;
@@ -56,16 +57,20 @@ public class GuiFCPriority extends AEBaseGui
         final int b = AEConfig.instance.priorityByStacksAmounts( 1 );
         final int c = AEConfig.instance.priorityByStacksAmounts( 2 );
         final int d = AEConfig.instance.priorityByStacksAmounts( 3 );
+        final int e = AEConfig.instance.priorityByStacksAmounts( 4 );
 
         this.buttonList.add( this.plus1 = new GuiButton( 0, this.guiLeft + 20, this.guiTop + 32, 22, 20, "+" + a ) );
         this.buttonList.add( this.plus10 = new GuiButton( 0, this.guiLeft + 48, this.guiTop + 32, 28, 20, "+" + b ) );
         this.buttonList.add( this.plus100 = new GuiButton( 0, this.guiLeft + 82, this.guiTop + 32, 32, 20, "+" + c ) );
         this.buttonList.add( this.plus1000 = new GuiButton( 0, this.guiLeft + 120, this.guiTop + 32, 38, 20, "+" + d ) );
+        this.buttonList.add( this.plus10000 = new GuiButton( 0, this.guiLeft + 140, this.guiTop + 32, 42, 20, "+" + e ) );
+
 
         this.buttonList.add( this.minus1 = new GuiButton( 0, this.guiLeft + 20, this.guiTop + 69, 22, 20, "-" + a ) );
         this.buttonList.add( this.minus10 = new GuiButton( 0, this.guiLeft + 48, this.guiTop + 69, 28, 20, "-" + b ) );
         this.buttonList.add( this.minus100 = new GuiButton( 0, this.guiLeft + 82, this.guiTop + 69, 32, 20, "-" + c ) );
         this.buttonList.add( this.minus1000 = new GuiButton( 0, this.guiLeft + 120, this.guiTop + 69, 38, 20, "-" + d ) );
+        this.buttonList.add( this.plus10000 = new GuiButton( 0, this.guiLeft + 140, this.guiTop + 32, 42, 20, "+" + e ) );
 
         ItemStack myIcon = null;
         final Object target = ( (AEBaseContainer) this.inventorySlots ).getTarget();

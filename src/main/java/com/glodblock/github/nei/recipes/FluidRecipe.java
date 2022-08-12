@@ -3,14 +3,22 @@ package com.glodblock.github.nei.recipes;
 import codechicken.nei.PositionedStack;
 import codechicken.nei.recipe.IRecipeHandler;
 import codechicken.nei.recipe.TemplateRecipeHandler;
+import com.glodblock.github.client.gui.container.FluidPrioritization;
 import com.glodblock.github.nei.object.IRecipeExtractor;
 import com.glodblock.github.nei.object.IRecipeExtractorLegacy;
 import com.glodblock.github.nei.object.OrderStack;
+import ibxm.Player;
+import net.minecraft.client.gui.Gui;
+import net.minecraft.network.play.client.C01PacketChatMessage;
+import net.minecraft.server.MinecraftServer;
+import net.minecraftforge.server.command.ForgeCommand;
+import tv.twitch.chat.Chat;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
+import net.minecraft.util.ChatComponentText;
 
 public final class FluidRecipe {
 
@@ -31,6 +39,20 @@ public final class FluidRecipe {
         IRecipeExtractor extractor = IdentifierMap.get(tRecipe.getOverlayIdentifier());
         if (extractor == null) return new ArrayList<>();
         List<PositionedStack> tmp = new ArrayList<>(tRecipe.getIngredientStacks(index));
+        FluidPrioritization fluid = FluidPrioritization.ENABLED;
+        switch(fluid) {
+            case ENABLED:
+                MinecraftServer.getServer().getConfigurationManager().sendChatMsg(new ChatComponentText("hi"));
+
+                for (int i = 0; i < tmp.size(); i++) {
+                    if(tmp.get(i).toString().contains("GregTech_FluidDisplay")) {
+                        MinecraftServer.getServer().getConfigurationManager().sendChatMsg(new ChatComponentText(String.valueOf(tmp.size())));
+                        PositionedStack Stack = tmp.get(i);
+                        tmp.remove(Stack);
+                        tmp.add(0, Stack);
+                        }
+                    }
+                }
         return extractor.getInputIngredients(tmp, recipe, index);
     }
 
