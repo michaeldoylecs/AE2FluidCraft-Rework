@@ -32,18 +32,14 @@ public final class FluidRecipe {
         }
     }
 
-    public static List<OrderStack<?>> getPackageInputs(IRecipeHandler recipe, int index) {
+    public static List<OrderStack<?>> getPackageInputs(IRecipeHandler recipe, int index, boolean priority) {
         TemplateRecipeHandler tRecipe = (TemplateRecipeHandler) recipe;
         if (tRecipe == null || !IdentifierMap.containsKey(tRecipe.getOverlayIdentifier())) return new ArrayList<>();
         if (tRecipe.getOverlayIdentifier() == null) return getPackageInputsLegacy(recipe, index);
         IRecipeExtractor extractor = IdentifierMap.get(tRecipe.getOverlayIdentifier());
         if (extractor == null) return new ArrayList<>();
         List<PositionedStack> tmp = new ArrayList<>(tRecipe.getIngredientStacks(index));
-        FluidPrioritization fluid = FluidPrioritization.ENABLED;
-        switch(fluid) {
-            case ENABLED:
-                MinecraftServer.getServer().getConfigurationManager().sendChatMsg(new ChatComponentText("hi"));
-
+        if (priority) {
                 for (int i = 0; i < tmp.size(); i++) {
                     if(tmp.get(i).toString().contains("GregTech_FluidDisplay")) {
                         MinecraftServer.getServer().getConfigurationManager().sendChatMsg(new ChatComponentText(String.valueOf(tmp.size())));
