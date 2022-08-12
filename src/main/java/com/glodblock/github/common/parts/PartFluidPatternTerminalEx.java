@@ -38,6 +38,7 @@ public class PartFluidPatternTerminalEx extends FCBasePart {
     private final AppEngInternalInventory pattern = new AppEngInternalInventory( this, 2 );
 
     private boolean substitute = false;
+    private boolean priorization = false;
     private boolean inverted = false;
     private int activePage = 0;
 
@@ -84,6 +85,7 @@ public class PartFluidPatternTerminalEx extends FCBasePart {
         this.crafting.readFromNBT( data, "craftingGrid" );
 
         this.setSubstitution( data.getBoolean( "substitute" ) );
+        this.setPrioritization( data.getBoolean( "priorization") );
         this.setInverted( data.getBoolean( "inverted" ) );
         this.setActivePage( data.getInteger( "activePage" ) );
     }
@@ -95,7 +97,7 @@ public class PartFluidPatternTerminalEx extends FCBasePart {
         this.pattern.writeToNBT( data, "pattern" );
         this.output.writeToNBT( data, "outputList" );
         this.crafting.writeToNBT( data, "craftingGrid" );
-
+        data.setBoolean("priorization", this.priorization);
         data.setBoolean( "substitute", this.substitute );
         data.setBoolean( "inverted", this.inverted );
         data.setInteger( "activePage", this.activePage );
@@ -207,6 +209,10 @@ public class PartFluidPatternTerminalEx extends FCBasePart {
     public void setSubstitution( boolean canSubstitute )
     {
         this.substitute = canSubstitute;
+    }
+    public void setPrioritization( boolean canPrioritize )
+    {
+        this.priorization = canPrioritize;
     }
 
     public void onChangeCrafting(IAEItemStack[] newCrafting, IAEItemStack[] newOutput) {

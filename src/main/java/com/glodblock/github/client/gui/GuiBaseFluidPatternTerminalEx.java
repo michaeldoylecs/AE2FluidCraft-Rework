@@ -10,12 +10,15 @@ import appeng.client.gui.widgets.GuiScrollbar;
 import appeng.container.slot.AppEngSlot;
 import com.glodblock.github.FluidCraft;
 import com.glodblock.github.client.gui.container.FCBasePartContainerEx;
+import com.glodblock.github.client.gui.container.FluidPrioritization;
 import com.glodblock.github.network.CPacketFluidPatternTermBtns;
 import com.glodblock.github.util.Ae2ReflectClient;
 import com.glodblock.github.util.ModAndClassUtil;
 import com.glodblock.github.util.NameConst;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.entity.player.InventoryPlayer;
+import net.minecraft.server.MinecraftServer;
+import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.StatCollector;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
@@ -24,11 +27,15 @@ public class GuiBaseFluidPatternTerminalEx extends GuiFCBaseMonitor {
 
     private static final String SUBSITUTION_DISABLE = "0";
     private static final String SUBSITUTION_ENABLE = "1";
+    private static final String PRIORITY_DISABLE = "0";
+    private static final String PRIORITY_ENABLE = "1";
 
     public FCBasePartContainerEx container;
 
     private GuiImgButton substitutionsEnabledBtn;
     private GuiImgButton substitutionsDisabledBtn;
+    private GuiImgButton fluidPrioritizedEnabledBtn;
+    private GuiImgButton fluidPrioritizedDisabledBtn;
     private GuiImgButton encodeBtn;
     private GuiImgButton invertBtn;
     private GuiImgButton clearBtn;
@@ -63,6 +70,10 @@ public class GuiBaseFluidPatternTerminalEx extends GuiFCBaseMonitor {
         {
             FluidCraft.proxy.netHandler.sendToServer( new CPacketFluidPatternTermBtns( "PatternTerminalEx.Substitute", this.substitutionsEnabledBtn == btn ? SUBSITUTION_DISABLE : SUBSITUTION_ENABLE ) );
         }
+        else if( this.fluidPrioritizedEnabledBtn == btn || this.fluidPrioritizedDisabledBtn == btn )
+        {
+            FluidCraft.proxy.netHandler.sendToServer( new CPacketFluidPatternTermBtns( "PatternTerminalEx.Prioritize", this.fluidPrioritizedEnabledBtn == btn ? PRIORITY_DISABLE : PRIORITY_ENABLE ) );
+        }
         else if( this.invertBtn == btn )
         {
             FluidCraft.proxy.netHandler.sendToServer( new CPacketFluidPatternTermBtns( "PatternTerminalEx.Invert", container.inverted ? "0" : "1" ) );
@@ -86,6 +97,16 @@ public class GuiBaseFluidPatternTerminalEx extends GuiFCBaseMonitor {
         this.substitutionsDisabledBtn = new GuiImgButton( this.guiLeft + 97, this.guiTop + this.ySize - 163, Settings.ACTIONS, ItemSubstitution.DISABLED );
         this.substitutionsDisabledBtn.setHalfSize( true );
         this.buttonList.add( this.substitutionsDisabledBtn );
+
+        this.fluidPrioritizedEnabledBtn = new GuiImgButton( this.guiLeft + 87, this.guiTop + this.ySize - 143, Settings.ACTIONS, FluidPrioritization.ENABLED );
+        this.fluidPrioritizedEnabledBtn.setHalfSize( true );
+        this.buttonList.add( this.fluidPrioritizedEnabledBtn );
+        MinecraftServer.getServer().getConfigurationManager().sendChatMsg(new ChatComponentText("ENABLED IMMER"));
+
+        this.fluidPrioritizedDisabledBtn = new GuiImgButton( this.guiLeft + 87, this.guiTop + this.ySize - 143, Settings.ACTIONS, FluidPrioritization.DISABLED );
+        this.fluidPrioritizedDisabledBtn.setHalfSize( true );
+        this.buttonList.add( this.fluidPrioritizedDisabledBtn );
+        MinecraftServer.getServer().getConfigurationManager().sendChatMsg(new ChatComponentText("DISABLED IMMER"));
 
         invertBtn = new GuiImgButton( this.guiLeft + 87, this.guiTop + this.ySize - 153, Settings.ACTIONS, container.inverted ? PatternSlotConfig.C_4_16 : PatternSlotConfig.C_16_4);
         invertBtn.setHalfSize( true );
@@ -123,6 +144,18 @@ public class GuiBaseFluidPatternTerminalEx extends GuiFCBaseMonitor {
             this.substitutionsEnabledBtn.visible = false;
             this.substitutionsDisabledBtn.visible = true;
         }
+        if( this.container.prioritize )
+        {
+            this.fluidPrioritizedEnabledBtn.visible = true;
+            this.fluidPrioritizedDisabledBtn.visible = false;
+           // MinecraftServer.getServer().getConfigurationManager().sendChatMsg(new ChatComponentText("ENABLED"));
+        }
+        else
+        {
+            this.fluidPrioritizedEnabledBtn.visible = false;
+            this.fluidPrioritizedDisabledBtn.visible = true;
+            //MinecraftServer.getServer().getConfigurationManager().sendChatMsg(new ChatComponentText("DISABLED"));
+        }
 
         super.drawFG( offsetX, offsetY, mouseX, mouseY );
         this.fontRendererObj.drawString( StatCollector.translateToLocal(NameConst.GUI_FLUID_PATTERN_TERMINAL_EX), 8, this.ySize - 96 + 2 - Ae2ReflectClient.getReservedSpace(this), 4210752 );
@@ -159,11 +192,20 @@ public class GuiBaseFluidPatternTerminalEx extends GuiFCBaseMonitor {
             substitutionsEnabledBtn.visible = false;
             substitutionsDisabledBtn.visible = true;
         }
+        if (container.prioritize) {
+            fluidPrioritizedEnabledBtn.visible = true;
+            fluidPrioritizedDisabledBtn.visible = false;
+        } else {
+            fluidPrioritizedEnabledBtn.visible = false;
+            fluidPrioritizedDisabledBtn.visible = true;
+        }
 
         final int offset = container.inverted? 18 * -3: 0;
 
         substitutionsEnabledBtn.xPosition  = this.guiLeft + 97 + offset;
         substitutionsDisabledBtn.xPosition = this.guiLeft + 97 + offset;
+        fluidPrioritizedEnabledBtn.xPosition = this.guiLeft + 87 + offset;
+        fluidPrioritizedDisabledBtn.xPosition = this.guiLeft + 87 + offset;
         doubleBtn.xPosition = this.guiLeft + 97 + offset;
         clearBtn.xPosition  = this.guiLeft + 87 + offset;
         invertBtn.xPosition = this.guiLeft + 87 + offset;
