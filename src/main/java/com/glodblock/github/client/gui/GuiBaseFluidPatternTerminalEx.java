@@ -72,7 +72,7 @@ public class GuiBaseFluidPatternTerminalEx extends GuiFCBaseMonitor {
         }
         else if( this.fluidPrioritizedEnabledBtn == btn || this.fluidPrioritizedDisabledBtn == btn )
         {
-            FluidCraft.proxy.netHandler.sendToServer( new CPacketFluidPatternTermBtns( "PatternTerminalEx.Prioritize", this.fluidPrioritizedEnabledBtn == btn ? PRIORITY_DISABLE : PRIORITY_ENABLE ) );
+            FluidCraft.proxy.netHandler.sendToServer( new CPacketFluidPatternTermBtns( "PatternTerminalEx.Prioritize", container.prioritize ? PRIORITY_DISABLE : PRIORITY_ENABLE ) );
         }
         else if( this.invertBtn == btn )
         {
@@ -146,14 +146,14 @@ public class GuiBaseFluidPatternTerminalEx extends GuiFCBaseMonitor {
         }
         if( this.container.prioritize )
         {
-            this.fluidPrioritizedEnabledBtn.visible = true;
-            this.fluidPrioritizedDisabledBtn.visible = false;
+            this.fluidPrioritizedEnabledBtn.visible = false;
+            this.fluidPrioritizedDisabledBtn.visible = true;
            // MinecraftServer.getServer().getConfigurationManager().sendChatMsg(new ChatComponentText("ENABLED"));
         }
         else
         {
-            this.fluidPrioritizedEnabledBtn.visible = false;
-            this.fluidPrioritizedDisabledBtn.visible = true;
+            this.fluidPrioritizedEnabledBtn.visible = true;
+            this.fluidPrioritizedDisabledBtn.visible = false;
             //MinecraftServer.getServer().getConfigurationManager().sendChatMsg(new ChatComponentText("DISABLED"));
         }
 

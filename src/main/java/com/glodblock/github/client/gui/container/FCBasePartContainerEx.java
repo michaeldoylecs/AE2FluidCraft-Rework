@@ -310,6 +310,7 @@ public class FCBasePartContainerEx extends FCBaseMonitorContain implements IAEAp
         if( Platform.isServer() )
         {
             this.substitute = this.patternTerminal.isSubstitution();
+            this.prioritize = this.patternTerminal.isPrioritize();
             if (inverted != patternTerminal.isInverted() || activePage != patternTerminal.getActivePage()) {
                 inverted = patternTerminal.isInverted();
                 activePage = patternTerminal.getActivePage();
