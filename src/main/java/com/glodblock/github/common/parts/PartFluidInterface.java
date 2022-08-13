@@ -16,7 +16,6 @@ import appeng.api.parts.IPartRenderHelper;
 import appeng.api.storage.IMEMonitor;
 import appeng.api.storage.data.IAEFluidStack;
 import appeng.client.texture.CableBusTextures;
-import appeng.core.settings.TickRates;
 import appeng.me.GridAccessException;
 import appeng.parts.misc.PartInterface;
 import appeng.tile.inventory.AppEngInternalAEInventory;

@@ -7,7 +7,10 @@ import appeng.api.storage.data.IAEItemStack;
 import appeng.api.util.IConfigManager;
 import appeng.api.util.IConfigurableObject;
 import appeng.client.gui.AEBaseMEGui;
-import appeng.client.gui.widgets.*;
+import appeng.client.gui.widgets.GuiImgButton;
+import appeng.client.gui.widgets.GuiScrollbar;
+import appeng.client.gui.widgets.GuiTabButton;
+import appeng.client.gui.widgets.ISortSource;
 import appeng.client.me.InternalSlotME;
 import appeng.client.me.ItemRepo;
 import appeng.client.me.SlotDisconnected;
@@ -28,9 +31,9 @@ import appeng.integration.IntegrationRegistry;
 import appeng.integration.IntegrationType;
 import appeng.util.IConfigManagerHost;
 import appeng.util.Platform;
+import appeng.util.item.AEItemStack;
 import com.glodblock.github.FluidCraft;
 import com.glodblock.github.client.gui.container.FCBaseMonitorContain;
-import com.glodblock.github.client.gui.container.FCBasePartContainer;
 import com.glodblock.github.network.CPacketInventoryAction;
 import com.glodblock.github.util.Ae2ReflectClient;
 import com.glodblock.github.util.ModAndClassUtil;
@@ -361,6 +364,19 @@ public class GuiFCBaseMonitor extends AEBaseMEGui implements ISortSource, IConfi
     protected void handleMouseClick( final Slot slot, final int slotIdx, final int ctrlDown, final int mouseButton )
     {
         final EntityPlayer player = Minecraft.getMinecraft().thePlayer;
+
+        if (mouseButton == 3 ){
+            if (slot instanceof OptionalSlotFake || slot instanceof SlotFakeCraftingMatrix) {
+                if (slot.getHasStack()) {
+                    InventoryAction action = InventoryAction.valueOf("SET_PATTERN_VALUE");
+                    IAEItemStack stack = AEItemStack.create(slot.getStack());
+
+                    ((AEBaseContainer) this.inventorySlots).setTargetStack(stack);
+                    FluidCraft.proxy.netHandler.sendToServer(new CPacketInventoryAction(action, Ae2ReflectClient.getInventorySlots(this).size(), 0, stack));
+                    return;
+                }
+            }
+        }
 
         if( slot instanceof SlotFake)
         {

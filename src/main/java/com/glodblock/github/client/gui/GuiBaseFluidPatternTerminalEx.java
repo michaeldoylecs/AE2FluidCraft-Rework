@@ -11,7 +11,6 @@ import appeng.container.slot.AppEngSlot;
 import com.glodblock.github.FluidCraft;
 import com.glodblock.github.client.gui.container.FCBasePartContainerEx;
 import com.glodblock.github.network.CPacketFluidPatternTermBtns;
-import com.glodblock.github.util.Ae2ReflectClient;
 import com.glodblock.github.util.ModAndClassUtil;
 import com.glodblock.github.util.NameConst;
 import net.minecraft.client.gui.GuiButton;

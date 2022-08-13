@@ -12,7 +12,6 @@ import com.glodblock.github.inventory.gui.MouseRegionManager;
 import com.glodblock.github.inventory.slot.SlotFluid;
 import com.glodblock.github.inventory.slot.SlotSingleItem;
 import com.glodblock.github.network.CPacketEncodePattern;
-import com.glodblock.github.util.Ae2Reflect;
 import com.glodblock.github.util.Ae2ReflectClient;
 import com.glodblock.github.util.NameConst;
 import net.minecraft.client.gui.FontRenderer;

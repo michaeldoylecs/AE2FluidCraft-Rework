@@ -14,6 +14,7 @@ import appeng.core.localization.GuiText;
 import appeng.helpers.Reflected;
 import com.glodblock.github.FluidCraft;
 import com.glodblock.github.common.parts.PartFluidPatternTerminal;
+import com.glodblock.github.common.parts.PartFluidPatternTerminalEx;
 import com.glodblock.github.inventory.gui.GuiType;
 import com.glodblock.github.loader.ItemAndBlockHolder;
 import com.glodblock.github.network.CPacketCraftRequest;
@@ -77,6 +78,10 @@ public class GuiFluidCraftAmount extends AEBaseGui
         {
             myIcon = new ItemStack(ItemAndBlockHolder.FLUID_TERMINAL, 1);
             this.originalGui = GuiType.FLUID_PATTERN_TERMINAL;
+        }
+        if (target instanceof PartFluidPatternTerminalEx) {
+            myIcon = new ItemStack(ItemAndBlockHolder.FLUID_TERMINAL_EX, 1);
+            this.originalGui = GuiType.FLUID_PATTERN_TERMINAL_EX;
         }
 
         if( this.originalGui != null && myIcon != null )

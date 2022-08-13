@@ -222,6 +222,18 @@ public enum GuiType {
         protected Object createClientGui(EntityPlayer player, TileFluidPacketDecoder inv) {
             return new GuiFluidPacketDecoder(player.inventory, inv);
         }
+    }),
+
+    PATTERN_VALUE_SET(new PartGuiFactory<FCBasePart>(FCBasePart.class) {
+        @Override
+        protected Object createServerGui(EntityPlayer player, FCBasePart inv) {
+            return new ContainerPatternValueAmount(player.inventory, inv);
+        }
+
+        @Override
+        protected Object createClientGui(EntityPlayer player, FCBasePart inv) {
+            return new GuiPatternValueAmount(player.inventory, inv);
+        }
     });
 
     public static final List<GuiType> VALUES = ImmutableList.copyOf(values());
