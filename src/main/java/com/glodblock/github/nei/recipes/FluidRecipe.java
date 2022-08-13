@@ -3,24 +3,15 @@ package com.glodblock.github.nei.recipes;
 import codechicken.nei.PositionedStack;
 import codechicken.nei.recipe.IRecipeHandler;
 import codechicken.nei.recipe.TemplateRecipeHandler;
-import com.glodblock.github.client.gui.container.FluidPrioritization;
 import com.glodblock.github.nei.object.IRecipeExtractor;
 import com.glodblock.github.nei.object.IRecipeExtractorLegacy;
 import com.glodblock.github.nei.object.OrderStack;
 import gregtech.common.items.GT_FluidDisplayItem;
-import ibxm.Player;
-import net.minecraft.client.gui.Gui;
-import net.minecraft.network.play.client.C01PacketChatMessage;
-import net.minecraft.server.MinecraftServer;
-import net.minecraftforge.fluids.Fluid;
-import net.minecraftforge.server.command.ForgeCommand;
-import tv.twitch.chat.Chat;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
-import net.minecraft.util.ChatComponentText;
 
 public final class FluidRecipe {
 
