@@ -7,10 +7,12 @@ import com.glodblock.github.client.gui.container.FluidPrioritization;
 import com.glodblock.github.nei.object.IRecipeExtractor;
 import com.glodblock.github.nei.object.IRecipeExtractorLegacy;
 import com.glodblock.github.nei.object.OrderStack;
+import gregtech.common.items.GT_FluidDisplayItem;
 import ibxm.Player;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.network.play.client.C01PacketChatMessage;
 import net.minecraft.server.MinecraftServer;
+import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.server.command.ForgeCommand;
 import tv.twitch.chat.Chat;
 
@@ -41,7 +43,7 @@ public final class FluidRecipe {
         List<PositionedStack> tmp = new ArrayList<>(tRecipe.getIngredientStacks(index));
         if (priority) {
                 for (int i = 0; i < tmp.size(); i++) {
-                    if(tmp.get(i).toString().contains("GregTech_FluidDisplay")) {
+                    if(tmp.get(i).item.getItem() instanceof GT_FluidDisplayItem) {
                         MinecraftServer.getServer().getConfigurationManager().sendChatMsg(new ChatComponentText(String.valueOf(tmp.size())));
                         PositionedStack Stack = tmp.get(i);
                         tmp.remove(Stack);
