@@ -7,6 +7,10 @@ import com.glodblock.github.nei.object.IRecipeExtractor;
 import com.glodblock.github.nei.object.IRecipeExtractorLegacy;
 import com.glodblock.github.nei.object.OrderStack;
 import gregtech.common.items.GT_FluidDisplayItem;
+import net.minecraft.item.ItemStack;
+import net.minecraft.server.MinecraftServer;
+import net.minecraft.util.ChatComponentText;
+import net.minecraftforge.fluids.FluidStack;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -32,23 +36,23 @@ public final class FluidRecipe {
         IRecipeExtractor extractor = IdentifierMap.get(tRecipe.getOverlayIdentifier());
         if (extractor == null) return new ArrayList<>();
         List<PositionedStack> tmp = new ArrayList<>(tRecipe.getIngredientStacks(index));
-        List<PositionedStack> fluidClone = new ArrayList<>();
+        List<OrderStack<?>> out = extractor.getInputIngredients(tmp, recipe, index);
         if (priority) {
-                for (int i = 0; i < tmp.size(); i++) {
-                    if(tmp.get(i).item.getItem() instanceof GT_FluidDisplayItem) {
-                        PositionedStack Stack = tmp.get(i);
-                        fluidClone.add(Stack);
-                        }
-                    }
-            for (int i = 0; i < fluidClone.size(); i++) {
-                tmp.remove(fluidClone.get(i));
+            List<OrderStack<?>> reordered = new ArrayList<>();
+            byte numFluids = 0;
+            for (OrderStack<?> orderStack : out) {
+                if (orderStack.getStack() instanceof FluidStack) {
+                    reordered.add(new OrderStack(orderStack.getStack(), numFluids++));
                 }
-            Collections.reverse(fluidClone);
-            for (int i = 0; i < fluidClone.size(); i++) {
-                tmp.add(0, fluidClone.get(i));
             }
+            for (OrderStack<?> orderStack : out) {
+                if (orderStack.getStack() instanceof ItemStack) {
+                    reordered.add(new OrderStack(orderStack.getStack(), numFluids++));
+                }
+            }
+            return reordered;
         }
-        return extractor.getInputIngredients(tmp, recipe, index);
+        return out;
     }
 
     public static List<OrderStack<?>> getPackageOutputs(IRecipeHandler recipe, int index, boolean useOther) {
