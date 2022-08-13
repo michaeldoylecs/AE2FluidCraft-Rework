@@ -41,16 +41,22 @@ public final class FluidRecipe {
         IRecipeExtractor extractor = IdentifierMap.get(tRecipe.getOverlayIdentifier());
         if (extractor == null) return new ArrayList<>();
         List<PositionedStack> tmp = new ArrayList<>(tRecipe.getIngredientStacks(index));
+        List<PositionedStack> fluidClone = new ArrayList<>();
         if (priority) {
                 for (int i = 0; i < tmp.size(); i++) {
                     if(tmp.get(i).item.getItem() instanceof GT_FluidDisplayItem) {
-                        MinecraftServer.getServer().getConfigurationManager().sendChatMsg(new ChatComponentText(String.valueOf(tmp.size())));
                         PositionedStack Stack = tmp.get(i);
-                        tmp.remove(Stack);
-                        tmp.add(0, Stack);
+                        fluidClone.add(Stack);
                         }
                     }
+            for (int i = 0; i < fluidClone.size(); i++) {
+                tmp.remove(fluidClone.get(i));
                 }
+            Collections.reverse(fluidClone);
+            for (int i = 0; i < fluidClone.size(); i++) {
+                tmp.add(0, fluidClone.get(i));
+            }
+        }
         return extractor.getInputIngredients(tmp, recipe, index);
     }
 
