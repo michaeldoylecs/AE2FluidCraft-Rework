@@ -39,7 +39,6 @@ public class PartFluidPatternTerminalEx extends FCBasePart {
 
     private boolean substitute = false;
     private boolean combine = false;
-    private boolean priorization = false;
     private boolean prioritize = false;
     private boolean inverted = false;
     private int activePage = 0;
