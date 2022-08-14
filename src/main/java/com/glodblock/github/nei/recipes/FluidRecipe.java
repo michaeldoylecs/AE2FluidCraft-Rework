@@ -6,6 +6,11 @@ import codechicken.nei.recipe.TemplateRecipeHandler;
 import com.glodblock.github.nei.object.IRecipeExtractor;
 import com.glodblock.github.nei.object.IRecipeExtractorLegacy;
 import com.glodblock.github.nei.object.OrderStack;
+import gregtech.common.items.GT_FluidDisplayItem;
+import net.minecraft.item.ItemStack;
+import net.minecraft.server.MinecraftServer;
+import net.minecraft.util.ChatComponentText;
+import net.minecraftforge.fluids.FluidStack;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -24,14 +29,30 @@ public final class FluidRecipe {
         }
     }
 
-    public static List<OrderStack<?>> getPackageInputs(IRecipeHandler recipe, int index) {
+    public static List<OrderStack<?>> getPackageInputs(IRecipeHandler recipe, int index, boolean priority) {
         TemplateRecipeHandler tRecipe = (TemplateRecipeHandler) recipe;
         if (tRecipe == null || !IdentifierMap.containsKey(tRecipe.getOverlayIdentifier())) return new ArrayList<>();
         if (tRecipe.getOverlayIdentifier() == null) return getPackageInputsLegacy(recipe, index);
         IRecipeExtractor extractor = IdentifierMap.get(tRecipe.getOverlayIdentifier());
         if (extractor == null) return new ArrayList<>();
         List<PositionedStack> tmp = new ArrayList<>(tRecipe.getIngredientStacks(index));
-        return extractor.getInputIngredients(tmp, recipe, index);
+        List<OrderStack<?>> out = extractor.getInputIngredients(tmp, recipe, index);
+        if (priority) {
+            List<OrderStack<?>> reordered = new ArrayList<>();
+            byte numFluids = 0;
+            for (OrderStack<?> orderStack : out) {
+                if (orderStack != null && orderStack.getStack() instanceof FluidStack) {
+                    reordered.add(new OrderStack(orderStack.getStack(), numFluids++));
+                }
+            }
+            for (OrderStack<?> orderStack : out) {
+                if (orderStack != null && orderStack.getStack() instanceof ItemStack) {
+                    reordered.add(new OrderStack(orderStack.getStack(), numFluids++));
+                }
+            }
+            return reordered;
+        }
+        return out;
     }
 
     public static List<OrderStack<?>> getPackageOutputs(IRecipeHandler recipe, int index, boolean useOther) {

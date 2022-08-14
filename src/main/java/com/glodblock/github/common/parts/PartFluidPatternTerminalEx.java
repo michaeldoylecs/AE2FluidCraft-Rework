@@ -39,6 +39,7 @@ public class PartFluidPatternTerminalEx extends FCBasePart {
 
     private boolean substitute = false;
     private boolean combine = false;
+    private boolean prioritize = false;
     private boolean inverted = false;
     private int activePage = 0;
 
@@ -80,7 +81,7 @@ public class PartFluidPatternTerminalEx extends FCBasePart {
     public void readFromNBT( final NBTTagCompound data )
     {
         super.readFromNBT( data );
-        
+
         this.setSubstitution( data.getBoolean( "substitute" ) );
         this.setCombineMode( data.getBoolean("combine") );
         this.pattern.readFromNBT( data, "pattern" );
@@ -88,6 +89,7 @@ public class PartFluidPatternTerminalEx extends FCBasePart {
         this.crafting.readFromNBT( data, "craftingGrid" );
 
         this.setSubstitution( data.getBoolean( "substitute" ) );
+        this.setPrioritization( data.getBoolean( "priorization") );
         this.setInverted( data.getBoolean( "inverted" ) );
         this.setActivePage( data.getInteger( "activePage" ) );
     }
@@ -96,13 +98,13 @@ public class PartFluidPatternTerminalEx extends FCBasePart {
     public void writeToNBT( final NBTTagCompound data )
     {
         super.writeToNBT( data );
-        
+
         data.setBoolean( "substitute", this.substitute );
         data.setBoolean( "combine", this.combine );
         this.pattern.writeToNBT( data, "pattern" );
         this.output.writeToNBT( data, "outputList" );
         this.crafting.writeToNBT( data, "craftingGrid" );
-
+        data.setBoolean("priorization", this.prioritize);
         data.setBoolean( "substitute", this.substitute );
         data.setBoolean( "inverted", this.inverted );
         data.setInteger( "activePage", this.activePage );
@@ -221,9 +223,18 @@ public class PartFluidPatternTerminalEx extends FCBasePart {
         return this.substitute;
     }
 
+    public boolean isPrioritize()
+    {
+        return this.prioritize;
+    }
+
     public void setSubstitution( boolean canSubstitute )
     {
         this.substitute = canSubstitute;
+    }
+    public void setPrioritization( boolean canPrioritize )
+    {
+        this.prioritize = canPrioritize;
     }
 
     public void onChangeCrafting(IAEItemStack[] newCrafting, IAEItemStack[] newOutput) {

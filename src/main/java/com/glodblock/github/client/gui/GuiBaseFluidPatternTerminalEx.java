@@ -11,7 +11,6 @@ import appeng.container.slot.AppEngSlot;
 import com.glodblock.github.FluidCraft;
 import com.glodblock.github.client.gui.container.FCBasePartContainerEx;
 import com.glodblock.github.network.CPacketFluidPatternTermBtns;
-import com.glodblock.github.util.Ae2ReflectClient;
 import com.glodblock.github.util.ModAndClassUtil;
 import com.glodblock.github.util.NameConst;
 import net.minecraft.client.gui.GuiButton;
@@ -24,11 +23,15 @@ public class GuiBaseFluidPatternTerminalEx extends GuiFCBaseMonitor {
 
     private static final String SUBSITUTION_DISABLE = "0";
     private static final String SUBSITUTION_ENABLE = "1";
+    private static final String PRIORITY_DISABLE = "0";
+    private static final String PRIORITY_ENABLE = "1";
 
     public FCBasePartContainerEx container;
 
     private GuiImgButton substitutionsEnabledBtn;
     private GuiImgButton substitutionsDisabledBtn;
+    private GuiFCImgButton fluidPrioritizedEnabledBtn;
+    private GuiFCImgButton fluidPrioritizedDisabledBtn;
     private GuiImgButton encodeBtn;
     private GuiImgButton invertBtn;
     private GuiImgButton clearBtn;
@@ -65,6 +68,10 @@ public class GuiBaseFluidPatternTerminalEx extends GuiFCBaseMonitor {
         {
             FluidCraft.proxy.netHandler.sendToServer( new CPacketFluidPatternTermBtns( "PatternTerminalEx.Substitute", this.substitutionsEnabledBtn == btn ? SUBSITUTION_DISABLE : SUBSITUTION_ENABLE ) );
         }
+        else if( this.fluidPrioritizedEnabledBtn == btn || this.fluidPrioritizedDisabledBtn == btn )
+        {
+            FluidCraft.proxy.netHandler.sendToServer( new CPacketFluidPatternTermBtns( "PatternTerminalEx.Prioritize", container.prioritize ? PRIORITY_DISABLE : PRIORITY_ENABLE ) );
+        }
         else if( this.invertBtn == btn )
         {
             FluidCraft.proxy.netHandler.sendToServer( new CPacketFluidPatternTermBtns( "PatternTerminalEx.Invert", container.inverted ? "0" : "1" ) );
@@ -92,6 +99,14 @@ public class GuiBaseFluidPatternTerminalEx extends GuiFCBaseMonitor {
         this.substitutionsDisabledBtn = new GuiImgButton( this.guiLeft + 97, this.guiTop + this.ySize - 163, Settings.ACTIONS, ItemSubstitution.DISABLED );
         this.substitutionsDisabledBtn.setHalfSize( true );
         this.buttonList.add( this.substitutionsDisabledBtn );
+
+        this.fluidPrioritizedEnabledBtn = new GuiFCImgButton( this.guiLeft + 97, this.guiTop + this.ySize - 143, "FORCE_PRIO", "DO_PRIO" );
+        this.fluidPrioritizedEnabledBtn.setHalfSize( true );
+        this.buttonList.add( this.fluidPrioritizedEnabledBtn );
+
+        this.fluidPrioritizedDisabledBtn = new GuiFCImgButton( this.guiLeft + 97, this.guiTop + this.ySize - 143, "NOT_PRIO", "DONT_PRIO" );
+        this.fluidPrioritizedDisabledBtn.setHalfSize( true );
+        this.buttonList.add( this.fluidPrioritizedDisabledBtn );
 
         invertBtn = new GuiImgButton( this.guiLeft + 87, this.guiTop + this.ySize - 153, Settings.ACTIONS, container.inverted ? PatternSlotConfig.C_4_16 : PatternSlotConfig.C_16_4);
         invertBtn.setHalfSize( true );
@@ -136,6 +151,16 @@ public class GuiBaseFluidPatternTerminalEx extends GuiFCBaseMonitor {
         {
             this.substitutionsEnabledBtn.visible = false;
             this.substitutionsDisabledBtn.visible = true;
+        }
+        if( this.container.prioritize )
+        {
+            this.fluidPrioritizedEnabledBtn.visible = false;
+            this.fluidPrioritizedDisabledBtn.visible = true;
+        }
+        else
+        {
+            this.fluidPrioritizedEnabledBtn.visible = true;
+            this.fluidPrioritizedDisabledBtn.visible = false;
         }
 
         if ( this.container.combine )
@@ -184,11 +209,20 @@ public class GuiBaseFluidPatternTerminalEx extends GuiFCBaseMonitor {
             substitutionsEnabledBtn.visible = false;
             substitutionsDisabledBtn.visible = true;
         }
+        if (container.prioritize) {
+            fluidPrioritizedEnabledBtn.visible = true;
+            fluidPrioritizedDisabledBtn.visible = false;
+        } else {
+            fluidPrioritizedEnabledBtn.visible = false;
+            fluidPrioritizedDisabledBtn.visible = true;
+        }
 
         final int offset = container.inverted? 18 * -3: 0;
 
         substitutionsEnabledBtn.xPosition  = this.guiLeft + 97 + offset;
         substitutionsDisabledBtn.xPosition = this.guiLeft + 97 + offset;
+        fluidPrioritizedEnabledBtn.xPosition = this.guiLeft + 97 + offset;
+        fluidPrioritizedDisabledBtn.xPosition = this.guiLeft + 97 + offset;
         doubleBtn.xPosition = this.guiLeft + 97 + offset;
         clearBtn.xPosition  = this.guiLeft + 87 + offset;
         invertBtn.xPosition = this.guiLeft + 87 + offset;

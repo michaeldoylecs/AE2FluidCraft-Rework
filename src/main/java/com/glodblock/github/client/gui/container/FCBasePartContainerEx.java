@@ -68,6 +68,8 @@ public class FCBasePartContainerEx extends FCBaseMonitorContain implements IAEAp
     public boolean inverted;
     @GuiSync( 96 + (17-9) + 17 )
     public int activePage = 0;
+    @GuiSync( 96 + (17-9) + 13 )
+    public boolean prioritize = false;
 
     public FCBasePartContainerEx(final InventoryPlayer ip, final ITerminalHost monitorable )
     {
@@ -207,6 +209,11 @@ public class FCBasePartContainerEx extends FCBaseMonitorContain implements IAEAp
         encodedValue.setTag( "out", tagOut );
         encodedValue.setBoolean( "substitute", this.isSubstitute() );
 
+        encodedValue.setTag( "in", tagIn );
+        encodedValue.setTag( "out", tagOut );
+        encodedValue.setBoolean( "piroritize", this.isPrioritize() );
+
+
         output.setTagCompound( encodedValue );
     }
 
@@ -305,7 +312,8 @@ public class FCBasePartContainerEx extends FCBaseMonitorContain implements IAEAp
         if( Platform.isServer() )
         {
             this.substitute = this.patternTerminal.isSubstitution();
-            this.combine = this.patternTerminal.shouldCombine();
+            this.combine = this.patternTerminal.shouldCombine(); //Check out
+            this.prioritize = this.patternTerminal.isPrioritize();
             if (inverted != patternTerminal.isInverted() || activePage != patternTerminal.getActivePage()) {
                 inverted = patternTerminal.isInverted();
                 activePage = patternTerminal.getActivePage();
@@ -385,6 +393,8 @@ public class FCBasePartContainerEx extends FCBaseMonitorContain implements IAEAp
     {
         return this.substitute;
     }
+
+    private boolean isPrioritize() { return this.prioritize; }
 
     static boolean canDoubleStacks(SlotFake[] slots)
     {

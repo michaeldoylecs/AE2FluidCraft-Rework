@@ -37,6 +37,8 @@ public class GuiFCImgButton extends GuiButton implements ITooltip {
             appearances = new HashMap<>();
             this.registerApp( 0, "NOT_COMBINE", "DONT_COMBINE", "not_combine" );
             this.registerApp( 1, "FORCE_COMBINE", "DO_COMBINE", "combine" );
+            this.registerApp( 2, "FORCE_PRIO", "DO_PRIO", "prio" );
+            this.registerApp( 3, "NOT_PRIO", "DONT_PRIO", "not_prio" );
         }
     }
 
