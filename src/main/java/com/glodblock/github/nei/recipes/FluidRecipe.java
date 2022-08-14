@@ -46,7 +46,7 @@ public final class FluidRecipe {
                 }
             }
             for (OrderStack<?> orderStack : out) {
-                if (orderStack.getStack() instanceof ItemStack) {
+                if (orderStack != null && orderStack.getStack() instanceof ItemStack) {
                     reordered.add(new OrderStack(orderStack.getStack(), numFluids++));
                 }
             }
