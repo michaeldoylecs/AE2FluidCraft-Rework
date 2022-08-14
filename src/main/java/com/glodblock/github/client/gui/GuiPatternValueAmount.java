@@ -237,8 +237,4 @@ public class GuiPatternValueAmount extends AEBaseGui {
         }
     }
 
-    protected String getBackground() {
-        return "guis/craftAmt.png";
-    }
-
 }

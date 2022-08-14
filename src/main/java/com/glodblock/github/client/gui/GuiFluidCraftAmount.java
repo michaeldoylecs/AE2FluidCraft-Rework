@@ -255,8 +255,4 @@ public class GuiFluidCraftAmount extends AEBaseGui
         }
     }
 
-    protected String getBackground()
-    {
-        return "guis/craftAmt.png";
-    }
 }
