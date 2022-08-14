@@ -9,16 +9,7 @@ import appeng.client.gui.widgets.GuiTabButton;
 import appeng.container.AEBaseContainer;
 import appeng.core.AEConfig;
 import appeng.core.localization.GuiText;
-<<<<<<< Updated upstream
-import appeng.core.sync.GuiBridge;
-import appeng.core.sync.network.NetworkHandler;
-import appeng.core.sync.packets.PacketSwitchGuis;
 import appeng.helpers.Reflected;
-import appeng.parts.reporting.PartPatternTerminal;
-import appeng.parts.reporting.PartPatternTerminalEx;
-=======
-import appeng.helpers.Reflected;
->>>>>>> Stashed changes
 import appeng.util.calculators.ArithHelper;
 import appeng.util.calculators.Calculator;
 import com.glodblock.github.FluidCraft;

@@ -2,15 +2,6 @@ package com.glodblock.github.network;
 
 import appeng.api.networking.IGridHost;
 import appeng.container.ContainerOpenContext;
-<<<<<<< Updated upstream
-import appeng.container.implementations.ContainerPatternTerm;
-import appeng.container.implementations.ContainerPatternTermEx;
-import appeng.core.sync.AppEngPacket;
-import appeng.core.sync.GuiBridge;
-import appeng.core.sync.network.INetworkInfo;
-import appeng.util.Platform;
-=======
->>>>>>> Stashed changes
 import com.glodblock.github.client.gui.container.ContainerFluidPatternTerminal;
 import com.glodblock.github.client.gui.container.ContainerFluidPatternTerminalEx;
 import com.glodblock.github.client.gui.container.ContainerPatternValueAmount;
@@ -23,10 +14,6 @@ import cpw.mods.fml.common.network.simpleimpl.IMessage;
 import cpw.mods.fml.common.network.simpleimpl.IMessageHandler;
 import cpw.mods.fml.common.network.simpleimpl.MessageContext;
 import io.netty.buffer.ByteBuf;
-<<<<<<< Updated upstream
-import io.netty.buffer.Unpooled;
-=======
->>>>>>> Stashed changes
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
