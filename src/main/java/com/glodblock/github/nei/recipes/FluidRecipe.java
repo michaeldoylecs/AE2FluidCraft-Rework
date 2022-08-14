@@ -41,7 +41,7 @@ public final class FluidRecipe {
             List<OrderStack<?>> reordered = new ArrayList<>();
             byte numFluids = 0;
             for (OrderStack<?> orderStack : out) {
-                if (orderStack.getStack() instanceof FluidStack) {
+                if (orderStack != null && orderStack.getStack() instanceof FluidStack) {
                     reordered.add(new OrderStack(orderStack.getStack(), numFluids++));
                 }
             }
