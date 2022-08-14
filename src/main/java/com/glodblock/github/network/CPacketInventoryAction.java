@@ -4,8 +4,11 @@ import appeng.api.storage.data.IAEItemStack;
 import appeng.container.AEBaseContainer;
 import appeng.container.ContainerOpenContext;
 import appeng.container.implementations.ContainerCraftAmount;
+import appeng.core.sync.GuiBridge;
 import appeng.helpers.InventoryAction;
+import appeng.util.Platform;
 import appeng.util.item.AEItemStack;
+import com.glodblock.github.client.gui.container.ContainerPatternValueAmount;
 import com.glodblock.github.inventory.InventoryHandler;
 import com.glodblock.github.inventory.gui.GuiType;
 import com.glodblock.github.util.BlockPos;
@@ -106,6 +109,24 @@ public class CPacketInventoryAction implements IMessage {
                             }
 
                             cca.detectAndSendChanges();
+                        }
+                    }
+                }else if (message.action == InventoryAction.valueOf("SET_PATTERN_VALUE"))
+                {
+                    final ContainerOpenContext context = baseContainer.getOpenContext();
+                    if( context != null )
+                    {
+                        final TileEntity te = context.getTile();
+                        InventoryHandler.openGui(sender, te.getWorldObj(), new BlockPos(te), Objects.requireNonNull(Util.from(baseContainer.getOpenContext().getSide())), GuiType.PATTERN_VALUE_SET );
+                        if( sender.openContainer instanceof ContainerPatternValueAmount)
+                        {
+                            final ContainerPatternValueAmount cpv = (ContainerPatternValueAmount) sender.openContainer;
+                            if( baseContainer.getTargetStack() != null )
+                            {
+                                cpv.setValueIndex( message.slot );
+                                cpv.getPatternValue().putStack( baseContainer.getTargetStack().getItemStack() );
+                            }
+                            cpv.detectAndSendChanges();
                         }
                     }
                 }

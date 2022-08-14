@@ -12,6 +12,7 @@ import appeng.util.Platform;
 import com.glodblock.github.client.textures.FCPartsTexture;
 import com.glodblock.github.common.item.ItemFluidDrop;
 import com.glodblock.github.common.item.ItemFluidPacket;
+import com.glodblock.github.inventory.BiggerAppEngInventory;
 import com.glodblock.github.inventory.InventoryHandler;
 import com.glodblock.github.inventory.gui.GuiType;
 import com.glodblock.github.util.BlockPos;
@@ -33,8 +34,8 @@ public class PartFluidPatternTerminalEx extends FCBasePart {
     private static final FCPartsTexture FRONT_DARK_ICON = FCPartsTexture.PartFluidPatternTerminal_Colored;
     private static final FCPartsTexture FRONT_COLORED_ICON = FCPartsTexture.PartFluidPatternTerminal_Dark;
 
-    private final AppEngInternalInventory crafting = new AppEngInternalInventory( this, 32 );
-    private final AppEngInternalInventory output = new AppEngInternalInventory( this, 32 );
+    private final AppEngInternalInventory crafting = new BiggerAppEngInventory( this, 32 );
+    private final AppEngInternalInventory output = new BiggerAppEngInventory( this, 32 );
     private final AppEngInternalInventory pattern = new AppEngInternalInventory( this, 2 );
 
     private boolean substitute = false;

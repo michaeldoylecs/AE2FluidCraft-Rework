@@ -3,7 +3,6 @@ package com.glodblock.github.common.block;
 import appeng.api.util.IOrientable;
 import appeng.block.AEBaseItemBlock;
 import appeng.core.features.AEFeature;
-import appeng.core.sync.GuiBridge;
 import appeng.tile.misc.TileInterface;
 import appeng.util.Platform;
 import com.glodblock.github.client.render.RenderBlockFluidInterface;
