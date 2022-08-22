@@ -123,11 +123,6 @@ public class TileFluidDiscretizer extends AENetworkTile implements IPriorityHost
         updateState();
     }
 
-    @MENetworkEventSubscribe
-    public void onStorageUpdate(MENetworkStorageEvent event) {
-        updateState();
-    }
-
     private class FluidDiscretizingInventory implements IMEInventory<IAEItemStack>, IMEMonitorHandlerReceiver<IAEFluidStack> {
 
         private final MEInventoryHandler<IAEItemStack> invHandler = new MEInventoryHandler<>(this, getChannel());
