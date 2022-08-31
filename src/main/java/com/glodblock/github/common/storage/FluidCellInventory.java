@@ -221,14 +221,15 @@ public class FluidCellInventory implements IFluidCellInventory {
         for( int x = 0; x < types; x++ )
         {
             final FluidStack t = FluidStack.loadFluidStackFromNBT( this.tagCompound.getCompoundTag( fluidSlots[x] ) );
+            final AEFluidStack aet = AEFluidStack.create( t );
 
-            if( t != null )
+            if( aet != null )
             {
-                t.amount = this.tagCompound.getInteger( fluidSlotCount[x] );
+                aet.setStackSize( this.tagCompound.getLong( fluidSlotCount[x] ) );
 
-                if( t.amount > 0 )
+                if( aet.getStackSize() > 0 )
                 {
-                    this.cellItems.add( AEFluidStack.create( t ) );
+                    this.cellItems.add( aet );
                 }
             }
         }
