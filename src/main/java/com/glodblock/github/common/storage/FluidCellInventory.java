@@ -31,7 +31,7 @@ public class FluidCellInventory implements IFluidCellInventory {
     private final ItemStack cellItem;
     private final ISaveProvider container;
     private final static int MAX_TYPE = 1;
-    private int storedFluidCount;
+    private long storedFluidCount;
     private short storedFluids;
     private IItemList<IAEFluidStack> cellItems;
     private final NBTTagCompound tagCompound;
@@ -78,7 +78,7 @@ public class FluidCellInventory implements IFluidCellInventory {
         this.container = container;
         this.tagCompound = Platform.openNbtData( o );
         this.storedFluids = this.tagCompound.getShort( FLUID_TYPE_TAG );
-        this.storedFluidCount = this.tagCompound.getInteger( FLUID_COUNT_TAG );
+        this.storedFluidCount = this.tagCompound.getLong( FLUID_COUNT_TAG );
         this.cellItems = null;
     }
 
@@ -247,12 +247,12 @@ public class FluidCellInventory implements IFluidCellInventory {
     private void updateFluidCount( final long delta )
     {
         this.storedFluidCount += delta;
-        this.tagCompound.setInteger( FLUID_COUNT_TAG, this.storedFluidCount );
+        this.tagCompound.setLong( FLUID_COUNT_TAG, this.storedFluidCount );
     }
 
     private void saveChanges()
     {
-        int itemCount = 0;
+        long itemCount = 0;
 
         int x = 0;
 
@@ -277,7 +277,7 @@ public class FluidCellInventory implements IFluidCellInventory {
              * NBTBase tagSlotCount = tagCompound.getTag( itemSlotCount[x] ); if ( tagSlotCount instanceof
              * NBTTagInt ) ((NBTTagInt) tagSlotCount).data = (int) v.getStackSize(); else
              */
-            this.tagCompound.setInteger( fluidSlotCount[x], (int) v.getStackSize() );
+            this.tagCompound.setLong( fluidSlotCount[x], v.getStackSize() );
 
             x++;
         }
@@ -312,7 +312,7 @@ public class FluidCellInventory implements IFluidCellInventory {
         }
         else
         {
-            this.tagCompound.setInteger( FLUID_COUNT_TAG, itemCount );
+            this.tagCompound.setLong( FLUID_COUNT_TAG, itemCount );
         }
 
         // clean any old crusty stuff...
