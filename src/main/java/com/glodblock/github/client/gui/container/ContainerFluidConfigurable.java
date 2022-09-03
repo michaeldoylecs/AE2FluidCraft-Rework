@@ -18,6 +18,8 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.IInventory;
+import net.minecraft.inventory.Slot;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fluids.FluidStack;
 
@@ -41,6 +43,7 @@ public abstract class ContainerFluidConfigurable extends ContainerUpgradeable {
 
         ItemStack tis = clickSlot.getStack();
         FluidStack fs = Util.getFluidFromItem(tis);
+        ItemStack itemstack = tis.copy();;
         if( fs != null )
         {
             final AppEngInternalAEInventory inv = this.getFakeFluidInv();
@@ -57,9 +60,17 @@ public abstract class ContainerFluidConfigurable extends ContainerUpgradeable {
                     break;
                 }
             }
+        } else {
+            if(!mergeItemStack(itemstack, 0, this.inventorySlots.size(), false)) return null;
+            Slot slot = (Slot) this.inventorySlots.get(idx);
+            if (itemstack.stackSize == 0) {
+                slot.putStack(null);
+            } else {
+                slot.onSlotChanged();
+            }
         }
         this.standardDetectAndSendChanges();
-        return null;
+        return itemstack;
     }
 
     protected void setupConfig()
