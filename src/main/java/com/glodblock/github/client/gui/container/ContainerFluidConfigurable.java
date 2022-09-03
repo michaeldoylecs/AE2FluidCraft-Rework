@@ -18,6 +18,8 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.IInventory;
+import net.minecraft.inventory.Slot;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fluids.FluidStack;
 
@@ -41,6 +43,7 @@ public abstract class ContainerFluidConfigurable extends ContainerUpgradeable {
 
         ItemStack tis = clickSlot.getStack();
         FluidStack fs = Util.getFluidFromItem(tis);
+        ItemStack itemstack = tis.copy();;
         if( fs != null )
         {
             final AppEngInternalAEInventory inv = this.getFakeFluidInv();
@@ -57,9 +60,22 @@ public abstract class ContainerFluidConfigurable extends ContainerUpgradeable {
                     break;
                 }
             }
+            this.standardDetectAndSendChanges();
+            return null;
+        } else {
+            if(idx < this.availableUpgrades()){
+                if(!mergeItemStack(tis, this.getFakeFluidInv().getSizeInventory()+this.availableUpgrades(), this.inventorySlots.size(), false)) return null;
+            }else if(idx>=this.getFakeFluidInv().getSizeInventory()+this.availableUpgrades()){
+                if(!mergeItemStack(tis, 0, this.availableUpgrades(), false)) return null;
+            }
+            if (tis.stackSize == 0) {
+                clickSlot.putStack(null);
+            } else {
+                clickSlot.onSlotChanged();
+            }
+            this.standardDetectAndSendChanges();
+            return tis;
         }
-        this.standardDetectAndSendChanges();
-        return null;
     }
 
     protected void setupConfig()
