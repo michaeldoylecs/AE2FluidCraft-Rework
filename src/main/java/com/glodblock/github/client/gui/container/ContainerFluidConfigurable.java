@@ -43,7 +43,6 @@ public abstract class ContainerFluidConfigurable extends ContainerUpgradeable {
 
         ItemStack tis = clickSlot.getStack();
         FluidStack fs = Util.getFluidFromItem(tis);
-        ItemStack itemstack = tis.copy();;
         if( fs != null )
         {
             final AppEngInternalAEInventory inv = this.getFakeFluidInv();
