@@ -214,8 +214,7 @@ public class FCBasePartContainerEx extends FCBaseMonitorContain implements IAEAp
 
         encodedValue.setTag( "in", tagIn );
         encodedValue.setTag( "out", tagOut );
-        encodedValue.setBoolean( "piroritize", this.isPrioritize() );
-
+        encodedValue.setBoolean( "prioritize", this.isPrioritize() );
 
         output.setTagCompound( encodedValue );
     }

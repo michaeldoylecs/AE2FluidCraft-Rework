@@ -19,6 +19,11 @@ public class CPacketFluidPatternTermBtns implements IMessage {
         Value = value;
     }
 
+    public CPacketFluidPatternTermBtns( final String name, final Integer value ) {
+        Name = name;
+        Value = value.toString();
+    }
+
     public CPacketFluidPatternTermBtns() {
         // NO-OP
     }
@@ -66,10 +71,17 @@ public class CPacketFluidPatternTermBtns implements IMessage {
                         cpt.getPatternTerminal().setCraftingRecipe(Value.equals("1"));
                         break;
                     case "PatternTerminal.Encode":
-                        if (Value.equals("2"))
-                            cpt.encodeAndMoveToInventory();
-                        else
-                            cpt.encode();
+                        switch (Value) {
+                            case "0":
+                                cpt.encode();
+                                break;
+                            case "1":
+                                cpt.encodeAndMoveToInventory();
+                                break;
+                            case "3":
+                                cpt.encodeAllItemAndMoveToInventory();
+                                break;
+                        }
                         break;
                     case "PatternTerminal.Clear":
                         cpt.clear();
@@ -89,10 +101,17 @@ public class CPacketFluidPatternTermBtns implements IMessage {
                 final ContainerFluidPatternTerminalEx cpt = (ContainerFluidPatternTerminalEx) c;
                 switch (Name) {
                     case "PatternTerminalEx.Encode":
-                        if (Value.equals("2"))
-                            cpt.encodeAndMoveToInventory();
-                        else
-                            cpt.encode();
+                        switch (Value) {
+                            case "0":
+                                cpt.encode();
+                                break;
+                            case "1":
+                                cpt.encodeAndMoveToInventory();
+                                break;
+                            case "3":
+                                cpt.encodeAllItemAndMoveToInventory();
+                                break;
+                        }
                         break;
                     case "PatternTerminalEx.Clear":
                         cpt.clear();

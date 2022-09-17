@@ -160,6 +160,11 @@ public class PartFluidPatternTerminalEx extends FCBasePart {
                     }
 
                     this.setSubstitution(details.canSubstitute());
+                    if(newStack != null){
+                        NBTTagCompound data = newStack.getTagCompound();
+                        this.setCombineMode(data.getInteger("combine") == 1);
+                        this.setPrioritization(data.getInteger("prioritize") == 1);
+                    }
                     this.setInverted(inputsCount <= 8 && outputCount >= 8);
                     this.setActivePage(0);
 
