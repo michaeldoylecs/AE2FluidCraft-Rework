@@ -22,6 +22,7 @@ public class FluidPatternDetails implements ICraftingPatternDetails, Comparable<
     private IAEItemStack patternStackAe;
     private IAEItemStack[] inputs = null, inputsCond = null, outputs = null, outputsCond = null;
     private int priority = 0;
+    private int combine = 0;
 
     public FluidPatternDetails(ItemStack stack) {
         this.patternStack = stack;
@@ -42,6 +43,8 @@ public class FluidPatternDetails implements ICraftingPatternDetails, Comparable<
     public void setPriority(int priority) {
         this.priority = priority;
     }
+    public void setCombine(int combine){ this.combine = combine;}
+    public int getCombine(){return combine;}
 
     @Override
     public boolean isCraftable() {
@@ -154,6 +157,8 @@ public class FluidPatternDetails implements ICraftingPatternDetails, Comparable<
         //Shits
         tag.setTag("in", writeStackArray(checkInitialized(inputs)));
         tag.setTag("out", writeStackArray(checkInitialized(outputs)));
+        tag.setInteger("priorization",this.getPriority());
+        tag.setInteger("combine",this.getCombine());
         patternStack.setTagCompound(tag);
         patternStackAe = Objects.requireNonNull(AEItemStack.create(patternStack));
         return patternStack;

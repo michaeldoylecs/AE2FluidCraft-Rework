@@ -134,7 +134,10 @@ public class PartFluidPatternTerminal extends FCBasePart {
 
                     this.setCraftingRecipe(details.isCraftable());
                     this.setSubstitution(details.canSubstitute());
-
+                    if(newStack != null){
+                        NBTTagCompound data = newStack.getTagCompound();
+                        this.setCombineMode(data.getInteger("combine") == 1);
+                    }
                     for (int i = 0; i < this.crafting.getSizeInventory(); i++) {
                         this.crafting.setInventorySlotContents(i, null);
                     }
