@@ -90,7 +90,7 @@ public class PartFluidPatternTerminalEx extends FCBasePart {
         this.crafting.readFromNBT( data, "craftingGrid" );
 
         this.setSubstitution( data.getBoolean( "substitute" ) );
-        this.setPrioritization( data.getBoolean( "priorization") );
+        this.setPrioritization( data.getBoolean( "prioritization") );
         this.setInverted( data.getBoolean( "inverted" ) );
         this.setActivePage( data.getInteger( "activePage" ) );
     }
@@ -105,7 +105,7 @@ public class PartFluidPatternTerminalEx extends FCBasePart {
         this.pattern.writeToNBT( data, "pattern" );
         this.output.writeToNBT( data, "outputList" );
         this.crafting.writeToNBT( data, "craftingGrid" );
-        data.setBoolean("priorization", this.prioritize);
+        data.setBoolean("prioritization", this.prioritize);
         data.setBoolean( "substitute", this.substitute );
         data.setBoolean( "inverted", this.inverted );
         data.setInteger( "activePage", this.activePage );
@@ -160,6 +160,11 @@ public class PartFluidPatternTerminalEx extends FCBasePart {
                     }
 
                     this.setSubstitution(details.canSubstitute());
+                    if(newStack != null){
+                        NBTTagCompound data = newStack.getTagCompound();
+                        this.setCombineMode(data.getInteger("combine") == 1);
+                        this.setPrioritization(data.getInteger("prioritization") == 1);
+                    }
                     this.setInverted(inputsCount <= 8 && outputCount >= 8);
                     this.setActivePage(0);
 

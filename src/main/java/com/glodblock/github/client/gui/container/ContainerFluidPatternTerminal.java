@@ -29,6 +29,17 @@ public class ContainerFluidPatternTerminal extends FCBasePartContainer implement
         super(ip, monitorable);
     }
 
+    public void encodeAllItemAndMoveToInventory(){
+        encode();
+        ItemStack output = this.patternSlotOUT.getStack();
+        output.stackSize += this.patternSlotIN.getStack().stackSize;
+        if (!getPlayerInv().addItemStackToInventory( output )){
+            getPlayerInv().player.entityDropItem(output, 0);
+        }
+        this.patternSlotOUT.putStack( null );
+        this.patternSlotIN.putStack(null);
+    }
+
     @Override
     public void encode() {
         if (!checkHasFluidPattern()) {

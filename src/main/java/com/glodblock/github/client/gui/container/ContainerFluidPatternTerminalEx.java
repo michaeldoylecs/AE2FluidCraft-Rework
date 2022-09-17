@@ -28,6 +28,17 @@ public class ContainerFluidPatternTerminalEx extends FCBasePartContainerEx imple
         super(ip, monitorable);
     }
 
+    public void encodeAllItemAndMoveToInventory(){
+        encode();
+        ItemStack output = this.patternSlotOUT.getStack();
+        output.stackSize += this.patternSlotIN.getStack().stackSize;
+        if (!getPlayerInv().addItemStackToInventory( output )){
+            getPlayerInv().player.entityDropItem(output, 0);
+        }
+        this.patternSlotOUT.putStack( null );
+        this.patternSlotIN.putStack(null);
+    }
+
     @Override
     public void encode() {
         if (!checkHasFluidPattern()) {
@@ -98,6 +109,8 @@ public class ContainerFluidPatternTerminalEx extends FCBasePartContainerEx imple
     private void encodeFluidPattern() {
         ItemStack patternStack = new ItemStack(ItemAndBlockHolder.PATTERN);
         FluidPatternDetails pattern = new FluidPatternDetails(patternStack);
+        pattern.setCombine(this.combine ? 1:0);
+        pattern.setPriority(this.prioritize? 1:0);
         pattern.setInputs(collectInventory(craftingSlots));
         pattern.setOutputs(collectInventory(outputSlots));
         patternSlotOUT.putStack(pattern.writeToStack());
