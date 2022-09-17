@@ -157,7 +157,7 @@ public class FluidPatternDetails implements ICraftingPatternDetails, Comparable<
         //Shits
         tag.setTag("in", writeStackArray(checkInitialized(inputs)));
         tag.setTag("out", writeStackArray(checkInitialized(outputs)));
-        tag.setInteger("priorization",this.getPriority());
+        tag.setInteger("prioritize",this.getPriority());
         tag.setInteger("combine",this.getCombine());
         patternStack.setTagCompound(tag);
         patternStackAe = Objects.requireNonNull(AEItemStack.create(patternStack));
