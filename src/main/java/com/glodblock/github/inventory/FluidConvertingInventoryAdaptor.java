@@ -1,6 +1,7 @@
 package com.glodblock.github.inventory;
 
 import appeng.api.config.FuzzyMode;
+import appeng.api.config.InsertionMode;
 import appeng.tile.networking.TileCableBus;
 import appeng.util.InventoryAdaptor;
 import appeng.util.inv.IInventoryDestination;
@@ -46,8 +47,7 @@ public class FluidConvertingInventoryAdaptor extends InventoryAdaptor {
         this.side = Util.from(facing);
     }
 
-    @Override
-    public ItemStack addItems(ItemStack toBeAdded) {
+    public ItemStack addItems( ItemStack toBeAdded,InsertionMode insertionMode ) {
         if (toBeAdded.getItem() instanceof ItemFluidPacket) {
             if (invFluids != null) {
                 FluidStack fluid = ItemFluidPacket.getFluidStack(toBeAdded);
@@ -61,11 +61,19 @@ public class FluidConvertingInventoryAdaptor extends InventoryAdaptor {
             }
             return toBeAdded;
         }
-        return invItems != null ? invItems.addItems(toBeAdded) : toBeAdded;
+        return invItems != null ? invItems.addItems(toBeAdded,insertionMode) : toBeAdded;
     }
 
     @Override
+    public ItemStack addItems(ItemStack toBeAdded) {
+        return addItems(toBeAdded,InsertionMode.DEFAULT);
+    }
+    @Override
     public ItemStack simulateAdd(ItemStack toBeSimulated) {
+        return simulateAdd(toBeSimulated,InsertionMode.DEFAULT);
+    }
+    @Override
+    public ItemStack simulateAdd(ItemStack toBeSimulated,InsertionMode insertionMode) {
         if (toBeSimulated.getItem() instanceof ItemFluidPacket) {
             if (invFluids != null) {
                 FluidStack fluid = ItemFluidPacket.getFluidStack(toBeSimulated);
@@ -79,7 +87,7 @@ public class FluidConvertingInventoryAdaptor extends InventoryAdaptor {
             }
             return toBeSimulated;
         }
-        return invItems != null ? invItems.simulateAdd(toBeSimulated) : toBeSimulated;
+        return invItems != null ? invItems.simulateAdd(toBeSimulated,insertionMode) : toBeSimulated;
     }
 
     @Override
