@@ -84,7 +84,7 @@ public class CraftingCpuTransformer extends FCClassTransformer.ClassMapper {
                 }
             }
             if (opcode == Opcodes.INVOKEVIRTUAL
-                && owner.equals("net/minecraft/inventory/InventoryCrafting") && name.equals("getStackInSlot")) {
+                && owner.equals("net/minecraft/inventory/InventoryCrafting") && (name.equals("getStackInSlot") || name.equals("func_70301_a"))) {
                 super.visitMethodInsn(Opcodes.INVOKESTATIC,
                     "com/glodblock/github/coremod/hooker/CoreModHooks",
                     "removeFluidPackets",
