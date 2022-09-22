@@ -29,6 +29,9 @@ public class FCClassTransformer implements IClassTransformer {
             case "net.p455w0rd.wirelesscraftingterminal.client.gui.GuiCraftConfirm":
                 tform = GuiCraftingTransformer.INSTANCE;
                 break;
+            case "appeng.integration.modules.NEI":
+                tform = NEITransfermer.INSTANCE;
+                break;
             default:
                 return code;
         }
