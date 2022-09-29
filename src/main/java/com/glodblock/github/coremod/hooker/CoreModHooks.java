@@ -174,22 +174,16 @@ public class CoreModHooks {
     }
 
     public static ItemStack getStackUnderMouse(GuiContainer gui, int mousex, int mousey) {
-        if (gui instanceof GuiCraftConfirm){
-            return ((GuiCraftConfirm)gui).getHoveredStack();
-        } else if (gui instanceof GuiFluidCraftConfirm) {
-            return ((GuiFluidCraftConfirm)gui).getHoveredStack();
-        } else if (gui instanceof GuiCraftingCPU){
-            return ((GuiCraftingCPU)gui).getHoveredStack();
+        if (gui instanceof GuiFluidCraftConfirm) {
+            return ((GuiFluidCraftConfirm) gui).getHoveredStack();
         }
         return null;
     }
+
     public static boolean shouldShowTooltip(GuiContainer gui) {
-        if (gui instanceof GuiFluidCraftConfirm)
+        if (gui instanceof GuiFluidCraftConfirm) {
             return ((GuiFluidCraftConfirm)gui).getHoveredStack() == null;
-        if (gui instanceof GuiCraftConfirm)
-            return ((GuiCraftConfirm)gui).getHoveredStack() == null;
-        if (gui instanceof GuiCraftingCPU)
-            return ((GuiCraftingCPU)gui).getHoveredStack() == null;
+        }
         return true;
     }
 

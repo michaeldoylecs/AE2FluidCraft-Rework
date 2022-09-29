@@ -552,6 +552,7 @@ public class GuiFluidCraftConfirm extends AEBaseGui {
             lineList.add(GuiText.HoldShiftForTooltip.getLocal());
         }
     }
+
     public ItemStack getHoveredStack() {
         return hoveredStack;
     }
