@@ -5,6 +5,9 @@ import net.minecraft.launchwrapper.IClassTransformer;
 import org.objectweb.asm.ClassReader;
 import org.objectweb.asm.ClassVisitor;
 import org.objectweb.asm.ClassWriter;
+import org.objectweb.asm.tree.ClassNode;
+import static org.objectweb.asm.ClassWriter.COMPUTE_FRAMES;
+import static org.objectweb.asm.ClassWriter.COMPUTE_MAXS;
 
 public class FCClassTransformer implements IClassTransformer {
 
@@ -29,6 +32,9 @@ public class FCClassTransformer implements IClassTransformer {
             case "net.p455w0rd.wirelesscraftingterminal.client.gui.GuiCraftConfirm":
                 tform = GuiCraftingTransformer.INSTANCE;
                 break;
+            case "appeng.integration.modules.NEI":
+                tform = NEITransfermer.INSTANCE;
+                break;
             default:
                 return code;
         }
@@ -46,17 +52,18 @@ public class FCClassTransformer implements IClassTransformer {
 
         @Override
         public byte[] transformClass(byte[] code) {
+            ClassNode classNode = new ClassNode();
             ClassReader reader = new ClassReader(code);
+            reader.accept(classNode, 0);
             ClassWriter writer = new ClassWriter(reader, getWriteFlags());
-            reader.accept(getClassMapper(writer), 0);
+            classNode.accept(getClassMapper(writer,classNode));
             return writer.toByteArray();
         }
 
         protected int getWriteFlags() {
-            return 0;
+            return COMPUTE_FRAMES|COMPUTE_MAXS;
         }
 
-        protected abstract ClassVisitor getClassMapper(ClassVisitor downstream);
-
+        protected abstract ClassVisitor getClassMapper(ClassVisitor downstream, ClassNode classNode);
     }
 }
