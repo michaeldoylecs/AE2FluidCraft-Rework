@@ -172,5 +172,12 @@ public class CoreModHooks {
         }
         return null;
     }
+    public boolean shouldShowTooltip(GuiContainer gui) {
+        if (gui instanceof GuiCraftConfirm)
+            return ((GuiCraftConfirm)gui).getHoveredStack() == null;
+        if (gui instanceof GuiCraftingCPU)
+            return ((GuiCraftingCPU)gui).getHoveredStack() == null;
+        return true;
+    }
 
 }
