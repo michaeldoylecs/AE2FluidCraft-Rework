@@ -5,6 +5,7 @@ import org.objectweb.asm.ClassVisitor;
 import org.objectweb.asm.Label;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
+import org.objectweb.asm.tree.ClassNode;
 
 public class CraftingTreeNodeTransformer extends FCClassTransformer.ClassMapper {
 
@@ -15,7 +16,7 @@ public class CraftingTreeNodeTransformer extends FCClassTransformer.ClassMapper 
     }
 
     @Override
-    protected ClassVisitor getClassMapper(ClassVisitor downstream) {
+    protected ClassVisitor getClassMapper(ClassVisitor downstream, ClassNode classNode) {
         return new TransformCraftingTreeNode(Opcodes.ASM5, downstream);
     }
 

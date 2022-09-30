@@ -49,6 +49,8 @@ public class GuiFluidCraftConfirm extends AEBaseGui {
     private GuiButton selectCPU;
     private int tooltip = -1;
 
+    private ItemStack hoveredStack;
+
     public GuiFluidCraftConfirm(final InventoryPlayer inventoryPlayer, final ITerminalHost te )
     {
         super( new ContainerFluidCraftConfirm( inventoryPlayer, te ) );
@@ -202,7 +204,7 @@ public class GuiFluidCraftConfirm extends AEBaseGui {
         final List<String> lineList = new LinkedList<String>();
         int toolPosX = 0;
         int toolPosY = 0;
-
+        hoveredStack = null;
         final int offY = 23;
 
         for( int z = viewStart; z < Math.min( viewEnd, this.visual.size() ); z++ )
@@ -324,6 +326,8 @@ public class GuiFluidCraftConfirm extends AEBaseGui {
 
                     toolPosX = x * ( 1 + sectionLength ) + xo + sectionLength - 8;
                     toolPosY = y * offY + yo;
+
+                    hoveredStack = is;
                 }
 
                 this.drawItem( posX, posY, is );
@@ -550,5 +554,7 @@ public class GuiFluidCraftConfirm extends AEBaseGui {
             lineList.add(GuiText.HoldShiftForTooltip.getLocal());
         }
     }
-
+    public ItemStack getHoveredStack() {
+        return hoveredStack;
+    }
 }

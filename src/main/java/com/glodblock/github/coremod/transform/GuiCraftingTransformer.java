@@ -4,6 +4,7 @@ import com.glodblock.github.coremod.FCClassTransformer;
 import org.objectweb.asm.ClassVisitor;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
+import org.objectweb.asm.tree.ClassNode;
 
 public class GuiCraftingTransformer extends FCClassTransformer.ClassMapper {
 
@@ -14,7 +15,7 @@ public class GuiCraftingTransformer extends FCClassTransformer.ClassMapper {
     }
 
     @Override
-    protected ClassVisitor getClassMapper(ClassVisitor downstream) {
+    protected ClassVisitor getClassMapper(ClassVisitor downstream, ClassNode classNode) {
         return new TransformGuiCrafting(Opcodes.ASM5, downstream);
     }
 
