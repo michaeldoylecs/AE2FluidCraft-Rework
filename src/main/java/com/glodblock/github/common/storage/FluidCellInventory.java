@@ -30,29 +30,26 @@ public class FluidCellInventory implements IFluidCellInventory {
     private static String[] fluidSlotCount;
     private final ItemStack cellItem;
     private final ISaveProvider container;
-    private final static int MAX_TYPE = 1;
+    private static final int MAX_TYPE = 1;
     private long storedFluidCount;
     private short storedFluids;
     private IItemList<IAEFluidStack> cellItems;
     private final NBTTagCompound tagCompound;
 
-    public FluidCellInventory( final ItemStack o, final ISaveProvider container ) throws AppEngException {
+    public FluidCellInventory(final ItemStack o, final ISaveProvider container) throws AppEngException {
 
-        if( fluidSlots == null )
-        {
+        if (fluidSlots == null) {
             fluidSlots = new String[MAX_TYPE];
             fluidSlotCount = new String[MAX_TYPE];
 
-            for( int x = 0; x < MAX_TYPE; x++ )
-            {
+            for (int x = 0; x < MAX_TYPE; x++) {
                 fluidSlots[x] = FLUID_SLOT + x;
                 fluidSlotCount[x] = FLUID_SLOT_COUNT + x;
             }
         }
 
-        if( o == null )
-        {
-            throw new AppEngException( "ItemStack was used as a cell, but was not a cell!" );
+        if (o == null) {
+            throw new AppEngException("ItemStack was used as a cell, but was not a cell!");
         }
 
         this.cellType = null;
@@ -60,52 +57,42 @@ public class FluidCellInventory implements IFluidCellInventory {
 
         final Item type = this.cellItem.getItem();
 
-        if( type instanceof IStorageFluidCell)
-        {
+        if (type instanceof IStorageFluidCell) {
             this.cellType = (IStorageFluidCell) this.cellItem.getItem();
         }
 
-        if( this.cellType == null )
-        {
-            throw new AppEngException( "ItemStack was used as a cell, but was not a cell!" );
+        if (this.cellType == null) {
+            throw new AppEngException("ItemStack was used as a cell, but was not a cell!");
         }
 
-        if( !this.cellType.isStorageCell( this.cellItem ) )
-        {
-            throw new AppEngException( "ItemStack was used as a cell, but was not a cell!" );
+        if (!this.cellType.isStorageCell(this.cellItem)) {
+            throw new AppEngException("ItemStack was used as a cell, but was not a cell!");
         }
 
         this.container = container;
-        this.tagCompound = Platform.openNbtData( o );
-        this.storedFluids = this.tagCompound.getShort( FLUID_TYPE_TAG );
-        this.storedFluidCount = this.tagCompound.getLong( FLUID_COUNT_TAG );
+        this.tagCompound = Platform.openNbtData(o);
+        this.storedFluids = this.tagCompound.getShort(FLUID_TYPE_TAG);
+        this.storedFluidCount = this.tagCompound.getLong(FLUID_COUNT_TAG);
         this.cellItems = null;
     }
 
-    public static IMEInventoryHandler<IAEFluidStack> getCell(final ItemStack o, final ISaveProvider container2 )
-    {
-        try
-        {
-            return new FluidCellInventoryHandler( new FluidCellInventory( o, container2 ) );
-        }
-        catch( final AppEngException e )
-        {
+    public static IMEInventoryHandler<IAEFluidStack> getCell(final ItemStack o, final ISaveProvider container2) {
+        try {
+            return new FluidCellInventoryHandler(new FluidCellInventory(o, container2));
+        } catch (final AppEngException e) {
             return null;
         }
     }
 
-    public static boolean isCell( final ItemStack itemStack )
-    {
-        if( itemStack == null )
-        {
+    public static boolean isCell(final ItemStack itemStack) {
+        if (itemStack == null) {
             return false;
         }
 
         final Item type = itemStack.getItem();
 
-        if( type instanceof IStorageFluidCell)
-        {
-            return ( (IStorageFluidCell) type ).isStorageCell( itemStack );
+        if (type instanceof IStorageFluidCell) {
+            return ((IStorageFluidCell) type).isStorageCell(itemStack);
         }
 
         return false;
@@ -123,24 +110,26 @@ public class FluidCellInventory implements IFluidCellInventory {
 
     @Override
     public IInventory getConfigInventory() {
-        return this.cellType.getConfigInventory( this.cellItem );
+        return this.cellType.getConfigInventory(this.cellItem);
     }
 
     @Override
     public int getBytesPerType() {
-        return this.cellType.getBytesPerType( this.cellItem );
+        return this.cellType.getBytesPerType(this.cellItem);
     }
 
     @Override
     public boolean canHoldNewFluid() {
         final long bytesFree = this.getFreeBytes();
 
-        return ( bytesFree > this.getBytesPerType() || ( bytesFree == this.getBytesPerType() && this.getUnusedFluidCount() > 0 ) ) && this.getRemainingFluidTypes() > 0;
+        return (bytesFree > this.getBytesPerType()
+                        || (bytesFree == this.getBytesPerType() && this.getUnusedFluidCount() > 0))
+                && this.getRemainingFluidTypes() > 0;
     }
 
     @Override
     public long getTotalBytes() {
-        return this.cellType.getBytes( this.cellItem );
+        return this.cellType.getBytes(this.cellItem);
     }
 
     @Override
@@ -150,7 +139,7 @@ public class FluidCellInventory implements IFluidCellInventory {
 
     @Override
     public long getUsedBytes() {
-        final long bytesForItemCount = ( this.getStoredFluidCount() + this.getUnusedFluidCount() ) / 8 / 256;
+        final long bytesForItemCount = (this.getStoredFluidCount() + this.getUnusedFluidCount()) / 8 / 256;
         return this.getStoredFluidTypes() * this.getBytesPerType() + bytesForItemCount;
     }
 
@@ -184,10 +173,9 @@ public class FluidCellInventory implements IFluidCellInventory {
 
     @Override
     public int getUnusedFluidCount() {
-        final int div = (int) ( this.getStoredFluidCount() % 8 );
+        final int div = (int) (this.getStoredFluidCount() % 8);
 
-        if( div == 0 )
-        {
+        if (div == 0) {
             return 0;
         }
 
@@ -196,21 +184,17 @@ public class FluidCellInventory implements IFluidCellInventory {
 
     @Override
     public int getStatusForCell() {
-        if( this.canHoldNewFluid() )
-        {
+        if (this.canHoldNewFluid()) {
             return 1;
         }
-        if( this.getRemainingFluidCount() > 0 )
-        {
+        if (this.getRemainingFluidCount() > 0) {
             return 2;
         }
         return 3;
     }
 
-    private void loadCellItems()
-    {
-        if( this.cellItems == null )
-        {
+    private void loadCellItems() {
+        if (this.cellItems == null) {
             this.cellItems = AEApi.instance().storage().createFluidList();
         }
 
@@ -218,67 +202,56 @@ public class FluidCellInventory implements IFluidCellInventory {
 
         final int types = (int) this.getStoredFluidTypes();
 
-        for( int x = 0; x < types; x++ )
-        {
-            final FluidStack t = FluidStack.loadFluidStackFromNBT( this.tagCompound.getCompoundTag( fluidSlots[x] ) );
-            final AEFluidStack aet = AEFluidStack.create( t );
+        for (int x = 0; x < types; x++) {
+            final FluidStack t = FluidStack.loadFluidStackFromNBT(this.tagCompound.getCompoundTag(fluidSlots[x]));
+            final AEFluidStack aet = AEFluidStack.create(t);
 
-            if( aet != null )
-            {
-                aet.setStackSize( this.tagCompound.getLong( fluidSlotCount[x] ) );
+            if (aet != null) {
+                aet.setStackSize(this.tagCompound.getLong(fluidSlotCount[x]));
 
-                if( aet.getStackSize() > 0 )
-                {
-                    this.cellItems.add( aet );
+                if (aet.getStackSize() > 0) {
+                    this.cellItems.add(aet);
                 }
             }
         }
     }
 
-    private IItemList<IAEFluidStack> getCellItems()
-    {
-        if( this.cellItems == null )
-        {
+    private IItemList<IAEFluidStack> getCellItems() {
+        if (this.cellItems == null) {
             this.loadCellItems();
         }
 
         return this.cellItems;
     }
 
-    private void updateFluidCount( final long delta )
-    {
+    private void updateFluidCount(final long delta) {
         this.storedFluidCount += delta;
-        this.tagCompound.setLong( FLUID_COUNT_TAG, this.storedFluidCount );
+        this.tagCompound.setLong(FLUID_COUNT_TAG, this.storedFluidCount);
     }
 
-    private void saveChanges()
-    {
+    private void saveChanges() {
         long itemCount = 0;
 
         int x = 0;
 
-        for( final IAEFluidStack v : this.cellItems )
-        {
+        for (final IAEFluidStack v : this.cellItems) {
             itemCount += v.getStackSize();
 
-            final NBTBase c = this.tagCompound.getTag( fluidSlots[x] );
+            final NBTBase c = this.tagCompound.getTag(fluidSlots[x]);
 
-            if( c instanceof NBTTagCompound )
-            {
-                v.writeToNBT( (NBTTagCompound) c );
-            }
-            else
-            {
+            if (c instanceof NBTTagCompound) {
+                v.writeToNBT((NBTTagCompound) c);
+            } else {
                 final NBTTagCompound g = new NBTTagCompound();
-                v.writeToNBT( g );
-                this.tagCompound.setTag( fluidSlots[x], g );
+                v.writeToNBT(g);
+                this.tagCompound.setTag(fluidSlots[x], g);
             }
 
             /*
              * NBTBase tagSlotCount = tagCompound.getTag( itemSlotCount[x] ); if ( tagSlotCount instanceof
              * NBTTagInt ) ((NBTTagInt) tagSlotCount).data = (int) v.getStackSize(); else
              */
-            this.tagCompound.setLong( fluidSlotCount[x], v.getStackSize() );
+            this.tagCompound.setLong(fluidSlotCount[x], v.getStackSize());
 
             x++;
         }
@@ -293,13 +266,10 @@ public class FluidCellInventory implements IFluidCellInventory {
          */
         this.storedFluids = (short) this.cellItems.size();
 
-        if( this.cellItems.isEmpty() )
-        {
-            this.tagCompound.removeTag( FLUID_TYPE_TAG );
-        }
-        else
-        {
-            this.tagCompound.setShort( FLUID_TYPE_TAG, this.storedFluids );
+        if (this.cellItems.isEmpty()) {
+            this.tagCompound.removeTag(FLUID_TYPE_TAG);
+        } else {
+            this.tagCompound.setShort(FLUID_TYPE_TAG, this.storedFluids);
         }
 
         /*
@@ -307,78 +277,63 @@ public class FluidCellInventory implements IFluidCellInventory {
          */
         this.storedFluidCount = itemCount;
 
-        if( itemCount == 0 )
-        {
-            this.tagCompound.removeTag( FLUID_COUNT_TAG );
-        }
-        else
-        {
-            this.tagCompound.setLong( FLUID_COUNT_TAG, itemCount );
+        if (itemCount == 0) {
+            this.tagCompound.removeTag(FLUID_COUNT_TAG);
+        } else {
+            this.tagCompound.setLong(FLUID_COUNT_TAG, itemCount);
         }
 
         // clean any old crusty stuff...
-        for( ; x < oldStoredItems && x < MAX_TYPE; x++ )
-        {
-            this.tagCompound.removeTag( fluidSlots[x] );
-            this.tagCompound.removeTag( fluidSlotCount[x] );
+        for (; x < oldStoredItems && x < MAX_TYPE; x++) {
+            this.tagCompound.removeTag(fluidSlots[x]);
+            this.tagCompound.removeTag(fluidSlotCount[x]);
         }
 
-        if( this.container != null )
-        {
-            this.container.saveChanges( this );
+        if (this.container != null) {
+            this.container.saveChanges(this);
         }
     }
 
     @Override
     public IAEFluidStack injectItems(IAEFluidStack input, Actionable mode, BaseActionSource src) {
-        if( input == null )
-        {
+        if (input == null) {
             return null;
         }
 
-        if( input.getStackSize() == 0 )
-        {
+        if (input.getStackSize() == 0) {
             return null;
         }
 
-        if(this.cellType.isBlackListed( this.cellItem, input ))
-        {
+        if (this.cellType.isBlackListed(this.cellItem, input)) {
             return input;
         }
 
         final FluidStack sharedFluidStack = input.getFluidStack();
 
-        final IAEFluidStack l = this.getCellItems().findPrecise( input );
+        final IAEFluidStack l = this.getCellItems().findPrecise(input);
 
-        if( l != null )
-        {
+        if (l != null) {
             final long remainingItemSlots = this.getRemainingFluidCount();
 
-            if( remainingItemSlots < 0 )
-            {
+            if (remainingItemSlots < 0) {
                 return input;
             }
 
-            if( input.getStackSize() > remainingItemSlots )
-            {
+            if (input.getStackSize() > remainingItemSlots) {
                 final IAEFluidStack r = input.copy();
-                r.setStackSize( r.getStackSize() - remainingItemSlots );
+                r.setStackSize(r.getStackSize() - remainingItemSlots);
 
-                if( mode == Actionable.MODULATE )
-                {
-                    l.setStackSize( l.getStackSize() + remainingItemSlots );
-                    this.updateFluidCount( remainingItemSlots );
+                if (mode == Actionable.MODULATE) {
+                    l.setStackSize(l.getStackSize() + remainingItemSlots);
+                    this.updateFluidCount(remainingItemSlots);
                     this.saveChanges();
                 }
 
                 return r;
-            }
-            else
-            {
-                if( mode == Actionable.MODULATE )
-                {
-                    l.setStackSize( l.getStackSize() + input.getStackSize() );
-                    this.updateFluidCount( input.getStackSize() );
+            } else {
+                if (mode == Actionable.MODULATE) {
+                    l.setStackSize(l.getStackSize() + input.getStackSize());
+                    this.updateFluidCount(input.getStackSize());
                     this.saveChanges();
                 }
 
@@ -386,35 +341,31 @@ public class FluidCellInventory implements IFluidCellInventory {
             }
         }
 
-        if( this.canHoldNewFluid() ) // room for new type, and for at least one item!
+        if (this.canHoldNewFluid()) // room for new type, and for at least one item!
         {
             final long remainingItemCount = this.getRemainingFluidCount() - this.getBytesPerType() * 8;
 
-            if( remainingItemCount > 0 )
-            {
-                if( input.getStackSize() > remainingItemCount )
-                {
+            if (remainingItemCount > 0) {
+                if (input.getStackSize() > remainingItemCount) {
                     final FluidStack toReturn = Util.cloneFluidStack(sharedFluidStack);
                     toReturn.amount = (int) (sharedFluidStack.amount - remainingItemCount);
 
-                    if( mode == Actionable.MODULATE )
-                    {
-                        final FluidStack toWrite = Util.cloneFluidStack( sharedFluidStack );
+                    if (mode == Actionable.MODULATE) {
+                        final FluidStack toWrite = Util.cloneFluidStack(sharedFluidStack);
                         toWrite.amount = (int) remainingItemCount;
 
-                        this.cellItems.add( AEFluidStack.create( toWrite ) );
-                        this.updateFluidCount( toWrite.amount );
+                        this.cellItems.add(AEFluidStack.create(toWrite));
+                        this.updateFluidCount(toWrite.amount);
 
                         this.saveChanges();
                     }
 
-                    return AEFluidStack.create( toReturn );
+                    return AEFluidStack.create(toReturn);
                 }
 
-                if( mode == Actionable.MODULATE )
-                {
-                    this.updateFluidCount( input.getStackSize() );
-                    this.cellItems.add( input );
+                if (mode == Actionable.MODULATE) {
+                    this.updateFluidCount(input.getStackSize());
+                    this.cellItems.add(input);
                     this.saveChanges();
                 }
 
@@ -427,40 +378,33 @@ public class FluidCellInventory implements IFluidCellInventory {
 
     @Override
     public IAEFluidStack extractItems(IAEFluidStack request, Actionable mode, BaseActionSource src) {
-        if( request == null )
-        {
+        if (request == null) {
             return null;
         }
 
-        final long size = Math.min( Integer.MAX_VALUE, request.getStackSize() );
+        final long size = Math.min(Integer.MAX_VALUE, request.getStackSize());
 
         IAEFluidStack results = null;
 
-        final IAEFluidStack l = this.getCellItems().findPrecise( request );
+        final IAEFluidStack l = this.getCellItems().findPrecise(request);
 
-        if( l != null )
-        {
+        if (l != null) {
             results = l.copy();
 
-            if( l.getStackSize() <= size )
-            {
-                results.setStackSize( l.getStackSize() );
+            if (l.getStackSize() <= size) {
+                results.setStackSize(l.getStackSize());
 
-                if( mode == Actionable.MODULATE )
-                {
-                    this.updateFluidCount( -l.getStackSize() );
-                    l.setStackSize( 0 );
+                if (mode == Actionable.MODULATE) {
+                    this.updateFluidCount(-l.getStackSize());
+                    l.setStackSize(0);
                     this.saveChanges();
                 }
-            }
-            else
-            {
-                results.setStackSize( size );
+            } else {
+                results.setStackSize(size);
 
-                if( mode == Actionable.MODULATE )
-                {
-                    l.setStackSize( l.getStackSize() - size );
-                    this.updateFluidCount( -size );
+                if (mode == Actionable.MODULATE) {
+                    l.setStackSize(l.getStackSize() - size);
+                    this.updateFluidCount(-size);
                     this.saveChanges();
                 }
             }
@@ -471,9 +415,8 @@ public class FluidCellInventory implements IFluidCellInventory {
 
     @Override
     public IItemList<IAEFluidStack> getAvailableItems(IItemList<IAEFluidStack> out) {
-        for( final IAEFluidStack i : this.getCellItems() )
-        {
-            out.add( i );
+        for (final IAEFluidStack i : this.getCellItems()) {
+            out.add(i);
         }
 
         return out;

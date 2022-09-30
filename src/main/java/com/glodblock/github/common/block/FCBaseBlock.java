@@ -3,10 +3,9 @@ package com.glodblock.github.common.block;
 import appeng.block.AEBaseTileBlock;
 import appeng.core.features.AEFeature;
 import com.glodblock.github.FluidCraft;
+import java.util.EnumSet;
 import net.minecraft.block.material.Material;
 import net.minecraft.tileentity.TileEntity;
-
-import java.util.EnumSet;
 
 public class FCBaseBlock extends AEBaseTileBlock {
 
@@ -17,7 +16,7 @@ public class FCBaseBlock extends AEBaseTileBlock {
     }
 
     @Override
-    public void setTileEntity( final Class<? extends TileEntity> clazz ) {
+    public void setTileEntity(final Class<? extends TileEntity> clazz) {
         super.setTileEntity(clazz);
     }
 
@@ -30,8 +29,7 @@ public class FCBaseBlock extends AEBaseTileBlock {
     }
 
     @Override
-    public void setFeature( final EnumSet<AEFeature> f ) {
+    public void setFeature(final EnumSet<AEFeature> f) {
         super.setFeature(f);
     }
-
 }

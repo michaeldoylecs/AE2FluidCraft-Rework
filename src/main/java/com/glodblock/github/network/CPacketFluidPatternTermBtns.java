@@ -14,12 +14,12 @@ public class CPacketFluidPatternTermBtns implements IMessage {
     private String Name = "";
     private String Value = "";
 
-    public CPacketFluidPatternTermBtns( final String name, final String value ) {
+    public CPacketFluidPatternTermBtns(final String name, final String value) {
         Name = name;
         Value = value;
     }
 
-    public CPacketFluidPatternTermBtns( final String name, final Integer value ) {
+    public CPacketFluidPatternTermBtns(final String name, final Integer value) {
         Name = name;
         Value = value.toString();
     }
@@ -33,12 +33,12 @@ public class CPacketFluidPatternTermBtns implements IMessage {
         int leName = buf.readInt();
         int leVal = buf.readInt();
         StringBuilder sb = new StringBuilder();
-        for (int i = 0; i < leName; i ++) {
+        for (int i = 0; i < leName; i++) {
             sb.append(buf.readChar());
         }
         Name = sb.toString();
         sb = new StringBuilder();
-        for (int i = 0; i < leVal; i ++) {
+        for (int i = 0; i < leVal; i++) {
             sb.append(buf.readChar());
         }
         Value = sb.toString();
@@ -48,10 +48,10 @@ public class CPacketFluidPatternTermBtns implements IMessage {
     public void toBytes(ByteBuf buf) {
         buf.writeInt(Name.length());
         buf.writeInt(Value.length());
-        for (int i = 0; i < Name.length(); i ++) {
+        for (int i = 0; i < Name.length(); i++) {
             buf.writeChar(Name.charAt(i));
         }
-        for (int i = 0; i < Value.length(); i ++) {
+        for (int i = 0; i < Value.length(); i++) {
             buf.writeChar(Value.charAt(i));
         }
     }
@@ -63,8 +63,7 @@ public class CPacketFluidPatternTermBtns implements IMessage {
             String Name = message.Name;
             String Value = message.Value;
             final Container c = ctx.getServerHandler().playerEntity.openContainer;
-            if( Name.startsWith( "PatternTerminal." ) && (c instanceof ContainerFluidPatternTerminal))
-            {
+            if (Name.startsWith("PatternTerminal.") && (c instanceof ContainerFluidPatternTerminal)) {
                 final ContainerFluidPatternTerminal cpt = (ContainerFluidPatternTerminal) c;
                 switch (Name) {
                     case "PatternTerminal.CraftMode":
@@ -96,8 +95,7 @@ public class CPacketFluidPatternTermBtns implements IMessage {
                         cpt.getPatternTerminal().setCombineMode(Value.equals("1"));
                         break;
                 }
-            } else if( Name.startsWith( "PatternTerminalEx." ) && (c instanceof ContainerFluidPatternTerminalEx))
-            {
+            } else if (Name.startsWith("PatternTerminalEx.") && (c instanceof ContainerFluidPatternTerminalEx)) {
                 final ContainerFluidPatternTerminalEx cpt = (ContainerFluidPatternTerminalEx) c;
                 switch (Name) {
                     case "PatternTerminalEx.Encode":
@@ -135,16 +133,14 @@ public class CPacketFluidPatternTermBtns implements IMessage {
                         cpt.getPatternTerminal().setPrioritization(Value.equals("1"));
                         break;
                 }
-            } else if(Name.equals( "Terminal.Cpu" ) && c instanceof ContainerFluidCraftConfirm) {
+            } else if (Name.equals("Terminal.Cpu") && c instanceof ContainerFluidCraftConfirm) {
                 final ContainerFluidCraftConfirm qk = (ContainerFluidCraftConfirm) c;
-                qk.cycleCpu( Value.equals( "Next" ) );
-            }
-            else if( Name.equals( "Terminal.Start" ) && c instanceof ContainerFluidCraftConfirm ) {
+                qk.cycleCpu(Value.equals("Next"));
+            } else if (Name.equals("Terminal.Start") && c instanceof ContainerFluidCraftConfirm) {
                 final ContainerFluidCraftConfirm qk = (ContainerFluidCraftConfirm) c;
                 qk.startJob();
             }
             return null;
         }
-
     }
 }

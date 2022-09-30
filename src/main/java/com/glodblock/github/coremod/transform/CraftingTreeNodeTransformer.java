@@ -33,7 +33,6 @@ public class CraftingTreeNodeTransformer extends FCClassTransformer.ClassMapper 
             }
             return super.visitMethod(access, name, desc, signature, exceptions);
         }
-
     }
 
     private static class TransformRequest extends MethodVisitor {
@@ -46,7 +45,9 @@ public class CraftingTreeNodeTransformer extends FCClassTransformer.ClassMapper 
 
         @Override
         public void visitFieldInsn(int opcode, String owner, String name, String desc) {
-            if (opcode == Opcodes.GETFIELD && owner.equals("appeng/crafting/CraftingTreeNode") && name.equals("bytes")) {
+            if (opcode == Opcodes.GETFIELD
+                    && owner.equals("appeng/crafting/CraftingTreeNode")
+                    && name.equals("bytes")) {
                 writingBytes = true;
             }
             super.visitFieldInsn(opcode, owner, name, desc);
@@ -60,19 +61,20 @@ public class CraftingTreeNodeTransformer extends FCClassTransformer.ClassMapper 
 
         @Override
         public void visitMethodInsn(int opcode, String owner, String name, String desc, boolean itf) {
-            if (writingBytes && opcode == Opcodes.INVOKEINTERFACE
-                && owner.equals("appeng/api/storage/data/IAEItemStack") && name.equals("getStackSize")) {
+            if (writingBytes
+                    && opcode == Opcodes.INVOKEINTERFACE
+                    && owner.equals("appeng/api/storage/data/IAEItemStack")
+                    && name.equals("getStackSize")) {
                 writingBytes = false;
-                super.visitMethodInsn(Opcodes.INVOKESTATIC,
-                    "com/glodblock/github/coremod/hooker/CoreModHooks",
-                    "getCraftingByteCost",
-                    "(Lappeng/api/storage/data/IAEItemStack;)J",
-                    false);
+                super.visitMethodInsn(
+                        Opcodes.INVOKESTATIC,
+                        "com/glodblock/github/coremod/hooker/CoreModHooks",
+                        "getCraftingByteCost",
+                        "(Lappeng/api/storage/data/IAEItemStack;)J",
+                        false);
             } else {
                 super.visitMethodInsn(opcode, owner, name, desc, itf);
             }
         }
-
     }
-
 }

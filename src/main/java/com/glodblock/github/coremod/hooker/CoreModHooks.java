@@ -29,6 +29,9 @@ import com.glodblock.github.util.Ae2Reflect;
 import com.glodblock.github.util.SetBackedMachineSet;
 import com.glodblock.github.util.Util;
 import com.google.common.collect.Sets;
+import java.util.HashSet;
+import java.util.Set;
+import javax.annotation.Nullable;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.inventory.InventoryCrafting;
 import net.minecraft.item.ItemStack;
@@ -36,14 +39,11 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.fluids.FluidStack;
 
-import javax.annotation.Nullable;
-import java.util.HashSet;
-import java.util.Set;
-
 public class CoreModHooks {
 
     public static InventoryCrafting wrapCraftingBuffer(InventoryCrafting inv) {
-        return new FluidConvertingInventoryCrafting(inv.eventHandler, inv.inventoryWidth, inv.getSizeInventory()/inv.inventoryWidth);
+        return new FluidConvertingInventoryCrafting(
+                inv.eventHandler, inv.inventoryWidth, inv.getSizeInventory() / inv.inventoryWidth);
     }
 
     public static IAEItemStack wrapFluidPacketStack(IAEItemStack stack) {
@@ -61,8 +61,7 @@ public class CoreModHooks {
         if (stack != null && stack.getItem() instanceof ItemFluidPacket) {
             FluidStack fluid = ItemFluidPacket.getFluidStack(stack);
             return ItemFluidDrop.newStack(fluid);
-        }
-        else {
+        } else {
             return stack;
         }
     }
@@ -74,7 +73,8 @@ public class CoreModHooks {
 
     public static long getCraftingByteCost(IAEItemStack stack) {
         return stack.getItem() instanceof ItemFluidDrop
-            ? (long)Math.ceil(stack.getStackSize() / 1000D) : stack.getStackSize();
+                ? (long) Math.ceil(stack.getStackSize() / 1000D)
+                : stack.getStackSize();
     }
 
     public static IAEItemStack[] flattenFluidPackets(IAEItemStack[] stacks) {
@@ -102,7 +102,7 @@ public class CoreModHooks {
         } else if (b.isEmpty()) {
             return a;
         } else if (a instanceof MachineSet && b instanceof MachineSet) {
-            return new SetBackedMachineSet(TileInterface.class, Sets.union((MachineSet)a, (MachineSet)b));
+            return new SetBackedMachineSet(TileInterface.class, Sets.union((MachineSet) a, (MachineSet) b));
         } else {
             Set<IGridNode> union = new HashSet<>();
             a.forEach(union::add);
@@ -115,36 +115,31 @@ public class CoreModHooks {
         if (aeStack.getItemStack() != null && aeStack.getItemStack().getItem() instanceof ItemFluidDrop) {
             FluidStack fluid = ItemFluidDrop.getFluidStack(aeStack.getItemStack());
             return ItemFluidPacket.newDisplayStack(fluid);
-        }
-        else return aeStack.getItemStack();
+        } else return aeStack.getItemStack();
     }
 
     public static long getFluidSize(IAEItemStack aeStack) {
         if (aeStack.getItemStack() != null && aeStack.getItemStack().getItem() instanceof ItemFluidDrop) {
             return (long) Math.max(aeStack.getStackSize() / 1000D, 1);
-        }
-        else return aeStack.getStackSize();
+        } else return aeStack.getStackSize();
     }
 
     public static void storeFluidItem(CraftingCPUCluster instance) {
         final IGrid g = Ae2Reflect.getGrid(instance);
 
-        if( g == null )
-        {
+        if (g == null) {
             return;
         }
 
-        final IStorageGrid sg = g.getCache( IStorageGrid.class );
+        final IStorageGrid sg = g.getCache(IStorageGrid.class);
         final IMEInventory<IAEItemStack> ii = sg.getItemInventory();
         final IMEInventory<IAEFluidStack> jj = sg.getFluidInventory();
         final MECraftingInventory inventory = Ae2Reflect.getCPUInventory(instance);
 
-        for( IAEItemStack is : inventory.getItemList() )
-        {
-            is = inventory.extractItems( is.copy(), Actionable.MODULATE, Ae2Reflect.getCPUSource(instance) );
+        for (IAEItemStack is : inventory.getItemList()) {
+            is = inventory.extractItems(is.copy(), Actionable.MODULATE, Ae2Reflect.getCPUSource(instance));
 
-            if( is != null )
-            {
+            if (is != null) {
                 Ae2Reflect.postCPUChange(instance, is, Ae2Reflect.getCPUSource(instance));
                 if (is.getItem() instanceof ItemFluidDrop) {
                     IAEFluidStack fluidDrop = ItemFluidDrop.getAeFluidStack(is);
@@ -159,14 +154,12 @@ public class CoreModHooks {
                 }
             }
 
-            if( is != null )
-            {
-                inventory.injectItems( is, Actionable.MODULATE, Ae2Reflect.getCPUSource(instance) );
+            if (is != null) {
+                inventory.injectItems(is, Actionable.MODULATE, Ae2Reflect.getCPUSource(instance));
             }
         }
 
-        if( inventory.getItemList().isEmpty() )
-        {
+        if (inventory.getItemList().isEmpty()) {
             Ae2Reflect.setCPUInventory(instance, new MECraftingInventory());
         }
 
@@ -174,21 +167,19 @@ public class CoreModHooks {
     }
 
     public ItemStack getStackUnderMouse(GuiContainer gui, int mousex, int mousey) {
-        if (gui instanceof GuiCraftConfirm){
-            return ((GuiCraftConfirm)gui).getHoveredStack();
+        if (gui instanceof GuiCraftConfirm) {
+            return ((GuiCraftConfirm) gui).getHoveredStack();
         } else if (gui instanceof GuiFluidCraftConfirm) {
-            return ((GuiFluidCraftConfirm)gui).getHoveredStack();
-        } else if (gui instanceof GuiCraftingCPU){
-            return ((GuiCraftingCPU)gui).getHoveredStack();
+            return ((GuiFluidCraftConfirm) gui).getHoveredStack();
+        } else if (gui instanceof GuiCraftingCPU) {
+            return ((GuiCraftingCPU) gui).getHoveredStack();
         }
         return null;
     }
+
     public boolean shouldShowTooltip(GuiContainer gui) {
-        if (gui instanceof GuiCraftConfirm)
-            return ((GuiCraftConfirm)gui).getHoveredStack() == null;
-        if (gui instanceof GuiCraftingCPU)
-            return ((GuiCraftingCPU)gui).getHoveredStack() == null;
+        if (gui instanceof GuiCraftConfirm) return ((GuiCraftConfirm) gui).getHoveredStack() == null;
+        if (gui instanceof GuiCraftingCPU) return ((GuiCraftingCPU) gui).getHoveredStack() == null;
         return true;
     }
-
 }

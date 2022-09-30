@@ -6,16 +6,15 @@ import appeng.tile.inventory.IAEAppEngInventory;
 import appeng.util.item.AEItemStack;
 import com.glodblock.github.util.ObjectArrayIterator;
 import com.glodblock.github.util.Util;
+import java.util.Arrays;
+import java.util.Iterator;
+import java.util.stream.Stream;
+import javax.annotation.Nullable;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraftforge.common.util.Constants;
 
-import javax.annotation.Nullable;
-import java.util.Arrays;
-import java.util.Iterator;
-import java.util.stream.Stream;
-
-public class AeStackInventoryImpl <T extends IAEStack<T>> implements AeStackInventory<T> {
+public class AeStackInventoryImpl<T extends IAEStack<T>> implements AeStackInventory<T> {
 
     private final StorageChannel channel;
     private final T[] inv;
@@ -24,7 +23,7 @@ public class AeStackInventoryImpl <T extends IAEStack<T>> implements AeStackInve
     @SuppressWarnings("unchecked")
     public AeStackInventoryImpl(StorageChannel channel, int slotCount, @Nullable IAEAppEngInventory owner) {
         this.channel = channel;
-        this.inv = (T[])new IAEStack[slotCount];
+        this.inv = (T[]) new IAEStack[slotCount];
         this.owner = owner;
     }
 
@@ -88,8 +87,7 @@ public class AeStackInventoryImpl <T extends IAEStack<T>> implements AeStackInve
             NBTTagCompound stackTag = stacksTag.getCompoundTagAt(i);
             if (channel == StorageChannel.ITEMS) {
                 inv[i] = stackTag == null ? null : (T) AEItemStack.loadItemStackFromNBT(stackTag);
-            }
-            else {
+            } else {
                 inv[i] = stackTag == null ? null : (T) Util.loadFluidStackFromNBT(stackTag);
             }
         }
@@ -98,5 +96,4 @@ public class AeStackInventoryImpl <T extends IAEStack<T>> implements AeStackInve
     public void readFromNbt(NBTTagCompound parentTag, String key) {
         readFromNbt(parentTag.getCompoundTag(key));
     }
-
 }

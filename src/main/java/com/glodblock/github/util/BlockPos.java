@@ -1,9 +1,8 @@
 package com.glodblock.github.util;
 
+import javax.annotation.Nonnull;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.util.ForgeDirection;
-
-import javax.annotation.Nonnull;
 
 public class BlockPos {
 
@@ -47,5 +46,4 @@ public class BlockPos {
         }
         return false;
     }
-
 }

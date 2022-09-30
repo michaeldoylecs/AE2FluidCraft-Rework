@@ -24,14 +24,20 @@ public class BlockFluidPatternEncoder extends FCBaseBlock {
     }
 
     @Override
-    public boolean onActivated(World world, int x, int y, int z, EntityPlayer player, int facing, float hitX, float hitY, float hitZ) {
+    public boolean onActivated(
+            World world, int x, int y, int z, EntityPlayer player, int facing, float hitX, float hitY, float hitZ) {
         if (player.isSneaking()) {
             return false;
         }
         TileFluidPatternEncoder tile = getTileEntity(world, x, y, z);
         if (tile != null) {
             if (!world.isRemote) {
-                InventoryHandler.openGui(player, world, new BlockPos(x, y, z), EnumFacing.getFront(facing), GuiType.FLUID_PATTERN_ENCODER);
+                InventoryHandler.openGui(
+                        player,
+                        world,
+                        new BlockPos(x, y, z),
+                        EnumFacing.getFront(facing),
+                        GuiType.FLUID_PATTERN_ENCODER);
             }
             return true;
         }
@@ -52,5 +58,4 @@ public class BlockFluidPatternEncoder extends FCBaseBlock {
     public ItemStack stack() {
         return new ItemStack(this, 1);
     }
-
 }

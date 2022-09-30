@@ -15,7 +15,6 @@ import appeng.me.storage.MEInventoryHandler;
 import appeng.me.storage.MEPassThrough;
 import appeng.util.inv.ItemSlot;
 import appeng.util.prioitylist.IPartitionList;
-
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.Arrays;
@@ -49,27 +48,28 @@ public class Ae2Reflect {
             fCPU_machineSrc = Ae2Reflect.reflectField(CraftingCPUCluster.class, "machineSrc");
             mItemSlot_setExtractable = reflectMethod(ItemSlot.class, "setExtractable", boolean.class);
             mCPU_getGrid = reflectMethod(CraftingCPUCluster.class, "getGrid");
-            mCPU_postChange = reflectMethod(CraftingCPUCluster.class, "postChange", IAEItemStack.class, BaseActionSource.class);
+            mCPU_postChange =
+                    reflectMethod(CraftingCPUCluster.class, "postChange", IAEItemStack.class, BaseActionSource.class);
             mCPU_markDirty = reflectMethod(CraftingCPUCluster.class, "markDirty");
         } catch (Exception e) {
             throw new IllegalStateException("Failed to initialize AE2 reflection hacks!", e);
         }
     }
 
-    public static Method reflectMethod(Class<?> owner, String name, Class<?>... paramTypes) throws NoSuchMethodException {
+    public static Method reflectMethod(Class<?> owner, String name, Class<?>... paramTypes)
+            throws NoSuchMethodException {
         Method m = owner.getDeclaredMethod(name, paramTypes);
         m.setAccessible(true);
         return m;
     }
 
-    public static Field reflectField(Class<?> owner, String ...names) throws NoSuchFieldException {
+    public static Field reflectField(Class<?> owner, String... names) throws NoSuchFieldException {
         Field f = null;
         for (String name : names) {
             try {
                 f = owner.getDeclaredField(name);
                 if (f != null) break;
-            }
-            catch (NoSuchFieldException ignore) {
+            } catch (NoSuchFieldException ignore) {
             }
         }
         if (f == null) throw new NoSuchFieldException("Can't find field from " + Arrays.toString(names));
@@ -80,7 +80,7 @@ public class Ae2Reflect {
     @SuppressWarnings("unchecked")
     public static <T> T readField(Object owner, Field field) {
         try {
-            return (T)field.get(owner);
+            return (T) field.get(owner);
         } catch (Exception e) {
             throw new IllegalStateException("Failed to read field: " + field);
         }
@@ -165,5 +165,4 @@ public class Ae2Reflect {
             throw new IllegalStateException("Failed to invoke method: " + mCPU_markDirty, e);
         }
     }
-
 }

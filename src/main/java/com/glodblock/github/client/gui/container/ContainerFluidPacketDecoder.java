@@ -12,5 +12,4 @@ public class ContainerFluidPacketDecoder extends AEBaseContainer {
         addSlotToContainer(new SlotNormal(tile.getInventory(), 0, 80, 35));
         bindPlayerInventory(ipl, 0, 84);
     }
-
 }

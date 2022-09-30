@@ -10,6 +10,9 @@ import com.glodblock.github.util.NameConst;
 import cpw.mods.fml.common.registry.GameRegistry;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import java.util.List;
+import java.util.Objects;
+import javax.annotation.Nullable;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
@@ -23,10 +26,6 @@ import net.minecraftforge.common.util.Constants;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
-
-import javax.annotation.Nullable;
-import java.util.List;
-import java.util.Objects;
 
 public class ItemFluidDrop extends Item {
 
@@ -46,7 +45,8 @@ public class ItemFluidDrop extends Item {
     @Override
     public String getItemStackDisplayName(ItemStack stack) {
         FluidStack fluid = getFluidStack(stack);
-        return StatCollector.translateToLocalFormatted("item.fluid_drop.name", fluid == null ? "???" : fluid.getLocalizedName());
+        return StatCollector.translateToLocalFormatted(
+                "item.fluid_drop.name", fluid == null ? "???" : fluid.getLocalizedName());
     }
 
     @Override
@@ -80,7 +80,7 @@ public class ItemFluidDrop extends Item {
     }
 
     public static FluidStack getFluidStack(ItemStack stack) {
-        if (stack == null|| stack.getItem() != ItemAndBlockHolder.DROP || !stack.hasTagCompound()) {
+        if (stack == null || stack.getItem() != ItemAndBlockHolder.DROP || !stack.hasTagCompound()) {
             return null;
         }
         NBTTagCompound tag = Objects.requireNonNull(stack.getTagCompound());
@@ -138,5 +138,4 @@ public class ItemFluidDrop extends Item {
         GameRegistry.registerItem(this, NameConst.ITEM_FLUID_DROP, FluidCraft.MODID);
         return this;
     }
-
 }

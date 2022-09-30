@@ -1,14 +1,14 @@
 package com.glodblock.github.coremod;
 
+import static org.objectweb.asm.ClassWriter.COMPUTE_FRAMES;
+import static org.objectweb.asm.ClassWriter.COMPUTE_MAXS;
+
 import com.glodblock.github.coremod.transform.*;
 import net.minecraft.launchwrapper.IClassTransformer;
 import org.objectweb.asm.ClassReader;
 import org.objectweb.asm.ClassVisitor;
 import org.objectweb.asm.ClassWriter;
 import org.objectweb.asm.tree.ClassNode;
-
-import static org.objectweb.asm.ClassWriter.COMPUTE_FRAMES;
-import static org.objectweb.asm.ClassWriter.COMPUTE_MAXS;
 
 public class FCClassTransformer implements IClassTransformer {
 
@@ -46,10 +46,9 @@ public class FCClassTransformer implements IClassTransformer {
     public interface Transform {
 
         byte[] transformClass(byte[] code);
-
     }
 
-    public static abstract class ClassMapper implements Transform {
+    public abstract static class ClassMapper implements Transform {
 
         @Override
         public byte[] transformClass(byte[] code) {
@@ -57,12 +56,12 @@ public class FCClassTransformer implements IClassTransformer {
             ClassReader reader = new ClassReader(code);
             reader.accept(classNode, 0);
             ClassWriter writer = new ClassWriter(reader, getWriteFlags());
-            classNode.accept(getClassMapper(writer,classNode));
+            classNode.accept(getClassMapper(writer, classNode));
             return writer.toByteArray();
         }
 
         protected int getWriteFlags() {
-            return COMPUTE_FRAMES|COMPUTE_MAXS;
+            return COMPUTE_FRAMES | COMPUTE_MAXS;
         }
 
         protected abstract ClassVisitor getClassMapper(ClassVisitor downstream, ClassNode classNode);

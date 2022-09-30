@@ -8,5 +8,4 @@ public class OCDriverInit {
         Driver.add(new DriverOCPatternEditor());
         Driver.add(new DriverOCPatternEditor.Provider());
     }
-
 }

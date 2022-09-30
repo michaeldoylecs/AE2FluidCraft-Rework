@@ -29,15 +29,15 @@ public class ContainerFluidPatternTerminal extends FCBasePartContainer implement
         super(ip, monitorable);
     }
 
-    public void encodeAllItemAndMoveToInventory(){
+    public void encodeAllItemAndMoveToInventory() {
         encode();
         ItemStack output = this.patternSlotOUT.getStack();
-        if(output != null){
-            if(this.patternSlotIN.getStack() != null) output.stackSize += this.patternSlotIN.getStack().stackSize;
-            if (!getPlayerInv().addItemStackToInventory( output )){
+        if (output != null) {
+            if (this.patternSlotIN.getStack() != null) output.stackSize += this.patternSlotIN.getStack().stackSize;
+            if (!getPlayerInv().addItemStackToInventory(output)) {
                 getPlayerInv().player.entityDropItem(output, 0);
             }
-            this.patternSlotOUT.putStack( null );
+            this.patternSlotOUT.putStack(null);
             this.patternSlotIN.putStack(null);
         }
     }
@@ -57,7 +57,7 @@ public class ContainerFluidPatternTerminal extends FCBasePartContainer implement
             if (stack.stackSize == 1) {
                 this.patternSlotIN.putStack(null);
             } else {
-                stack.stackSize --;
+                stack.stackSize--;
             }
             encodeFluidPattern();
         } else if (isPattern(stack)) {
@@ -73,7 +73,8 @@ public class ContainerFluidPatternTerminal extends FCBasePartContainer implement
             return true;
         }
         final IDefinitions defs = AEApi.instance().definitions();
-        return defs.items().encodedPattern().isSameAs(output) || defs.materials().blankPattern().isSameAs(output);
+        return defs.items().encodedPattern().isSameAs(output)
+                || defs.materials().blankPattern().isSameAs(output);
     }
 
     private boolean checkHasFluidPattern() {
@@ -171,7 +172,8 @@ public class ContainerFluidPatternTerminal extends FCBasePartContainer implement
             super.doAction(player, action, slotId, id);
             return;
         }
-        if ((slot instanceof SlotFakeCraftingMatrix || slot instanceof SlotPatternOutputs) && (stack.getItem() instanceof IFluidContainerItem || FluidContainerRegistry.isContainer(stack))) {
+        if ((slot instanceof SlotFakeCraftingMatrix || slot instanceof SlotPatternOutputs)
+                && (stack.getItem() instanceof IFluidContainerItem || FluidContainerRegistry.isContainer(stack))) {
             FluidStack fluid = null;
             switch (action) {
                 case PICKUP_OR_SET_DOWN:
@@ -196,5 +198,4 @@ public class ContainerFluidPatternTerminal extends FCBasePartContainer implement
         }
         super.doAction(player, action, slotId, id);
     }
-
 }

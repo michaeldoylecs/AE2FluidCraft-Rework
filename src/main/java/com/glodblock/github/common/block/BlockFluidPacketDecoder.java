@@ -24,14 +24,20 @@ public class BlockFluidPacketDecoder extends FCBaseBlock {
     }
 
     @Override
-    public boolean onActivated(World world, int x, int y, int z, EntityPlayer player, int facing, float hitX, float hitY, float hitZ) {
+    public boolean onActivated(
+            World world, int x, int y, int z, EntityPlayer player, int facing, float hitX, float hitY, float hitZ) {
         if (player.isSneaking()) {
             return false;
         }
         TileFluidPacketDecoder tile = getTileEntity(world, x, y, z);
         if (tile != null) {
             if (!world.isRemote) {
-                InventoryHandler.openGui(player, world, new BlockPos(x, y, z), EnumFacing.getFront(facing), GuiType.FLUID_PACKET_DECODER);
+                InventoryHandler.openGui(
+                        player,
+                        world,
+                        new BlockPos(x, y, z),
+                        EnumFacing.getFront(facing),
+                        GuiType.FLUID_PACKET_DECODER);
             }
             return true;
         }
@@ -52,5 +58,4 @@ public class BlockFluidPacketDecoder extends FCBaseBlock {
     public ItemStack stack() {
         return new ItemStack(this, 1);
     }
-
 }

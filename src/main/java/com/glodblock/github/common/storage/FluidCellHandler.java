@@ -12,64 +12,63 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.IIcon;
 import net.minecraftforge.common.util.ForgeDirection;
 
-public class FluidCellHandler implements ICellHandler
-{
+public class FluidCellHandler implements ICellHandler {
 
     @Override
-    public boolean isCell( final ItemStack is )
-    {
-        return FluidCellInventory.isCell( is );
+    public boolean isCell(final ItemStack is) {
+        return FluidCellInventory.isCell(is);
     }
 
     @Override
-    public IMEInventoryHandler getCellInventory(final ItemStack is, final ISaveProvider container, final StorageChannel channel )
-    {
-        if( channel == StorageChannel.FLUIDS )
-        {
-            return FluidCellInventory.getCell( is, container );
+    public IMEInventoryHandler getCellInventory(
+            final ItemStack is, final ISaveProvider container, final StorageChannel channel) {
+        if (channel == StorageChannel.FLUIDS) {
+            return FluidCellInventory.getCell(is, container);
         }
         return null;
     }
 
     @Override
-    public IIcon getTopTexture_Light()
-    {
+    public IIcon getTopTexture_Light() {
         return ExtraBlockTextures.BlockMEChestItems_Light.getIcon();
     }
 
     @Override
-    public IIcon getTopTexture_Medium()
-    {
+    public IIcon getTopTexture_Medium() {
         return ExtraBlockTextures.BlockMEChestItems_Medium.getIcon();
     }
 
     @Override
-    public IIcon getTopTexture_Dark()
-    {
+    public IIcon getTopTexture_Dark() {
         return ExtraBlockTextures.BlockMEChestItems_Dark.getIcon();
     }
 
     @Override
-    public void openChestGui(final EntityPlayer player, final IChestOrDrive chest, final ICellHandler cellHandler, final IMEInventoryHandler inv, final ItemStack is, final StorageChannel chan )
-    {
+    public void openChestGui(
+            final EntityPlayer player,
+            final IChestOrDrive chest,
+            final ICellHandler cellHandler,
+            final IMEInventoryHandler inv,
+            final ItemStack is,
+            final StorageChannel chan) {
         if (ModAndClassUtil.EC2) {
             if (chan == StorageChannel.FLUIDS) {
                 IStorageMonitorable monitorable = null;
                 if (chest != null) {
-                    monitorable = ((IMEChest)chest).getMonitorable(ForgeDirection.UNKNOWN, new PlayerSource(player, chest));
+                    monitorable =
+                            ((IMEChest) chest).getMonitorable(ForgeDirection.UNKNOWN, new PlayerSource(player, chest));
                 }
                 if (monitorable != null) {
-                    GuiHandler.launchGui(GuiHandler.getGuiId(0), player, new Object[]{monitorable.getFluidInventory()});
+                    GuiHandler.launchGui(
+                            GuiHandler.getGuiId(0), player, new Object[] {monitorable.getFluidInventory()});
                 }
             }
         }
     }
 
     @Override
-    public int getStatusForCell( final ItemStack is, final IMEInventory handler )
-    {
-        if( handler instanceof FluidCellInventoryHandler)
-        {
+    public int getStatusForCell(final ItemStack is, final IMEInventory handler) {
+        if (handler instanceof FluidCellInventoryHandler) {
             final FluidCellInventoryHandler ci = (FluidCellInventoryHandler) handler;
             return ci.getStatusForCell();
         }
@@ -77,9 +76,8 @@ public class FluidCellHandler implements ICellHandler
     }
 
     @Override
-    public double cellIdleDrain( final ItemStack is, final IMEInventory handler )
-    {
-        final IFluidCellInventory inv = ( (IFluidCellInventoryHandler) handler ).getCellInv();
+    public double cellIdleDrain(final ItemStack is, final IMEInventory handler) {
+        final IFluidCellInventory inv = ((IFluidCellInventoryHandler) handler).getCellInv();
         return inv.getIdleDrain();
     }
 }

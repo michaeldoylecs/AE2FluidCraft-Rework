@@ -8,13 +8,12 @@ import cpw.mods.fml.common.network.simpleimpl.IMessage;
 import cpw.mods.fml.common.network.simpleimpl.IMessageHandler;
 import cpw.mods.fml.common.network.simpleimpl.MessageContext;
 import io.netty.buffer.ByteBuf;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiScreen;
-
 import java.io.IOException;
 import java.nio.BufferOverflowException;
 import java.util.LinkedList;
 import java.util.List;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiScreen;
 
 public class SPacketMEInventoryUpdate implements IMessage {
 
@@ -37,7 +36,7 @@ public class SPacketMEInventoryUpdate implements IMessage {
         ref = buf.readByte();
         list = new LinkedList<>();
         try {
-            for (int i = 0; i < amount; i ++) {
+            for (int i = 0; i < amount; i++) {
                 list.add(AEItemStack.loadItemStackFromPacket(buf));
             }
         } catch (IOException io) {
@@ -58,7 +57,7 @@ public class SPacketMEInventoryUpdate implements IMessage {
         }
     }
 
-    public void appendItem( final IAEItemStack is ) throws BufferOverflowException {
+    public void appendItem(final IAEItemStack is) throws BufferOverflowException {
         list.add(is);
     }
 
@@ -71,12 +70,10 @@ public class SPacketMEInventoryUpdate implements IMessage {
         @Override
         public IMessage onMessage(SPacketMEInventoryUpdate message, MessageContext ctx) {
             final GuiScreen gs = Minecraft.getMinecraft().currentScreen;
-            if( gs instanceof GuiFCBaseMonitor)
-            {
-                ( (GuiFCBaseMonitor) gs ).postUpdate(message.list);
-            }
-            else if ( gs instanceof GuiFluidCraftConfirm) {
-                ( (GuiFluidCraftConfirm) gs ).postUpdate( message.list, message.ref );
+            if (gs instanceof GuiFCBaseMonitor) {
+                ((GuiFCBaseMonitor) gs).postUpdate(message.list);
+            } else if (gs instanceof GuiFluidCraftConfirm) {
+                ((GuiFluidCraftConfirm) gs).postUpdate(message.list, message.ref);
             }
             return null;
         }

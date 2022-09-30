@@ -29,5 +29,4 @@ public class GuiFluidPacketDecoder extends AEBaseGui {
         fontRendererObj.drawString(getGuiDisplayName(I18n.format(NameConst.GUI_FLUID_PACKET_DECODER)), 8, 6, 0x404040);
         fontRendererObj.drawString(GuiText.inventory.getLocal(), 8, ySize - 94, 0x404040);
     }
-
 }

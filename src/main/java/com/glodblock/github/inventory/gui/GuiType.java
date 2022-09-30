@@ -13,13 +13,11 @@ import com.glodblock.github.common.parts.PartFluidInterface;
 import com.glodblock.github.common.parts.PartSharedFluidBus;
 import com.glodblock.github.common.tile.*;
 import com.google.common.collect.ImmutableList;
+import java.util.List;
+import javax.annotation.Nullable;
 import net.minecraft.entity.player.EntityPlayer;
 
-import javax.annotation.Nullable;
-import java.util.List;
-
 public enum GuiType {
-
     OC_PATTERN_EDITOR(new TileGuiFactory<TileOCPatternEditor>(TileOCPatternEditor.class) {
         @Override
         protected Object createServerGui(EntityPlayer player, TileOCPatternEditor inv) {
@@ -248,5 +246,4 @@ public enum GuiType {
     GuiType(GuiFactory guiFactory) {
         this.guiFactory = guiFactory;
     }
-
 }

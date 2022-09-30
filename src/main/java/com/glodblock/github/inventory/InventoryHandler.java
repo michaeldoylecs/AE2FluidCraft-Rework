@@ -7,11 +7,10 @@ import com.glodblock.github.util.BlockPos;
 import cpw.mods.fml.common.network.IGuiHandler;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import javax.annotation.Nullable;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.world.World;
-
-import javax.annotation.Nullable;
 
 public class InventoryHandler implements IGuiHandler {
 
@@ -20,8 +19,13 @@ public class InventoryHandler implements IGuiHandler {
     }
 
     public static void openGui(EntityPlayer player, World world, BlockPos pos, EnumFacing face, GuiType guiType) {
-        player.openGui(FluidCraft.INSTANCE,
-            (guiType.ordinal() << 3) | face.ordinal(), world, pos.getX(), pos.getY(), pos.getZ());
+        player.openGui(
+                FluidCraft.INSTANCE,
+                (guiType.ordinal() << 3) | face.ordinal(),
+                world,
+                pos.getX(),
+                pos.getY(),
+                pos.getZ());
     }
 
     @Nullable

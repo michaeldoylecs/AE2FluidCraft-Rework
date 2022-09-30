@@ -4,13 +4,11 @@ import appeng.tile.inventory.AppEngInternalAEInventory;
 import com.glodblock.github.common.parts.PartSharedFluidBus;
 import net.minecraft.entity.player.InventoryPlayer;
 
-public class ContainerFluidIO extends ContainerFluidConfigurable
-{
+public class ContainerFluidIO extends ContainerFluidConfigurable {
     private final PartSharedFluidBus bus;
 
-    public ContainerFluidIO(InventoryPlayer ip, PartSharedFluidBus te )
-    {
-        super( ip, te );
+    public ContainerFluidIO(InventoryPlayer ip, PartSharedFluidBus te) {
+        super(ip, te);
         this.bus = te;
     }
 

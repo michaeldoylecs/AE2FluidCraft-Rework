@@ -23,9 +23,12 @@ public final class Util {
 
     public static EnumFacing from(ForgeDirection direction) {
         switch (direction) {
-            case WEST: return EnumFacing.EAST;
-            case EAST: return EnumFacing.WEST;
-            case UNKNOWN: return null;
+            case WEST:
+                return EnumFacing.EAST;
+            case EAST:
+                return EnumFacing.WEST;
+            case UNKNOWN:
+                return null;
             default: {
                 int o = direction.ordinal();
                 return EnumFacing.values()[o];
@@ -35,8 +38,10 @@ public final class Util {
 
     public static ForgeDirection from(EnumFacing direction) {
         switch (direction) {
-            case WEST: return ForgeDirection.EAST;
-            case EAST: return ForgeDirection.WEST;
+            case WEST:
+                return ForgeDirection.EAST;
+            case EAST:
+                return ForgeDirection.WEST;
             default: {
                 int o = direction.ordinal();
                 return ForgeDirection.values()[o];
@@ -52,7 +57,8 @@ public final class Util {
         return hasPermission(player, permission, host, ForgeDirection.UNKNOWN);
     }
 
-    public static boolean hasPermission(EntityPlayer player, SecurityPermissions permission, IGridHost host, ForgeDirection side) {
+    public static boolean hasPermission(
+            EntityPlayer player, SecurityPermissions permission, IGridHost host, ForgeDirection side) {
         return host == null || hasPermission(player, permission, host.getGridNode(side));
     }
 
@@ -64,21 +70,24 @@ public final class Util {
         return part == null || hasPermission(player, permission, part.getGridNode());
     }
 
-    public static boolean hasPermission(EntityPlayer player, SecurityPermissions permission, ISecurityGrid securityGrid) {
-        return player == null || permission == null || securityGrid == null || securityGrid.hasPermission(player, permission);
+    public static boolean hasPermission(
+            EntityPlayer player, SecurityPermissions permission, ISecurityGrid securityGrid) {
+        return player == null
+                || permission == null
+                || securityGrid == null
+                || securityGrid.hasPermission(player, permission);
     }
 
-    public static ItemStack copyStackWithSize(ItemStack itemStack, int size)
-    {
-        if (size == 0 || itemStack == null)
-            return null;
+    public static ItemStack copyStackWithSize(ItemStack itemStack, int size) {
+        if (size == 0 || itemStack == null) return null;
         ItemStack copy = itemStack.copy();
         copy.stackSize = size;
         return copy;
     }
 
     public static FluidStack getFluidFromItem(ItemStack stack) {
-        if (stack != null && (stack.getItem() instanceof IFluidContainerItem || FluidContainerRegistry.isContainer(stack))) {
+        if (stack != null
+                && (stack.getItem() instanceof IFluidContainerItem || FluidContainerRegistry.isContainer(stack))) {
             if (stack.getItem() instanceof IFluidContainerItem) {
                 FluidStack fluid = ((IFluidContainerItem) stack.getItem()).getFluid(stack);
                 if (fluid != null) {
@@ -108,14 +117,13 @@ public final class Util {
         return null;
     }
 
-    public static IAEFluidStack loadFluidStackFromNBT( final NBTTagCompound i )
-    {
-        //Fuck ae2
+    public static IAEFluidStack loadFluidStackFromNBT(final NBTTagCompound i) {
+        // Fuck ae2
         final FluidStack t = FluidRegistry.getFluidStack(i.getString("FluidName"), 1);
-        final AEFluidStack fluid = AEFluidStack.create( t );
-        fluid.setStackSize( i.getLong( "Cnt" ) );
-        fluid.setCountRequestable( i.getLong( "Req" ) );
-        fluid.setCraftable( i.getBoolean( "Craft" ) );
+        final AEFluidStack fluid = AEFluidStack.create(t);
+        fluid.setStackSize(i.getLong("Cnt"));
+        fluid.setCountRequestable(i.getLong("Req"));
+        fluid.setCraftable(i.getBoolean("Craft"));
         return fluid;
     }
 
@@ -123,5 +131,4 @@ public final class Util {
         if (fluid1 == null || fluid2 == null) return false;
         return fluid1.isFluidEqual(fluid2);
     }
-
 }

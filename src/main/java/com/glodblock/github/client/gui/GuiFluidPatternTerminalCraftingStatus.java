@@ -36,13 +36,11 @@ public class GuiFluidPatternTerminalCraftingStatus extends GuiCraftingStatus {
     @Override
     protected void actionPerformed(final GuiButton btn) {
         if (btn == originalGuiBtn) {
-            if (host instanceof PartFluidPatternTerminal)
-                InventoryHandler.switchGui(GuiType.FLUID_PATTERN_TERMINAL);
+            if (host instanceof PartFluidPatternTerminal) InventoryHandler.switchGui(GuiType.FLUID_PATTERN_TERMINAL);
             else if (host instanceof PartFluidPatternTerminalEx)
                 InventoryHandler.switchGui(GuiType.FLUID_PATTERN_TERMINAL_EX);
         } else {
             super.actionPerformed(btn);
         }
     }
-
 }

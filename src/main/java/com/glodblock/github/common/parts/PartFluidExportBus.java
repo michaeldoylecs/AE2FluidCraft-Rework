@@ -27,14 +27,13 @@ public class PartFluidExportBus extends PartSharedFluidBus {
 
     private final BaseActionSource source;
 
-    public PartFluidExportBus( ItemStack is )
-    {
-        super( is );
-        this.getConfigManager().registerSetting( Settings.REDSTONE_CONTROLLED, RedstoneMode.IGNORE );
-        this.getConfigManager().registerSetting( Settings.FUZZY_MODE, FuzzyMode.IGNORE_ALL );
-        this.getConfigManager().registerSetting( Settings.CRAFT_ONLY, YesNo.NO );
-        this.getConfigManager().registerSetting( Settings.SCHEDULING_MODE, SchedulingMode.DEFAULT );
-        this.source = new MachineSource( this );
+    public PartFluidExportBus(ItemStack is) {
+        super(is);
+        this.getConfigManager().registerSetting(Settings.REDSTONE_CONTROLLED, RedstoneMode.IGNORE);
+        this.getConfigManager().registerSetting(Settings.FUZZY_MODE, FuzzyMode.IGNORE_ALL);
+        this.getConfigManager().registerSetting(Settings.CRAFT_ONLY, YesNo.NO);
+        this.getConfigManager().registerSetting(Settings.SCHEDULING_MODE, SchedulingMode.DEFAULT);
+        this.source = new MachineSource(this);
     }
 
     @Override
@@ -43,59 +42,50 @@ public class PartFluidExportBus extends PartSharedFluidBus {
     }
 
     @Override
-    public TickingRequest getTickingRequest( IGridNode node )
-    {
-        return new TickingRequest( 5, 40, this.isSleeping(), false );
+    public TickingRequest getTickingRequest(IGridNode node) {
+        return new TickingRequest(5, 40, this.isSleeping(), false);
     }
 
     @Override
-    public TickRateModulation tickingRequest(IGridNode node, int ticksSinceLastCall )
-    {
+    public TickRateModulation tickingRequest(IGridNode node, int ticksSinceLastCall) {
         return this.canDoBusWork() ? this.doBusWork() : TickRateModulation.IDLE;
     }
 
     @Override
-    protected boolean canDoBusWork()
-    {
+    protected boolean canDoBusWork() {
         return this.getProxy().isActive();
     }
 
     @Override
-    protected TickRateModulation doBusWork()
-    {
-        if( !this.canDoBusWork() )
-        {
+    protected TickRateModulation doBusWork() {
+        if (!this.canDoBusWork()) {
             return TickRateModulation.IDLE;
         }
 
         final TileEntity te = this.getConnectedTE();
 
-        if(te instanceof IFluidHandler)
-        {
-            try
-            {
+        if (te instanceof IFluidHandler) {
+            try {
                 final IFluidHandler fh = (IFluidHandler) te;
-                final IMEMonitor<IAEFluidStack> inv = this.getProxy().getStorage().getFluidInventory();
+                final IMEMonitor<IAEFluidStack> inv =
+                        this.getProxy().getStorage().getFluidInventory();
 
-                for( int i = 0; i < this.getInventoryByName("config").getSizeInventory(); i++ )
-                {
-                    IAEFluidStack fluid = AEFluidStack.create(ItemFluidPacket.getFluidStack(this.getInventoryByName("config").getStackInSlot(i)));
-                    if( fluid != null )
-                    {
+                for (int i = 0; i < this.getInventoryByName("config").getSizeInventory(); i++) {
+                    IAEFluidStack fluid = AEFluidStack.create(ItemFluidPacket.getFluidStack(
+                            this.getInventoryByName("config").getStackInSlot(i)));
+                    if (fluid != null) {
                         final IAEFluidStack toExtract = fluid.copy();
 
-                        toExtract.setStackSize( this.calculateAmountToSend() );
+                        toExtract.setStackSize(this.calculateAmountToSend());
 
-                        final IAEFluidStack out = inv.extractItems( toExtract, Actionable.SIMULATE, this.source );
+                        final IAEFluidStack out = inv.extractItems(toExtract, Actionable.SIMULATE, this.source);
 
-                        if( out != null )
-                        {
-                            int wasInserted = fh.fill( this.getSide().getOpposite(), out.getFluidStack(), true );
+                        if (out != null) {
+                            int wasInserted = fh.fill(this.getSide().getOpposite(), out.getFluidStack(), true);
 
-                            if( wasInserted > 0 )
-                            {
-                                toExtract.setStackSize( wasInserted );
-                                inv.extractItems( toExtract, Actionable.MODULATE, this.source );
+                            if (wasInserted > 0) {
+                                toExtract.setStackSize(wasInserted);
+                                inv.extractItems(toExtract, Actionable.MODULATE, this.source);
 
                                 return TickRateModulation.FASTER;
                             }
@@ -104,9 +94,7 @@ public class PartFluidExportBus extends PartSharedFluidBus {
                 }
 
                 return TickRateModulation.SLOWER;
-            }
-            catch( GridAccessException e )
-            {
+            } catch (GridAccessException e) {
                 // Ignore
             }
         }
@@ -115,58 +103,72 @@ public class PartFluidExportBus extends PartSharedFluidBus {
     }
 
     @Override
-    public void getBoxes( final IPartCollisionHelper bch )
-    {
-        bch.addBox( 4, 4, 12, 12, 12, 14 );
-        bch.addBox( 5, 5, 14, 11, 11, 15 );
-        bch.addBox( 6, 6, 15, 10, 10, 16 );
-        bch.addBox( 6, 6, 11, 10, 10, 12 );
+    public void getBoxes(final IPartCollisionHelper bch) {
+        bch.addBox(4, 4, 12, 12, 12, 14);
+        bch.addBox(5, 5, 14, 11, 11, 15);
+        bch.addBox(6, 6, 15, 10, 10, 16);
+        bch.addBox(6, 6, 11, 10, 10, 12);
     }
 
     @Override
-    @SideOnly( Side.CLIENT )
-    public void renderInventory(final IPartRenderHelper rh, final RenderBlocks renderer )
-    {
-        rh.setTexture( CableBusTextures.PartExportSides.getIcon(), CableBusTextures.PartExportSides.getIcon(), CableBusTextures.PartMonitorBack.getIcon(), this.getFaceIcon(), CableBusTextures.PartExportSides.getIcon(), CableBusTextures.PartExportSides.getIcon() );
+    @SideOnly(Side.CLIENT)
+    public void renderInventory(final IPartRenderHelper rh, final RenderBlocks renderer) {
+        rh.setTexture(
+                CableBusTextures.PartExportSides.getIcon(),
+                CableBusTextures.PartExportSides.getIcon(),
+                CableBusTextures.PartMonitorBack.getIcon(),
+                this.getFaceIcon(),
+                CableBusTextures.PartExportSides.getIcon(),
+                CableBusTextures.PartExportSides.getIcon());
 
-        rh.setBounds( 4, 4, 12, 12, 12, 14 );
-        rh.renderInventoryBox( renderer );
+        rh.setBounds(4, 4, 12, 12, 12, 14);
+        rh.renderInventoryBox(renderer);
 
-        rh.setBounds( 5, 5, 14, 11, 11, 15 );
-        rh.renderInventoryBox( renderer );
+        rh.setBounds(5, 5, 14, 11, 11, 15);
+        rh.renderInventoryBox(renderer);
 
-        rh.setBounds( 6, 6, 15, 10, 10, 16 );
-        rh.renderInventoryBox( renderer );
+        rh.setBounds(6, 6, 15, 10, 10, 16);
+        rh.renderInventoryBox(renderer);
     }
 
     @Override
-    @SideOnly( Side.CLIENT )
-    public void renderStatic( final int x, final int y, final int z, final IPartRenderHelper rh, final RenderBlocks renderer )
-    {
-        this.setRenderCache( rh.useSimplifiedRendering( x, y, z, this, this.getRenderCache() ) );
-        rh.setTexture( CableBusTextures.PartExportSides.getIcon(), CableBusTextures.PartExportSides.getIcon(), CableBusTextures.PartMonitorBack.getIcon(), this.getFaceIcon(), CableBusTextures.PartExportSides.getIcon(), CableBusTextures.PartExportSides.getIcon() );
+    @SideOnly(Side.CLIENT)
+    public void renderStatic(
+            final int x, final int y, final int z, final IPartRenderHelper rh, final RenderBlocks renderer) {
+        this.setRenderCache(rh.useSimplifiedRendering(x, y, z, this, this.getRenderCache()));
+        rh.setTexture(
+                CableBusTextures.PartExportSides.getIcon(),
+                CableBusTextures.PartExportSides.getIcon(),
+                CableBusTextures.PartMonitorBack.getIcon(),
+                this.getFaceIcon(),
+                CableBusTextures.PartExportSides.getIcon(),
+                CableBusTextures.PartExportSides.getIcon());
 
-        rh.setBounds( 4, 4, 12, 12, 12, 14 );
-        rh.renderBlock( x, y, z, renderer );
+        rh.setBounds(4, 4, 12, 12, 12, 14);
+        rh.renderBlock(x, y, z, renderer);
 
-        rh.setBounds( 5, 5, 14, 11, 11, 15 );
-        rh.renderBlock( x, y, z, renderer );
+        rh.setBounds(5, 5, 14, 11, 11, 15);
+        rh.renderBlock(x, y, z, renderer);
 
-        rh.setBounds( 6, 6, 15, 10, 10, 16 );
-        rh.renderBlock( x, y, z, renderer );
+        rh.setBounds(6, 6, 15, 10, 10, 16);
+        rh.renderBlock(x, y, z, renderer);
 
-        rh.setTexture( CableBusTextures.PartMonitorSidesStatus.getIcon(), CableBusTextures.PartMonitorSidesStatus.getIcon(), CableBusTextures.PartMonitorBack.getIcon(), this.getFaceIcon(), CableBusTextures.PartMonitorSidesStatus.getIcon(), CableBusTextures.PartMonitorSidesStatus.getIcon() );
+        rh.setTexture(
+                CableBusTextures.PartMonitorSidesStatus.getIcon(),
+                CableBusTextures.PartMonitorSidesStatus.getIcon(),
+                CableBusTextures.PartMonitorBack.getIcon(),
+                this.getFaceIcon(),
+                CableBusTextures.PartMonitorSidesStatus.getIcon(),
+                CableBusTextures.PartMonitorSidesStatus.getIcon());
 
-        rh.setBounds( 6, 6, 11, 10, 10, 12 );
-        rh.renderBlock( x, y, z, renderer );
+        rh.setBounds(6, 6, 11, 10, 10, 12);
+        rh.renderBlock(x, y, z, renderer);
 
-        this.renderLights( x, y, z, rh, renderer );
+        this.renderLights(x, y, z, rh, renderer);
     }
 
     @Override
-    public RedstoneMode getRSMode()
-    {
-        return (RedstoneMode) this.getConfigManager().getSetting( Settings.REDSTONE_CONTROLLED );
+    public RedstoneMode getRSMode() {
+        return (RedstoneMode) this.getConfigManager().getSetting(Settings.REDSTONE_CONTROLLED);
     }
-
 }

@@ -5,8 +5,7 @@ import appeng.api.storage.data.IAEFluidStack;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 
-public interface IFluidCellInventory extends IMEInventory<IAEFluidStack>
-{
+public interface IFluidCellInventory extends IMEInventory<IAEFluidStack> {
 
     /**
      * @return the item stack of this storage cell.

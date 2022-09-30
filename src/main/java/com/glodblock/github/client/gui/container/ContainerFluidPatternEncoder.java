@@ -18,6 +18,10 @@ import com.glodblock.github.inventory.slot.SlotFluid;
 import com.glodblock.github.loader.ItemAndBlockHolder;
 import com.glodblock.github.util.FluidPatternDetails;
 import com.glodblock.github.util.Util;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
+import javax.annotation.Nullable;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.Slot;
@@ -25,11 +29,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraftforge.fluids.FluidContainerRegistry;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.IFluidContainerItem;
-
-import javax.annotation.Nullable;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
 
 public class ContainerFluidPatternEncoder extends AEBaseContainer implements PatternConsumer {
 
@@ -47,9 +46,9 @@ public class ContainerFluidPatternEncoder extends AEBaseContainer implements Pat
             addSlotToContainer(new SlotFluidConvertingFake(output, y, 113, 17 + y * 18));
         }
         addSlotToContainer(new SlotRestrictedInput(
-            SlotRestrictedInput.PlacableItemType.BLANK_PATTERN, tile.getInventory(), 0, 138, 20, ipl));
+                SlotRestrictedInput.PlacableItemType.BLANK_PATTERN, tile.getInventory(), 0, 138, 20, ipl));
         addSlotToContainer(new SlotRestrictedInput(
-            SlotRestrictedInput.PlacableItemType.ENCODED_PATTERN, tile.getInventory(), 1, 138, 50, ipl));
+                SlotRestrictedInput.PlacableItemType.ENCODED_PATTERN, tile.getInventory(), 1, 138, 50, ipl));
         bindPlayerInventory(ipl, 0, 84);
     }
 
@@ -58,7 +57,8 @@ public class ContainerFluidPatternEncoder extends AEBaseContainer implements Pat
     }
 
     public boolean canEncodePattern() {
-        if (isNotPattern(tile.getInventory().getStackInSlot(0)) && isNotPattern(tile.getInventory().getStackInSlot(1))) {
+        if (isNotPattern(tile.getInventory().getStackInSlot(0))
+                && isNotPattern(tile.getInventory().getStackInSlot(1))) {
             return false;
         }
         find_input:
@@ -79,8 +79,9 @@ public class ContainerFluidPatternEncoder extends AEBaseContainer implements Pat
     }
 
     private static boolean isNotPattern(ItemStack stack) {
-        return stack == null || !(AEApi.instance().definitions().materials().blankPattern().isSameAs(stack)
-            || (stack.getItem() instanceof ItemFluidEncodedPattern));
+        return stack == null
+                || !(AEApi.instance().definitions().materials().blankPattern().isSameAs(stack)
+                        || (stack.getItem() instanceof ItemFluidEncodedPattern));
     }
 
     public void encodePattern() {
@@ -126,12 +127,13 @@ public class ContainerFluidPatternEncoder extends AEBaseContainer implements Pat
                     if (stack == null) {
                         slot.putStack(null);
                     } else {
-                        ((SlotFluidConvertingFake)slot).putConvertedStack(stack.copy());
+                        ((SlotFluidConvertingFake) slot).putConvertedStack(stack.copy());
                     }
                     break;
                 case PLACE_SINGLE:
                     if (stack != null) {
-                        ((SlotFluidConvertingFake)slot).putConvertedStack(Objects.requireNonNull(Util.copyStackWithSize(stack, 1)));
+                        ((SlotFluidConvertingFake) slot)
+                                .putConvertedStack(Objects.requireNonNull(Util.copyStackWithSize(stack, 1)));
                     }
                     break;
                 case SPLIT_OR_PLACE_SINGLE:
@@ -140,13 +142,15 @@ public class ContainerFluidPatternEncoder extends AEBaseContainer implements Pat
                         if (stack == null) {
                             slot.putStack(Util.copyStackWithSize(inSlot, Math.max(1, inSlot.stackSize - 1)));
                         } else if (stack.isItemEqual(inSlot)) {
-                            slot.putStack(Util.copyStackWithSize(inSlot,
-                                Math.min(inSlot.getMaxStackSize(), inSlot.stackSize + 1)));
+                            slot.putStack(Util.copyStackWithSize(
+                                    inSlot, Math.min(inSlot.getMaxStackSize(), inSlot.stackSize + 1)));
                         } else {
-                            ((SlotFluidConvertingFake)slot).putConvertedStack(Objects.requireNonNull(Util.copyStackWithSize(stack, 1)));
+                            ((SlotFluidConvertingFake) slot)
+                                    .putConvertedStack(Objects.requireNonNull(Util.copyStackWithSize(stack, 1)));
                         }
                     } else if (stack != null) {
-                        ((SlotFluidConvertingFake)slot).putConvertedStack(Objects.requireNonNull(Util.copyStackWithSize(stack, 1)));
+                        ((SlotFluidConvertingFake) slot)
+                                .putConvertedStack(Objects.requireNonNull(Util.copyStackWithSize(stack, 1)));
                     }
                     break;
             }
@@ -220,7 +224,5 @@ public class ContainerFluidPatternEncoder extends AEBaseContainer implements Pat
         public IAEItemStack getAeStack() {
             return inv.getStack(getSlotIndex());
         }
-
     }
-
 }

@@ -11,10 +11,9 @@ public class CommonProxy {
 
     public final SimpleNetworkWrapper netHandler = NetworkRegistry.INSTANCE.newSimpleChannel(FluidCraft.MODID);
 
-    public void preInit(FMLPreInitializationEvent event){}
+    public void preInit(FMLPreInitializationEvent event) {}
 
-    public void init(FMLInitializationEvent event){}
+    public void init(FMLInitializationEvent event) {}
 
-    public void postInit(FMLPostInitializationEvent event){}
-
+    public void postInit(FMLPostInitializationEvent event) {}
 }

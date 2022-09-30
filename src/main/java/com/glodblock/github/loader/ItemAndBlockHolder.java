@@ -25,11 +25,16 @@ public class ItemAndBlockHolder {
     public static ItemFluidPacket PACKET = new ItemFluidPacket().register();
     public static ItemBasicFluidStorageCell CELL1K = new ItemBasicFluidStorageCell(CellType.Cell1kPart, 1).register();
     public static ItemBasicFluidStorageCell CELL4K = new ItemBasicFluidStorageCell(CellType.Cell4kPart, 4).register();
-    public static ItemBasicFluidStorageCell CELL16K = new ItemBasicFluidStorageCell(CellType.Cell16kPart, 16).register();
-    public static ItemBasicFluidStorageCell CELL64K = new ItemBasicFluidStorageCell(CellType.Cell64kPart, 64).register();
-    public static ItemBasicFluidStorageCell CELL256K = new ItemBasicFluidStorageCell(CellType.Cell256kPart, 256).register();
-    public static ItemBasicFluidStorageCell CELL1024K = new ItemBasicFluidStorageCell(CellType.Cell1024kPart, 1024).register();
-    public static ItemBasicFluidStorageCell CELL4096K = new ItemBasicFluidStorageCell(CellType.Cell4096kPart, 4096).register();
+    public static ItemBasicFluidStorageCell CELL16K =
+            new ItemBasicFluidStorageCell(CellType.Cell16kPart, 16).register();
+    public static ItemBasicFluidStorageCell CELL64K =
+            new ItemBasicFluidStorageCell(CellType.Cell64kPart, 64).register();
+    public static ItemBasicFluidStorageCell CELL256K =
+            new ItemBasicFluidStorageCell(CellType.Cell256kPart, 256).register();
+    public static ItemBasicFluidStorageCell CELL1024K =
+            new ItemBasicFluidStorageCell(CellType.Cell1024kPart, 1024).register();
+    public static ItemBasicFluidStorageCell CELL4096K =
+            new ItemBasicFluidStorageCell(CellType.Cell4096kPart, 4096).register();
     public static ItemBasicFluidStoragePart CELL_PART = new ItemBasicFluidStoragePart().register();
 
     public static void loadSetting() {
@@ -42,5 +47,4 @@ public class ItemAndBlockHolder {
         CellType.Cell1024kPart.setItemInstance(CELL_PART);
         CellType.Cell4096kPart.setItemInstance(CELL_PART);
     }
-
 }

@@ -12,6 +12,9 @@ import com.glodblock.github.common.parts.PartFluidInterface;
 import com.glodblock.github.common.tile.TileFluidInterface;
 import com.glodblock.github.util.Ae2Reflect;
 import com.glodblock.github.util.Util;
+import java.util.Collections;
+import java.util.Iterator;
+import javax.annotation.Nullable;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
@@ -20,17 +23,19 @@ import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTankInfo;
 import net.minecraftforge.fluids.IFluidHandler;
 
-import javax.annotation.Nullable;
-import java.util.Collections;
-import java.util.Iterator;
-
 public class FluidConvertingInventoryAdaptor extends InventoryAdaptor {
 
     public static InventoryAdaptor wrap(TileEntity capProvider, EnumFacing face) {
         // sometimes i wish 1.7.10 has cap system.
         ForgeDirection f = Util.from(face);
-        TileEntity inter = capProvider.getWorldObj().getTileEntity(capProvider.xCoord + f.offsetX, capProvider.yCoord + f.offsetY, capProvider.zCoord + f.offsetZ);
-        if (!Config.noFluidPacket && !(inter instanceof TileFluidInterface || (inter instanceof TileCableBus && ((TileCableBus) inter).getPart(f.getOpposite()) instanceof PartFluidInterface)))
+        TileEntity inter = capProvider
+                .getWorldObj()
+                .getTileEntity(
+                        capProvider.xCoord + f.offsetX, capProvider.yCoord + f.offsetY, capProvider.zCoord + f.offsetZ);
+        if (!Config.noFluidPacket
+                && !(inter instanceof TileFluidInterface
+                        || (inter instanceof TileCableBus
+                                && ((TileCableBus) inter).getPart(f.getOpposite()) instanceof PartFluidInterface)))
             return InventoryAdaptor.getAdaptor(capProvider, f);
         InventoryAdaptor item = InventoryAdaptor.getAdaptor(capProvider, f);
         IFluidHandler fluid = capProvider instanceof IFluidHandler ? (IFluidHandler) capProvider : null;
@@ -41,13 +46,14 @@ public class FluidConvertingInventoryAdaptor extends InventoryAdaptor {
     private final IFluidHandler invFluids;
     private final ForgeDirection side;
 
-    public FluidConvertingInventoryAdaptor(@Nullable InventoryAdaptor invItems, @Nullable IFluidHandler invFluids, EnumFacing facing) {
+    public FluidConvertingInventoryAdaptor(
+            @Nullable InventoryAdaptor invItems, @Nullable IFluidHandler invFluids, EnumFacing facing) {
         this.invItems = invItems;
         this.invFluids = invFluids;
         this.side = Util.from(facing);
     }
 
-    public ItemStack addItems( ItemStack toBeAdded,InsertionMode insertionMode ) {
+    public ItemStack addItems(ItemStack toBeAdded, InsertionMode insertionMode) {
         if (toBeAdded.getItem() instanceof ItemFluidPacket) {
             if (invFluids != null) {
                 FluidStack fluid = ItemFluidPacket.getFluidStack(toBeAdded);
@@ -61,19 +67,21 @@ public class FluidConvertingInventoryAdaptor extends InventoryAdaptor {
             }
             return toBeAdded;
         }
-        return invItems != null ? invItems.addItems(toBeAdded,insertionMode) : toBeAdded;
+        return invItems != null ? invItems.addItems(toBeAdded, insertionMode) : toBeAdded;
     }
 
     @Override
     public ItemStack addItems(ItemStack toBeAdded) {
-        return addItems(toBeAdded,InsertionMode.DEFAULT);
+        return addItems(toBeAdded, InsertionMode.DEFAULT);
     }
+
     @Override
     public ItemStack simulateAdd(ItemStack toBeSimulated) {
-        return simulateAdd(toBeSimulated,InsertionMode.DEFAULT);
+        return simulateAdd(toBeSimulated, InsertionMode.DEFAULT);
     }
+
     @Override
-    public ItemStack simulateAdd(ItemStack toBeSimulated,InsertionMode insertionMode) {
+    public ItemStack simulateAdd(ItemStack toBeSimulated, InsertionMode insertionMode) {
         if (toBeSimulated.getItem() instanceof ItemFluidPacket) {
             if (invFluids != null) {
                 FluidStack fluid = ItemFluidPacket.getFluidStack(toBeSimulated);
@@ -87,7 +95,7 @@ public class FluidConvertingInventoryAdaptor extends InventoryAdaptor {
             }
             return toBeSimulated;
         }
-        return invItems != null ? invItems.simulateAdd(toBeSimulated,insertionMode) : toBeSimulated;
+        return invItems != null ? invItems.simulateAdd(toBeSimulated, insertionMode) : toBeSimulated;
     }
 
     @Override
@@ -101,12 +109,14 @@ public class FluidConvertingInventoryAdaptor extends InventoryAdaptor {
     }
 
     @Override
-    public ItemStack removeSimilarItems(int amount, ItemStack filter, FuzzyMode fuzzyMode, IInventoryDestination destination) {
+    public ItemStack removeSimilarItems(
+            int amount, ItemStack filter, FuzzyMode fuzzyMode, IInventoryDestination destination) {
         return invItems != null ? invItems.removeSimilarItems(amount, filter, fuzzyMode, destination) : null;
     }
 
     @Override
-    public ItemStack simulateSimilarRemove(int amount, ItemStack filter, FuzzyMode fuzzyMode, IInventoryDestination destination) {
+    public ItemStack simulateSimilarRemove(
+            int amount, ItemStack filter, FuzzyMode fuzzyMode, IInventoryDestination destination) {
         return invItems != null ? invItems.simulateSimilarRemove(amount, filter, fuzzyMode, destination) : null;
     }
 
@@ -124,15 +134,14 @@ public class FluidConvertingInventoryAdaptor extends InventoryAdaptor {
     }
 
     public boolean hasSlots() {
-        return (invFluids != null && invFluids.getTankInfo(side).length > 0)
-            || (invItems != null);
+        return (invFluids != null && invFluids.getTankInfo(side).length > 0) || (invItems != null);
     }
 
     @Override
     public Iterator<ItemSlot> iterator() {
         return new SlotIterator(
-            invFluids != null ? invFluids.getTankInfo(side) : new FluidTankInfo[0],
-            invItems != null ? invItems.iterator() : Collections.emptyIterator());
+                invFluids != null ? invFluids.getTankInfo(side) : new FluidTankInfo[0],
+                invItems != null ? invItems.iterator() : Collections.emptyIterator());
     }
 
     private static class SlotIterator implements Iterator<ItemSlot> {
@@ -166,7 +175,5 @@ public class FluidConvertingInventoryAdaptor extends InventoryAdaptor {
                 return slot;
             }
         }
-
     }
-
 }

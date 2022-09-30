@@ -23,8 +23,14 @@ public class FCGuiTextField extends GuiTextField {
      * @param width        absolute width
      * @param height       absolute height
      */
-    public FCGuiTextField(final FontRenderer fontRenderer, final int xPos, final int yPos, final int width, final int height) {
-        super(fontRenderer, xPos + PADDING, yPos + PADDING, width - 2 * PADDING - fontRenderer.getCharWidth('_'), height - 2 * PADDING);
+    public FCGuiTextField(
+            final FontRenderer fontRenderer, final int xPos, final int yPos, final int width, final int height) {
+        super(
+                fontRenderer,
+                xPos + PADDING,
+                yPos + PADDING,
+                width - 2 * PADDING - fontRenderer.getCharWidth('_'),
+                height - 2 * PADDING);
 
         this._xPos = xPos;
         this._yPos = yPos;
@@ -55,13 +61,11 @@ public class FCGuiTextField extends GuiTextField {
         return withinXRange && withinYRange;
     }
 
-    public void setMessage(String t)
-    {
+    public void setMessage(String t) {
         tooltip = t;
     }
 
-    public class TooltipProvider implements ITooltip
-    {
+    public class TooltipProvider implements ITooltip {
         @Override
         public String getMessage() {
             return tooltip;
@@ -83,7 +87,9 @@ public class FCGuiTextField extends GuiTextField {
         }
 
         @Override
-        public int getWidth() { return _width; }
+        public int getWidth() {
+            return _width;
+        }
 
         @Override
         public boolean isVisible() {

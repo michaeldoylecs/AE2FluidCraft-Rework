@@ -10,19 +10,17 @@ import cpw.mods.fml.common.network.simpleimpl.IMessage;
 import cpw.mods.fml.common.network.simpleimpl.IMessageHandler;
 import cpw.mods.fml.common.network.simpleimpl.MessageContext;
 import io.netty.buffer.ByteBuf;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiScreen;
-
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiScreen;
 
 public class SPacketFluidUpdate implements IMessage {
 
     private Map<Integer, IAEFluidStack> list;
 
-    public SPacketFluidUpdate() {
-    }
+    public SPacketFluidUpdate() {}
 
     public SPacketFluidUpdate(Map<Integer, IAEFluidStack> data) {
         this.list = data;
@@ -33,11 +31,10 @@ public class SPacketFluidUpdate implements IMessage {
         int size = buf.readInt();
         this.list = new HashMap<>();
         try {
-            for (int i = 0; i < size; i ++) {
+            for (int i = 0; i < size; i++) {
                 int id = buf.readInt();
                 boolean isNull = buf.readBoolean();
-                if (!isNull)
-                    list.put(id, null);
+                if (!isNull) list.put(id, null);
                 else {
                     IAEFluidStack fluid = AEFluidStack.loadFluidStackFromPacket(buf);
                     list.put(id, fluid);
@@ -54,8 +51,7 @@ public class SPacketFluidUpdate implements IMessage {
         try {
             for (Map.Entry<Integer, IAEFluidStack> fs : list.entrySet()) {
                 buf.writeInt(fs.getKey());
-                if (fs.getValue() == null)
-                    buf.writeBoolean(false);
+                if (fs.getValue() == null) buf.writeBoolean(false);
                 else {
                     buf.writeBoolean(true);
                     fs.getValue().writeToPacket(buf);
@@ -71,27 +67,24 @@ public class SPacketFluidUpdate implements IMessage {
         @Override
         public IMessage onMessage(SPacketFluidUpdate message, MessageContext ctx) {
             final GuiScreen gs = Minecraft.getMinecraft().currentScreen;
-            if( gs instanceof GuiIngredientBuffer)
-            {
-                for (Map.Entry<Integer, IAEFluidStack> e : message.list.entrySet() ) {
-                    ( (GuiIngredientBuffer) gs ).update(e.getKey(), e.getValue());
+            if (gs instanceof GuiIngredientBuffer) {
+                for (Map.Entry<Integer, IAEFluidStack> e : message.list.entrySet()) {
+                    ((GuiIngredientBuffer) gs).update(e.getKey(), e.getValue());
                 }
             } else if (gs instanceof GuiLargeIngredientBuffer) {
-                for (Map.Entry<Integer, IAEFluidStack> e : message.list.entrySet() ) {
-                    ( (GuiLargeIngredientBuffer) gs ).update(e.getKey(), e.getValue());
+                for (Map.Entry<Integer, IAEFluidStack> e : message.list.entrySet()) {
+                    ((GuiLargeIngredientBuffer) gs).update(e.getKey(), e.getValue());
                 }
-            } else if( gs instanceof GuiFluidIO)
-            {
-                for (Map.Entry<Integer, IAEFluidStack> e : message.list.entrySet() ) {
-                    ( (GuiFluidIO) gs ).update(e.getKey(), e.getValue());
+            } else if (gs instanceof GuiFluidIO) {
+                for (Map.Entry<Integer, IAEFluidStack> e : message.list.entrySet()) {
+                    ((GuiFluidIO) gs).update(e.getKey(), e.getValue());
                 }
             } else if (gs instanceof GuiFluidInterface) {
-                for (Map.Entry<Integer, IAEFluidStack> e : message.list.entrySet() ) {
-                    ( (GuiFluidInterface) gs ).update(e.getKey(), e.getValue());
+                for (Map.Entry<Integer, IAEFluidStack> e : message.list.entrySet()) {
+                    ((GuiFluidInterface) gs).update(e.getKey(), e.getValue());
                 }
             }
             return null;
         }
-
     }
 }

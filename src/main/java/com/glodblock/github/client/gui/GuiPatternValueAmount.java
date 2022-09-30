@@ -85,8 +85,8 @@ public class GuiPatternValueAmount extends AEBaseGui {
         this.buttonList.add(this.minus100 = new GuiButton(0, this.guiLeft + 82, this.guiTop + 75, 32, 20, "-" + c));
         this.buttonList.add(this.minus1000 = new GuiButton(0, this.guiLeft + 120, this.guiTop + 75, 38, 20, "-" + d));
 
-        this.buttonList.add(this.set = new GuiButton(0, this.guiLeft + 128, this.guiTop + 51, 38, 20, GuiText.Next.getLocal()));
-
+        this.buttonList.add(
+                this.set = new GuiButton(0, this.guiLeft + 128, this.guiTop + 51, 38, 20, GuiText.Next.getLocal()));
 
         ItemStack myIcon = null;
         final Object target = ((AEBaseContainer) this.inventorySlots).getTarget();
@@ -104,10 +104,13 @@ public class GuiPatternValueAmount extends AEBaseGui {
         }
 
         if (this.originalGui != null && myIcon != null) {
-            this.buttonList.add(this.originalGuiBtn = new GuiTabButton(this.guiLeft + 154, this.guiTop, myIcon, myIcon.getDisplayName(), itemRender));
+            this.buttonList.add(
+                    this.originalGuiBtn = new GuiTabButton(
+                            this.guiLeft + 154, this.guiTop, myIcon, myIcon.getDisplayName(), itemRender));
         }
 
-        this.amountToSet = new GuiTextField(this.fontRendererObj, this.guiLeft + 62, this.guiTop + 57, 59, this.fontRendererObj.FONT_HEIGHT);
+        this.amountToSet = new GuiTextField(
+                this.fontRendererObj, this.guiLeft + 62, this.guiTop + 57, 59, this.fontRendererObj.FONT_HEIGHT);
         this.amountToSet.setEnableBackgroundDrawing(false);
         this.amountToSet.setMaxStringLength(16);
         this.amountToSet.setTextColor(0xFFFFFF);
@@ -115,9 +118,7 @@ public class GuiPatternValueAmount extends AEBaseGui {
         this.amountToSet.setFocused(true);
         this.amountToSet.setText(String.valueOf(originalAmount));
         this.amountToSet.setSelectionPos(0);
-
     }
-
 
     @Override
     public void drawFG(final int offsetX, final int offsetY, final int mouseX, final int mouseY) {
@@ -183,7 +184,8 @@ public class GuiPatternValueAmount extends AEBaseGui {
                     resultI = (int) ArithHelper.round(resultD, 0);
                 }
 
-                FluidCraft.proxy.netHandler.sendToServer(new CPacketPatternValueSet(originalGui.ordinal(), resultI, valueIndex));
+                FluidCraft.proxy.netHandler.sendToServer(
+                        new CPacketPatternValueSet(originalGui.ordinal(), resultI, valueIndex));
             }
         } catch (final NumberFormatException e) {
             // nope..
@@ -191,7 +193,8 @@ public class GuiPatternValueAmount extends AEBaseGui {
         }
 
         final boolean isPlus = btn == this.plus1 || btn == this.plus10 || btn == this.plus100 || btn == this.plus1000;
-        final boolean isMinus = btn == this.minus1 || btn == this.minus10 || btn == this.minus100 || btn == this.minus1000;
+        final boolean isMinus =
+                btn == this.minus1 || btn == this.minus10 || btn == this.minus100 || btn == this.minus1000;
 
         if (isPlus || isMinus) {
             this.addQty(this.getQty(btn));
@@ -236,5 +239,4 @@ public class GuiPatternValueAmount extends AEBaseGui {
             return stack.stackSize;
         }
     }
-
 }

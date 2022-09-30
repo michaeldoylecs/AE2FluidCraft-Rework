@@ -16,6 +16,7 @@ import com.glodblock.github.inventory.InventoryHandler;
 import com.glodblock.github.inventory.gui.GuiType;
 import com.glodblock.github.util.BlockPos;
 import com.glodblock.github.util.Util;
+import java.util.Objects;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
@@ -25,106 +26,87 @@ import net.minecraft.util.IIcon;
 import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
 
-import java.util.Objects;
+public abstract class PartSharedFluidBus extends PartUpgradeable implements IGridTickable {
 
-public abstract class PartSharedFluidBus extends PartUpgradeable implements IGridTickable
-{
-
-    private final AppEngInternalAEInventory config = new AppEngInternalAEInventory( this, 9 );
+    private final AppEngInternalAEInventory config = new AppEngInternalAEInventory(this, 9);
     private boolean lastRedstone;
 
-    public PartSharedFluidBus( ItemStack is )
-    {
-        super( is );
+    public PartSharedFluidBus(ItemStack is) {
+        super(is);
     }
 
     public abstract IIcon getFaceIcon();
 
     @Override
-    public void upgradesChanged()
-    {
+    public void upgradesChanged() {
         this.updateState();
     }
 
     @Override
-    public void onNeighborChanged()
-    {
+    public void onNeighborChanged() {
         this.updateState();
-        if( this.lastRedstone != this.getHost().hasRedstone( this.getSide() ) )
-        {
+        if (this.lastRedstone != this.getHost().hasRedstone(this.getSide())) {
             this.lastRedstone = !this.lastRedstone;
-            if( this.lastRedstone && this.getRSMode() == RedstoneMode.SIGNAL_PULSE )
-            {
+            if (this.lastRedstone && this.getRSMode() == RedstoneMode.SIGNAL_PULSE) {
                 this.doBusWork();
             }
         }
     }
 
-    private void updateState()
-    {
-        try
-        {
-            if( !this.isSleeping() )
-            {
-                this.getProxy().getTick().wakeDevice( this.getProxy().getNode() );
+    private void updateState() {
+        try {
+            if (!this.isSleeping()) {
+                this.getProxy().getTick().wakeDevice(this.getProxy().getNode());
+            } else {
+                this.getProxy().getTick().sleepDevice(this.getProxy().getNode());
             }
-            else
-            {
-                this.getProxy().getTick().sleepDevice( this.getProxy().getNode() );
-            }
-        }
-        catch( final GridAccessException e )
-        {
+        } catch (final GridAccessException e) {
             // :P
         }
     }
 
     @Override
-    public boolean onPartActivate(final EntityPlayer player, final Vec3 pos)
-    {
-        if( player.isSneaking() )
-        {
+    public boolean onPartActivate(final EntityPlayer player, final Vec3 pos) {
+        if (player.isSneaking()) {
             return false;
         }
-        if( Platform.isServer() )
-        {
-            InventoryHandler.openGui(player, this.getHost().getTile().getWorldObj(), new BlockPos(this.getHost().getTile()), Objects.requireNonNull(Util.from(this.getSide())), GuiType.FLUID_BUS_IO);
+        if (Platform.isServer()) {
+            InventoryHandler.openGui(
+                    player,
+                    this.getHost().getTile().getWorldObj(),
+                    new BlockPos(this.getHost().getTile()),
+                    Objects.requireNonNull(Util.from(this.getSide())),
+                    GuiType.FLUID_BUS_IO);
         }
 
         return true;
     }
 
     @Override
-    public void getBoxes( IPartCollisionHelper bch )
-    {
-        bch.addBox( 6, 6, 11, 10, 10, 13 );
-        bch.addBox( 5, 5, 13, 11, 11, 14 );
-        bch.addBox( 4, 4, 14, 12, 12, 16 );
+    public void getBoxes(IPartCollisionHelper bch) {
+        bch.addBox(6, 6, 11, 10, 10, 13);
+        bch.addBox(5, 5, 13, 11, 11, 14);
+        bch.addBox(4, 4, 14, 12, 12, 16);
     }
 
-    protected TileEntity getConnectedTE()
-    {
+    protected TileEntity getConnectedTE() {
         TileEntity self = this.getHost().getTile();
-        return this.getTileEntity( self, (new BlockPos(self)).getOffSet( this.getSide() ) );
+        return this.getTileEntity(self, (new BlockPos(self)).getOffSet(this.getSide()));
     }
 
-    private TileEntity getTileEntity( final TileEntity self, final BlockPos pos )
-    {
+    private TileEntity getTileEntity(final TileEntity self, final BlockPos pos) {
         final World w = self.getWorldObj();
 
-        if( w.getChunkProvider().chunkExists( pos.getX() >> 4, pos.getZ() >> 4 ) )
-        {
-            return w.getTileEntity( pos.getX(), pos.getY(), pos.getZ() );
+        if (w.getChunkProvider().chunkExists(pos.getX() >> 4, pos.getZ() >> 4)) {
+            return w.getTileEntity(pos.getX(), pos.getY(), pos.getZ());
         }
 
         return null;
     }
 
-    protected int calculateAmountToSend()
-    {
+    protected int calculateAmountToSend() {
         double amount = 1000D;
-        switch( this.getInstalledUpgrades( Upgrades.SPEED ) )
-        {
+        switch (this.getInstalledUpgrades(Upgrades.SPEED)) {
             case 4:
                 amount = amount * 1.5;
             case 3:
@@ -135,22 +117,20 @@ public abstract class PartSharedFluidBus extends PartUpgradeable implements IGri
                 amount = amount * 8;
             case 0:
             default:
-                return (int) Math.floor( amount );
+                return (int) Math.floor(amount);
         }
     }
 
     @Override
-    public void readFromNBT( NBTTagCompound extra )
-    {
-        super.readFromNBT( extra );
-        this.config.readFromNBT( extra, "config" );
+    public void readFromNBT(NBTTagCompound extra) {
+        super.readFromNBT(extra);
+        this.config.readFromNBT(extra, "config");
     }
 
     @Override
-    public void writeToNBT( NBTTagCompound extra )
-    {
-        super.writeToNBT( extra );
-        this.config.writeToNBT( extra, "config" );
+    public void writeToNBT(NBTTagCompound extra) {
+        super.writeToNBT(extra);
+        this.config.writeToNBT(extra, "config");
     }
 
     @Override
@@ -166,8 +146,7 @@ public abstract class PartSharedFluidBus extends PartUpgradeable implements IGri
         this.config.setInventorySlotContents(id, tmp);
     }
 
-    protected StorageChannel getChannel()
-    {
+    protected StorageChannel getChannel() {
         return StorageChannel.FLUIDS;
     }
 
@@ -176,9 +155,7 @@ public abstract class PartSharedFluidBus extends PartUpgradeable implements IGri
     protected abstract boolean canDoBusWork();
 
     @Override
-    public int cableConnectionRenderTo()
-    {
+    public int cableConnectionRenderTo() {
         return 5;
     }
-
 }

@@ -38,10 +38,8 @@ public class GuiFluidPatternTerminalEx extends GuiBaseFluidPatternTerminalEx {
     }
 
     @Override
-    public void func_146977_a( final Slot s )
-    {
-        if (drawSlot0(s))
-            super.func_146977_a( s );
+    public void func_146977_a(final Slot s) {
+        if (drawSlot0(s)) super.func_146977_a(s);
     }
 
     public boolean drawSlot0(Slot slot) {
@@ -53,11 +51,14 @@ public class GuiFluidPatternTerminalEx extends GuiBaseFluidPatternTerminalEx {
             if (fake.getItemStack().getItem() instanceof ItemFluidPacket) {
                 if (ItemFluidPacket.getFluidStack(stack) != null && ItemFluidPacket.getFluidStack(stack).amount > 0)
                     fake.setStackSize(ItemFluidPacket.getFluidStack(stack).amount);
-            }
-            else
-                return true;
+            } else return true;
             stackSizeRenderer.setAeStack(fake);
-            stackSizeRenderer.renderItemOverlayIntoGUI(fontRendererObj, mc.getTextureManager(), stack.getItemStack(), slot.xDisplayPosition, slot.yDisplayPosition);
+            stackSizeRenderer.renderItemOverlayIntoGUI(
+                    fontRendererObj,
+                    mc.getTextureManager(),
+                    stack.getItemStack(),
+                    slot.xDisplayPosition,
+                    slot.yDisplayPosition);
             return false;
         }
         return true;
@@ -71,5 +72,4 @@ public class GuiFluidPatternTerminalEx extends GuiBaseFluidPatternTerminalEx {
             super.actionPerformed(btn);
         }
     }
-
 }

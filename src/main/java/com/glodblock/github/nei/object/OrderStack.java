@@ -2,22 +2,21 @@ package com.glodblock.github.nei.object;
 
 import codechicken.nei.PositionedStack;
 import com.glodblock.github.util.Util;
+import javax.annotation.Nullable;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.oredict.OreDictionary;
 
-import javax.annotation.Nullable;
-
 public class OrderStack<T> {
 
     private final T RealStack;
     private final int index;
 
-    public final static int ITEM = 1;
-    public final static int FLUID = 2;
-    public final static int CUSTOM = 3;
+    public static final int ITEM = 1;
+    public static final int FLUID = 2;
+    public static final int CUSTOM = 3;
 
     public OrderStack(T stack, int order) {
         if (stack == null || order < 0)
@@ -40,8 +39,7 @@ public class OrderStack<T> {
                 ItemStack tmp = stack.items[0].copy();
                 tmp.setItemDamage(0);
                 return new OrderStack<>(tmp, index);
-            }
-            else return new OrderStack<>(stack.items[0].copy(), index);
+            } else return new OrderStack<>(stack.items[0].copy(), index);
         }
         return null;
     }
@@ -55,8 +53,7 @@ public class OrderStack<T> {
         return null;
     }
 
-    protected void customNBTWriter(NBTTagCompound buf) {
-    }
+    protected void customNBTWriter(NBTTagCompound buf) {}
 
     protected T customNBTReader(NBTTagCompound buf) {
         return null;
@@ -68,14 +65,12 @@ public class OrderStack<T> {
             tmp.setByte("t", (byte) ITEM);
             ((ItemStack) RealStack).writeToNBT(tmp);
             buf.setTag(index + ":", tmp);
-        }
-        else if (RealStack instanceof FluidStack) {
+        } else if (RealStack instanceof FluidStack) {
             NBTTagCompound tmp = new NBTTagCompound();
             tmp.setByte("t", (byte) FLUID);
             ((FluidStack) RealStack).writeToNBT(tmp);
             buf.setTag(index + ":", tmp);
-        }
-        else {
+        } else {
             NBTTagCompound tmp = new NBTTagCompound();
             tmp.setByte("t", (byte) CUSTOM);
             customNBTWriter(tmp);
@@ -99,5 +94,4 @@ public class OrderStack<T> {
                 throw new IllegalOrderStackID(id);
         }
     }
-
 }
