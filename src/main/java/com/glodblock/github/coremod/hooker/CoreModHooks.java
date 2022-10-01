@@ -9,12 +9,15 @@ import appeng.api.networking.storage.IStorageGrid;
 import appeng.api.storage.IMEInventory;
 import appeng.api.storage.data.IAEFluidStack;
 import appeng.api.storage.data.IAEItemStack;
+import appeng.client.gui.implementations.GuiCraftConfirm;
+import appeng.client.gui.implementations.GuiCraftingCPU;
 import appeng.crafting.MECraftingInventory;
 import appeng.me.MachineSet;
 import appeng.me.cluster.implementations.CraftingCPUCluster;
 import appeng.parts.misc.PartInterface;
 import appeng.tile.misc.TileInterface;
 import appeng.util.InventoryAdaptor;
+import com.glodblock.github.client.gui.GuiFluidCraftConfirm;
 import com.glodblock.github.common.item.ItemFluidDrop;
 import com.glodblock.github.common.item.ItemFluidPacket;
 import com.glodblock.github.common.parts.PartFluidInterface;
@@ -26,6 +29,7 @@ import com.glodblock.github.util.Ae2Reflect;
 import com.glodblock.github.util.SetBackedMachineSet;
 import com.glodblock.github.util.Util;
 import com.google.common.collect.Sets;
+import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.inventory.InventoryCrafting;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
@@ -167,6 +171,20 @@ public class CoreModHooks {
         }
 
         Ae2Reflect.markCPUDirty(instance);
+    }
+
+    public static ItemStack getStackUnderMouse(GuiContainer gui, int mousex, int mousey) {
+        if (gui instanceof GuiFluidCraftConfirm) {
+            return ((GuiFluidCraftConfirm) gui).getHoveredStack();
+        }
+        return null;
+    }
+
+    public static boolean shouldShowTooltip(GuiContainer gui) {
+        if (gui instanceof GuiFluidCraftConfirm) {
+            return ((GuiFluidCraftConfirm)gui).getHoveredStack() == null;
+        }
+        return true;
     }
 
 }

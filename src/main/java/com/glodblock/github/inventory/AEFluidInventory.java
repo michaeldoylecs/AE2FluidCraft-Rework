@@ -17,6 +17,7 @@ public class AEFluidInventory implements IAEFluidTank
     private final IAEFluidStack[] fluids;
     private final IAEFluidInventory handler;
     private final int capacity;
+    public int lastIndex;
 
     public AEFluidInventory( final IAEFluidInventory handler, final int slots, final int capcity )
     {
@@ -253,9 +254,10 @@ public class AEFluidInventory implements IAEFluidTank
         FluidStack totalDrained = null;
         int toDrain = maxDrain;
 
-        for( int slot = 0; slot < this.getSlots(); ++slot )
+        for( int slot = lastIndex; slot < this.getSlots(); ++slot )
         {
             if (this.getFluidInSlot(slot) == null) {
+                if(slot == this.getSlots()-1) lastIndex = 0;
                 continue;
             }
 
@@ -264,6 +266,7 @@ public class AEFluidInventory implements IAEFluidTank
                 totalDrained = this.drain( slot, toDrain, doDrain );
                 if( totalDrained != null )
                 {
+                    lastIndex = slot;
                     toDrain -= totalDrained.amount;
                 }
             }
