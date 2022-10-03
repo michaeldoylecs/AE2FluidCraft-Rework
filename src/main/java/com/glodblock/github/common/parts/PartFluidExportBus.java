@@ -108,7 +108,6 @@ public class PartFluidExportBus extends PartSharedFluidBus implements ICraftingR
                         if( this.craftOnly() )
                         {
                             isAllowed = this.craftingTracker.handleCrafting( i, toExtract.getStackSize(), ItemFluidDrop.newAeStack(toExtract), destination, this.getTile().getWorldObj(), this.getProxy().getGrid(), cg, this.source );
-                            System.out.print(isAllowed + "\n");
                         }
 
                         final IAEFluidStack out = inv.extractItems( toExtract, Actionable.SIMULATE, this.source );
@@ -222,10 +221,8 @@ public class PartFluidExportBus extends PartSharedFluidBus implements ICraftingR
 
         try
         {
-            System.out.print("111\n");
             if( d != null && this.getProxy().isActive() )
             {
-                System.out.print("222\n");
                 final IEnergyGrid energy = this.getProxy().getEnergy();
                 final double power = Math.ceil(items.getStackSize() / 1000D);
 
