@@ -74,7 +74,7 @@ public class CoreModHooks {
 
     public static long getCraftingByteCost(IAEItemStack stack) {
         return stack.getItem() instanceof ItemFluidDrop
-            ? (long)Math.ceil(stack.getStackSize() / 1000D) : stack.getStackSize();
+            ? (long) Math.ceil(stack.getStackSize() / 1000D) : stack.getStackSize();
     }
 
     public static IAEItemStack[] flattenFluidPackets(IAEItemStack[] stacks) {
