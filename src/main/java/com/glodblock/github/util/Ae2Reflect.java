@@ -31,6 +31,7 @@ public class Ae2Reflect {
     private static final Field fCPU_size;
     private static final Field fCPU_inventory;
     private static final Field fCPU_machineSrc;
+    private static final Field fContainerUpgradeable_upgradeable;
     private static final Method mItemSlot_setExtractable;
     private static final Method mCPU_getGrid;
     private static final Method mCPU_postChange;
@@ -47,6 +48,7 @@ public class Ae2Reflect {
             fCPU_size = Ae2Reflect.reflectField(CraftingCPURecord.class, "size");
             fCPU_inventory = Ae2Reflect.reflectField(CraftingCPUCluster.class, "inventory");
             fCPU_machineSrc = Ae2Reflect.reflectField(CraftingCPUCluster.class, "machineSrc");
+            fContainerUpgradeable_upgradeable = Ae2Reflect.reflectField(ContainerUpgradeable.class, "upgradeable");
             mItemSlot_setExtractable = reflectMethod(ItemSlot.class, "setExtractable", boolean.class);
             mCPU_getGrid = reflectMethod(CraftingCPUCluster.class, "getGrid");
             mCPU_postChange = reflectMethod(CraftingCPUCluster.class, "postChange", IAEItemStack.class, BaseActionSource.class);
@@ -148,6 +150,10 @@ public class Ae2Reflect {
 
     public static MachineSource getCPUSource(CraftingCPUCluster cpu) {
         return Ae2Reflect.readField(cpu, fCPU_machineSrc);
+    }
+
+    public static IUpgradeableHost getUpgradeableHost(ContainerUpgradeable owner) {
+        return Ae2Reflect.readField(owner, fContainerUpgradeable_upgradeable);
     }
 
     public static void postCPUChange(CraftingCPUCluster cpu, IAEItemStack stack, MachineSource src) {
