@@ -112,7 +112,6 @@ public class ContainerFluidPatternTerminalEx extends FCBasePartContainerEx imple
         ItemStack patternStack = new ItemStack(ItemAndBlockHolder.PATTERN);
         FluidPatternDetails pattern = new FluidPatternDetails(patternStack);
         pattern.setCombine(this.combine ? 1:0);
-        pattern.setPriority(this.prioritize? 1:0);
         pattern.setInputs(collectInventory(craftingSlots));
         pattern.setOutputs(collectInventory(outputSlots));
         patternSlotOUT.putStack(pattern.writeToStack());
