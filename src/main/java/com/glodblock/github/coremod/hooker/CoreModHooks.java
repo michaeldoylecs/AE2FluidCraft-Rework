@@ -77,6 +77,13 @@ public class CoreModHooks {
             ? (long) Math.ceil(stack.getStackSize() / 1000D) : stack.getStackSize();
     }
 
+    public static long getFluidDropsByteCost(long totalBytes, long originByte, IAEItemStack stack) {
+        if (stack != null && stack.getItem() instanceof ItemFluidDrop) {
+            return (long) Math.ceil(originByte / 1000D) + totalBytes;
+        }
+        return originByte + totalBytes;
+    }
+
     public static IAEItemStack[] flattenFluidPackets(IAEItemStack[] stacks) {
         for (int i = 0; i < stacks.length; i++) {
             if (stacks[i].getItem() instanceof ItemFluidPacket) {

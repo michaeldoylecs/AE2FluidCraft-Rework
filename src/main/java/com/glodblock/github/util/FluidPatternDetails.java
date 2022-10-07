@@ -2,6 +2,7 @@ package com.glodblock.github.util;
 
 import appeng.api.networking.crafting.ICraftingPatternDetails;
 import appeng.api.storage.data.IAEItemStack;
+import appeng.helpers.PatternHelper;
 import appeng.util.item.AEItemStack;
 import net.minecraft.inventory.InventoryCrafting;
 import net.minecraft.item.ItemStack;
@@ -12,8 +13,6 @@ import net.minecraftforge.common.util.Constants;
 
 import javax.annotation.Nullable;
 import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Objects;
 
 public class FluidPatternDetails implements ICraftingPatternDetails, Comparable<FluidPatternDetails>{
@@ -43,8 +42,14 @@ public class FluidPatternDetails implements ICraftingPatternDetails, Comparable<
     public void setPriority(int priority) {
         this.priority = priority;
     }
-    public void setCombine(int combine){ this.combine = combine;}
-    public int getCombine(){return combine;}
+
+    public void setCombine(int combine) {
+        this.combine = combine;
+    }
+
+    public int getCombine() {
+        return combine;
+    }
 
     @Override
     public boolean isCraftable() {
@@ -99,20 +104,7 @@ public class FluidPatternDetails implements ICraftingPatternDetails, Comparable<
     }
 
     private static IAEItemStack[] condenseStacks(IAEItemStack[] stacks) {
-        // AE item stacks are equivalent iff they are of the same item type (not accounting for stack size)
-        // thus, it's not the semantically-correct definition of "equal" but it's useful for matching item types
-        Map<IAEItemStack, IAEItemStack> accMap = new HashMap<>();
-        for (IAEItemStack stack : stacks) {
-            if (stack != null) {
-                IAEItemStack acc = accMap.get(stack);
-                if (acc == null) {
-                    accMap.put(stack, stack.copy());
-                } else {
-                    acc.add(stack);
-                }
-            }
-        }
-        return accMap.values().toArray(new IAEItemStack[0]);
+        return PatternHelper.convertToCondensedList(stacks);
     }
 
     @Override
@@ -157,8 +149,7 @@ public class FluidPatternDetails implements ICraftingPatternDetails, Comparable<
         //Shits
         tag.setTag("in", writeStackArray(checkInitialized(inputs)));
         tag.setTag("out", writeStackArray(checkInitialized(outputs)));
-        tag.setInteger("prioritize",this.getPriority());
-        tag.setInteger("combine",this.getCombine());
+        tag.setInteger("combine", this.getCombine());
         patternStack.setTagCompound(tag);
         patternStackAe = Objects.requireNonNull(AEItemStack.create(patternStack));
         return patternStack;
@@ -170,7 +161,6 @@ public class FluidPatternDetails implements ICraftingPatternDetails, Comparable<
             // see note at top of class
             NBTTagCompound stackTag = new NBTTagCompound();
             if (stack != null) stack.writeToNBT(stackTag);
-
             listTag.appendTag(stackTag);
         }
         return listTag;
