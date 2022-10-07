@@ -38,7 +38,7 @@ public class TileFluidInterface extends TileInterface implements IFluidHandler, 
     private final DualityFluidInterface fluidDuality = new DualityFluidInterface(this.getProxy(), this) {
         @Override
         public FluidStack drain(ForgeDirection from, int maxDrain, boolean doDrain) {
-            return this.getTanks().drain(from.ordinal(), maxDrain, doDrain);
+            return this.getTanks().drain(from, maxDrain, doDrain);
         }
     };
     private final AppEngInternalAEInventory config = new AppEngInternalAEInventory(this, 6);
