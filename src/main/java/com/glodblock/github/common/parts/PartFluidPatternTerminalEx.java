@@ -165,7 +165,7 @@ public class PartFluidPatternTerminalEx extends FCBasePart {
                         this.setCombineMode(data.getInteger("combine") == 1);
                         this.setPrioritization(data.getInteger("prioritize") == 1);
                     }
-                    this.setInverted(inputsCount <= 8 && outputCount >= 8);
+                    this.setInverted(inputsCount <= 8 && outputCount > 8);
                     this.setActivePage(0);
 
                     for (int i = 0; i < this.crafting.getSizeInventory(); i++) {
