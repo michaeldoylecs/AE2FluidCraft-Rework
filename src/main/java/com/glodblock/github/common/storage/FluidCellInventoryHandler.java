@@ -55,6 +55,11 @@ public class FluidCellInventoryHandler extends MEInventoryHandler<IAEFluidStack>
     }
 
     @Override
+    public Iterable<IAEFluidStack> getPartitionInv() {
+        return (Iterable<IAEFluidStack>) Ae2Reflect.getPartitionList(this).getItems();
+    }
+
+    @Override
     public boolean isPreformatted()
     {
         return !Ae2Reflect.getPartitionList(this).isEmpty();

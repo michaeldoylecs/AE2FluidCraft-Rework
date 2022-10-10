@@ -30,6 +30,7 @@ import com.google.common.base.Optional;
 import cpw.mods.fml.common.registry.GameRegistry;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
@@ -140,6 +141,14 @@ public class ItemBasicFluidStorageCell extends AEBaseItem implements IStorageFlu
                 {
                     final String list = (handler.getIncludeExcludeMode() == IncludeExclude.WHITELIST ? GuiText.Included : GuiText.Excluded).getLocal();
                     lines.add(GuiText.Partitioned.getLocal() + " - " + list + ' ' + GuiText.Precise.getLocal());
+
+                    if (GuiScreen.isShiftKeyDown())
+                    {
+                        lines.add(GuiText.Filter.getLocal() + ": ");
+                        for (IAEFluidStack aeFluidStack : handler.getPartitionInv()) {
+                            if (aeFluidStack != null) lines.add("  " + aeFluidStack.getFluidStack().getLocalizedName());
+                        }
+                    }
                 }
             }
         }
