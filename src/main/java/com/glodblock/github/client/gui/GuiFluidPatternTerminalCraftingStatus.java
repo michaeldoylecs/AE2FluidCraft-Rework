@@ -5,6 +5,7 @@ import appeng.client.gui.implementations.GuiCraftingStatus;
 import appeng.client.gui.widgets.GuiTabButton;
 import com.glodblock.github.common.parts.PartFluidPatternTerminal;
 import com.glodblock.github.common.parts.PartFluidPatternTerminalEx;
+import com.glodblock.github.common.parts.PartFluidTerminal;
 import com.glodblock.github.inventory.InventoryHandler;
 import com.glodblock.github.inventory.gui.GuiType;
 import com.glodblock.github.loader.ItemAndBlockHolder;
@@ -29,6 +30,9 @@ public class GuiFluidPatternTerminalCraftingStatus extends GuiCraftingStatus {
             Ae2ReflectClient.rewriteIcon(this, new ItemStack(ItemAndBlockHolder.FLUID_TERMINAL, 1));
         else if (host instanceof PartFluidPatternTerminalEx)
             Ae2ReflectClient.rewriteIcon(this, new ItemStack(ItemAndBlockHolder.FLUID_TERMINAL_EX, 1));
+        else if (host instanceof PartFluidTerminal) {
+            Ae2ReflectClient.rewriteIcon(this, new ItemStack(ItemAndBlockHolder.FLUID_TERM, 1));
+        }
         super.initGui();
         originalGuiBtn = Ae2ReflectClient.getOriginalGuiButton(this);
     }
@@ -40,6 +44,8 @@ public class GuiFluidPatternTerminalCraftingStatus extends GuiCraftingStatus {
                 InventoryHandler.switchGui(GuiType.FLUID_PATTERN_TERMINAL);
             else if (host instanceof PartFluidPatternTerminalEx)
                 InventoryHandler.switchGui(GuiType.FLUID_PATTERN_TERMINAL_EX);
+            else if (host instanceof PartFluidTerminal)
+                InventoryHandler.switchGui(GuiType.FLUID_TERMINAL);
         } else {
             super.actionPerformed(btn);
         }

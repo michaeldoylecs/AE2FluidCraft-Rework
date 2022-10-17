@@ -79,8 +79,19 @@ public class ItemFluidDrop extends Item {
         return stack;
     }
 
+    public static ItemStack newStack1(FluidStack fluid) {
+        if (fluid == null) {
+            return null;
+        }
+        ItemStack stack = new ItemStack(ItemAndBlockHolder.DROP, fluid.amount);
+        NBTTagCompound tag = new NBTTagCompound();
+        tag.setString("Fluid", fluid.getFluid().getName());
+        stack.setTagCompound(tag);
+        return stack;
+    }
+
     public static FluidStack getFluidStack(ItemStack stack) {
-        if (stack == null|| stack.getItem() != ItemAndBlockHolder.DROP || !stack.hasTagCompound()) {
+        if (stack == null || stack.getItem() != ItemAndBlockHolder.DROP || !stack.hasTagCompound()) {
             return null;
         }
         NBTTagCompound tag = Objects.requireNonNull(stack.getTagCompound());

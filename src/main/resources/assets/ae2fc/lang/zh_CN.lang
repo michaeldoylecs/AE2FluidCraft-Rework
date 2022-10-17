@@ -29,6 +29,7 @@ tile.ingredient_buffer.name=原材料缓存仓
 tile.large_ingredient_buffer.name=大型原材料缓存仓
 tile.oc_pattern_editor.name=OC样板编辑器
 
+ae2fc.tooltip.fluid_terminal=我们不再需要EC2了吗?
 ae2fc.tooltip.invalid_fluid=流体无效！
 ae2fc.tooltip.encode_pattern=编写样板
 ae2fc.tooltip.fluid_packet=使用ME流体封包解码器\n来将其转换回流体形式。

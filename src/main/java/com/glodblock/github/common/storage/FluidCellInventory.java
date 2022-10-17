@@ -133,9 +133,7 @@ public class FluidCellInventory implements IFluidCellInventory {
 
     @Override
     public boolean canHoldNewFluid() {
-        final long bytesFree = this.getFreeBytes();
-
-        return ( bytesFree > this.getBytesPerType() || ( bytesFree == this.getBytesPerType() && this.getUnusedFluidCount() > 0 ) ) && this.getRemainingFluidTypes() > 0;
+        return this.getRemainingFluidCount() > 0 && getRemainingFluidTypes() > 0;
     }
 
     @Override
@@ -150,8 +148,10 @@ public class FluidCellInventory implements IFluidCellInventory {
 
     @Override
     public long getUsedBytes() {
-        final long bytesForItemCount = ( this.getStoredFluidCount() + this.getUnusedFluidCount() ) / 8 / 256;
-        return this.getStoredFluidTypes() * this.getBytesPerType() + bytesForItemCount;
+        long bytesForItemCount = (this.getStoredFluidCount() + this.getUnusedFluidCount()) / (8 * 256);
+        long tmp = this.getStoredFluidTypes() * this.getBytesPerType() + bytesForItemCount;
+        if (this.getUnusedFluidCount() > 0 && tmp < this.getTotalBytes()) tmp++;
+        return tmp;
     }
 
     @Override
@@ -178,7 +178,7 @@ public class FluidCellInventory implements IFluidCellInventory {
 
     @Override
     public long getRemainingFluidCount() {
-        final long remaining = this.getFreeBytes() * 8 * 256 + this.getUnusedFluidCount();
+        final long remaining = (this.getTotalBytes() - (this.getTotalFluidTypes() * 8)) * 8 * 256 - this.getStoredFluidCount();
         return remaining > 0 ? remaining : 0;
     }
 
@@ -370,7 +370,6 @@ public class FluidCellInventory implements IFluidCellInventory {
                     this.updateFluidCount( remainingItemSlots );
                     this.saveChanges();
                 }
-
                 return r;
             }
             else

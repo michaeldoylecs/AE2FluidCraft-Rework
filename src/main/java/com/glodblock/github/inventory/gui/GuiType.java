@@ -152,6 +152,18 @@ public enum GuiType {
         }
     }),
 
+    FLUID_TERMINAL(new PartGuiFactory<ITerminalHost>(ITerminalHost.class) {
+        @Override
+        protected Object createServerGui(EntityPlayer player, ITerminalHost inv) {
+            return new ContainerFluidTerminal(player.inventory, inv);
+        }
+
+        @Override
+        protected Object createClientGui(EntityPlayer player, ITerminalHost inv) {
+            return new GuiFluidTerminal(player.inventory, inv);
+        }
+    }),
+
     FLUID_PATTERN_TERMINAL(new PartGuiFactory<ITerminalHost>(ITerminalHost.class) {
         @Override
         protected Object createServerGui(EntityPlayer player, ITerminalHost inv) {

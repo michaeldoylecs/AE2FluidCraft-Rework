@@ -9,7 +9,7 @@ import net.minecraft.util.IIcon;
 import net.minecraft.util.ResourceLocation;
 
 public enum FCPartsTexture {
-
+    PartFluidTerminal_Bright("fluid_terminal_bright"), PartFluidTerminal_Dark("fluid_terminal_dark"), PartFluidTerminal_Colored("fluid_terminal_medium"),
     PartFluidPatternTerminal_Bright("pattern_terminal_bright"), PartFluidPatternTerminal_Dark("pattern_terminal_dark"),
     PartFluidPatternTerminal_Colored("pattern_terminal_medium"), PartTerminalBroad("terminal_broad"),
     PartFluidImportBus("fluid_import_face"), PartFluidExportBus("fluid_export_face"),
@@ -19,7 +19,7 @@ public enum FCPartsTexture {
     private final String name;
     public net.minecraft.util.IIcon IIcon;
 
-    FCPartsTexture( final String name )
+    FCPartsTexture(final String name)
     {
         this.name = name;
     }

@@ -14,6 +14,7 @@ public class NameConst {
 
     public static final String ITEM_FLUID_DROP = "fluid_drop";
     public static final String ITEM_FLUID_ENCODED_PATTERN = "fluid_encoded_pattern";
+    public static final String ITEM_PART_FLUID_TERMINAL = "part_fluid_terminal";
     public static final String ITEM_PART_FLUID_PATTERN_TERMINAL = "part_fluid_pattern_terminal";
     public static final String ITEM_PART_FLUID_PATTERN_TERMINAL_EX = "part_fluid_pattern_terminal_ex";
     public static final String ITEM_PART_FLUID_INTERFACE = "part_fluid_interface";
@@ -24,6 +25,7 @@ public class NameConst {
     public static final String ITEM_FLUID_PART = "fluid_part";
 
     public static final String TT_KEY = FluidCraft.MODID + ".tooltip.";
+    public static final String TT_FLUID_TERMINAL = TT_KEY + "fluid_terminal";
     public static final String TT_INVALID_FLUID = TT_KEY + "invalid_fluid";
     public static final String TT_FLUID_PACKET = TT_KEY + "fluid_packet";
     public static final String TT_ENCODE_PATTERN = TT_KEY + "encode_pattern";
@@ -33,6 +35,7 @@ public class NameConst {
     public static final String RES_KEY = FluidCraft.MODID + ":";
 
     public static final String GUI_KEY = FluidCraft.MODID + ".gui.";
+    public static final String GUI_FLUID_TERMINAL = GUI_KEY + ITEM_PART_FLUID_TERMINAL;
     public static final String GUI_FLUID_PATTERN_TERMINAL = GUI_KEY + ITEM_PART_FLUID_PATTERN_TERMINAL;
     public static final String GUI_FLUID_PATTERN_TERMINAL_EX = GUI_KEY + ITEM_PART_FLUID_PATTERN_TERMINAL_EX;
     public static final String GUI_FLUID_PATTERN_ENCODER = GUI_KEY + BLOCK_FLUID_PATTERN_ENCODER;
