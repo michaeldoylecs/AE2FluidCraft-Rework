@@ -15,6 +15,7 @@ import appeng.helpers.Reflected;
 import com.glodblock.github.FluidCraft;
 import com.glodblock.github.common.parts.PartFluidPatternTerminal;
 import com.glodblock.github.common.parts.PartFluidPatternTerminalEx;
+import com.glodblock.github.common.parts.PartFluidTerminal;
 import com.glodblock.github.inventory.gui.GuiType;
 import com.glodblock.github.loader.ItemAndBlockHolder;
 import com.glodblock.github.network.CPacketCraftRequest;
@@ -74,8 +75,7 @@ public class GuiFluidCraftAmount extends AEBaseGui
         final IDefinitions definitions = AEApi.instance().definitions();
         final IParts parts = definitions.parts();
 
-        if( target instanceof PartFluidPatternTerminal)
-        {
+        if (target instanceof PartFluidPatternTerminal) {
             myIcon = new ItemStack(ItemAndBlockHolder.FLUID_TERMINAL, 1);
             this.originalGui = GuiType.FLUID_PATTERN_TERMINAL;
         }
@@ -83,16 +83,19 @@ public class GuiFluidCraftAmount extends AEBaseGui
             myIcon = new ItemStack(ItemAndBlockHolder.FLUID_TERMINAL_EX, 1);
             this.originalGui = GuiType.FLUID_PATTERN_TERMINAL_EX;
         }
-
-        if( this.originalGui != null && myIcon != null )
-        {
-            this.buttonList.add( this.originalGuiBtn = new GuiTabButton( this.guiLeft + 154, this.guiTop, myIcon, myIcon.getDisplayName(), itemRender ) );
+        if (target instanceof PartFluidTerminal) {
+            myIcon = new ItemStack(ItemAndBlockHolder.FLUID_TERM, 1);
+            this.originalGui = GuiType.FLUID_TERMINAL;
         }
 
-        this.amountToCraft = new GuiNumberBox( this.fontRendererObj, this.guiLeft + 62, this.guiTop + 57, 59, this.fontRendererObj.FONT_HEIGHT, Integer.class );
-        this.amountToCraft.setEnableBackgroundDrawing( false );
-        this.amountToCraft.setMaxStringLength( 16 );
-        this.amountToCraft.setTextColor( 0xFFFFFF );
+        if (this.originalGui != null && myIcon != null) {
+            this.buttonList.add(this.originalGuiBtn = new GuiTabButton(this.guiLeft + 154, this.guiTop, myIcon, myIcon.getDisplayName(), itemRender));
+        }
+
+        this.amountToCraft = new GuiNumberBox(this.fontRendererObj, this.guiLeft + 62, this.guiTop + 57, 59, this.fontRendererObj.FONT_HEIGHT, Integer.class);
+        this.amountToCraft.setEnableBackgroundDrawing(false);
+        this.amountToCraft.setMaxStringLength(16);
+        this.amountToCraft.setTextColor(0xFFFFFF);
         this.amountToCraft.setVisible( true );
         this.amountToCraft.setFocused( true );
         this.amountToCraft.setText( "1" );

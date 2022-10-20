@@ -1,5 +1,6 @@
 item.fluid_drop.name=drop of %s
 item.fluid_encoded_pattern.name=Encode Pattern
+item.part_fluid_terminal.name=ME Fluid Terminal
 item.part_fluid_pattern_terminal.name=ME Fluid Pattern Terminal
 item.part_fluid_pattern_terminal_ex.name=ME Fluid Processing Pattern Terminal
 item.part_fluid_interface.name=ME Dual Interface
@@ -29,6 +30,7 @@ tile.ingredient_buffer.name=Ingredient Buffer
 tile.large_ingredient_buffer.name=Large Ingredient Buffer
 tile.oc_pattern_editor.name=OC Pattern Editor
 
+ae2fc.tooltip.fluid_terminal=uh So we don't need EC2 anymore?
 ae2fc.tooltip.invalid_fluid=Invalid fluid!
 ae2fc.tooltip.encode_pattern=Encode Patter
 ae2fc.tooltip.fluid_packet=Use a Fluid Packet Decoder to\nconvert this back into fluid.

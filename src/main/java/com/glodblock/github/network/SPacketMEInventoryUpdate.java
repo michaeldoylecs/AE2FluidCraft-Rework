@@ -1,7 +1,10 @@
 package com.glodblock.github.network;
 
+import appeng.api.storage.data.IAEFluidStack;
 import appeng.api.storage.data.IAEItemStack;
+import appeng.util.item.AEFluidStack;
 import appeng.util.item.AEItemStack;
+import com.glodblock.github.client.gui.GuiFCBaseFluidMonitor;
 import com.glodblock.github.client.gui.GuiFCBaseMonitor;
 import com.glodblock.github.client.gui.GuiFluidCraftConfirm;
 import cpw.mods.fml.common.network.simpleimpl.IMessage;
@@ -18,27 +21,39 @@ import java.util.List;
 
 public class SPacketMEInventoryUpdate implements IMessage {
 
-    private List<IAEItemStack> list;
+    private List<Object> list;
     private byte ref;
+    private boolean isFluid = false;
 
     public SPacketMEInventoryUpdate() {
         ref = 0;
         list = new LinkedList<>();
     }
 
+    public SPacketMEInventoryUpdate(Boolean isFluid) {
+        ref = 0;
+        list = new LinkedList<>();
+        this.isFluid = isFluid;
+    }
+
     public SPacketMEInventoryUpdate(byte b) {
-        this.ref = b;
+        ref = b;
         list = new LinkedList<>();
     }
 
     @Override
     public void fromBytes(ByteBuf buf) {
+        isFluid = buf.readBoolean();
         long amount = buf.readLong();
         ref = buf.readByte();
         list = new LinkedList<>();
         try {
             for (int i = 0; i < amount; i ++) {
-                list.add(AEItemStack.loadItemStackFromPacket(buf));
+                if (isFluid) {
+                    list.add(AEFluidStack.loadFluidStackFromPacket(buf));
+                } else {
+                    list.add(AEItemStack.loadItemStackFromPacket(buf));
+                }
             }
         } catch (IOException io) {
             io.printStackTrace();
@@ -47,18 +62,28 @@ public class SPacketMEInventoryUpdate implements IMessage {
 
     @Override
     public void toBytes(ByteBuf buf) {
+        if (isFluid) {
+            buf.writeBoolean(true);
+        } else {
+            buf.writeBoolean(false);
+        }
         buf.writeLong(list.size());
         buf.writeByte(ref);
         try {
-            for (IAEItemStack itemStack : list) {
-                itemStack.writeToPacket(buf);
+            for (Object is : list) {
+                if (is instanceof IAEItemStack) ((IAEItemStack) is).writeToPacket(buf);
+                if (is instanceof IAEFluidStack) ((IAEFluidStack) is).writeToPacket(buf);
             }
         } catch (IOException io) {
             io.printStackTrace();
         }
     }
 
-    public void appendItem( final IAEItemStack is ) throws BufferOverflowException {
+    public void appendItem(final IAEItemStack is) throws BufferOverflowException {
+        list.add(is);
+    }
+
+    public void appendFluid(final IAEFluidStack is) throws BufferOverflowException {
         list.add(is);
     }
 
@@ -71,12 +96,12 @@ public class SPacketMEInventoryUpdate implements IMessage {
         @Override
         public IMessage onMessage(SPacketMEInventoryUpdate message, MessageContext ctx) {
             final GuiScreen gs = Minecraft.getMinecraft().currentScreen;
-            if( gs instanceof GuiFCBaseMonitor)
-            {
-                ( (GuiFCBaseMonitor) gs ).postUpdate(message.list);
-            }
-            else if ( gs instanceof GuiFluidCraftConfirm) {
-                ( (GuiFluidCraftConfirm) gs ).postUpdate( message.list, message.ref );
+            if (gs instanceof GuiFCBaseFluidMonitor) {
+                ((GuiFCBaseFluidMonitor) gs).postUpdate((List<IAEFluidStack>) (List<?>) message.list);
+            } else if (gs instanceof GuiFCBaseMonitor) {
+                ((GuiFCBaseMonitor) gs).postUpdate((List<IAEItemStack>) (List<?>) message.list);
+            } else if (gs instanceof GuiFluidCraftConfirm) {
+                ((GuiFluidCraftConfirm) gs).postUpdate((List<IAEItemStack>) (List<?>) message.list, message.ref);
             }
             return null;
         }

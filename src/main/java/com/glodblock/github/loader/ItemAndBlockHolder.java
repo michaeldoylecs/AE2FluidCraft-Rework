@@ -17,6 +17,7 @@ public class ItemAndBlockHolder {
 
     public static ItemFluidDrop DROP = new ItemFluidDrop().register();
     public static ItemFluidEncodedPattern PATTERN = new ItemFluidEncodedPattern().register();
+    public static ItemPartFluidTerminal FLUID_TERM = new ItemPartFluidTerminal().register();
     public static ItemPartFluidPatternTerminal FLUID_TERMINAL = new ItemPartFluidPatternTerminal().register();
     public static ItemPartFluidPatternTerminalEx FLUID_TERMINAL_EX = new ItemPartFluidPatternTerminalEx().register();
     public static ItemPartFluidInterface FLUID_INTERFACE = new ItemPartFluidInterface().register();

@@ -34,6 +34,7 @@ public class RecipeLoader implements Runnable {
     public final static ItemStack AE2_CORE_FOM = new ItemStack(GameRegistry.findItem("appliedenergistics2", "item.ItemMultiMaterial"), 1, 43);
     public final static ItemStack PISTON = new ItemStack(Blocks.piston, 1);
     public final static ItemStack AE2_BLANK_PATTERN = new ItemStack(GameRegistry.findItem("appliedenergistics2", "item.ItemMultiMaterial"), 1, 52);
+    public final static ItemStack AE2_TERMINAL = new ItemStack(GameRegistry.findItem("appliedenergistics2", "item.ItemMultiPart"), 1, 380);
     public final static ItemStack BUCKET = new ItemStack(Items.bucket, 1);
     public final static ItemStack IRON_BAR = new ItemStack(Blocks.iron_bars, 1);
 
@@ -49,7 +50,8 @@ public class RecipeLoader implements Runnable {
         GameRegistry.addShapelessRecipe(FLUID_TERMINAL_EX.stack(), FLUID_TERMINAL.stack(), AE2_PROCESS_CAL, AE2_PROCESS_ENG, AE2_PROCESS_LOG);
         GameRegistry.addRecipe(new ShapedOreRecipe(BUFFER.stack(), "ILI", "AGF", "IBI", 'I', "ingotIron", 'G', AE2_QUARTZ_GLASS, 'L', AE2_CELL_1K, 'A', AE2_CORE_ANN, 'F', AE2_CORE_FOM, 'B', BUCKET));
         GameRegistry.addRecipe(new ShapedOreRecipe(LARGE_BUFFER.stack(), "BGB", "GEG", "BGB", 'B', BUFFER.stack(), 'G', AE2_QUARTZ_GLASS, 'E', AE2_PROCESS_ENG));
-        GameRegistry.addShapelessRecipe(AE2_BLANK_PATTERN,PATTERN.stack());
+        GameRegistry.addShapelessRecipe(AE2_BLANK_PATTERN, PATTERN.stack());
+        GameRegistry.addShapelessRecipe(FLUID_TERM.stack(), AE2_TERMINAL, BUFFER);
         if (Config.fluidCells) {
             OreDictionary.registerOre("anyCertusCrystal", AE2_PURE_CERTUS);
             for (ItemStack it : OreDictionary.getOres("crystalCertusQuartz"))
