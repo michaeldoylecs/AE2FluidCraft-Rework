@@ -91,6 +91,7 @@ public class FluidRepo extends ItemRepo {
     public void postUpdate(final IAEItemStack is) {
         IAEFluidStack fluid = ItemFluidDrop.getAeFluidStack(is);
         IAEItemStack i = AEItemStack.create(is.getItemStack().setStackDisplayName(fluid.getFluid().getLocalizedName()));
+        i.setStackSize(is.getStackSize());
         final IAEItemStack st = this.list.findPrecise(i);
         if (st != null) {
             st.reset();

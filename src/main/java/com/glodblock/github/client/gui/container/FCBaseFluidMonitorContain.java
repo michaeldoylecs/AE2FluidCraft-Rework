@@ -50,7 +50,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.fluids.FluidContainerRegistry;
-import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.IFluidContainerItem;
 import org.apache.commons.lang3.tuple.MutablePair;
 
@@ -382,13 +381,13 @@ public class FCBaseFluidMonitorContain extends AEBaseContainer implements IConfi
                 }
             } else if (!Util.FluidUtil.isEmpty(fluidContainer)) {
 //              add fluid to ae network
-                FluidStack fluidStack = Util.getFluidFromItem(fluidContainer);
-                final AEFluidStack aeFluidStack = AEFluidStack.create(fluidStack);
+                AEFluidStack fluidStack = Util.getAEFluidFromItem(fluidContainer);
+                final IAEFluidStack aeFluidStack = fluidStack.copy();
                 // simulate result is incorrect. so I'm using other solution and ec2 both mod have same issues
                 final IAEFluidStack notInserted = this.host.getFluidInventory().injectItems(aeFluidStack, Actionable.MODULATE, this.getActionSource());
                 MutablePair<Integer, ItemStack> drainStack = Util.FluidUtil.drainStack(out.copy(), aeFluidStack.getFluidStack());
                 if (notInserted != null && notInserted.getStackSize() > 0) {
-                    if (fluidStack.amount == notInserted.getStackSize()) continue;
+                    if (fluidStack.getStackSize() == notInserted.getStackSize()) continue;
                     aeFluidStack.decStackSize(notInserted.getStackSize());
 
                     if (drainStack.left > aeFluidStack.getStackSize() && FluidContainerRegistry.isContainer(drainStack.right)) {
@@ -398,11 +397,11 @@ public class FCBaseFluidMonitorContain extends AEBaseContainer implements IConfi
                     }
 
                     this.dropItem(drainStack.right, (int) (aeFluidStack.getStackSize() / drainStack.left)); // drop empty item
-                    out.stackSize = ((int) (notInserted.getStackSize()) / drainStack.left);
+                    out.stackSize = (int) (notInserted.getStackSize() / drainStack.left);
                     if (drainStack.right.getItem() instanceof IFluidContainerItem) {
                         if (notInserted.getStackSize() % drainStack.left > 0) {
-                            fluidStack.amount = (int) (notInserted.getStackSize() % drainStack.left);
-                            ((IFluidContainerItem) drainStack.right.getItem()).fill(drainStack.right, fluidStack, true);
+                            fluidStack.setStackSize((notInserted.getStackSize() % drainStack.left));
+                            ((IFluidContainerItem) drainStack.right.getItem()).fill(drainStack.right, fluidStack.getFluidStack(), true);
                             this.dropItem(drainStack.right, 1);
                         }
                     } else if (FluidContainerRegistry.isContainer(drainStack.right)) {

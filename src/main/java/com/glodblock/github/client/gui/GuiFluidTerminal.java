@@ -5,7 +5,6 @@ import appeng.api.storage.data.IAEFluidStack;
 import appeng.api.storage.data.IAEItemStack;
 import appeng.client.me.SlotME;
 import appeng.client.render.AppEngRenderItem;
-import appeng.util.item.AEItemStack;
 import com.glodblock.github.FluidCraft;
 import com.glodblock.github.client.gui.container.ContainerFluidTerminal;
 import com.glodblock.github.client.gui.container.FCBaseFluidMonitorContain;
@@ -48,13 +47,11 @@ public class GuiFluidTerminal extends GuiBaseFluidTerminal {
 
     public boolean drawSlot0(Slot slot) {
         if (slot instanceof SlotME) {
-            AEItemStack stack = AEItemStack.create(slot.getStack());
+            IAEItemStack stack = ((SlotME) slot).getAEStack();
             if (stack == null) return true;
             FluidStack fluidStack = ItemFluidDrop.getFluidStack(slot.getStack());
             this.drawWidget(slot.xDisplayPosition, slot.yDisplayPosition, fluidStack.getFluid());
-            IAEItemStack fake = stack.copy();
-            fake.setStackSize(fluidStack.amount);
-            stackSizeRenderer.setAeStack(fake);
+            stackSizeRenderer.setAeStack(stack);
             stackSizeRenderer.renderItemOverlayIntoGUI(fontRendererObj, mc.getTextureManager(), stack.getItemStack(), slot.xDisplayPosition, slot.yDisplayPosition);
             return false;
         }
