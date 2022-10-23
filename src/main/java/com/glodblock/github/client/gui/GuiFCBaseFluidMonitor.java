@@ -39,8 +39,10 @@ import com.glodblock.github.common.item.ItemFluidDrop;
 import com.glodblock.github.network.CPacketInventoryAction;
 import com.glodblock.github.util.Ae2ReflectClient;
 import com.glodblock.github.util.ModAndClassUtil;
+import com.glodblock.github.util.NameConst;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
+import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.Slot;
@@ -51,8 +53,6 @@ import org.lwjgl.input.Mouse;
 
 import java.io.IOException;
 import java.util.List;
-
-import static com.glodblock.github.common.item.ItemFluidDrop.newStack1;
 
 public class GuiFCBaseFluidMonitor extends AEBaseMEGui implements ISortSource, IConfigManagerHost {
 
@@ -105,7 +105,7 @@ public class GuiFCBaseFluidMonitor extends AEBaseMEGui implements ISortSource, I
 
     public void postUpdate(final List<IAEFluidStack> list) {
         for (final IAEFluidStack is : list) {
-            IAEItemStack stack = AEItemStack.create(newStack1(is.getFluidStack()));
+            IAEItemStack stack = AEItemStack.create(ItemFluidDrop.newDisplayStack(is.getFluidStack()));
             stack.setStackSize(is.getStackSize());
             this.repo.postUpdate(stack);
         }
@@ -302,7 +302,7 @@ public class GuiFCBaseFluidMonitor extends AEBaseMEGui implements ISortSource, I
 
     @Override
     public void drawFG(final int offsetX, final int offsetY, final int mouseX, final int mouseY) {
-        this.fontRendererObj.drawString(this.getGuiDisplayName(GuiText.Terminal.getLocal()), 8, 6, 4210752);
+        this.fontRendererObj.drawString(this.getGuiDisplayName(I18n.format(NameConst.GUI_FLUID_TERMINAL)), 8, 6, 4210752);
         this.fontRendererObj.drawString(GuiText.inventory.getLocal(), 8, this.ySize - 96 + 3, 4210752);
     }
 

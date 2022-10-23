@@ -70,4 +70,8 @@ ae2fc.gui.oc_pattern_editor=OC Pattern Editor
 ae2fc.gui.button.set=Set
 ae2fc.gui.part_fluid_import=ME Fluid Import Bus
 ae2fc.gui.part_fluid_export=ME Fluid Export Bus
+ae2fc.gui.part_fluid_terminal=Fluid Terminal
+
+error.unknown=Unknown
+
 itemGroup.ae2fc=Fluid Craft For AE2

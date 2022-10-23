@@ -46,6 +46,9 @@ public class ItemFluidDrop extends Item {
     @Override
     public String getItemStackDisplayName(ItemStack stack) {
         FluidStack fluid = getFluidStack(stack);
+        if (ItemFluidPacket.isDisplay(stack)) {
+            return fluid != null ? fluid.getLocalizedName() : StatCollector.translateToLocalFormatted("error.unknown");
+        }
         return StatCollector.translateToLocalFormatted("item.fluid_drop.name", fluid == null ? "???" : fluid.getLocalizedName());
     }
 
@@ -54,6 +57,7 @@ public class ItemFluidDrop extends Item {
     @SideOnly(Side.CLIENT)
     public void addInformation(ItemStack stack, EntityPlayer player, List tooltip, boolean flag) {
         FluidStack fluid = getFluidStack(stack);
+        if (ItemFluidPacket.isDisplay(stack)) return;
         if (fluid != null) {
             tooltip.add(String.format(EnumChatFormatting.GRAY + "%s, 1 mB", fluid.getLocalizedName()));
         } else {
@@ -79,13 +83,14 @@ public class ItemFluidDrop extends Item {
         return stack;
     }
 
-    public static ItemStack newStack1(FluidStack fluid) {
+    public static ItemStack newDisplayStack(FluidStack fluid) {
         if (fluid == null) {
             return null;
         }
         ItemStack stack = new ItemStack(ItemAndBlockHolder.DROP, fluid.amount);
         NBTTagCompound tag = new NBTTagCompound();
         tag.setString("Fluid", fluid.getFluid().getName());
+        tag.setBoolean("DisplayOnly", true);
         stack.setTagCompound(tag);
         return stack;
     }
