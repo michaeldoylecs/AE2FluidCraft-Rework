@@ -76,13 +76,34 @@ public final class Util {
         return player == null || permission == null || securityGrid == null || securityGrid.hasPermission(player, permission);
     }
 
-    public static ItemStack copyStackWithSize(ItemStack itemStack, int size)
-    {
+    public static ItemStack copyStackWithSize(ItemStack itemStack, int size) {
         if (size == 0 || itemStack == null)
             return null;
         ItemStack copy = itemStack.copy();
         copy.stackSize = size;
         return copy;
+    }
+
+    public static AEFluidStack getAEFluidFromItem(ItemStack stack) {
+        if (stack != null && (stack.getItem() instanceof IFluidContainerItem || FluidContainerRegistry.isContainer(stack))) {
+            if (stack.getItem() instanceof IFluidContainerItem) {
+                FluidStack fluid = ((IFluidContainerItem) stack.getItem()).getFluid(stack);
+                if (fluid != null) {
+                    AEFluidStack fluid0 = AEFluidStack.create(fluid.copy());
+                    fluid0.setStackSize(fluid0.getStackSize() * stack.stackSize);
+                    return fluid0;
+                }
+            }
+            if (FluidContainerRegistry.isContainer(stack)) {
+                FluidStack fluid = FluidContainerRegistry.getFluidForFilledItem(stack);
+                if (fluid != null) {
+                    AEFluidStack fluid0 = AEFluidStack.create(fluid.copy());
+                    fluid0.setStackSize(fluid0.getStackSize() * stack.stackSize);
+                    return fluid0;
+                }
+            }
+        }
+        return null;
     }
 
     public static FluidStack getFluidFromItem(ItemStack stack) {

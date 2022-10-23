@@ -11,7 +11,6 @@ import appeng.api.storage.data.IAEFluidStack;
 import appeng.api.storage.data.IItemList;
 import appeng.util.Platform;
 import appeng.util.item.AEFluidStack;
-import com.glodblock.github.util.Util;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -346,8 +345,6 @@ public class FluidCellInventory implements IFluidCellInventory {
             return input;
         }
 
-        final FluidStack sharedFluidStack = input.getFluidStack();
-
         final IAEFluidStack l = this.getCellItems().findPrecise( input );
 
         if( l != null )
@@ -393,21 +390,20 @@ public class FluidCellInventory implements IFluidCellInventory {
             {
                 if( input.getStackSize() > remainingItemCount )
                 {
-                    final FluidStack toReturn = Util.cloneFluidStack(sharedFluidStack);
-                    toReturn.amount = (int) (sharedFluidStack.amount - remainingItemCount);
+                    final IAEFluidStack toReturn = input.copy();
+                    toReturn.decStackSize(remainingItemCount);
 
-                    if( mode == Actionable.MODULATE )
-                    {
-                        final FluidStack toWrite = Util.cloneFluidStack( sharedFluidStack );
-                        toWrite.amount = (int) remainingItemCount;
+                    if (mode == Actionable.MODULATE) {
+                        IAEFluidStack toWrite = input.copy();
+                        toWrite.setStackSize(remainingItemCount);
 
-                        this.cellItems.add( AEFluidStack.create( toWrite ) );
-                        this.updateFluidCount( toWrite.amount );
+                        this.cellItems.add(toWrite);
+                        this.updateFluidCount(toWrite.getStackSize());
 
                         this.saveChanges();
                     }
 
-                    return AEFluidStack.create( toReturn );
+                    return toReturn;
                 }
 
                 if( mode == Actionable.MODULATE )
@@ -431,7 +427,7 @@ public class FluidCellInventory implements IFluidCellInventory {
             return null;
         }
 
-        final long size = Math.min( Integer.MAX_VALUE, request.getStackSize() );
+        final long size = request.getStackSize();
 
         IAEFluidStack results = null;
 
