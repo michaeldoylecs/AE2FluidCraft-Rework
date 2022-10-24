@@ -2,6 +2,8 @@ package com.glodblock.github.inventory;
 
 import appeng.api.config.FuzzyMode;
 import appeng.api.config.InsertionMode;
+import appeng.me.GridAccessException;
+import appeng.parts.p2p.PartP2PLiquids;
 import appeng.tile.misc.TileInterface;
 import appeng.tile.networking.TileCableBus;
 import appeng.util.InventoryAdaptor;
@@ -27,8 +29,12 @@ import net.minecraftforge.fluids.FluidTankInfo;
 import net.minecraftforge.fluids.IFluidHandler;
 
 import javax.annotation.Nullable;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.Collections;
 import java.util.Iterator;
+import java.util.List;
+import java.util.LinkedList;
 
 public class FluidConvertingInventoryAdaptor extends InventoryAdaptor {
 
@@ -179,11 +185,38 @@ public class FluidConvertingInventoryAdaptor extends InventoryAdaptor {
 
     @Override
     public boolean containsItems() {
-        if (invFluids != null && invFluids.getTankInfo(side) != null) {
-            for (FluidTankInfo tank : invFluids.getTankInfo(side)) {
-                FluidStack fluid = tank.fluid;
-                if (fluid != null && fluid.amount > 0) {
-                    return true;
+        if (invFluids != null && invFluids.getTankInfo(this.side) != null) {
+            List<FluidTankInfo[]> tankInfos = new LinkedList<>();
+            if (invFluids instanceof TileCableBus && ((TileCableBus) invFluids).getPart(this.side) instanceof PartP2PLiquids) {
+                // read other ends of p2p for blocking mode
+                PartP2PLiquids invFluidsP2P = (PartP2PLiquids) ((TileCableBus) invFluids).getPart(this.side);
+                try {
+                    Iterator<PartP2PLiquids> it = invFluidsP2P.getOutputs().iterator();
+                    boolean checkedInput = false;
+                    while (it.hasNext() || !checkedInput) {
+                        PartP2PLiquids p2p;
+                        if (it.hasNext()) {
+                            p2p = it.next();
+                        } else {
+                            p2p = invFluidsP2P.getInput();
+                            checkedInput = true;
+                        }
+                        if (p2p == invFluidsP2P || p2p == null)
+                            continue;
+                        tankInfos.add(Ae2Reflect.getP2PLiquidTarget(p2p).getTankInfo(p2p.getSide().getOpposite()));
+                    }
+                } catch (GridAccessException e) {
+                    // ignore
+                }
+            } else {
+                tankInfos.add(invFluids.getTankInfo(this.side));
+            }
+            for (FluidTankInfo[] tankInfoArray : tankInfos) {
+                for (FluidTankInfo tank : tankInfoArray) {
+                    FluidStack fluid = tank.fluid;
+                    if (fluid != null && fluid.amount > 0) {
+                        return true;
+                    }
                 }
             }
         }
