@@ -13,8 +13,10 @@ import appeng.crafting.MECraftingInventory;
 import appeng.me.cluster.implementations.CraftingCPUCluster;
 import appeng.me.storage.MEInventoryHandler;
 import appeng.me.storage.MEPassThrough;
+import appeng.parts.p2p.PartP2PLiquids;
 import appeng.util.inv.ItemSlot;
 import appeng.util.prioitylist.IPartitionList;
+import net.minecraftforge.fluids.IFluidHandler;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
@@ -36,6 +38,7 @@ public class Ae2Reflect {
     private static final Method mCPU_getGrid;
     private static final Method mCPU_postChange;
     private static final Method mCPU_markDirty;
+    private static final Method mP2PLiquids_getTarget;
 
     static {
         try {
@@ -53,6 +56,7 @@ public class Ae2Reflect {
             mCPU_getGrid = reflectMethod(CraftingCPUCluster.class, "getGrid");
             mCPU_postChange = reflectMethod(CraftingCPUCluster.class, "postChange", IAEItemStack.class, BaseActionSource.class);
             mCPU_markDirty = reflectMethod(CraftingCPUCluster.class, "markDirty");
+            mP2PLiquids_getTarget = reflectMethod(PartP2PLiquids.class, "getTarget");
         } catch (Exception e) {
             throw new IllegalStateException("Failed to initialize AE2 reflection hacks!", e);
         }
@@ -169,6 +173,14 @@ public class Ae2Reflect {
             mCPU_markDirty.invoke(cpu);
         } catch (Exception e) {
             throw new IllegalStateException("Failed to invoke method: " + mCPU_markDirty, e);
+        }
+    }
+
+    public static IFluidHandler getP2PLiquidTarget(PartP2PLiquids p2p) {
+        try {
+            return (IFluidHandler) mP2PLiquids_getTarget.invoke(p2p);
+        } catch (Exception e) {
+            throw new IllegalStateException("Failed to invoke method: " + mP2PLiquids_getTarget, e);
         }
     }
 

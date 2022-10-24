@@ -201,18 +201,9 @@ public class FluidConvertingInventoryAdaptor extends InventoryAdaptor {
                             p2p = invFluidsP2P.getInput();
                             checkedInput = true;
                         }
-
                         if (p2p == invFluidsP2P || p2p == null)
                             continue;
-
-                        try {
-                            Method getTarget = p2p.getClass().getDeclaredMethod("getTarget");
-                            getTarget.setAccessible(true);
-                            tankInfos.add(((IFluidHandler) getTarget.invoke(p2p)).getTankInfo(p2p.getSide().getOpposite()));
-                        } catch (NoSuchMethodException  | InvocationTargetException | IllegalAccessException e) {
-                            // skip if we can't read the target
-                        }
-
+                        tankInfos.add(Ae2Reflect.getP2PLiquidTarget(p2p).getTankInfo(p2p.getSide().getOpposite()));
                     }
                 } catch (GridAccessException e) {
                     // ignore
