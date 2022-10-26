@@ -9,8 +9,6 @@ import appeng.api.networking.storage.IStorageGrid;
 import appeng.api.storage.IMEInventory;
 import appeng.api.storage.data.IAEFluidStack;
 import appeng.api.storage.data.IAEItemStack;
-import appeng.client.gui.implementations.GuiCraftConfirm;
-import appeng.client.gui.implementations.GuiCraftingCPU;
 import appeng.crafting.MECraftingInventory;
 import appeng.me.MachineSet;
 import appeng.me.cluster.implementations.CraftingCPUCluster;
@@ -189,9 +187,14 @@ public class CoreModHooks {
 
     public static boolean shouldShowTooltip(GuiContainer gui) {
         if (gui instanceof GuiFluidCraftConfirm) {
-            return ((GuiFluidCraftConfirm)gui).getHoveredStack() == null;
+            return ((GuiFluidCraftConfirm) gui).getHoveredStack() == null;
         }
         return true;
     }
 
+    public static void updateFluidTag(ItemStack whatToSend, ItemStack Result) {
+        if (Result != null && Result.getItem() instanceof ItemFluidPacket) {
+            whatToSend.setTagCompound(Result.getTagCompound());
+        }
+    }
 }
