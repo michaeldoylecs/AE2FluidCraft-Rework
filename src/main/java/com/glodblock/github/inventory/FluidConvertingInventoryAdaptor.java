@@ -29,12 +29,10 @@ import net.minecraftforge.fluids.FluidTankInfo;
 import net.minecraftforge.fluids.IFluidHandler;
 
 import javax.annotation.Nullable;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import java.util.Collections;
 import java.util.Iterator;
-import java.util.List;
 import java.util.LinkedList;
+import java.util.List;
 
 public class FluidConvertingInventoryAdaptor extends InventoryAdaptor {
 
@@ -84,7 +82,7 @@ public class FluidConvertingInventoryAdaptor extends InventoryAdaptor {
                     fluid = ItemFluidDrop.getFluidStack(toBeAdded);
                 }
 
-                if (fluid != null) {
+                if (fluid != null && invFluids.canFill(side, fluid.getFluid())) {
                     int filled = invFluids.fill(side, fluid, true);
                     if (filled > 0) {
                         fluid.amount -= filled;

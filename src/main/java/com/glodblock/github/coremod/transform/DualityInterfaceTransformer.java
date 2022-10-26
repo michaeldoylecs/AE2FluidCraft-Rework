@@ -30,7 +30,7 @@ public class DualityInterfaceTransformer extends FCClassTransformer.ClassMapper 
                 case "pushItemsOut":
                 case "pushPattern":
                 case "isBusy":
-                    return new TransformInvAdaptorCalls(api, super.visitMethod(access, name, desc, signature, exceptions));
+                    return new TransformInvAdaptorCalls(api, super.visitMethod(access, name, desc, signature, exceptions), name);
                 default:
                     return super.visitMethod(access, name, desc, signature, exceptions);
             }
@@ -39,9 +39,24 @@ public class DualityInterfaceTransformer extends FCClassTransformer.ClassMapper 
     }
 
     private static class TransformInvAdaptorCalls extends MethodVisitor {
+        private final String name;
+        private int const_1 = 0;
 
-        TransformInvAdaptorCalls(int api, MethodVisitor mv) {
+        private TransformInvAdaptorCalls(int api, MethodVisitor mv, String name) {
             super(api, mv);
+            this.name = name;
+        }
+
+        @Override
+        public void visitFieldInsn(int opcode, String owner, String name, String desc) {
+            super.visitFieldInsn(opcode, owner, name, desc);
+            if (this.name.equals("pushItemsOut") && opcode == Opcodes.PUTFIELD && const_1 == 0) {
+//                update fluid tag
+                super.visitVarInsn(Opcodes.ALOAD, 5);
+                super.visitVarInsn(Opcodes.ALOAD, 10);
+                super.visitMethodInsn(Opcodes.INVOKESTATIC, "com/glodblock/github/coremod/hooker/CoreModHooks", "updateFluidTag", "(Lnet/minecraft/item/ItemStack;Lnet/minecraft/item/ItemStack;)V", false);
+                const_1++;
+            }
         }
 
         @Override
