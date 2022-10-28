@@ -6,6 +6,7 @@ import appeng.api.storage.ITerminalHost;
 import appeng.api.storage.data.IAEItemStack;
 import appeng.container.slot.OptionalSlotFake;
 import appeng.helpers.InventoryAction;
+import appeng.items.misc.ItemEncodedPattern;
 import appeng.util.item.AEItemStack;
 import com.glodblock.github.common.item.ItemFluidDrop;
 import com.glodblock.github.common.item.ItemFluidEncodedPattern;
@@ -14,6 +15,7 @@ import com.glodblock.github.inventory.PatternConsumer;
 import com.glodblock.github.loader.ItemAndBlockHolder;
 import com.glodblock.github.util.FluidPatternDetails;
 import com.glodblock.github.util.Util;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.Slot;
@@ -195,4 +197,18 @@ public class ContainerFluidPatternTerminalEx extends FCBasePartContainerEx imple
         super.doAction(player, action, slotId, id);
     }
 
+    @Override
+    public ItemStack transferStackInSlot(EntityPlayer p, int idx) {
+        Slot clickSlot = (Slot) this.inventorySlots.get(idx);
+        ItemStack is = clickSlot.getStack();
+        if (is != null && !patternSlotOUT.getHasStack() && is.stackSize == 1 && (is.getItem() instanceof ItemFluidEncodedPattern || is.getItem() instanceof ItemEncodedPattern)) {
+            ItemStack output = is.copy();
+            patternSlotOUT.putStack(output);
+            p.inventory.setInventorySlotContents(clickSlot.getSlotIndex(), null);
+            this.detectAndSendChanges();
+            return null;
+        } else {
+            return super.transferStackInSlot(p, idx);
+        }
+    }
 }
