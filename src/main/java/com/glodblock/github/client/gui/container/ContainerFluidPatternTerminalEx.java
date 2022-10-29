@@ -116,6 +116,7 @@ public class ContainerFluidPatternTerminalEx extends FCBasePartContainerEx imple
         pattern.setCombine(this.combine ? 1:0);
         pattern.setInputs(collectInventory(craftingSlots));
         pattern.setOutputs(collectInventory(outputSlots));
+        pattern.setCanBeSubstitute(this.beSubstitute ? 1 : 0);
         patternSlotOUT.putStack(pattern.writeToStack());
     }
 

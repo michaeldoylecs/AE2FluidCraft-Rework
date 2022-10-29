@@ -42,6 +42,7 @@ public class PartFluidPatternTerminalEx extends FCBasePart {
     private boolean combine = false;
     private boolean prioritize = false;
     private boolean inverted = false;
+    private boolean beSubstitute = false;
     private int activePage = 0;
 
     public PartFluidPatternTerminalEx(ItemStack is) {
@@ -87,9 +88,9 @@ public class PartFluidPatternTerminalEx extends FCBasePart {
         this.setCombineMode( data.getBoolean("combine") );
         this.pattern.readFromNBT( data, "pattern" );
         this.output.readFromNBT( data, "outputList" );
-        this.crafting.readFromNBT( data, "craftingGrid" );
-
-        this.setSubstitution( data.getBoolean( "substitute" ) );
+        this.crafting.readFromNBT(data, "craftingGrid");
+        this.setBeSubstitute(data.getBoolean("beSubstitute"));
+        this.setSubstitution(data.getBoolean("substitute"));
         this.setPrioritization( data.getBoolean( "priorization") );
         this.setInverted( data.getBoolean( "inverted" ) );
         this.setActivePage( data.getInteger( "activePage" ) );
@@ -104,7 +105,8 @@ public class PartFluidPatternTerminalEx extends FCBasePart {
         data.setBoolean( "combine", this.combine );
         this.pattern.writeToNBT( data, "pattern" );
         this.output.writeToNBT( data, "outputList" );
-        this.crafting.writeToNBT( data, "craftingGrid" );
+        this.crafting.writeToNBT(data, "craftingGrid");
+        data.setBoolean("beSubstitute", this.beSubstitute);
         data.setBoolean("priorization", this.prioritize);
         data.setBoolean( "substitute", this.substitute );
         data.setBoolean( "inverted", this.inverted );
@@ -163,7 +165,7 @@ public class PartFluidPatternTerminalEx extends FCBasePart {
                     if(newStack != null){
                         NBTTagCompound data = newStack.getTagCompound();
                         this.setCombineMode(data.getInteger("combine") == 1);
-                        this.setPrioritization(data.getInteger("prioritize") == 1);
+                        this.setBeSubstitute(data.getBoolean("beSubstitute"));
                     }
                     this.setInverted(inputsCount <= 8 && outputCount > 8);
                     this.setActivePage(0);
@@ -224,22 +226,27 @@ public class PartFluidPatternTerminalEx extends FCBasePart {
         this.combine = shouldCombine;
     }
 
-    public boolean isSubstitution()
-    {
+    public boolean isSubstitution() {
         return this.substitute;
     }
 
-    public boolean isPrioritize()
-    {
+    public boolean isPrioritize() {
         return this.prioritize;
     }
 
-    public void setSubstitution( boolean canSubstitute )
-    {
+    public void setBeSubstitute(boolean canBeSubstitute) {
+        this.beSubstitute = canBeSubstitute;
+    }
+
+    public boolean canBeSubstitute() {
+        return this.beSubstitute;
+    }
+
+    public void setSubstitution(boolean canSubstitute) {
         this.substitute = canSubstitute;
     }
-    public void setPrioritization( boolean canPrioritize )
-    {
+
+    public void setPrioritization(boolean canPrioritize) {
         this.prioritize = canPrioritize;
     }
 

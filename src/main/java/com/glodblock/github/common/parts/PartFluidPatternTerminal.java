@@ -41,6 +41,7 @@ public class PartFluidPatternTerminal extends FCBasePart {
     private boolean craftingMode = true;
     private boolean substitute = false;
     private boolean combine = false;
+    private boolean beSubstitute = false;
 
     public PartFluidPatternTerminal(ItemStack is) {
         super(is, true);
@@ -82,8 +83,9 @@ public class PartFluidPatternTerminal extends FCBasePart {
         super.readFromNBT( data );
         this.setCraftingRecipe( data.getBoolean( "craftingMode" ) );
         this.setSubstitution( data.getBoolean( "substitute" ) );
-        this.setCombineMode( data.getBoolean("combine") );
-        this.pattern.readFromNBT( data, "pattern" );
+        this.setCombineMode(data.getBoolean("combine"));
+        this.setBeSubstitute(data.getBoolean("beSubstitute"));
+        this.pattern.readFromNBT(data, "pattern");
         this.output.readFromNBT( data, "outputList" );
         this.crafting.readFromNBT( data, "craftingGrid" );
     }
@@ -94,8 +96,9 @@ public class PartFluidPatternTerminal extends FCBasePart {
         super.writeToNBT( data );
         data.setBoolean( "craftingMode", this.craftingMode );
         data.setBoolean( "substitute", this.substitute );
-        data.setBoolean( "combine", this.combine );
-        this.pattern.writeToNBT( data, "pattern" );
+        data.setBoolean("combine", this.combine);
+        data.setBoolean("beSubstitute", this.beSubstitute);
+        this.pattern.writeToNBT(data, "pattern");
         this.output.writeToNBT( data, "outputList" );
         this.crafting.writeToNBT( data, "craftingGrid" );
     }
@@ -137,6 +140,7 @@ public class PartFluidPatternTerminal extends FCBasePart {
                     if(newStack != null){
                         NBTTagCompound data = newStack.getTagCompound();
                         this.setCombineMode(data.getInteger("combine") == 1);
+                        this.setBeSubstitute(data.getBoolean("beSubstitute"));
                     }
                     for (int i = 0; i < this.crafting.getSizeInventory(); i++) {
                         this.crafting.setInventorySlotContents(i, null);
@@ -209,14 +213,20 @@ public class PartFluidPatternTerminal extends FCBasePart {
         return this.combine;
     }
 
-    public void setSubstitution( boolean canSubstitute )
-    {
+    public void setSubstitution(boolean canSubstitute) {
         this.substitute = canSubstitute;
     }
 
-    public void setCombineMode(boolean shouldCombine)
-    {
+    public void setCombineMode(boolean shouldCombine) {
         this.combine = shouldCombine;
+    }
+
+    public void setBeSubstitute(boolean canBeSubstitute) {
+        this.beSubstitute = canBeSubstitute;
+    }
+
+    public boolean canBeSubstitute() {
+        return this.beSubstitute;
     }
 
     public void onChangeCrafting(IAEItemStack[] newCrafting, IAEItemStack[] newOutput) {
@@ -225,7 +235,7 @@ public class PartFluidPatternTerminal extends FCBasePart {
         if (crafting instanceof AppEngInternalInventory && output instanceof AppEngInternalInventory) {
             for (int x = 0; x < crafting.getSizeInventory() && x < newCrafting.length; x++) {
                 final IAEItemStack item = newCrafting[x];
-                crafting.setInventorySlotContents(x, item == null ? null: item.getItemStack());
+                crafting.setInventorySlotContents(x, item == null ? null : item.getItemStack());
             }
             for (int x = 0; x < output.getSizeInventory() && x < newOutput.length; x++) {
                 final IAEItemStack item = newOutput[x];

@@ -63,25 +63,26 @@ public class FCBasePartContainerEx extends FCBaseMonitorContain implements IAEAp
     protected final ProcessingSlotFake[] outputSlots = new ProcessingSlotFake[CRAFTING_GRID_SLOTS * CRAFTING_GRID_PAGES];
     protected final SlotRestrictedInput patternSlotIN;
     protected final SlotRestrictedInput patternSlotOUT;
-    @GuiSync( 96 + (17-9) + 11 )
+    @GuiSync(96 + (17 - 9) + 11)
     public boolean combine = false;
-    @GuiSync( 96 + (17-9) + 12 )
+    @GuiSync(96 + (17 - 9) + 12)
     public boolean substitute = false;
-    @GuiSync( 96 + (17-9) + 16 )
+    @GuiSync(96 + (17 - 9) + 16)
     public boolean inverted;
-    @GuiSync( 96 + (17-9) + 17 )
+    @GuiSync(96 + (17 - 9) + 17)
     public int activePage = 0;
-    @GuiSync( 96 + (17-9) + 13 )
+    @GuiSync(96 + (17 - 9) + 13)
     public boolean prioritize = false;
+    @GuiSync(96 + (17 - 9) + 14)
+    public boolean beSubstitute = false;
 
-    public FCBasePartContainerEx(final InventoryPlayer ip, final ITerminalHost monitorable )
-    {
-        super( ip, monitorable, false );
+    public FCBasePartContainerEx(final InventoryPlayer ip, final ITerminalHost monitorable) {
+        super(ip, monitorable, false);
         this.patternTerminal = (PartFluidPatternTerminalEx) monitorable;
         this.inverted = patternTerminal.isInverted();
 
-        final IInventory patternInv = this.getPatternTerminal().getInventoryByName( "pattern" );
-        final IInventory output = this.getPatternTerminal().getInventoryByName( "output" );
+        final IInventory patternInv = this.getPatternTerminal().getInventoryByName("pattern");
+        final IInventory output = this.getPatternTerminal().getInventoryByName("output");
         IInventory crafting = this.getPatternTerminal().getInventoryByName("crafting");
 
         for (int page = 0; page < CRAFTING_GRID_PAGES; page++) {
@@ -210,9 +211,9 @@ public class FCBasePartContainerEx extends FCBaseMonitorContain implements IAEAp
 
         encodedValue.setTag( "in", tagIn );
         encodedValue.setTag( "out", tagOut );
-        encodedValue.setBoolean( "substitute", this.isSubstitute() );
-
-        encodedValue.setTag( "in", tagIn );
+        encodedValue.setBoolean("substitute", this.isSubstitute());
+        encodedValue.setBoolean("beSubstitute", this.canBeSubstitute());
+        encodedValue.setTag("in", tagIn);
         encodedValue.setTag( "out", tagOut );
         encodedValue.setBoolean( "prioritize", this.isPrioritize() );
 
@@ -315,6 +316,7 @@ public class FCBasePartContainerEx extends FCBaseMonitorContain implements IAEAp
         {
             this.substitute = this.patternTerminal.isSubstitution();
             this.combine = this.patternTerminal.shouldCombine(); //Check out
+            this.beSubstitute = this.patternTerminal.canBeSubstitute();
             this.prioritize = this.patternTerminal.isPrioritize();
             if (inverted != patternTerminal.isInverted() || activePage != patternTerminal.getActivePage()) {
                 inverted = patternTerminal.isInverted();
@@ -451,16 +453,18 @@ public class FCBasePartContainerEx extends FCBaseMonitorContain implements IAEAp
         {
             doubleStacksInternal(this.craftingSlots);
             doubleStacksInternal(this.outputSlots);
-            if (isShift && !containsFluid(outputSlots) && !containsFluid(craftingSlots))
-            {
-                while (canDoubleStacks(craftingSlots) && canDoubleStacks(outputSlots))
-                {
+            if (isShift && !containsFluid(outputSlots) && !containsFluid(craftingSlots)) {
+                while (canDoubleStacks(craftingSlots) && canDoubleStacks(outputSlots)) {
                     doubleStacksInternal(this.craftingSlots);
                     doubleStacksInternal(this.outputSlots);
                 }
             }
             this.detectAndSendChanges();
         }
+    }
+
+    private boolean canBeSubstitute() {
+        return this.beSubstitute;
     }
 
     static boolean containsFluid(SlotFake[] slots) {

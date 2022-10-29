@@ -54,20 +54,22 @@ public class FCBasePartContainer extends FCBaseMonitorContain implements IAEAppE
     protected final SlotPatternTerm craftSlot;
     protected final SlotRestrictedInput patternSlotIN;
     protected final SlotRestrictedInput patternSlotOUT;
-    @GuiSync( 97 )
+    @GuiSync(97)
     public boolean craftingMode = true;
-    @GuiSync( 96 )
+    @GuiSync(96)
     public boolean substitute = false;
-    @GuiSync( 95 )
+    @GuiSync(95)
     public boolean combine = false;
+    @GuiSync(94)
+    public boolean beSubstitute = false;
 
-    public FCBasePartContainer(final InventoryPlayer ip, final ITerminalHost monitorable )
-    {
-        super( ip, monitorable, false );
+
+    public FCBasePartContainer(final InventoryPlayer ip, final ITerminalHost monitorable) {
+        super(ip, monitorable, false);
         this.patternTerminal = (PartFluidPatternTerminal) monitorable;
 
-        final IInventory patternInv = this.getPatternTerminal().getInventoryByName( "pattern" );
-        final IInventory output = this.getPatternTerminal().getInventoryByName( "output" );
+        final IInventory patternInv = this.getPatternTerminal().getInventoryByName("pattern");
+        final IInventory output = this.getPatternTerminal().getInventoryByName("output");
 
         this.crafting = this.getPatternTerminal().getInventoryByName( "crafting" );
 
@@ -238,9 +240,9 @@ public class FCBasePartContainer extends FCBaseMonitorContain implements IAEAppE
         encodedValue.setTag( "in", tagIn );
         encodedValue.setTag( "out", tagOut );
         encodedValue.setBoolean( "crafting", this.isCraftingMode() );
-        encodedValue.setBoolean( "substitute", this.isSubstitute() );
-
-        output.setTagCompound( encodedValue );
+        encodedValue.setBoolean("substitute", this.isSubstitute());
+        encodedValue.setBoolean("beSubstitute", this.canBeSubstitute());
+        output.setTagCompound(encodedValue);
     }
 
     private ItemStack[] getInputs()
@@ -460,6 +462,7 @@ public class FCBasePartContainer extends FCBaseMonitorContain implements IAEAppE
 
             this.substitute = this.patternTerminal.isSubstitution();
             this.combine = this.patternTerminal.shouldCombine();
+            this.beSubstitute = this.patternTerminal.canBeSubstitute();
         }
     }
 
@@ -543,23 +546,23 @@ public class FCBasePartContainer extends FCBaseMonitorContain implements IAEAppE
         return this.craftingMode;
     }
 
-    private void setCraftingMode( final boolean craftingMode )
-    {
+    private void setCraftingMode(final boolean craftingMode) {
         this.craftingMode = craftingMode;
     }
 
-    public PartFluidPatternTerminal getPatternTerminal()
-    {
+    public PartFluidPatternTerminal getPatternTerminal() {
         return this.patternTerminal;
     }
 
-    private boolean isSubstitute()
-    {
+    private boolean canBeSubstitute() {
+        return this.beSubstitute;
+    }
+
+    private boolean isSubstitute() {
         return this.substitute;
     }
 
-    public void setSubstitute( final boolean substitute )
-    {
+    public void setSubstitute(final boolean substitute) {
         this.substitute = substitute;
     }
 

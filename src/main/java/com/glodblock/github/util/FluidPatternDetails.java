@@ -22,10 +22,19 @@ public class FluidPatternDetails implements ICraftingPatternDetails, Comparable<
     private IAEItemStack[] inputs = null, inputsCond = null, outputs = null, outputsCond = null;
     private int priority = 0;
     private int combine = 0;
+    private int beSubstitute = 0;
 
     public FluidPatternDetails(ItemStack stack) {
         this.patternStack = stack;
         this.patternStackAe = Objects.requireNonNull(AEItemStack.create(stack)); // s2g
+    }
+
+    public boolean canBeSubstitute() {
+        return beSubstitute != 0;
+    }
+
+    public void setCanBeSubstitute(int beSubstitute) {
+        this.beSubstitute = beSubstitute;
     }
 
     @Override
@@ -150,6 +159,7 @@ public class FluidPatternDetails implements ICraftingPatternDetails, Comparable<
         tag.setTag("in", writeStackArray(checkInitialized(inputs)));
         tag.setTag("out", writeStackArray(checkInitialized(outputs)));
         tag.setInteger("combine", this.getCombine());
+        tag.setBoolean("beSubstitute", this.canBeSubstitute());
         patternStack.setTagCompound(tag);
         patternStackAe = Objects.requireNonNull(AEItemStack.create(patternStack));
         return patternStack;
