@@ -35,10 +35,11 @@ public class GuiFCImgButton extends GuiButton implements ITooltip {
 
         if( appearances == null ) {
             appearances = new HashMap<>();
-            this.registerApp( 0, "NOT_COMBINE", "DONT_COMBINE", "not_combine" );
-            this.registerApp( 1, "FORCE_COMBINE", "DO_COMBINE", "combine" );
-            this.registerApp( 2, "FORCE_PRIO", "DO_PRIO", "prio" );
-            this.registerApp( 3, "NOT_PRIO", "DONT_PRIO", "not_prio" );
+            this.registerApp(0, "NOT_COMBINE", "DONT_COMBINE", "not_combine");
+            this.registerApp(1, "FORCE_COMBINE", "DO_COMBINE", "combine");
+            this.registerApp(2, "FORCE_PRIO", "DO_PRIO", "prio");
+            this.registerApp(3, "NOT_PRIO", "DONT_PRIO", "not_prio");
+            this.registerApp(4, "SUBMIT", "SUBMIT", "submit");
         }
     }
 
@@ -221,35 +222,34 @@ public class GuiFCImgButton extends GuiButton implements ITooltip {
                 par1Minecraft.renderEngine.bindTexture( FluidCraft.resource("textures/gui/states.png") );
                 this.field_146123_n = par2 >= this.xPosition && par3 >= this.yPosition && par2 < this.xPosition + this.width && par3 < this.yPosition + this.height;
 
-                final int uv_y = (int) Math.floor( iconIndex / 3.0 );
+                final int uv_y = (int) Math.floor(iconIndex / 3.0);
                 final int uv_x = iconIndex - uv_y * 3;
 
-                this.drawTexturedModalRect( 0, 0, Math.round(32F * 16F / 3F), Math.round(32F * 16F / 3F), Math.round(16F * 16F / 3F), Math.round(16F * 16F / 3F) );
-                this.drawTexturedModalRect( 0, 0, Math.round(uv_x * 16F * 16F / 3F), Math.round(uv_y * 16F * 16F / 3F), Math.round(16F * 16F / 3F), Math.round(16F * 16F / 3F) );
-                this.mouseDragged( par1Minecraft, par2, par3 );
+                this.drawTexturedModalRect(0, 0, Math.round(32F * 16F / 3F), Math.round(32F * 16F / 3F), Math.round(16F * 16F / 3F), Math.round(16F * 16F / 3F));
+                this.drawTexturedModalRect(0, 0, Math.round(uv_x * 16F * 16F / 3F), Math.round(uv_y * 16F * 16F / 3F), Math.round(16F * 16F / 3F), Math.round(16F * 16F / 3F));
+                this.mouseDragged(par1Minecraft, par2, par3);
 
                 GL11.glPopMatrix();
-            }
-            else
-            {
-                if( this.enabled )
-                {
-                    GL11.glColor4f( 1.0f, 1.0f, 1.0f, 1.0f );
-                }
-                else
-                {
-                    GL11.glColor4f( 0.5f, 0.5f, 0.5f, 1.0f );
+            } else {
+                GL11.glPushMatrix();
+                GL11.glTranslatef(this.xPosition, this.yPosition, 0.0F);
+                GL11.glScalef(0.5f / 16 * 6, 0.5f / 16 * 6, 0.5f / 16 * 6);
+                if (this.enabled) {
+                    GL11.glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
+                } else {
+                    GL11.glColor4f(0.5f, 0.5f, 0.5f, 1.0f);
                 }
 
-                par1Minecraft.renderEngine.bindTexture( FluidCraft.resource("textures/gui/states.png") );
+                par1Minecraft.renderEngine.bindTexture(FluidCraft.resource("textures/gui/states.png"));
                 this.field_146123_n = par2 >= this.xPosition && par3 >= this.yPosition && par2 < this.xPosition + this.width && par3 < this.yPosition + this.height;
 
-                final int uv_y = (int) Math.floor( iconIndex / 3.0 );
+                final int uv_y = (int) Math.floor(iconIndex / 3.0);
                 final int uv_x = iconIndex - uv_y * 3;
 
-                this.drawTexturedModalRect( this.xPosition, this.yPosition, 32, 32, 16, 16 );
-                this.drawTexturedModalRect( this.xPosition, this.yPosition, uv_x * 16, uv_y * 16, 16, 16 );
-                this.mouseDragged( par1Minecraft, par2, par3 );
+                this.drawTexturedModalRect(0, 0, Math.round(32F * 16F / 3F), Math.round(32F * 16F / 3F), Math.round(16F * 16F / 3F), Math.round(16F * 16F / 3F));
+                this.drawTexturedModalRect(0, 0, Math.round(uv_x * 16F * 16F / 3F), Math.round(uv_y * 16F * 16F / 3F), Math.round(16F * 16F / 3F), Math.round(16F * 16F / 3F));
+                this.mouseDragged(par1Minecraft, par2, par3);
+                GL11.glPopMatrix();
             }
         }
         GL11.glColor4f( 1.0f, 1.0f, 1.0f, 1.0f );

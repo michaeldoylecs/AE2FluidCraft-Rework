@@ -34,6 +34,7 @@ public class FluidCellInventory implements IFluidCellInventory {
     private short storedFluids;
     private IItemList<IAEFluidStack> cellItems;
     private final NBTTagCompound tagCompound;
+    public static final int singleByteAmount = 256 * 8;
 
     public FluidCellInventory( final ItemStack o, final ISaveProvider container ) throws AppEngException {
 
@@ -147,8 +148,8 @@ public class FluidCellInventory implements IFluidCellInventory {
 
     @Override
     public long getUsedBytes() {
-        long bytesForItemCount = (this.getStoredFluidCount() + this.getUnusedFluidCount()) / (8 * 256);
-        long tmp = this.getStoredFluidTypes() * this.getBytesPerType() + bytesForItemCount;
+        long bytesForItemCount = this.getStoredFluidCount() / singleByteAmount;
+        long tmp = (this.getStoredFluidTypes() * this.getBytesPerType()) * singleByteAmount + bytesForItemCount;
         if (this.getUnusedFluidCount() > 0 && tmp < this.getTotalBytes()) tmp++;
         return tmp;
     }
@@ -177,20 +178,14 @@ public class FluidCellInventory implements IFluidCellInventory {
 
     @Override
     public long getRemainingFluidCount() {
-        final long remaining = (this.getTotalBytes() - (this.getTotalFluidTypes() * 8)) * 8 * 256 - this.getStoredFluidCount();
+        final long remaining = this.getTotalBytes() * singleByteAmount - this.getStoredFluidCount();
         return remaining > 0 ? remaining : 0;
     }
 
     @Override
     public int getUnusedFluidCount() {
-        final int div = (int) ( this.getStoredFluidCount() % 8 );
+        return (int) (this.getStoredFluidCount() % singleByteAmount);
 
-        if( div == 0 )
-        {
-            return 0;
-        }
-
-        return 8 - div;
     }
 
     @Override
@@ -349,7 +344,7 @@ public class FluidCellInventory implements IFluidCellInventory {
 
         if( l != null )
         {
-            final long remainingItemSlots = this.getRemainingFluidCount();
+            final long remainingItemSlots = this.getRemainingFluidCount() - (long) this.getBytesPerType() * singleByteAmount;
 
             if( remainingItemSlots < 0 )
             {
@@ -384,7 +379,7 @@ public class FluidCellInventory implements IFluidCellInventory {
 
         if( this.canHoldNewFluid() ) // room for new type, and for at least one item!
         {
-            final long remainingItemCount = this.getRemainingFluidCount() - this.getBytesPerType() * 8;
+            final long remainingItemCount = this.getRemainingFluidCount() - ((long) this.getBytesPerType() * singleByteAmount);
 
             if( remainingItemCount > 0 )
             {

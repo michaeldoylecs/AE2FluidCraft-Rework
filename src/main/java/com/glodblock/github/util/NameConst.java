@@ -11,6 +11,7 @@ public class NameConst {
     public static final String BLOCK_INGREDIENT_BUFFER = "ingredient_buffer";
     public static final String BLOCK_LARGE_INGREDIENT_BUFFER = "large_ingredient_buffer";
     public static final String BLOCK_OC_PATTERN_EDITOR = "oc_pattern_editor";
+    public static final String BLOCK_LEVEL_MAINTAINER = "level_maintainer";
 
     public static final String ITEM_FLUID_DROP = "fluid_drop";
     public static final String ITEM_FLUID_ENCODED_PATTERN = "fluid_encoded_pattern";
@@ -31,6 +32,8 @@ public class NameConst {
     public static final String TT_ENCODE_PATTERN = TT_KEY + "encode_pattern";
     public static final String TT_EMPTY = TT_KEY + "empty";
     public static final String TT_DUMP_TANK = TT_KEY + "dump_tank";
+    public static final String TT_REQUEST_SIZE = TT_KEY + "request_size";
+    public static final String TT_BATCH_SIZE = TT_KEY + "batch_size";
 
     public static final String RES_KEY = FluidCraft.MODID + ":";
 
@@ -38,6 +41,7 @@ public class NameConst {
     public static final String GUI_FLUID_TERMINAL = GUI_KEY + ITEM_PART_FLUID_TERMINAL;
     public static final String GUI_FLUID_PATTERN_TERMINAL = GUI_KEY + ITEM_PART_FLUID_PATTERN_TERMINAL;
     public static final String GUI_FLUID_PATTERN_TERMINAL_EX = GUI_KEY + ITEM_PART_FLUID_PATTERN_TERMINAL_EX;
+    public static final String GUI_LEVEL_MAINTAINER = GUI_KEY + BLOCK_LEVEL_MAINTAINER;
     public static final String GUI_FLUID_PATTERN_ENCODER = GUI_KEY + BLOCK_FLUID_PATTERN_ENCODER;
     public static final String GUI_FLUID_PACKET_DECODER = GUI_KEY + BLOCK_FLUID_PACKET_DECODER;
     public static final String GUI_INGREDIENT_BUFFER = GUI_KEY + BLOCK_INGREDIENT_BUFFER;

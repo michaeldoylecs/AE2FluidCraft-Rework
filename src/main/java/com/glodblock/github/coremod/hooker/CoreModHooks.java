@@ -7,6 +7,7 @@ import appeng.api.networking.IGridNode;
 import appeng.api.networking.IMachineSet;
 import appeng.api.networking.storage.IStorageGrid;
 import appeng.api.storage.IMEInventory;
+import appeng.api.storage.StorageChannel;
 import appeng.api.storage.data.IAEFluidStack;
 import appeng.api.storage.data.IAEItemStack;
 import appeng.crafting.MECraftingInventory;
@@ -19,6 +20,7 @@ import com.glodblock.github.client.gui.GuiFluidCraftConfirm;
 import com.glodblock.github.common.item.ItemFluidDrop;
 import com.glodblock.github.common.item.ItemFluidPacket;
 import com.glodblock.github.common.parts.PartFluidInterface;
+import com.glodblock.github.common.storage.FluidCellInventory;
 import com.glodblock.github.common.tile.TileFluidInterface;
 import com.glodblock.github.inventory.FluidConvertingInventoryAdaptor;
 import com.glodblock.github.inventory.FluidConvertingInventoryCrafting;
@@ -196,5 +198,9 @@ public class CoreModHooks {
         if (Result != null && Result.getItem() instanceof ItemFluidPacket) {
             whatToSend.setTagCompound(Result.getTagCompound());
         }
+    }
+
+    public static long IOPortMinSpeed(long possible, long itemsToMove, final StorageChannel chan) {
+        return chan == StorageChannel.FLUIDS ? Math.min(possible, itemsToMove * FluidCellInventory.singleByteAmount) : Math.min(possible, itemsToMove);
     }
 }

@@ -14,18 +14,16 @@ public enum FCPartsTexture {
     PartFluidPatternTerminal_Colored("pattern_terminal_medium"), PartTerminalBroad("terminal_broad"),
     PartFluidImportBus("fluid_import_face"), PartFluidExportBus("fluid_export_face"),
     BlockFluidInterfaceAlternate_Arrow("fluid_interface_arrow"), BlockInterfaceAlternate("fluid_interface_a"),
-    BlockInterface_Face("fluid_interface");
+    BlockInterface_Face("fluid_interface"), BlockLevelMaintainer("level_maintainer");
 
     private final String name;
     public net.minecraft.util.IIcon IIcon;
 
-    FCPartsTexture(final String name)
-    {
+    FCPartsTexture(final String name) {
         this.name = name;
     }
 
-    public static ResourceLocation GuiTexture(final String string)
-    {
+    public static ResourceLocation GuiTexture(final String string) {
         return null;
     }
 
