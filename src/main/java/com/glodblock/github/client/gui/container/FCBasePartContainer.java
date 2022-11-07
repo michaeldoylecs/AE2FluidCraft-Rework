@@ -613,28 +613,30 @@ public class FCBasePartContainer extends FCBaseMonitorContain implements IAEAppE
         assert !ow.hasNext();
     }
 
-    public void doubleStacks(boolean isShift)
-    {
-        if (!isCraftingMode() && canDoubleStacks(craftingSlots) && canDoubleStacks(outputSlots))
-        {
-            doubleStacksInternal(this.craftingSlots);
-            doubleStacksInternal(this.outputSlots);
-            if (isShift && !containsFluid(outputSlots) && !containsFluid(craftingSlots))
-            {
-                while (canDoubleStacks(craftingSlots) && canDoubleStacks(outputSlots))
-                {
-                    doubleStacksInternal(this.craftingSlots);
-                    doubleStacksInternal(this.outputSlots);
-                }
-            }
-            this.detectAndSendChanges();
-        }
+    static boolean containsItem(SlotFake[] slots) {
+        List<SlotFake> enabledSlots = Arrays.stream(slots).filter(SlotFake::isEnabled).collect(Collectors.toList());
+        long item = enabledSlots.stream().filter(s -> s.getStack() != null && !Util.isFluidPacket(s.getStack())).count();
+        return item > 0;
     }
 
     static boolean containsFluid(SlotFake[] slots) {
         List<SlotFake> enabledSlots = Arrays.stream(slots).filter(SlotFake::isEnabled).collect(Collectors.toList());
         long fluid = enabledSlots.stream().filter(s -> Util.isFluidPacket(s.getStack())).count();
         return fluid > 0;
+    }
+
+    public void doubleStacks(boolean isShift) {
+        if (!isCraftingMode() && canDoubleStacks(craftingSlots) && canDoubleStacks(outputSlots)) {
+            doubleStacksInternal(this.craftingSlots);
+            doubleStacksInternal(this.outputSlots);
+            if (isShift && (containsItem(outputSlots) || containsItem(craftingSlots))) {
+                while (canDoubleStacks(craftingSlots) && canDoubleStacks(outputSlots)) {
+                    doubleStacksInternal(this.craftingSlots);
+                    doubleStacksInternal(this.outputSlots);
+                }
+            }
+            this.detectAndSendChanges();
+        }
     }
 
 }

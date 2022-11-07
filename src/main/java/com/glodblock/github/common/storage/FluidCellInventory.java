@@ -149,7 +149,7 @@ public class FluidCellInventory implements IFluidCellInventory {
     @Override
     public long getUsedBytes() {
         long bytesForItemCount = this.getStoredFluidCount() / singleByteAmount;
-        long tmp = (this.getStoredFluidTypes() * this.getBytesPerType()) * singleByteAmount + bytesForItemCount;
+        long tmp = (this.getStoredFluidTypes() * this.getBytesPerType()) + bytesForItemCount;
         if (this.getUnusedFluidCount() > 0 && tmp < this.getTotalBytes()) tmp++;
         return tmp;
     }

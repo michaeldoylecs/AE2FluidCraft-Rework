@@ -447,20 +447,10 @@ public class FCBasePartContainerEx extends FCBaseMonitorContain implements IAEAp
         assert !ow.hasNext();
     }
 
-    public void doubleStacks(boolean isShift)
-    {
-        if (canDoubleStacks(craftingSlots) && canDoubleStacks(outputSlots))
-        {
-            doubleStacksInternal(this.craftingSlots);
-            doubleStacksInternal(this.outputSlots);
-            if (isShift && !containsFluid(outputSlots) && !containsFluid(craftingSlots)) {
-                while (canDoubleStacks(craftingSlots) && canDoubleStacks(outputSlots)) {
-                    doubleStacksInternal(this.craftingSlots);
-                    doubleStacksInternal(this.outputSlots);
-                }
-            }
-            this.detectAndSendChanges();
-        }
+    static boolean containsItem(SlotFake[] slots) {
+        List<SlotFake> enabledSlots = Arrays.stream(slots).filter(SlotFake::isEnabled).collect(Collectors.toList());
+        long item = enabledSlots.stream().filter(s -> s.getStack() != null && !Util.isFluidPacket(s.getStack())).count();
+        return item > 0;
     }
 
     private boolean canBeSubstitute() {
@@ -471,6 +461,20 @@ public class FCBasePartContainerEx extends FCBaseMonitorContain implements IAEAp
         List<SlotFake> enabledSlots = Arrays.stream(slots).filter(SlotFake::isEnabled).collect(Collectors.toList());
         long fluid = enabledSlots.stream().filter(s -> Util.isFluidPacket(s.getStack())).count();
         return fluid > 0;
+    }
+
+    public void doubleStacks(boolean isShift) {
+        if (canDoubleStacks(craftingSlots) && canDoubleStacks(outputSlots)) {
+            doubleStacksInternal(this.craftingSlots);
+            doubleStacksInternal(this.outputSlots);
+            if (isShift && (containsItem(outputSlots) || containsItem(craftingSlots))) {
+                while (canDoubleStacks(craftingSlots) && canDoubleStacks(outputSlots)) {
+                    doubleStacksInternal(this.craftingSlots);
+                    doubleStacksInternal(this.outputSlots);
+                }
+            }
+            this.detectAndSendChanges();
+        }
     }
 
     public void setActivePage(final int activePage) {

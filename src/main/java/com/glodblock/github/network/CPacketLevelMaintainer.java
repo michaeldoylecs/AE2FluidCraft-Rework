@@ -42,10 +42,10 @@ public class CPacketLevelMaintainer implements IMessage {
         this.size = Long.parseLong(size);
     }
 
-    public static IAEItemStack setTag(IAEItemStack ias, long size, int slotIndex) {
+    public static IAEItemStack setTag(IAEItemStack ias, long batch, int slotIndex) {
         NBTTagCompound data = new NBTTagCompound();
         ItemStack is = ias.getItemStack();
-        data.setLong("BatchSize", size);
+        data.setLong("Batch", batch);
         data.setLong("Index", slotIndex);
         is.setTagCompound(data);
         IAEItemStack iaeItemStack = AEItemStack.create(is);
@@ -78,8 +78,8 @@ public class CPacketLevelMaintainer implements IMessage {
                 if (message.action == -1) {
                     SPacketMEInventoryUpdate piu = new SPacketMEInventoryUpdate(false);
                     for (int i = 0; i < TileLevelMaintainer.REQ_COUNT; i++) {
-                        IAEItemStack is = cca.getTile().requests.getCraftingSlots().getStack(i);
-                        IAEItemStack is1 = cca.getTile().requests.getBatchInputs().getStack(i);
+                        IAEItemStack is = cca.getTile().requests.getQuantity(i);
+                        IAEItemStack is1 = cca.getTile().requests.getRequestBatches().getStack(i);
                         if (is != null) {
                             piu.appendItem(setTag(is, is1 != null ? is1.getStackSize() : 0, i));
                         }

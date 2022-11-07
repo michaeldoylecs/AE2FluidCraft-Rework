@@ -130,7 +130,6 @@ public class GuiBaseFluidPatternTerminal extends GuiFCBaseMonitor {
                 this.guiLeft + 84, this.guiTop + this.ySize - 153, Settings.ACTIONS, PatternBeSubstitution.DISABLED);
             this.beSubstitutionsDisabledBtn.setHalfSize(true);
             this.buttonList.add(this.beSubstitutionsDisabledBtn);
-
         }
         this.combineEnableBtn = new GuiFCImgButton(this.guiLeft + combineLeft, this.guiTop + this.ySize - combineTop, "FORCE_COMBINE", "DO_COMBINE");
         this.combineEnableBtn.setHalfSize(true);

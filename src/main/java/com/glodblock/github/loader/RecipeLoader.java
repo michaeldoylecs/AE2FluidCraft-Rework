@@ -35,6 +35,8 @@ public class RecipeLoader implements Runnable {
     public final static ItemStack PISTON = new ItemStack(Blocks.piston, 1);
     public final static ItemStack AE2_BLANK_PATTERN = new ItemStack(GameRegistry.findItem("appliedenergistics2", "item.ItemMultiMaterial"), 1, 52);
     public final static ItemStack AE2_TERMINAL = new ItemStack(GameRegistry.findItem("appliedenergistics2", "item.ItemMultiPart"), 1, 380);
+    public final static ItemStack AE2_CRAFTING_CP_UNIT = new ItemStack(GameRegistry.findItem("appliedenergistics2", "tile.BlockCraftingUnit"), 1, 1);
+    public final static ItemStack AE2_PATTERN_CAPACITY_CARD = new ItemStack(GameRegistry.findItem("appliedenergistics2", "item.ItemMultiMaterial"), 1, 54);
     public final static ItemStack BUCKET = new ItemStack(Items.bucket, 1);
     public final static ItemStack IRON_BAR = new ItemStack(Blocks.iron_bars, 1);
 
@@ -52,6 +54,7 @@ public class RecipeLoader implements Runnable {
         GameRegistry.addRecipe(new ShapedOreRecipe(LARGE_BUFFER.stack(), "BGB", "GEG", "BGB", 'B', BUFFER.stack(), 'G', AE2_QUARTZ_GLASS, 'E', AE2_PROCESS_ENG));
         GameRegistry.addShapelessRecipe(AE2_BLANK_PATTERN, PATTERN.stack());
         GameRegistry.addShapelessRecipe(FLUID_TERM.stack(), AE2_TERMINAL, BUFFER);
+        GameRegistry.addShapelessRecipe(LEVEL_MAINTAINER.stack(), AE2_CRAFTING_CP_UNIT, ENCODER, AE2_PATTERN_CAPACITY_CARD);
         if (Config.fluidCells) {
             OreDictionary.registerOre("anyCertusCrystal", AE2_PURE_CERTUS);
             for (ItemStack it : OreDictionary.getOres("crystalCertusQuartz"))

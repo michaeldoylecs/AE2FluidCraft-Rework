@@ -101,12 +101,12 @@ public class GuiBaseFluidPatternTerminalEx extends GuiFCBaseMonitor {
         this.substitutionsDisabledBtn.setHalfSize( true );
         this.buttonList.add( this.substitutionsDisabledBtn );
 
-        this.fluidPrioritizedEnabledBtn = new GuiFCImgButton( this.guiLeft + 97, this.guiTop + this.ySize - 143, "FORCE_PRIO", "DO_PRIO" );
-        this.fluidPrioritizedEnabledBtn.setHalfSize( true );
+        this.fluidPrioritizedEnabledBtn = new GuiFCImgButton(this.guiLeft + 97, this.guiTop + this.ySize - 114, "FORCE_PRIO", "DO_PRIO");
+        this.fluidPrioritizedEnabledBtn.setHalfSize(true);
         this.buttonList.add( this.fluidPrioritizedEnabledBtn );
 
-        this.fluidPrioritizedDisabledBtn = new GuiFCImgButton( this.guiLeft + 97, this.guiTop + this.ySize - 143, "NOT_PRIO", "DONT_PRIO" );
-        this.fluidPrioritizedDisabledBtn.setHalfSize( true );
+        this.fluidPrioritizedDisabledBtn = new GuiFCImgButton(this.guiLeft + 97, this.guiTop + this.ySize - 114, "NOT_PRIO", "DONT_PRIO");
+        this.fluidPrioritizedDisabledBtn.setHalfSize(true);
         this.buttonList.add( this.fluidPrioritizedDisabledBtn );
 
         invertBtn = new GuiImgButton( this.guiLeft + 87, this.guiTop + this.ySize - 153, Settings.ACTIONS, container.inverted ? PatternSlotConfig.C_4_16 : PatternSlotConfig.C_16_4);
@@ -126,21 +126,21 @@ public class GuiBaseFluidPatternTerminalEx extends GuiFCBaseMonitor {
             this.buttonList.add(this.doubleBtn);
         }
 
-        this.combineEnableBtn = new GuiFCImgButton(this.guiLeft + 87, this.guiTop + this.ySize - 143, "FORCE_COMBINE", "DO_COMBINE");
+        this.combineEnableBtn = new GuiFCImgButton(this.guiLeft + 87, this.guiTop + this.ySize - 114, "FORCE_COMBINE", "DO_COMBINE");
         this.combineEnableBtn.setHalfSize(true);
         this.buttonList.add(this.combineEnableBtn);
 
-        this.combineDisableBtn = new GuiFCImgButton(this.guiLeft + 87, this.guiTop + this.ySize - 143, "NOT_COMBINE", "DONT_COMBINE");
+        this.combineDisableBtn = new GuiFCImgButton(this.guiLeft + 87, this.guiTop + this.ySize - 114, "NOT_COMBINE", "DONT_COMBINE");
         this.combineDisableBtn.setHalfSize(true);
         this.buttonList.add(this.combineDisableBtn);
         if (ModAndClassUtil.isBeSubstitutionsButton) {
             this.beSubstitutionsEnabledBtn = new GuiImgButton(
-                this.guiLeft + 87, this.guiTop + this.ySize - 133, Settings.ACTIONS, PatternBeSubstitution.ENABLED);
+                this.guiLeft + 87, this.guiTop + this.ySize - 103, Settings.ACTIONS, PatternBeSubstitution.ENABLED);
             this.beSubstitutionsEnabledBtn.setHalfSize(true);
             this.buttonList.add(this.beSubstitutionsEnabledBtn);
 
             this.beSubstitutionsDisabledBtn = new GuiImgButton(
-                this.guiLeft + 87, this.guiTop + this.ySize - 133, Settings.ACTIONS, PatternBeSubstitution.DISABLED);
+                this.guiLeft + 87, this.guiTop + this.ySize - 103, Settings.ACTIONS, PatternBeSubstitution.DISABLED);
             this.beSubstitutionsDisabledBtn.setHalfSize(true);
             this.buttonList.add(this.beSubstitutionsDisabledBtn);
         }

@@ -4,9 +4,13 @@ import appeng.api.storage.data.IAEItemStack;
 import appeng.client.gui.AEBaseGui;
 import appeng.client.render.AppEngRenderItem;
 import appeng.container.slot.SlotFake;
+import appeng.core.sync.network.NetworkHandler;
+import appeng.core.sync.packets.PacketNEIDragClick;
+import codechicken.nei.VisiblityData;
+import codechicken.nei.api.INEIGuiHandler;
+import codechicken.nei.api.TaggedInventoryArea;
 import com.glodblock.github.FluidCraft;
 import com.glodblock.github.client.gui.container.ContainerLevelMaintainer;
-import com.glodblock.github.common.item.ItemFluidPacket;
 import com.glodblock.github.common.tile.TileLevelMaintainer;
 import com.glodblock.github.inventory.gui.MouseRegionManager;
 import com.glodblock.github.inventory.slot.SlotSingleItem;
@@ -14,16 +18,22 @@ import com.glodblock.github.network.CPacketLevelMaintainer;
 import com.glodblock.github.util.Ae2ReflectClient;
 import com.glodblock.github.util.ModAndClassUtil;
 import com.glodblock.github.util.NameConst;
+import cpw.mods.fml.common.Optional;
 import net.minecraft.client.gui.GuiButton;
+import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.Slot;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import org.lwjgl.input.Keyboard;
 
+import java.awt.*;
+import java.util.Collections;
 import java.util.List;
 
-public class GuiLevelMaintainer extends AEBaseGui {
+@Optional.Interface(modid = "NotEnoughItems", iface = "codechicken.nei.api.INEIGuiHandler")
+public class GuiLevelMaintainer extends AEBaseGui implements INEIGuiHandler {
 
     private static final ResourceLocation TEX_BG = FluidCraft.resource("textures/gui/level_maintainer.png");
     private final ContainerLevelMaintainer cont;
@@ -44,7 +54,7 @@ public class GuiLevelMaintainer extends AEBaseGui {
 
     public void postUpdate(List<IAEItemStack> list) {
         for (IAEItemStack is : list) {
-            long size = is.getItemStack().getTagCompound().getLong("BatchSize");
+            long size = is.getItemStack().getTagCompound().getLong("Batch");
             int i = is.getItemStack().getTagCompound().getInteger("Index");
             qtyInputs[i].textField.setText(String.valueOf(is.getStackSize()));
             batchInputs[i].textField.setText(String.valueOf(size));
@@ -109,9 +119,10 @@ public class GuiLevelMaintainer extends AEBaseGui {
             super.func_146977_a(new SlotSingleItem(slot));
             if (stack == null) return true;
             IAEItemStack fake = stack.copy();
-            if (fake.getItemStack().getItem() instanceof ItemFluidPacket) {
-                if (ItemFluidPacket.getFluidStack(stack) != null && ItemFluidPacket.getFluidStack(stack).amount > 0)
-                    fake.setStackSize(ItemFluidPacket.getFluidStack(stack).amount);
+            if (this.qtyInputs[slot.getSlotIndex()].textField.getText().matches("[0-9]+")) {
+                fake.setStackSize(Long.parseLong(this.qtyInputs[slot.getSlotIndex()].textField.getText()));
+            } else {
+                fake.setStackSize(0);
             }
             stackSizeRenderer.setAeStack(fake);
             stackSizeRenderer.renderItemOverlayIntoGUI(fontRendererObj, mc.getTextureManager(), stack.getItemStack(), slot.xDisplayPosition, slot.yDisplayPosition);
@@ -172,10 +183,11 @@ public class GuiLevelMaintainer extends AEBaseGui {
 
     @Override
     protected void handleMouseClick(final Slot slot, final int slotIdx, final int ctrlDown, final int mouseButton) {
-        super.handleMouseClick(slot, slotIdx, ctrlDown, mouseButton);
         if (slot instanceof ContainerLevelMaintainer.FakeSlot && this.cont.getPlayerInv().getItemStack() != null) {
             this.qtyInputs[slot.getSlotIndex()].textField.setText(String.valueOf(this.cont.getPlayerInv().getItemStack().stackSize));
+            return;
         }
+        super.handleMouseClick(slot, slotIdx, ctrlDown, mouseButton);
     }
 
     public void updateAmount(int idx, int stackSize) {
@@ -184,7 +196,8 @@ public class GuiLevelMaintainer extends AEBaseGui {
 
     private boolean sendToServer(Widget widget) {
         if (((ContainerLevelMaintainer.FakeSlot) cont.inventorySlots.get(widget.idx)).getHasStack()) {
-            if (!widget.textField.getText().isEmpty() && widget.textField.getText().matches("[0-9]+") && Long.parseLong(widget.textField.getText()) <= Integer.MAX_VALUE) {
+            if (!widget.textField.getText().isEmpty() && widget.textField.getText().matches("[0-9]+")) {
+                widget.textField.setText(widget.textField.getText().replaceAll("^(0+)", ""));
                 FluidCraft.proxy.netHandler.sendToServer(new CPacketLevelMaintainer(widget.action, widget.idx, widget.textField.getText()));
                 widget.textField.setTextColor(0xFFFFFF);
                 return true;
@@ -213,6 +226,49 @@ public class GuiLevelMaintainer extends AEBaseGui {
         }
     }
 
+    @Override
+    public VisiblityData modifyVisiblity(GuiContainer gui, VisiblityData currentVisibility) {
+        return currentVisibility;
+    }
+
+    @Override
+    public Iterable<Integer> getItemSpawnSlots(GuiContainer gui, ItemStack item) {
+        return Collections.emptyList();
+    }
+
+    @Override
+    public List<TaggedInventoryArea> getInventoryAreas(GuiContainer gui) {
+        return null;
+    }
+
+    private Rectangle getSlotArea(SlotFake slot) {
+        return new Rectangle(guiLeft + slot.getX(), guiTop + slot.getY(), 16, 16);
+    }
+
+    @Override
+    public boolean handleDragNDrop(GuiContainer gui, int mouseX, int mouseY, ItemStack draggedStack, int button) {
+        for (ContainerLevelMaintainer.FakeSlot slot : this.cont.getRequestSlots()) {
+            if (getSlotArea(slot).contains(mouseX, mouseY)) {
+                slot.putStack(draggedStack);
+                NetworkHandler.instance.sendToServer(new PacketNEIDragClick(draggedStack, slot.getSlotIndex()));
+                if (draggedStack != null) {
+                    this.updateAmount(slot.getSlotIndex(), draggedStack.stackSize);
+                    draggedStack.stackSize = 0;
+                }
+                return true;
+            }
+        }
+        if (draggedStack != null) {
+            draggedStack.stackSize = 0;
+        }
+        return false;
+    }
+
+    @Override
+    public boolean hideItemPanelSlot(GuiContainer gui, int x, int y, int w, int h) {
+        return false;
+    }
+
     private class Widget {
         public final int idx;
         public final int action;
@@ -224,6 +280,7 @@ public class GuiLevelMaintainer extends AEBaseGui {
             this.textField.setMessage(tooltip);
             this.textField.setEnableBackgroundDrawing(false);
             this.textField.setText("0");
+            this.textField.setMaxStringLength(10); // it's enough to useful
             this.button = button;
             this.idx = idx;
             this.action = action;
