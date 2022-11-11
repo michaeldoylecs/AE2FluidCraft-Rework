@@ -17,36 +17,43 @@ import javax.annotation.Nullable;
 
 public class CPacketLevelMaintainer implements IMessage {
 
-    private int action;
+    private String action;
     private long size;
     private int slotIndex;
 
     public CPacketLevelMaintainer() {
     }
 
-    public CPacketLevelMaintainer(int action) {
+    public CPacketLevelMaintainer(String action, int slotIndex) {
+        this.action = action;
+        this.size = 0;
+        this.slotIndex = slotIndex;
+    }
+
+    public CPacketLevelMaintainer(String action) {
         this.action = action;
         this.size = 0;
         this.slotIndex = 0;
     }
 
-    public CPacketLevelMaintainer(int action, int slotIndex, long size) {
+    public CPacketLevelMaintainer(String action, int slotIndex, long size) {
         this.action = action;
         this.size = size;
         this.slotIndex = slotIndex;
     }
 
-    public CPacketLevelMaintainer(int action, int slotIndex, String size) {
+    public CPacketLevelMaintainer(String action, int slotIndex, String size) {
         this.action = action;
         this.slotIndex = slotIndex;
-        this.size = Long.parseLong(size);
+        this.size = size.isEmpty() ? 0 : Long.parseLong(size);
     }
 
-    public static IAEItemStack setTag(IAEItemStack ias, long batch, int slotIndex) {
+    public static IAEItemStack setTag(IAEItemStack ias, long batch, int slotIndex, boolean enable) {
         NBTTagCompound data = new NBTTagCompound();
         ItemStack is = ias.getItemStack();
         data.setLong("Batch", batch);
         data.setLong("Index", slotIndex);
+        data.setBoolean("Enable", enable);
         is.setTagCompound(data);
         IAEItemStack iaeItemStack = AEItemStack.create(is);
         iaeItemStack.setStackSize(ias.getStackSize());
@@ -55,40 +62,66 @@ public class CPacketLevelMaintainer implements IMessage {
 
     @Override
     public void fromBytes(ByteBuf buf) {
-        this.action = buf.readInt();
+        int leAction = buf.readInt();
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < leAction; i++) {
+            sb.append(buf.readChar());
+        }
+        this.action = sb.toString();
         this.slotIndex = buf.readInt();
         this.size = buf.readLong();
     }
 
     @Override
     public void toBytes(ByteBuf buf) {
-        buf.writeInt(this.action);
+        buf.writeInt(this.action.length());
+        for (int i = 0; i < this.action.length(); i++) {
+            buf.writeChar(this.action.charAt(i));
+        }
         buf.writeInt(this.slotIndex);
         buf.writeLong(this.size);
     }
 
     public static class Handler implements IMessageHandler<CPacketLevelMaintainer, IMessage> {
+        private void refresh(ContainerLevelMaintainer cca, EntityPlayerMP player) {
+            SPacketMEInventoryUpdate piu = new SPacketMEInventoryUpdate(false);
+            for (int i = 0; i < TileLevelMaintainer.REQ_COUNT; i++) {
+                IAEItemStack is = cca.getTile().requests.getRequestQtyStack(i);
+                IAEItemStack is1 = cca.getTile().requests.getRequestBatches().getStack(i);
+                if (is != null) {
+                    if (is1 != null) {
+                        NBTTagCompound data;
+                        data = is1.getItemStack().getTagCompound();
+                        piu.appendItem(setTag(is, is1.getStackSize(), i, data.getBoolean("Enable")));
+                    } else {
+                        piu.appendItem(setTag(is, 0, i, true));
+                    }
+                }
+            }
+            FluidCraft.proxy.netHandler.sendTo(piu, player);
+        }
 
         @Nullable
         @Override
         public IMessage onMessage(CPacketLevelMaintainer message, MessageContext ctx) {
-            if (ctx.getServerHandler().playerEntity.openContainer instanceof ContainerLevelMaintainer) {
+            if (message.action.startsWith("TileLevelMaintainer.") && ctx.getServerHandler().playerEntity.openContainer instanceof ContainerLevelMaintainer) {
                 EntityPlayerMP player = ctx.getServerHandler().playerEntity;
                 final ContainerLevelMaintainer cca = (ContainerLevelMaintainer) ctx.getServerHandler().playerEntity.openContainer;
-                if (message.action == -1) {
-                    SPacketMEInventoryUpdate piu = new SPacketMEInventoryUpdate(false);
-                    for (int i = 0; i < TileLevelMaintainer.REQ_COUNT; i++) {
-                        IAEItemStack is = cca.getTile().requests.getQuantity(i);
-                        IAEItemStack is1 = cca.getTile().requests.getRequestBatches().getStack(i);
-                        if (is != null) {
-                            piu.appendItem(setTag(is, is1 != null ? is1.getStackSize() : 0, i));
-                        }
-                    }
-                    FluidCraft.proxy.netHandler.sendTo(piu, player);
-                } else {
-                    cca.handleClientInteraction(message.action, message.slotIndex, message.size);
+                switch (message.action) {
+                    case "TileLevelMaintainer.Quantity":
+                        cca.getTile().updateQuantity(message.slotIndex, message.size);
+                        break;
+                    case "TileLevelMaintainer.Batch":
+                        cca.getTile().updateBatchSize(message.slotIndex, message.size);
+                        break;
+                    case "TileLevelMaintainer.Enable":
+                        cca.getTile().setRequestStatus(message.slotIndex, false);
+                        break;
+                    case "TileLevelMaintainer.Disable":
+                        cca.getTile().setRequestStatus(message.slotIndex, true);
+                        break;
                 }
-
+                this.refresh(cca, player);
             }
             return null;
         }

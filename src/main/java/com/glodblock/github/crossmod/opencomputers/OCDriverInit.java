@@ -7,6 +7,8 @@ public class OCDriverInit {
     public static void run() {
         Driver.add(new DriverOCPatternEditor());
         Driver.add(new DriverOCPatternEditor.Provider());
+        Driver.add(new DriverLevelMaintainer());
+        Driver.add(new DriverLevelMaintainer.Provider());
     }
 
 }

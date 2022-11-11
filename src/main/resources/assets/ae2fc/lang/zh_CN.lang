@@ -49,8 +49,9 @@ ae2fc.tooltip.not_prio=优先放置流体
 ae2fc.tooltip.not_prio.hint=启用
 ae2fc.tooltip.prio=优先放置流体
 ae2fc.tooltip.prio.hint=禁用
-ae2fc.tooltip.submit=提交请求
-ae2fc.tooltip.submit.hint=提交
+ae2fc.tooltip.submit=提交
+ae2fc.tooltip.enable=启用
+ae2fc.tooltip.disable=禁用
 
 ae2fc.gui.part_fluid_pattern_terminal=ME流体样板终端
 ae2fc.gui.part_fluid_pattern_terminal_ex=ME增广流体样板终端

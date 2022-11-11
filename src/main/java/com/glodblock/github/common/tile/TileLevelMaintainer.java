@@ -3,6 +3,7 @@ package com.glodblock.github.common.tile;
 import appeng.api.AEApi;
 import appeng.api.config.Actionable;
 import appeng.api.config.PowerMultiplier;
+import appeng.api.implementations.IPowerChannelState;
 import appeng.api.networking.GridFlags;
 import appeng.api.networking.IGrid;
 import appeng.api.networking.IGridNode;
@@ -11,6 +12,9 @@ import appeng.api.networking.crafting.ICraftingJob;
 import appeng.api.networking.crafting.ICraftingLink;
 import appeng.api.networking.crafting.ICraftingRequester;
 import appeng.api.networking.energy.IEnergyGrid;
+import appeng.api.networking.events.MENetworkBootingStatusChange;
+import appeng.api.networking.events.MENetworkEventSubscribe;
+import appeng.api.networking.events.MENetworkPowerStatusChange;
 import appeng.api.networking.security.BaseActionSource;
 import appeng.api.networking.security.MachineSource;
 import appeng.api.networking.ticking.IGridTickable;
@@ -29,22 +33,26 @@ import appeng.tile.events.TileEventType;
 import appeng.tile.grid.AENetworkTile;
 import appeng.tile.inventory.IAEAppEngInventory;
 import appeng.tile.inventory.InvOperation;
+import appeng.util.item.AEItemStack;
 import com.glodblock.github.common.item.ItemFluidDrop;
+import com.glodblock.github.inventory.AeItemStackHandler;
 import com.glodblock.github.inventory.AeStackInventory;
 import com.glodblock.github.inventory.AeStackInventoryImpl;
 import com.google.common.collect.ImmutableSet;
+import io.netty.buffer.ByteBuf;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 
 import java.util.concurrent.Future;
 
-public class TileLevelMaintainer extends AENetworkTile implements IAEAppEngInventory, IGridTickable, ICraftingRequester {
+public class TileLevelMaintainer extends AENetworkTile implements IAEAppEngInventory, IGridTickable, ICraftingRequester, IPowerChannelState {
 
     public static final int REQ_COUNT = 5;
     public final InventoryRequest requests = new InventoryRequest(this);
     private final BaseActionSource source;
-
+    private final IInventory inv = new AeItemStackHandler(requests.getRequestStacks());
+    private boolean isPowered = false;
 
     public TileLevelMaintainer() {
         getProxy().setIdlePowerUsage(1D);
@@ -103,6 +111,7 @@ public class TileLevelMaintainer extends AENetworkTile implements IAEAppEngInven
     public TickRateModulation tickingRequest(IGridNode node, int TicksSinceLastCall) {
         return this.canDoBusWork() ? this.doWork() : TickRateModulation.IDLE;
     }
+
     private TickRateModulation doWork() {
         if (!this.getProxy().isActive() || !this.canDoBusWork()) {
             return TickRateModulation.IDLE;
@@ -113,7 +122,7 @@ public class TileLevelMaintainer extends AENetworkTile implements IAEAppEngInven
             IGrid grid = this.getProxy().getGrid();
             final IItemList<IAEItemStack> inv = this.getProxy().getStorage().getItemInventory().getStorageList();
             for (int i = 0; i < REQ_COUNT; i++) {
-                IAEItemStack is = requests.getQuantity(i);
+                IAEItemStack is = requests.getRequestQtyStack(i);
                 if (is != null && requests.getBatchSize(i) > 0) {
                     IAEItemStack craftItem = requests.getCraftItem(i);
                     if (cg.canEmitFor(craftItem) || cg.isRequesting(craftItem) ||
@@ -165,12 +174,27 @@ public class TileLevelMaintainer extends AENetworkTile implements IAEAppEngInven
         return this.getProxy().isActive();
     }
 
+    @Override
+    public void gridChanged() {
+
+    }
+
+    @Override
+    public boolean isPowered() {
+        return this.isPowered;
+    }
+
+    @Override
+    public boolean isActive() {
+        return this.isPowered;
+    }
+
     public InventoryRequest getRequestInventory() {
         return this.requests;
     }
 
     public IInventory getInventory() {
-        return (IInventory) this.requests.getRequestStacks();
+        return inv;
     }
 
     public void updateQuantity(int idx, long size) {
@@ -179,6 +203,10 @@ public class TileLevelMaintainer extends AENetworkTile implements IAEAppEngInven
 
     public void updateBatchSize(int idx, long size) {
         this.requests.updateBatchSize(idx, size);
+    }
+
+    public void setRequestStatus(int idx, boolean enable) {
+        this.requests.setEnable(idx, enable);
     }
 
     private void readLinkFromNBT(NBTTagCompound data) {
@@ -224,6 +252,45 @@ public class TileLevelMaintainer extends AENetworkTile implements IAEAppEngInven
         this.readLinkFromNBT(data);
     }
 
+    @TileEvent(TileEventType.NETWORK_READ)
+    public boolean readFromStream(final ByteBuf data) {
+        final boolean oldPower = this.isPowered;
+        this.isPowered = data.readBoolean();
+        return this.isPowered != oldPower;
+    }
+
+    @TileEvent(TileEventType.NETWORK_WRITE)
+    public void writeToStream(final ByteBuf data) {
+        data.writeBoolean(this.isActive());
+    }
+
+    @MENetworkEventSubscribe
+    public void stateChange(final MENetworkPowerStatusChange p) {
+        this.updatePowerState();
+    }
+
+    @MENetworkEventSubscribe
+    public final void bootingRender(final MENetworkBootingStatusChange c) {
+        this.updatePowerState();
+    }
+
+    private void updatePowerState() {
+        boolean newState = false;
+
+        try {
+            newState = this.getProxy().isActive()
+                && this.getProxy().getEnergy().extractAEPower(1, Actionable.SIMULATE, PowerMultiplier.CONFIG)
+                > 0.0001;
+        } catch (final GridAccessException ignored) {
+
+        }
+
+        if (newState != this.isPowered) {
+            this.isPowered = newState;
+            this.markForUpdate();
+        }
+    }
+
     public static class InventoryRequest {
         private final AeStackInventoryImpl<IAEItemStack> requestStacks;
         private final AeStackInventoryImpl<IAEItemStack> requestBatches;
@@ -237,6 +304,35 @@ public class TileLevelMaintainer extends AENetworkTile implements IAEAppEngInven
             this.requestQtys = new AeStackInventoryImpl<>(StorageChannel.ITEMS, REQ_COUNT, tile);
             this.jobs = new Future[REQ_COUNT];
             this.links = new ICraftingLink[REQ_COUNT];
+        }
+
+        public void setEnable(int idx, boolean enable) {
+            IAEItemStack ias = this.getRequestStacks().getStack(idx);
+            IAEItemStack ias1 = this.getRequestBatches().getStack(idx);
+            if (ias != null && ias1 != null) {
+                ItemStack is = ias1.getItemStack();
+                NBTTagCompound data = new NBTTagCompound();
+                data.setBoolean("Enable", enable);
+                is.setTagCompound(data);
+                IAEItemStack i = AEItemStack.create(is);
+                i.setStackSize(ias1.getStackSize());
+                this.getRequestBatches().setStack(idx, i);
+            }
+        }
+
+        public boolean isEnable(int idx) {
+            IAEItemStack ias = this.getRequestBatches().getStack(idx);
+            if (ias != null) {
+                ItemStack is = ias.getItemStack();
+                try {
+                    return is.getTagCompound().getBoolean("Enable");
+                } catch (NullPointerException e) {
+                    // support old version
+                    return true;
+                }
+            } else {
+                return true;
+            }
         }
 
         public boolean isDone(int index) {
@@ -276,15 +372,19 @@ public class TileLevelMaintainer extends AENetworkTile implements IAEAppEngInven
         }
 
         public void updateBatchSize(int idx, long size) {
-            IAEItemStack is = this.getRequestStacks().getStack(idx);
-            if (is != null) {
-                IAEItemStack i = is.copy();
+            IAEItemStack ias = this.getRequestStacks().getStack(idx);
+            if (ias != null) {
+                ItemStack is = ias.copy().getItemStack();
+                NBTTagCompound data = new NBTTagCompound();
+                data.setBoolean("Enable", true);
+                is.setTagCompound(data);
+                IAEItemStack i = AEItemStack.create(is);
                 i.setStackSize(size);
                 this.getRequestBatches().setStack(idx, i);
             }
         }
 
-        public IAEItemStack getQuantity(int idx) {
+        public IAEItemStack getRequestQtyStack(int idx) {
             IAEItemStack is = this.getRequestStacks().getStack(idx);
             if (is == null) return null;
             IAEItemStack qis = this.getRequestQtys().getStack(idx);
@@ -292,17 +392,26 @@ public class TileLevelMaintainer extends AENetworkTile implements IAEAppEngInven
             return this.getRequestQtys().getStack(idx);
         }
 
+        public long getQuantity(int idx) {
+            IAEItemStack ias = this.getRequestQtyStack(idx);
+            if (ias == null) {
+                return 0;
+            }
+            return ias.getStackSize();
+        }
+
         public long getBatchSize(int idx) {
+            if (!this.isEnable(idx)) return 0;
             IAEItemStack is = this.getRequestStacks().getStack(idx);
             IAEItemStack is1 = this.getRequestBatches().getStack(idx);
-            if (is != null && is1 != null && is.isSameType(is1)) {
+            if (is != null && is1 != null) {
                 return is1.getStackSize();
             }
             return 0;
         }
 
         public IAEItemStack getCraftItem(int idx) {
-            IAEItemStack is = this.getQuantity(idx);
+            IAEItemStack is = this.getRequestQtyStack(idx);
             if (is != null) {
                 IAEItemStack ias = is.copy();
                 ias.setStackSize(this.getBatchSize(idx));

@@ -40,16 +40,21 @@ public class GuiFCImgButton extends GuiButton implements ITooltip {
             this.registerApp(2, "FORCE_PRIO", "DO_PRIO", "prio");
             this.registerApp(3, "NOT_PRIO", "DONT_PRIO", "not_prio");
             this.registerApp(4, "SUBMIT", "SUBMIT", "submit");
+            this.registerApp(6, "DISABLE", "DISABLE", "disable");
+            this.registerApp(7, "ENABLE", "ENABLE", "enable");
         }
     }
 
-    private void registerApp(final int iconIndex, final String setting, final String val, final String title )
-    {
+    private void registerApp(final int iconIndex, final String setting, final String val, final String title ) {
         final ButtonAppearance a = new ButtonAppearance();
         a.displayName = StatCollector.translateToLocal(prefix + title);
-        a.displayValue = StatCollector.translateToLocal(prefix + title + ".hint");
+        if (StatCollector.translateToLocal(prefix + title + ".hint").equals(prefix + title + ".hint")) {
+            a.displayValue = null;
+        } else {
+            a.displayValue = StatCollector.translateToLocal(prefix + title + ".hint");
+        }
         a.index = iconIndex;
-        appearances.put( new EnumPair( setting, val ), a );
+        appearances.put(new EnumPair(setting, val), a);
     }
 
     public void setVisibility( final boolean vis )
@@ -157,39 +162,31 @@ public class GuiFCImgButton extends GuiButton implements ITooltip {
             displayValue = buttonAppearance.displayValue;
         }
 
-        if( displayName != null )
-        {
-            String name = StatCollector.translateToLocal( displayName );
-            String value = StatCollector.translateToLocal( displayValue );
-
-            if( name == null || name.isEmpty() )
-            {
+        if( displayName != null ) {
+            String name = StatCollector.translateToLocal(displayName);
+            if (name == null || name.isEmpty()) {
                 name = displayName;
             }
-            if( value == null || value.isEmpty() )
-            {
-                value = displayValue;
-            }
+            if (displayValue != null) {
+                String value = StatCollector.translateToLocal(displayValue);
 
-            if( this.fillVar != null )
-            {
-                value = COMPILE.matcher( value ).replaceFirst( this.fillVar );
-            }
+                if (this.fillVar != null) {
+                    value = COMPILE.matcher(value).replaceFirst(this.fillVar);
+                }
 
-            value = PATTERN_NEW_LINE.matcher( value ).replaceAll( "\n" );
-            final StringBuilder sb = new StringBuilder( value );
+                value = PATTERN_NEW_LINE.matcher(value).replaceAll("\n");
+                final StringBuilder sb = new StringBuilder(value);
 
-            int i = sb.lastIndexOf( "\n" );
-            if( i <= 0 )
-            {
-                i = 0;
+                int i = sb.lastIndexOf("\n");
+                if (i <= 0) {
+                    i = 0;
+                }
+                while (i + 30 < sb.length() && (i = sb.lastIndexOf(" ", i + 30)) != -1) {
+                    sb.replace(i, i + 1, "\n");
+                }
+                return name + '\n' + sb;
             }
-            while( i + 30 < sb.length() && ( i = sb.lastIndexOf( " ", i + 30 ) ) != -1 )
-            {
-                sb.replace( i, i + 1, "\n" );
-            }
-
-            return name + '\n' + sb;
+            return name;
         }
         return null;
     }

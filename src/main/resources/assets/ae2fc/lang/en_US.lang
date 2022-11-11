@@ -49,8 +49,9 @@ ae2fc.tooltip.not_prio=Allow fluids to be placed first
 ae2fc.tooltip.not_prio.hint=Enabled
 ae2fc.tooltip.prio=Allow fluids to be placed first
 ae2fc.tooltip.prio.hint=Disabled
-ae2fc.tooltip.submit=Submit Request
-ae2fc.tooltip.submit.hint=Submit
+ae2fc.tooltip.submit=Submit
+ae2fc.tooltip.enable=enable
+ae2fc.tooltip.disable=disable
 
 ae2fc.gui.part_fluid_pattern_terminal=Fluid Pattern Terminal
 ae2fc.gui.part_fluid_pattern_terminal_ex=Fluid Processing Pattern Terminal

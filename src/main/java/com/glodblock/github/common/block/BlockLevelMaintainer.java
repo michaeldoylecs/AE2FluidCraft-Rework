@@ -1,6 +1,7 @@
 package com.glodblock.github.common.block;
 
 import appeng.block.AEBaseItemBlock;
+import com.glodblock.github.client.render.RenderBlockLevelMaintainer;
 import com.glodblock.github.common.tabs.FluidCraftingTabs;
 import com.glodblock.github.common.tile.TileLevelMaintainer;
 import com.glodblock.github.inventory.InventoryHandler;
@@ -8,6 +9,8 @@ import com.glodblock.github.inventory.gui.GuiType;
 import com.glodblock.github.util.BlockPos;
 import com.glodblock.github.util.NameConst;
 import cpw.mods.fml.common.registry.GameRegistry;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
@@ -28,6 +31,12 @@ public class BlockLevelMaintainer extends FCBaseBlock {
         GameRegistry.registerTileEntity(TileLevelMaintainer.class, NameConst.BLOCK_LEVEL_MAINTAINER);
         setCreativeTab(FluidCraftingTabs.INSTANCE);
         return this;
+    }
+
+    @Override
+    @SideOnly(Side.CLIENT)
+    protected RenderBlockLevelMaintainer getRenderer() {
+        return new RenderBlockLevelMaintainer();
     }
 
     @Override

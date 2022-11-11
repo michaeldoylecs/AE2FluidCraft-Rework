@@ -37,8 +37,7 @@ public class GuiLevelMaintainer extends AEBaseGui implements INEIGuiHandler {
 
     private static final ResourceLocation TEX_BG = FluidCraft.resource("textures/gui/level_maintainer.png");
     private final ContainerLevelMaintainer cont;
-    private final Widget[] qtyInputs = new Widget[TileLevelMaintainer.REQ_COUNT];
-    private final Widget[] batchInputs = new Widget[TileLevelMaintainer.REQ_COUNT];
+    private final Component[] component = new Component[TileLevelMaintainer.REQ_COUNT];
     private final MouseRegionManager mouseRegions = new MouseRegionManager(this);
     private final AppEngRenderItem stackSizeRenderer = Ae2ReflectClient.getStackSizeRenderer(this);
     private TileLevelMaintainer tile;
@@ -56,19 +55,19 @@ public class GuiLevelMaintainer extends AEBaseGui implements INEIGuiHandler {
         for (IAEItemStack is : list) {
             long size = is.getItemStack().getTagCompound().getLong("Batch");
             int i = is.getItemStack().getTagCompound().getInteger("Index");
-            qtyInputs[i].textField.setText(String.valueOf(is.getStackSize()));
-            batchInputs[i].textField.setText(String.valueOf(size));
+            boolean isEnable = is.getItemStack().getTagCompound().getBoolean("Enable");
+            component[i].getQty().textField.setText(String.valueOf(is.getStackSize()));
+            component[i].getBatch().textField.setText(String.valueOf(size));
+            component[i].setEnable(isEnable);
         }
     }
 
     public void drawScreen(final int mouseX, final int mouseY, final float btn) {
         super.drawScreen(mouseX, mouseY, btn);
         if (ModAndClassUtil.isSearchBar) {
-            for (Widget i : qtyInputs) {
-                handleTooltip(mouseX, mouseY, i.textField.new TooltipProvider());
-            }
-            for (Widget i : batchInputs) {
-                handleTooltip(mouseX, mouseY, i.textField.new TooltipProvider());
+            for (Component com : this.component) {
+                handleTooltip(mouseX, mouseY, com.getQty().textField.new TooltipProvider());
+                handleTooltip(mouseX, mouseY, com.getBatch().textField.new TooltipProvider());
             }
         }
     }
@@ -76,19 +75,21 @@ public class GuiLevelMaintainer extends AEBaseGui implements INEIGuiHandler {
     public void initGui() {
         super.initGui();
         for (int i = 0; i < TileLevelMaintainer.REQ_COUNT; i++) {
-            qtyInputs[i] = new Widget(
-                new FCGuiTextField(this.fontRendererObj, guiLeft + 37, guiTop + 21 + 20 * i, 52, 16),
-                new GuiFCImgButton(guiLeft + 37 + 47, guiTop + 20 + 20 * i, "SUBMIT", "SUBMIT"), I18n.format(NameConst.TT_REQUEST_SIZE),
-                i, 0);
-            this.buttonList.add(qtyInputs[i].btn());
-            batchInputs[i] = new Widget(
-                new FCGuiTextField(this.fontRendererObj, guiLeft + 100, guiTop + 21 + 20 * i, 52, 16),
-                new GuiFCImgButton(guiLeft + 100 + 47, guiTop + 20 + 20 * i, "SUBMIT", "SUBMIT"), I18n.format(NameConst.TT_BATCH_SIZE),
-                i, 1
+            component[i] = new Component(
+                new Widget(
+                    new FCGuiTextField(this.fontRendererObj, guiLeft + 37, guiTop + 21 + 20 * i, 52, 16),
+                    new GuiFCImgButton(guiLeft + 37 + 47, guiTop + 20 + 20 * i, "SUBMIT", "SUBMIT"), I18n.format(NameConst.TT_REQUEST_SIZE),
+                    i, "TileLevelMaintainer.Quantity"),
+                new Widget(
+                    new FCGuiTextField(this.fontRendererObj, guiLeft + 100, guiTop + 21 + 20 * i, 52, 16),
+                    new GuiFCImgButton(guiLeft + 100 + 47, guiTop + 20 + 20 * i, "SUBMIT", "SUBMIT"), I18n.format(NameConst.TT_BATCH_SIZE),
+                    i, "TileLevelMaintainer.Batch"),
+                new GuiFCImgButton(guiLeft + 4, guiTop + 23 + 20 * i, "ENABLE", "ENABLE"),
+                new GuiFCImgButton(guiLeft + 4, guiTop + 23 + 20 * i, "DISABLE", "DISABLE"),
+                this.buttonList
             );
-            this.buttonList.add(batchInputs[i].btn());
         }
-        FluidCraft.proxy.netHandler.sendToServer(new CPacketLevelMaintainer(-1));
+        FluidCraft.proxy.netHandler.sendToServer(new CPacketLevelMaintainer("TileLevelMaintainer.refresh"));
     }
 
     @Override
@@ -96,8 +97,7 @@ public class GuiLevelMaintainer extends AEBaseGui implements INEIGuiHandler {
         mc.getTextureManager().bindTexture(TEX_BG);
         drawTexturedModalRect(offsetX, offsetY, 0, 0, 176, ySize);
         for (int i = 0; i < TileLevelMaintainer.REQ_COUNT; i++) {
-            qtyInputs[i].draw();
-            batchInputs[i].draw();
+            this.component[i].draw();
         }
     }
 
@@ -119,8 +119,8 @@ public class GuiLevelMaintainer extends AEBaseGui implements INEIGuiHandler {
             super.func_146977_a(new SlotSingleItem(slot));
             if (stack == null) return true;
             IAEItemStack fake = stack.copy();
-            if (this.qtyInputs[slot.getSlotIndex()].textField.getText().matches("[0-9]+")) {
-                fake.setStackSize(Long.parseLong(this.qtyInputs[slot.getSlotIndex()].textField.getText()));
+            if (this.component[slot.getSlotIndex()].getQty().textField.getText().matches("[0-9]+")) {
+                fake.setStackSize(Long.parseLong(this.component[slot.getSlotIndex()].getQty().textField.getText()));
             } else {
                 fake.setStackSize(0);
             }
@@ -137,18 +137,11 @@ public class GuiLevelMaintainer extends AEBaseGui implements INEIGuiHandler {
             if (input != null) {
                 input.setFocused(false);
             }
-            for (Widget i : qtyInputs) {
-                if (i.textField.isMouseIn(xCoord, yCoord)) {
-                    i.textField.setFocused(true);
-                    this.input = i.textField;
-                    super.mouseClicked(xCoord, yCoord, btn);
-                    return;
-                }
-            }
-            for (Widget i : batchInputs) {
-                if (i.textField.isMouseIn(xCoord, yCoord)) {
-                    i.textField.setFocused(true);
-                    this.input = i.textField;
+            for (Component com : this.component) {
+                FCGuiTextField textField = com.isMouseIn(xCoord, yCoord);
+                if (textField != null) {
+                    textField.setFocused(true);
+                    this.input = textField;
                     super.mouseClicked(xCoord, yCoord, btn);
                     return;
                 }
@@ -169,7 +162,7 @@ public class GuiLevelMaintainer extends AEBaseGui implements INEIGuiHandler {
                 this.input.textboxKeyTyped(character, key);
             }
             super.keyTyped(character, key);
-            if (!this.input.getText().matches("[0-9]+")) {
+            if (!this.input.getText().matches("^[0-9]+")) {
                 this.input.setTextColor(0xFF0000);
             } else {
                 this.input.setTextColor(0xFFFFFF);
@@ -184,44 +177,23 @@ public class GuiLevelMaintainer extends AEBaseGui implements INEIGuiHandler {
     @Override
     protected void handleMouseClick(final Slot slot, final int slotIdx, final int ctrlDown, final int mouseButton) {
         if (slot instanceof ContainerLevelMaintainer.FakeSlot && this.cont.getPlayerInv().getItemStack() != null) {
-            this.qtyInputs[slot.getSlotIndex()].textField.setText(String.valueOf(this.cont.getPlayerInv().getItemStack().stackSize));
+            this.component[slot.getSlotIndex()].getQty().textField.setText(String.valueOf(this.cont.getPlayerInv().getItemStack().stackSize));
             return;
         }
         super.handleMouseClick(slot, slotIdx, ctrlDown, mouseButton);
     }
 
     public void updateAmount(int idx, int stackSize) {
-        this.qtyInputs[idx].textField.setText(String.valueOf(stackSize));
+        this.component[idx].getQty().textField.setText(String.valueOf(stackSize));
     }
 
-    private boolean sendToServer(Widget widget) {
-        if (((ContainerLevelMaintainer.FakeSlot) cont.inventorySlots.get(widget.idx)).getHasStack()) {
-            if (!widget.textField.getText().isEmpty() && widget.textField.getText().matches("[0-9]+")) {
-                widget.textField.setText(widget.textField.getText().replaceAll("^(0+)", ""));
-                FluidCraft.proxy.netHandler.sendToServer(new CPacketLevelMaintainer(widget.action, widget.idx, widget.textField.getText()));
-                widget.textField.setTextColor(0xFFFFFF);
-                return true;
-            } else {
-                widget.textField.setTextColor(0xFF0000);
-                return false;
-            }
-        }
-        return false;
-    }
 
     @Override
     protected void actionPerformed(final GuiButton btn) {
         super.actionPerformed(btn);
-        for (Widget widget : qtyInputs) {
-            if (widget.button == btn) {
-                sendToServer(widget);
-                return;
-            }
-        }
-        for (Widget widget : batchInputs) {
-            if (widget.button == btn) {
-                sendToServer(widget);
-                return;
+        for (Component com : this.component) {
+            if (com.sendToServer(btn)) {
+                break;
             }
         }
     }
@@ -269,13 +241,100 @@ public class GuiLevelMaintainer extends AEBaseGui implements INEIGuiHandler {
         return false;
     }
 
+    private class Component {
+        public boolean isEnable = true;
+        private Widget qty;
+        private Widget batch;
+        private GuiFCImgButton disable;
+        private GuiFCImgButton enable;
+
+        public Component(Widget qtyInput, Widget batchInput, GuiFCImgButton enableBtn, GuiFCImgButton disableBtn, List buttonList) {
+            this.qty = qtyInput;
+            this.batch = batchInput;
+            this.enable = enableBtn;
+            this.disable = disableBtn;
+            this.enable.setHalfSize(true);
+            this.disable.setHalfSize(true);
+            buttonList.add(this.qty.button);
+            buttonList.add(this.batch.button);
+            buttonList.add(this.enable);
+            buttonList.add(this.disable);
+        }
+
+        public int getIndex() {
+            return this.getQty().idx;
+        }
+
+        public void setEnable(boolean enable) {
+            this.isEnable = enable;
+        }
+
+        private boolean send(Widget widget) {
+            if (((ContainerLevelMaintainer.FakeSlot) cont.inventorySlots.get(widget.idx)).getHasStack()) {
+                if (!widget.textField.getText().isEmpty() && widget.textField.getText().matches("^[0-9]+")) {
+                    String str = widget.textField.getText().replaceAll("^(0+)", "");
+                    widget.textField.setText(str.isEmpty() ? "0" : str);
+                    FluidCraft.proxy.netHandler.sendToServer(new CPacketLevelMaintainer(widget.action, widget.idx, widget.textField.getText()));
+                    widget.textField.setTextColor(0xFFFFFF);
+                    return true;
+                } else {
+                    widget.textField.setTextColor(0xFF0000);
+                    return false;
+                }
+            }
+            return false;
+        }
+
+        protected boolean sendToServer(GuiButton btn) {
+            if (this.getQty().button == btn) {
+                return this.send(this.getQty());
+            }
+            if (this.getBatch().button == btn) {
+                return this.send(this.getBatch());
+            }
+            if (this.enable == btn) {
+                FluidCraft.proxy.netHandler.sendToServer(new CPacketLevelMaintainer("TileLevelMaintainer.Enable", this.getIndex()));
+            } else if (this.disable == btn) {
+                FluidCraft.proxy.netHandler.sendToServer(new CPacketLevelMaintainer("TileLevelMaintainer.Disable", this.getIndex()));
+            }
+            return false;
+        }
+
+        public FCGuiTextField isMouseIn(final int xCoord, final int yCoord) {
+            if (this.getQty().textField.isMouseIn(xCoord, yCoord)) return this.getQty().textField;
+            if (this.getBatch().textField.isMouseIn(xCoord, yCoord)) return this.getBatch().textField;
+            return null;
+        }
+
+        public Widget getQty() {
+            return this.qty;
+        }
+
+        public Widget getBatch() {
+            return this.batch;
+        }
+
+        public void draw() {
+            this.getQty().draw();
+            this.getBatch().draw();
+            if (this.isEnable) {
+                this.enable.visible = true;
+                this.disable.visible = false;
+            } else {
+                this.enable.visible = false;
+                this.disable.visible = true;
+            }
+        }
+
+    }
+
     private class Widget {
         public final int idx;
-        public final int action;
+        public final String action;
         private FCGuiTextField textField;
         private GuiFCImgButton button;
 
-        public Widget(FCGuiTextField textField, GuiFCImgButton button, String tooltip, int idx, int action) {
+        public Widget(FCGuiTextField textField, GuiFCImgButton button, String tooltip, int idx, String action) {
             this.textField = textField;
             this.textField.setMessage(tooltip);
             this.textField.setEnableBackgroundDrawing(false);

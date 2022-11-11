@@ -46,15 +46,6 @@ public class ContainerLevelMaintainer extends AEBaseContainer {
         return null;
     }
 
-
-    public void handleClientInteraction(int action, int idx, long size) {
-        if (action == 0) {
-            tile.updateQuantity(idx, size);
-        } else if (action == 1) {
-            tile.updateBatchSize(idx, size);
-        }
-    }
-
     public static class FakeSlot extends ContainerFluidPatternEncoder.SlotFluidConvertingFake {
 
         public FakeSlot(AeItemStackHandler inv, int idx, int x, int y) {
