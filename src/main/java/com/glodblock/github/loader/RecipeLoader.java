@@ -70,7 +70,22 @@ public class RecipeLoader implements Runnable {
             };
 
             for (ItemBasicFluidStorageCell cell : cells) {
-                GameRegistry.addRecipe(new ShapedOreRecipe(cell, "GDG", "DCD", "III", 'D', "dustRedstone", 'G', AE2_QUARTZ_GLASS, 'C', cell.getComponent(), 'I', "ingotIron"));
+                GameRegistry.addRecipe(new ShapedOreRecipe(cell, "hCW", "SKS", "WAs",
+                    'h', "craftingToolHardHammer",
+                    'C', "plateCertusQuartz",
+                    'W', "screwCertusQuartz",
+                    'S', "plateStainlessSteel",
+                    'K', cell.getComponent(),
+                    'A', "plateAluminium",
+                    's', "craftingToolScrewdriver"));
+                GameRegistry.addRecipe(new ShapedOreRecipe(cell, "sCW", "SKS", "WAh",
+                    'h', "craftingToolHardHammer",
+                    'C', "plateCertusQuartz",
+                    'W', "screwCertusQuartz",
+                    'S', "plateStainlessSteel",
+                    'K', cell.getComponent(),
+                    'A', "plateAluminium",
+                    's', "craftingToolScrewdriver"));
                 GameRegistry.addRecipe(new ShapelessOreRecipe(cell, AE2_CELL_HOUSING, cell.getComponent()));
             }
         }
