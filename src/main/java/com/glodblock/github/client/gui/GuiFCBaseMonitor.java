@@ -394,6 +394,10 @@ public class GuiFCBaseMonitor extends AEBaseMEGui implements ISortSource, IConfi
         final EntityPlayer player = Minecraft.getMinecraft().thePlayer;
 
         if (mouseButton == 3) {
+            if (this instanceof GuiBaseFluidPatternTerminal
+                && ((GuiBaseFluidPatternTerminal) this).container.isCraftingMode()) {
+                return;
+            }
             if (slot instanceof OptionalSlotFake || slot instanceof SlotFakeCraftingMatrix) {
                 if (slot.getHasStack()) {
                     InventoryAction action = InventoryAction.valueOf("SET_PATTERN_VALUE");

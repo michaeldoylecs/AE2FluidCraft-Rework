@@ -184,7 +184,7 @@ public class FluidConvertingInventoryAdaptor extends InventoryAdaptor {
     @Override
     public boolean containsItems() {
         if (invFluids == null && invItems == null) {
-            // If this entity doesn't has fluid or item inventory, we just view it as full of things.
+            // If this entity doesn't have fluid or item inventory, we just view it as full of things.
             return true;
         }
         if (invFluids != null && invFluids.getTankInfo(this.side) != null) {
@@ -227,7 +227,7 @@ public class FluidConvertingInventoryAdaptor extends InventoryAdaptor {
                 }
             }
             if (!hasTank && invItems == null) {
-                // If this entity doesn't has fluid or item inventory, we just view it as full of things.
+                // If this entity doesn't have fluid or item inventory, we just view it as full of things.
                 return true;
             }
         }
