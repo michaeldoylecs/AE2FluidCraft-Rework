@@ -140,7 +140,7 @@ public class PartFluidPatternTerminal extends FCBasePart {
                     if(newStack != null){
                         NBTTagCompound data = newStack.getTagCompound();
                         this.setCombineMode(data.getInteger("combine") == 1);
-                        this.setBeSubstitute(data.getBoolean("beSubstitute"));
+//                        this.setBeSubstitute(data.getBoolean("beSubstitute"));
                     }
                     for (int i = 0; i < this.crafting.getSizeInventory(); i++) {
                         this.crafting.setInventorySlotContents(i, null);
