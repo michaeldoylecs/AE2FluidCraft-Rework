@@ -95,6 +95,9 @@ public class CPacketFluidPatternTermBtns implements IMessage {
                     case "PatternTerminal.Combine":
                         cpt.getPatternTerminal().setCombineMode(Value.equals("1"));
                         break;
+                    case "PatternTerminal.beSubstitute":
+                        cpt.getPatternTerminal().setBeSubstitute(Value.equals("1"));
+                        break;
                 }
             } else if( Name.startsWith( "PatternTerminalEx." ) && (c instanceof ContainerFluidPatternTerminalEx))
             {
@@ -133,6 +136,9 @@ public class CPacketFluidPatternTermBtns implements IMessage {
                         break;
                     case "PatternTerminalEx.Prioritize":
                         cpt.getPatternTerminal().setPrioritization(Value.equals("1"));
+                        break;
+                    case "PatternTerminalEx.beSubstitute":
+                        cpt.getPatternTerminal().setBeSubstitute(Value.equals("1"));
                         break;
                 }
             } else if(Name.equals( "Terminal.Cpu" ) && c instanceof ContainerFluidCraftConfirm) {

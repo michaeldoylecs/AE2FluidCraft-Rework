@@ -168,7 +168,7 @@ public class ContainerFluidPatternEncoder extends AEBaseContainer implements Pat
         }
     }
 
-    private static class SlotFluidConvertingFake extends SlotFake implements SlotFluid {
+    public static class SlotFluidConvertingFake extends SlotFake implements SlotFluid {
 
         private final AeStackInventory<IAEItemStack> inv;
 

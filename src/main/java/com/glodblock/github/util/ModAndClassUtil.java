@@ -33,6 +33,8 @@ public final class ModAndClassUtil {
     public static boolean isShiftTooltip;
     public static boolean isBigInterface;
 
+    public static boolean isBeSubstitutionsButton;
+
     public static Class<?> essentiaGas;
 
     @SuppressWarnings("all")
@@ -68,6 +70,12 @@ public final class ModAndClassUtil {
             isDoubleButton = true;
         } catch (NoSuchFieldException e) {
             isDoubleButton = false;
+        }
+        try {
+            Field d = ButtonToolTips.class.getDeclaredField("BeSubstitutionsDescEnabled");
+//            isBeSubstitutionsButton = true;
+        } catch (NoSuchFieldException e) {
+            isBeSubstitutionsButton = false;
         }
 
         try {

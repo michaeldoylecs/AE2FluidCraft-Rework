@@ -95,6 +95,25 @@ public class ItemFluidDrop extends Item {
         return stack;
     }
 
+    public static boolean isFluidStack(ItemStack stack) {
+        if (getFluidStack(stack) != null) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public static boolean isFluidStack(@Nullable IAEItemStack stack) {
+        if (stack == null) {
+            return false;
+        }
+        if (getFluidStack(stack.getItemStack()) != null) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
     public static FluidStack getFluidStack(ItemStack stack) {
         if (stack == null || stack.getItem() != ItemAndBlockHolder.DROP || !stack.hasTagCompound()) {
             return null;

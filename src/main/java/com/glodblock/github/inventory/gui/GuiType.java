@@ -19,7 +19,17 @@ import javax.annotation.Nullable;
 import java.util.List;
 
 public enum GuiType {
+    LEVEL_MAINTAINER(new TileGuiFactory<TileLevelMaintainer>(TileLevelMaintainer.class) {
+        @Override
+        protected Object createServerGui(EntityPlayer player, TileLevelMaintainer inv) {
+            return new ContainerLevelMaintainer(player.inventory, inv);
+        }
 
+        @Override
+        protected Object createClientGui(EntityPlayer player, TileLevelMaintainer inv) {
+            return new GuiLevelMaintainer(player.inventory, inv);
+        }
+    }),
     OC_PATTERN_EDITOR(new TileGuiFactory<TileOCPatternEditor>(TileOCPatternEditor.class) {
         @Override
         protected Object createServerGui(EntityPlayer player, TileOCPatternEditor inv) {

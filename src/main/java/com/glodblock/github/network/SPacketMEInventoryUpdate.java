@@ -7,6 +7,7 @@ import appeng.util.item.AEItemStack;
 import com.glodblock.github.client.gui.GuiFCBaseFluidMonitor;
 import com.glodblock.github.client.gui.GuiFCBaseMonitor;
 import com.glodblock.github.client.gui.GuiFluidCraftConfirm;
+import com.glodblock.github.client.gui.GuiLevelMaintainer;
 import cpw.mods.fml.common.network.simpleimpl.IMessage;
 import cpw.mods.fml.common.network.simpleimpl.IMessageHandler;
 import cpw.mods.fml.common.network.simpleimpl.MessageContext;
@@ -102,6 +103,8 @@ public class SPacketMEInventoryUpdate implements IMessage {
                 ((GuiFCBaseMonitor) gs).postUpdate((List<IAEItemStack>) (List<?>) message.list);
             } else if (gs instanceof GuiFluidCraftConfirm) {
                 ((GuiFluidCraftConfirm) gs).postUpdate((List<IAEItemStack>) (List<?>) message.list, message.ref);
+            } else if (gs instanceof GuiLevelMaintainer) {
+                ((GuiLevelMaintainer) gs).postUpdate((List<IAEItemStack>) (List<?>) message.list);
             }
             return null;
         }

@@ -8,10 +8,7 @@ import appeng.api.storage.data.IAEItemStack;
 import appeng.api.util.IConfigManager;
 import appeng.api.util.IConfigurableObject;
 import appeng.client.gui.AEBaseMEGui;
-import appeng.client.gui.widgets.GuiImgButton;
-import appeng.client.gui.widgets.GuiScrollbar;
-import appeng.client.gui.widgets.GuiTabButton;
-import appeng.client.gui.widgets.ISortSource;
+import appeng.client.gui.widgets.*;
 import appeng.client.me.InternalSlotME;
 import appeng.client.me.SlotDisconnected;
 import appeng.client.me.SlotME;
@@ -32,6 +29,8 @@ import appeng.integration.IntegrationType;
 import appeng.util.IConfigManagerHost;
 import appeng.util.Platform;
 import appeng.util.item.AEItemStack;
+import codechicken.nei.LayoutManager;
+import codechicken.nei.util.TextHistory;
 import com.glodblock.github.FluidCraft;
 import com.glodblock.github.client.gui.container.FCBaseFluidMonitorContain;
 import com.glodblock.github.client.me.FluidRepo;
@@ -40,6 +39,7 @@ import com.glodblock.github.network.CPacketInventoryAction;
 import com.glodblock.github.util.Ae2ReflectClient;
 import com.glodblock.github.util.ModAndClassUtil;
 import com.glodblock.github.util.NameConst;
+import com.glodblock.github.util.Util;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.resources.I18n;
@@ -52,9 +52,10 @@ import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 
 import java.io.IOException;
+import java.lang.reflect.Field;
 import java.util.List;
 
-public class GuiFCBaseFluidMonitor extends AEBaseMEGui implements ISortSource, IConfigManagerHost {
+public class GuiFCBaseFluidMonitor extends AEBaseMEGui implements ISortSource, IConfigManagerHost, IDropToFillTextField {
 
     public static int craftingGridOffsetX;
     public static int craftingGridOffsetY;
@@ -309,16 +310,47 @@ public class GuiFCBaseFluidMonitor extends AEBaseMEGui implements ISortSource, I
     @Override
     protected void mouseClicked(final int xCoord, final int yCoord, final int btn) {
         final Enum<?> searchMode = AEConfig.instance.settings.getSetting(Settings.SEARCH_MODE);
-
         if (searchMode != SearchBoxMode.AUTOSEARCH && searchMode != SearchBoxMode.NEI_AUTOSEARCH) {
             this.searchField.mouseClicked(xCoord, yCoord, btn);
         }
-
         if (btn == 1 && this.searchField.isMouseIn(xCoord, yCoord)) {
             setSearchString("", true);
         }
 
         super.mouseClicked(xCoord, yCoord, btn);
+    }
+
+    @Override
+    public void handleMouseInput() {
+        final int wheel = Mouse.getEventDWheel();
+        final int x = Mouse.getEventX() * this.width / this.mc.displayWidth;
+        final int y = this.height - Mouse.getEventY() * this.height / this.mc.displayHeight;
+
+        if (wheel != 0 && this.searchField.isMouseIn(x, y) && isCtrlKeyDown()) {
+            final Enum<?> searchMode = AEConfig.instance.settings.getSetting(Settings.SEARCH_MODE);
+            if (searchMode == SearchBoxMode.NEI_MANUAL_SEARCH || searchMode == SearchBoxMode.NEI_AUTOSEARCH) {
+                try {
+                    Field cls = LayoutManager.searchField.getClass().getDeclaredField("history");
+                    cls.setAccessible(true);
+                    TextHistory history = ((TextHistory) cls.get("get"));
+                    TextHistory.Direction direction;
+                    if (wheel > 0) {
+                        direction = TextHistory.Direction.PREVIOUS;
+                    } else {
+                        direction = TextHistory.Direction.NEXT;
+                    }
+                    history.get(direction, this.searchField.getText())
+                        .map(newText -> {
+                            setSearchString(newText, true);
+                            return true;
+                        })
+                        .orElse(false);
+                    return;
+                } catch (NoSuchFieldException | IllegalAccessException e) {
+                }
+            }
+        }
+        super.handleMouseInput();
     }
 
     @Override
@@ -686,4 +718,15 @@ public class GuiFCBaseFluidMonitor extends AEBaseMEGui implements ISortSource, I
         return false;
     }
 
+    @Override
+    public boolean isOverTextField(int mousex, int mousey) {
+        return searchField.isMouseIn(mousex, mousey);
+    }
+
+    @Override
+    public void setTextFieldValue(String displayName, int mousex, int mousey, ItemStack stack) {
+        if (Util.getFluidFromItem(stack) != null) {
+            setSearchString(Util.getFluidFromItem(stack).getFluid().getLocalizedName(), true);
+        }
+    }
 }
