@@ -183,6 +183,10 @@ public class FluidConvertingInventoryAdaptor extends InventoryAdaptor {
 
     @Override
     public boolean containsItems() {
+        if (invFluids == null && invItems == null) {
+            // If this entity doesn't has fluid or item inventory, we just view it as full of things.
+            return true;
+        }
         if (invFluids != null && invFluids.getTankInfo(this.side) != null) {
             List<FluidTankInfo[]> tankInfos = new LinkedList<>();
             if (invFluids instanceof TileCableBus && ((TileCableBus) invFluids).getPart(this.side) instanceof PartP2PLiquids) {
@@ -212,13 +216,19 @@ public class FluidConvertingInventoryAdaptor extends InventoryAdaptor {
             } else {
                 tankInfos.add(invFluids.getTankInfo(this.side));
             }
+            boolean hasTank = false;
             for (FluidTankInfo[] tankInfoArray : tankInfos) {
                 for (FluidTankInfo tank : tankInfoArray) {
+                    hasTank = true;
                     FluidStack fluid = tank.fluid;
                     if (fluid != null && fluid.amount > 0) {
                         return true;
                     }
                 }
+            }
+            if (!hasTank && invItems == null) {
+                // If this entity doesn't has fluid or item inventory, we just view it as full of things.
+                return true;
             }
         }
         return invItems != null && invItems.containsItems();
