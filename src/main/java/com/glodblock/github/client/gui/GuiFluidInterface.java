@@ -15,9 +15,11 @@ import com.glodblock.github.network.CPacketSwitchGuis;
 import com.glodblock.github.util.NameConst;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
+import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.InventoryPlayer;
+import net.minecraft.inventory.Slot;
 import net.minecraft.util.IIcon;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.StatCollector;
@@ -46,6 +48,16 @@ public class GuiFluidInterface extends AEBaseGui {
         super(new ContainerFluidInterface(ipl, tile));
         this.cont = (ContainerFluidInterface) inventorySlots;
         this.ySize = 231;
+    }
+
+    @Override
+    public void func_146977_a(final Slot s) {
+        try {
+            GuiContainer.class
+                .getDeclaredMethod("func_146977_a_original", Slot.class)
+                .invoke(this, s);
+        } catch (final Exception ignore) {
+        }
     }
 
     @Override
