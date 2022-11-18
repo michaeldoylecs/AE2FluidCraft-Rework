@@ -136,4 +136,8 @@ public class ItemFluidPacket extends Item {
         GameRegistry.registerItem(this, NameConst.ITEM_FLUID_PACKET, FluidCraft.MODID);
         return this;
     }
+
+    public ItemStack stack() {
+        return new ItemStack(this, 1);
+    }
 }

@@ -158,6 +158,6 @@ public class TileFluidPacketDecoder extends AENetworkTile implements IGridTickab
 
     @Override
     public boolean isItemValidForSlot(int slot, ItemStack stack) {
-        return inventory.isItemValidForSlot(slot, stack);
+        return stack.getItem() instanceof ItemFluidPacket;
     }
 }
