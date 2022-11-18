@@ -9,6 +9,8 @@ public class OCDriverInit {
         Driver.add(new DriverOCPatternEditor.Provider());
         Driver.add(new DriverLevelMaintainer());
         Driver.add(new DriverLevelMaintainer.Provider());
+        Driver.add(new DriverDualFluidInterface());
+        Driver.add(new DriverDualFluidInterface.Provider());
     }
 
 }
