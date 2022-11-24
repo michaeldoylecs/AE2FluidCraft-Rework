@@ -34,7 +34,8 @@ public class DriverDualFluidInterface implements SidedBlock {
 
     @Override
     public ManagedEnvironment createEnvironment(World world, int x, int y, int z, ForgeDirection side) {
-        return null;
+        TileEntity te = world.getTileEntity(x, y, z);
+        return new DriverDualFluidInterface.Environment(getInterface(te, side));
     }
 
     public static class Environment extends ManagedTileEntityEnvironment<DualityFluidInterface> implements NamedBlock {
@@ -108,6 +109,18 @@ public class DriverDualFluidInterface implements SidedBlock {
             }
         }
         return false;
+    }
+
+    private static DualityFluidInterface getInterface(TileEntity te, ForgeDirection face) {
+        if (te != null) {
+            if (te instanceof TileFluidInterface) {
+                return ((TileFluidInterface) te).getDualityFluid();
+            }
+            if (te instanceof IPartHost && ((IPartHost) te).getPart(face) instanceof PartFluidInterface) {
+                return ((PartFluidInterface) ((IPartHost) te).getPart(face)).getDualityFluid();
+            }
+        }
+        return null;
     }
 
     public static class Provider implements EnvironmentProvider {
