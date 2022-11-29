@@ -5,6 +5,7 @@ import appeng.api.config.Upgrades;
 import com.glodblock.github.common.Config;
 import com.glodblock.github.common.storage.FluidCellHandler;
 import com.glodblock.github.crossmod.opencomputers.OCDriverInit;
+import com.glodblock.github.crossmod.waila.WailaInit;
 import com.glodblock.github.inventory.InventoryHandler;
 import com.glodblock.github.loader.ChannelLoader;
 import com.glodblock.github.loader.ItemAndBlockHolder;
@@ -21,7 +22,7 @@ import cpw.mods.fml.common.network.NetworkRegistry;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 
-@Mod(modid = FluidCraft.MODID, version = FluidCraft.VERSION, name = FluidCraft.MODNAME, dependencies = "required-after:appliedenergistics2")
+@Mod(modid = FluidCraft.MODID, version = FluidCraft.VERSION, name = FluidCraft.MODNAME, dependencies = "required-after:appliedenergistics2;after:waila")
 public class FluidCraft {
 
     public static final String MODID = "GRADLETOKEN_MODID";
@@ -46,6 +47,9 @@ public class FluidCraft {
         ModAndClassUtil.init();
         if (ModAndClassUtil.OC) {
             OCDriverInit.run();
+        }
+        if (ModAndClassUtil.WAILA) {
+            WailaInit.run();
         }
         proxy.init(event);
     }

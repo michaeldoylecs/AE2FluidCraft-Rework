@@ -352,7 +352,8 @@ public class AEFluidInventory implements IAEFluidTank
             }
             catch( final Exception e )
             {
-                AELog.debug( e );
+                this.fluids[x] = null;
+                AELog.debug(e);
             }
         }
     }

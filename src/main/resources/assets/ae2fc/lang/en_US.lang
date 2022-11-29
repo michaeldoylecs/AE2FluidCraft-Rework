@@ -31,6 +31,10 @@ tile.large_ingredient_buffer.name=Large Ingredient Buffer
 tile.oc_pattern_editor.name=OC Pattern Editor
 tile.level_maintainer.name=ME Level Maintainer
 
+ae2fc.waila.speed=Speed
+ae2fc.waila.enable=Enable
+ae2fc.waila.disable=Disable
+
 ae2fc.tooltip.request_size=Amount to Maintain
 ae2fc.tooltip.batch_size=Crafting Batch Size
 ae2fc.tooltip.fluid_terminal=uh So we don't need EC2 anymore?

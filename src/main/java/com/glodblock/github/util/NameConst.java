@@ -35,6 +35,10 @@ public class NameConst {
     public static final String TT_REQUEST_SIZE = TT_KEY + "request_size";
     public static final String TT_BATCH_SIZE = TT_KEY + "batch_size";
 
+    public static final String WAILA_KEY = FluidCraft.MODID + ".waila.";
+    public static final String WAILA_ENABLE = WAILA_KEY + "enable";
+    public static final String WAILA_DISABLE = WAILA_KEY + "disable";
+    public static final String WAILA_SPEED = WAILA_KEY + "speed";
     public static final String RES_KEY = FluidCraft.MODID + ":";
 
     public static final String GUI_KEY = FluidCraft.MODID + ".gui.";
