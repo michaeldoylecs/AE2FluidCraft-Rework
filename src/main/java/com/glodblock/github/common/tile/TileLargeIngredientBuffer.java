@@ -60,6 +60,11 @@ public class TileLargeIngredientBuffer extends AEBaseInvTile implements IAEFluid
         markForUpdate();
     }
 
+    @Override
+    public AEFluidInventory getInternalFluid() {
+        return this.invFluids;
+    }
+
     @TileEvent(TileEventType.NETWORK_WRITE)
     protected void writeToStream(ByteBuf data) throws IOException {
         for (int i = 0; i < invItems.getSizeInventory(); i++) {

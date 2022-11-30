@@ -10,6 +10,8 @@ import com.glodblock.github.common.parts.PartFluidInterface;
 import com.glodblock.github.common.tile.TileFluidInterface;
 import com.glodblock.github.inventory.IAEFluidTank;
 import com.glodblock.github.inventory.gui.GuiType;
+import com.glodblock.github.inventory.gui.MouseRegionManager;
+import com.glodblock.github.inventory.gui.TankMouseHandler;
 import com.glodblock.github.loader.ItemAndBlockHolder;
 import com.glodblock.github.network.CPacketSwitchGuis;
 import com.glodblock.github.util.NameConst;
@@ -37,17 +39,29 @@ public class GuiFluidInterface extends AEBaseGui {
     private final ContainerFluidInterface cont;
 
     private GuiTabButton switcher;
+    private final MouseRegionManager mouseRegions = new MouseRegionManager(this);
 
     public GuiFluidInterface(InventoryPlayer ipl, TileFluidInterface tile) {
         super(new ContainerFluidInterface(ipl, tile));
         this.cont = (ContainerFluidInterface) inventorySlots;
         this.ySize = 231;
+        this.addMouseRegin();
     }
 
     public GuiFluidInterface(InventoryPlayer ipl, PartFluidInterface tile) {
         super(new ContainerFluidInterface(ipl, tile));
         this.cont = (ContainerFluidInterface) inventorySlots;
         this.ySize = 231;
+        this.addMouseRegin();
+    }
+
+    private void addMouseRegin() {
+        for (int i = 0; i < 6; i++) {
+            mouseRegions.addRegion(TANK_X + TANK_X_OFF * i, TANK_Y, TANK_WIDTH, TANK_HEIGHT,
+                new TankMouseHandler(
+                    isPart() ? ((PartFluidInterface) cont.getTile()).getInternalFluid() : ((TileFluidInterface) cont.getTile()).getInternalFluid(),
+                    i));
+        }
     }
 
     @Override
@@ -91,6 +105,7 @@ public class GuiFluidInterface extends AEBaseGui {
                 fluidInv.getFluidInSlot(i), fluidInv.getTankInfo(ForgeDirection.UNKNOWN)[i].capacity);
         }
         GL11.glColor4f(1F, 1F, 1F, 1F);
+        mouseRegions.render(mouseX, mouseY);
     }
 
     public String dirName(int face) {

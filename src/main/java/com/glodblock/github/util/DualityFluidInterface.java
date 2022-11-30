@@ -236,6 +236,11 @@ public class DualityFluidInterface implements IGridTickable, IStorageMonitorable
         }
     }
 
+    @Override
+    public AEFluidInventory getInternalFluid() {
+        return this.tanks;
+    }
+
     private boolean hasWorkToDo() {
         for (IAEFluidStack requiredWork : this.requireWork) {
             if (requiredWork != null) {

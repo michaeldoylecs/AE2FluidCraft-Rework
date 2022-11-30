@@ -60,7 +60,12 @@ public class TileIngredientBuffer extends AEBaseInvTile implements IAEFluidInven
         markForUpdate();
     }
 
-    @TileEvent( TileEventType.NETWORK_WRITE )
+    @Override
+    public AEFluidInventory getInternalFluid() {
+        return this.invFluids;
+    }
+
+    @TileEvent(TileEventType.NETWORK_WRITE)
     protected void writeToStream(ByteBuf data) throws IOException {
         for (int i = 0; i < invItems.getSizeInventory(); i++) {
             ByteBufUtils.writeItemStack(data, invItems.getStackInSlot(i));

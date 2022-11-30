@@ -10,6 +10,8 @@ import appeng.api.parts.IPart;
 import appeng.api.storage.data.IAEFluidStack;
 import appeng.util.item.AEFluidStack;
 import com.glodblock.github.common.item.ItemFluidPacket;
+import cpw.mods.fml.common.ModContainer;
+import cpw.mods.fml.common.registry.GameData;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -142,6 +144,23 @@ public final class Util {
         String name = FluidRegistry.getDefaultFluidName(fluid);
         try {
             return name.split(":")[0];
+        } catch (Exception e) {
+            return "";
+        }
+    }
+
+    public static ModContainer getFluidMod(Fluid fluid) {
+        return GameData.findModOwner(String.format("%s:%s", getFluidModID(fluid), fluid.getName()));
+    }
+
+    public static int getFluidID(Fluid fluid) {
+        return GameData.getBlockRegistry().getId(fluid.getBlock());
+    }
+
+    public static String getFluidModName(Fluid fluid) {
+        try {
+            ModContainer mod = getFluidMod(fluid);
+            return mod == null ? "Minecraft" : mod.getName();
         } catch (Exception e) {
             return "";
         }

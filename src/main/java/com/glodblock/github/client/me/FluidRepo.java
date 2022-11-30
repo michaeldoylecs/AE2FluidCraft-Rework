@@ -20,7 +20,6 @@ package com.glodblock.github.client.me;
 
 import appeng.api.AEApi;
 import appeng.api.config.*;
-import appeng.api.storage.data.IAEFluidStack;
 import appeng.api.storage.data.IAEItemStack;
 import appeng.api.storage.data.IItemList;
 import appeng.client.gui.widgets.IScrollSource;
@@ -28,13 +27,13 @@ import appeng.client.gui.widgets.ISortSource;
 import appeng.client.me.ItemRepo;
 import appeng.core.AEConfig;
 import appeng.items.storage.ItemViewCell;
-import appeng.util.item.AEItemStack;
 import appeng.util.prioitylist.IPartitionList;
 import com.glodblock.github.common.item.ItemFluidDrop;
 import com.glodblock.github.util.FluidSorters;
 import com.glodblock.github.util.Util;
 import cpw.mods.fml.relauncher.ReflectionHelper;
 import net.minecraft.item.ItemStack;
+import net.minecraftforge.fluids.Fluid;
 
 import javax.annotation.Nonnull;
 import java.lang.reflect.Field;
@@ -158,11 +157,16 @@ public class FluidRepo extends ItemRepo {
             if (viewMode == ViewItems.STORED && is.getStackSize() == 0) {
                 continue;
             }
-
-            final String dspName = searchMod ? Util.getFluidModID(ItemFluidDrop.getAeFluidStack(is).getFluid()) : ItemFluidDrop.getAeFluidStack(is).getFluid().getLocalizedName();
-
-            if (m.matcher(dspName.toLowerCase()).find()) {
-                this.view.add(is);
+            Fluid fluid = ItemFluidDrop.getAeFluidStack(is).getFluid();
+            if (searchMod) {
+                if (m.matcher(Util.getFluidModID(fluid).toLowerCase()).find() ||
+                    m.matcher(Util.getFluidModName(fluid).toLowerCase()).find()) {
+                    this.view.add(is);
+                }
+            } else {
+                if (m.matcher(fluid.getLocalizedName().toLowerCase()).find()) {
+                    this.view.add(is);
+                }
             }
 
             /*

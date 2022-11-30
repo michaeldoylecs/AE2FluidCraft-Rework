@@ -24,7 +24,7 @@ public final class ModAndClassUtil {
     public static boolean NEI = false;
     public static boolean COFH = false;
     public static boolean GTPP = false;
-
+    public static boolean WAILA = false;
     public static boolean isDoubleButton;
     public static boolean isSaveText;
     public static boolean isSearchStringTooltip;
@@ -132,5 +132,7 @@ public final class ModAndClassUtil {
             COFH = true;
         if (Loader.isModLoaded("miscutils"))
             GTPP = true;
+        if (Loader.isModLoaded("Waila"))
+            WAILA = true;
     }
 }

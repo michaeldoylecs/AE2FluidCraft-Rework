@@ -120,11 +120,9 @@ public abstract class PartSharedFluidBus extends PartUpgradeable implements IGri
         return null;
     }
 
-    protected int calculateAmountToSend()
-    {
+    public int calculateAmountToSend() {
         double amount = 1000D;
-        switch( this.getInstalledUpgrades( Upgrades.SPEED ) )
-        {
+        switch (this.getInstalledUpgrades(Upgrades.SPEED)) {
             case 4:
                 amount = amount * 1.5;
             case 3:

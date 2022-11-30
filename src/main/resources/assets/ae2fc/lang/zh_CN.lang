@@ -31,6 +31,10 @@ tile.large_ingredient_buffer.name=大型原材料缓存仓
 tile.oc_pattern_editor.name=OC样板编辑器
 tile.level_maintainer.name=ME缓存指令器
 
+ae2fc.waila.speed=速度
+ae2fc.waila.enable=启用
+ae2fc.waila.disable=禁用
+
 ae2fc.tooltip.request_size=缓存量
 ae2fc.tooltip.batch_size=批量制作数量
 ae2fc.tooltip.fluid_terminal=我们不再需要EC2了吗?
