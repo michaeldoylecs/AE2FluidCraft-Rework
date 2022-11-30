@@ -6,6 +6,7 @@ import mcp.mobius.waila.handlers.nei.TooltipHandlerWaila;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.EnumChatFormatting;
 import net.minecraftforge.fluids.FluidStack;
 
 import java.util.List;
@@ -21,14 +22,10 @@ public class FCTooltipHandlerWaila extends TooltipHandlerWaila {
         if (itemstack != null && itemstack.getItem() instanceof ItemFluidDrop && currenttip.size() > 0) {
             FluidStack fs = ItemFluidDrop.getFluidStack(itemstack);
             if (fs == null) return currenttip;
-
-            int fsid = Util.getFluidID(fs.getFluid());
+            currenttip.set(0, Tooltip.partFluidTerminalFluidFormat(fs));
             if (Minecraft.getMinecraft().gameSettings.advancedItemTooltips) {
-                currenttip.set(0, String.format("%s (#%s) %s", fs.getFluid().getLocalizedName(), fsid, fsid));
-            } else {
-                currenttip.set(0, String.format("%s %s", fs.getFluid().getLocalizedName(), fsid));
+                currenttip.set(1, EnumChatFormatting.GRAY + String.format("%s:%s", Util.getFluidModID(fs.getFluid()), fs.getFluid().getName()) + EnumChatFormatting.RESET);
             }
-
             String modName = Util.getFluidModName(fs.getFluid());
             if (modName != null && !modName.equals(""))
                 currenttip.set(currenttip.size() - 1, "\u00a79\u00a7o" + modName);

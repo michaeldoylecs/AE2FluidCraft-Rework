@@ -2,7 +2,10 @@ package com.glodblock.github.crossmod.waila;
 
 import appeng.util.Utility;
 import com.glodblock.github.util.NameConst;
+import com.glodblock.github.util.Util;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.I18n;
+import net.minecraftforge.fluids.FluidStack;
 
 public class Tooltip {
     public static String fluidFormat(String name, int amount) {
@@ -22,5 +25,16 @@ public class Tooltip {
             name, Utility.formatNumbers(quantity), Utility.formatNumbers(batch),
             isEnable ? I18n.format(NameConst.WAILA_ENABLE) : I18n.format(NameConst.WAILA_DISABLE)
         );
+    }
+
+    public static String partFluidTerminalFluidFormat(FluidStack fs) {
+        int fid = Util.getFluidID(fs.getFluid());
+        if (fid == -1) {
+            return fs.getFluid().getLocalizedName();
+        } else if (Minecraft.getMinecraft().gameSettings.advancedItemTooltips) {
+            return String.format("%s (#%s) %s", fs.getFluid().getLocalizedName(), fid, fid);
+        } else {
+            return String.format("%s %s", fs.getFluid().getLocalizedName(), fid);
+        }
     }
 }
