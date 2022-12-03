@@ -10,6 +10,7 @@ import appeng.api.networking.events.MENetworkPowerStatusChange;
 import appeng.api.networking.ticking.TickRateModulation;
 import appeng.api.networking.ticking.TickingRequest;
 import appeng.api.storage.data.IAEFluidStack;
+import appeng.api.util.IConfigManager;
 import appeng.tile.TileEvent;
 import appeng.tile.events.TileEventType;
 import appeng.tile.inventory.AppEngInternalAEInventory;
@@ -43,9 +44,16 @@ public class TileFluidInterface extends TileInterface implements IFluidHandler, 
     }
 
     private final DualityFluidInterface fluidDuality = new DualityFluidInterface(this.getProxy(), this) {
+        private final IConfigManager dualityConfigManager = getInterfaceDuality().getConfigManager();
+
         @Override
         public FluidStack drain(ForgeDirection from, int maxDrain, boolean doDrain) {
-            return this.getTanks().drain(from, maxDrain, doDrain);
+            SidelessMode mode = (SidelessMode) dualityConfigManager.getSetting(Settings.SIDELESS_MODE);
+            if (mode == SidelessMode.SIDELESS) {
+                return this.getTanks().drain(from, maxDrain, doDrain);
+            }
+
+            return this.getTanks().drain(from.ordinal(), maxDrain, doDrain);
         }
     };
     private final AppEngInternalAEInventory config = new AppEngInternalAEInventory(this, 6);
