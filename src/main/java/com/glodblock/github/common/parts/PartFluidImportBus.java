@@ -22,6 +22,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.IIcon;
 import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.fluids.FluidTankInfo;
 import net.minecraftforge.fluids.IFluidHandler;
 
 public class PartFluidImportBus extends PartSharedFluidBus {
@@ -72,30 +73,35 @@ public class PartFluidImportBus extends PartSharedFluidBus {
                 final IFluidHandler fh = (IFluidHandler) te;
                 final IMEMonitor<IAEFluidStack> inv = this.getProxy().getStorage().getFluidInventory();
 
-                final FluidStack fluidStack = fh.drain( this.getSide().getOpposite(), this.calculateAmountToSend(), false );
-
-                if( this.filterEnabled() && !this.isInFilter( fluidStack ) )
-                {
-                    return TickRateModulation.SLOWER;
-                }
-
-                final AEFluidStack aeFluidStack = AEFluidStack.create( fluidStack );
-
-                if( aeFluidStack != null )
-                {
-                    final IAEFluidStack notInserted = inv.injectItems( aeFluidStack, Actionable.MODULATE, this.source );
-
-                    if( notInserted != null && notInserted.getStackSize() > 0 )
-                    {
-                        aeFluidStack.decStackSize( notInserted.getStackSize() );
+                int maxDrain = this.calculateAmountToSend();
+                boolean drained = false;
+                FluidTankInfo[] tanksInfo = fh.getTankInfo(this.getSide().getOpposite());
+                for (FluidTankInfo tankInfo : tanksInfo) {
+                    if (tankInfo.fluid == null) {
+                        continue;
                     }
 
-                    fh.drain( this.getSide().getOpposite(), aeFluidStack.getFluidStack(), true );
+                    FluidStack fluidStack = new FluidStack(tankInfo.fluid, Math.min(tankInfo.fluid.amount, maxDrain));
+                    fluidStack = fh.drain(this.getSide().getOpposite(), fluidStack, false);
+                    if (this.filterEnabled() && !this.isInFilter(fluidStack)) {
+                        continue;
+                    }
 
-                    return TickRateModulation.FASTER;
+                    final AEFluidStack aeFluidStack = AEFluidStack.create(fluidStack);
+                    if (aeFluidStack != null) {
+                        final IAEFluidStack notInserted = inv.injectItems(aeFluidStack, Actionable.MODULATE, this.source);
+
+                        if (notInserted != null && notInserted.getStackSize() > 0) {
+                            aeFluidStack.decStackSize(notInserted.getStackSize());
+                        }
+
+                        fh.drain(this.getSide().getOpposite(), aeFluidStack.getFluidStack(), true);
+                        maxDrain -= aeFluidStack.getFluidStack().amount;
+                        drained = true;
+                    }
                 }
 
-                return TickRateModulation.IDLE;
+                return drained ? TickRateModulation.FASTER : TickRateModulation.SLOWER;
             }
             catch(GridAccessException e )
             {
