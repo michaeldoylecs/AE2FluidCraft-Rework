@@ -5,6 +5,8 @@ import appeng.api.storage.data.IAEFluidStack;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 
+import java.util.List;
+
 public interface IFluidCellInventory extends IMEInventory<IAEFluidStack>
 {
 
@@ -71,4 +73,6 @@ public interface IFluidCellInventory extends IMEInventory<IAEFluidStack>
     long getStoredFluidTypes();
 
     long getTotalFluidTypes();
+
+    List<IAEFluidStack> getContents();
 }

@@ -34,6 +34,7 @@ public class NameConst {
     public static final String TT_DUMP_TANK = TT_KEY + "dump_tank";
     public static final String TT_REQUEST_SIZE = TT_KEY + "request_size";
     public static final String TT_BATCH_SIZE = TT_KEY + "batch_size";
+    public static final String TT_CELL_CONTENTS = TT_KEY + "cell_contents";
 
     public static final String WAILA_KEY = FluidCraft.MODID + ".waila.";
     public static final String WAILA_ENABLE = WAILA_KEY + "enable";

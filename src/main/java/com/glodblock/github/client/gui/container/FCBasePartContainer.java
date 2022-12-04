@@ -327,6 +327,7 @@ public class FCBasePartContainer extends FCBaseMonitorContain implements IAEAppE
         if( i != null )
         {
             i.writeToNBT( c );
+            c.setInteger( "Count", i.stackSize );
         }
 
         return c;
