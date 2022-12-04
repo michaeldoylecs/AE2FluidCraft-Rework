@@ -6,18 +6,17 @@ import net.minecraft.item.ItemStack;
 
 public interface IStorageFluidCell extends ICellWorkbenchItem {
 
-    int getBytes( ItemStack cellItem );
+    int getBytes(ItemStack cellItem);
 
-    int getBytesPerType( ItemStack cellItem );
+    int getBytesPerType(ItemStack cellItem);
 
-    boolean isBlackListed( ItemStack cellItem, IAEFluidStack requestedAddition );
+    boolean isBlackListed(ItemStack cellItem, IAEFluidStack requestedAddition);
 
     boolean storableInStorageCell();
 
-    boolean isStorageCell( ItemStack i );
+    boolean isStorageCell(ItemStack i);
 
     double getIdleDrain();
 
-    int getTotalTypes( ItemStack cellItem );
-
+    int getTotalTypes(ItemStack cellItem);
 }

@@ -7,9 +7,8 @@ import appeng.integration.IntegrationType;
 import appeng.integration.abstraction.IInvTweaks;
 import appeng.util.Platform;
 import com.glodblock.github.common.item.ItemFluidDrop;
-import net.minecraftforge.fluids.Fluid;
-
 import java.util.Comparator;
+import net.minecraftforge.fluids.Fluid;
 
 public class FluidSorters {
     private static SortDir Direction = SortDir.ASCENDING;
@@ -20,7 +19,8 @@ public class FluidSorters {
             final Fluid f1 = ItemFluidDrop.getAeFluidStack(o1).getFluid();
             final Fluid f2 = ItemFluidDrop.getAeFluidStack(o2).getFluid();
             if (getDirection() == SortDir.ASCENDING) {
-                return this.secondarySort(Util.getFluidModName(f2).compareToIgnoreCase(Util.getFluidModName(f1)), f1, f2);
+                return this.secondarySort(
+                        Util.getFluidModName(f2).compareToIgnoreCase(Util.getFluidModName(f1)), f1, f2);
             }
             return this.secondarySort(Util.getFluidModName(f1).compareToIgnoreCase(Util.getFluidModName(f2)), f2, f1);
         }

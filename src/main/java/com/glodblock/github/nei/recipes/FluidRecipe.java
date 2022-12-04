@@ -6,16 +6,12 @@ import codechicken.nei.recipe.TemplateRecipeHandler;
 import com.glodblock.github.nei.object.IRecipeExtractor;
 import com.glodblock.github.nei.object.IRecipeExtractorLegacy;
 import com.glodblock.github.nei.object.OrderStack;
-import gregtech.common.items.GT_FluidDisplayItem;
-import net.minecraft.item.ItemStack;
-import net.minecraft.server.MinecraftServer;
-import net.minecraft.util.ChatComponentText;
-import net.minecraftforge.fluids.FluidStack;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
+import net.minecraft.item.ItemStack;
+import net.minecraftforge.fluids.FluidStack;
 
 public final class FluidRecipe {
 
@@ -86,6 +82,4 @@ public final class FluidRecipe {
         if (useOther) tmp.addAll(recipe.getOtherStacks(index));
         return extractor.getOutputIngredients(tmp, recipe, index);
     }
-
-
 }

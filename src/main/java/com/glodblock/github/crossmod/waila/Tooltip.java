@@ -13,18 +13,26 @@ public class Tooltip {
     }
 
     public static String partFluidBusFormat(int amount) {
-        return String.format("%s: %s mB/t", I18n.format(NameConst.WAILA_SPEED), ReadableNumberConverter.INSTANCE.toWideReadableForm(amount / 5));
+        return String.format(
+                "%s: %s mB/t",
+                I18n.format(NameConst.WAILA_SPEED), ReadableNumberConverter.INSTANCE.toWideReadableForm(amount / 5));
     }
 
     public static String tileFluidInterfaceFormat(String name, int amount, int face) {
-        return String.format("%s %s: %s mB", I18n.format(NameConst.GUI_FLUID_INTERFACE + "." + face), name, ReadableNumberConverter.INSTANCE.toWideReadableForm(amount));
+        return String.format(
+                "%s %s: %s mB",
+                I18n.format(NameConst.GUI_FLUID_INTERFACE + "." + face),
+                name,
+                ReadableNumberConverter.INSTANCE.toWideReadableForm(amount));
     }
 
     public static String tileLevelMaintainerFormat(String name, long quantity, long batch, boolean isEnable) {
-        return String.format("%s: %s / %s %s",
-            name, ReadableNumberConverter.INSTANCE.toWideReadableForm(quantity), ReadableNumberConverter.INSTANCE.toWideReadableForm(batch),
-            isEnable ? I18n.format(NameConst.WAILA_ENABLE) : I18n.format(NameConst.WAILA_DISABLE)
-        );
+        return String.format(
+                "%s: %s / %s %s",
+                name,
+                ReadableNumberConverter.INSTANCE.toWideReadableForm(quantity),
+                ReadableNumberConverter.INSTANCE.toWideReadableForm(batch),
+                isEnable ? I18n.format(NameConst.WAILA_ENABLE) : I18n.format(NameConst.WAILA_DISABLE));
     }
 
     public static String partFluidTerminalFluidFormat(FluidStack fs) {

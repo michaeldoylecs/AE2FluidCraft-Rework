@@ -35,6 +35,8 @@ import cpw.mods.fml.common.network.ByteBufUtils;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import io.netty.buffer.ByteBuf;
+import java.io.IOException;
+import java.util.Objects;
 import net.minecraft.client.renderer.RenderBlocks;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
@@ -46,13 +48,10 @@ import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTankInfo;
 import net.minecraftforge.fluids.IFluidHandler;
 
-import java.io.IOException;
-import java.util.Objects;
-
 public class PartFluidInterface extends PartInterface implements IFluidHandler, IAEFluidInventory {
 
     private final BaseActionSource ownActionSource = new MachineSource(this);
-    private final AppEngInternalAEInventory config = new AppEngInternalAEInventory( this, 6 );
+    private final AppEngInternalAEInventory config = new AppEngInternalAEInventory(this, 6);
     private final DualityFluidInterface fluidDuality = new DualityFluidInterface(this.getProxy(), this);
 
     public PartFluidInterface(ItemStack is) {
@@ -60,42 +59,65 @@ public class PartFluidInterface extends PartInterface implements IFluidHandler, 
     }
 
     @Override
-    @SideOnly( Side.CLIENT )
-    public void renderStatic(final int x, final int y, final int z, final IPartRenderHelper rh, final RenderBlocks renderer )
-    {
-        this.setRenderCache( rh.useSimplifiedRendering( x, y, z, this, this.getRenderCache() ) );
-        rh.setTexture( CableBusTextures.PartMonitorSides.getIcon(), CableBusTextures.PartMonitorSides.getIcon(), CableBusTextures.PartMonitorBack.getIcon(), FCPartsTexture.BlockInterface_Face.getIcon(), CableBusTextures.PartMonitorSides.getIcon(), CableBusTextures.PartMonitorSides.getIcon() );
+    @SideOnly(Side.CLIENT)
+    public void renderStatic(
+            final int x, final int y, final int z, final IPartRenderHelper rh, final RenderBlocks renderer) {
+        this.setRenderCache(rh.useSimplifiedRendering(x, y, z, this, this.getRenderCache()));
+        rh.setTexture(
+                CableBusTextures.PartMonitorSides.getIcon(),
+                CableBusTextures.PartMonitorSides.getIcon(),
+                CableBusTextures.PartMonitorBack.getIcon(),
+                FCPartsTexture.BlockInterface_Face.getIcon(),
+                CableBusTextures.PartMonitorSides.getIcon(),
+                CableBusTextures.PartMonitorSides.getIcon());
 
-        rh.setBounds( 2, 2, 14, 14, 14, 16 );
-        rh.renderBlock( x, y, z, renderer );
+        rh.setBounds(2, 2, 14, 14, 14, 16);
+        rh.renderBlock(x, y, z, renderer);
 
-        rh.setTexture( CableBusTextures.PartMonitorSides.getIcon(), CableBusTextures.PartMonitorSides.getIcon(), CableBusTextures.PartMonitorBack.getIcon(), FCPartsTexture.BlockInterface_Face.getIcon(), CableBusTextures.PartMonitorSides.getIcon(), CableBusTextures.PartMonitorSides.getIcon() );
+        rh.setTexture(
+                CableBusTextures.PartMonitorSides.getIcon(),
+                CableBusTextures.PartMonitorSides.getIcon(),
+                CableBusTextures.PartMonitorBack.getIcon(),
+                FCPartsTexture.BlockInterface_Face.getIcon(),
+                CableBusTextures.PartMonitorSides.getIcon(),
+                CableBusTextures.PartMonitorSides.getIcon());
 
-        rh.setBounds( 5, 5, 12, 11, 11, 13 );
-        rh.renderBlock( x, y, z, renderer );
+        rh.setBounds(5, 5, 12, 11, 11, 13);
+        rh.renderBlock(x, y, z, renderer);
 
-        rh.setTexture( CableBusTextures.PartMonitorSidesStatus.getIcon(), CableBusTextures.PartMonitorSidesStatus.getIcon(), CableBusTextures.PartMonitorBack.getIcon(), FCPartsTexture.BlockInterface_Face.getIcon(), CableBusTextures.PartMonitorSidesStatus.getIcon(), CableBusTextures.PartMonitorSidesStatus.getIcon() );
+        rh.setTexture(
+                CableBusTextures.PartMonitorSidesStatus.getIcon(),
+                CableBusTextures.PartMonitorSidesStatus.getIcon(),
+                CableBusTextures.PartMonitorBack.getIcon(),
+                FCPartsTexture.BlockInterface_Face.getIcon(),
+                CableBusTextures.PartMonitorSidesStatus.getIcon(),
+                CableBusTextures.PartMonitorSidesStatus.getIcon());
 
-        rh.setBounds( 5, 5, 13, 11, 11, 14 );
-        rh.renderBlock( x, y, z, renderer );
+        rh.setBounds(5, 5, 13, 11, 11, 14);
+        rh.renderBlock(x, y, z, renderer);
 
-        this.renderLights( x, y, z, rh, renderer );
+        this.renderLights(x, y, z, rh, renderer);
     }
 
     @Override
-    @SideOnly( Side.CLIENT )
-    public void renderInventory( final IPartRenderHelper rh, final RenderBlocks renderer )
-    {
-        rh.setTexture( CableBusTextures.PartMonitorSides.getIcon(), CableBusTextures.PartMonitorSides.getIcon(), CableBusTextures.PartMonitorBack.getIcon(), FCPartsTexture.BlockInterface_Face.getIcon(), CableBusTextures.PartMonitorSides.getIcon(), CableBusTextures.PartMonitorSides.getIcon() );
+    @SideOnly(Side.CLIENT)
+    public void renderInventory(final IPartRenderHelper rh, final RenderBlocks renderer) {
+        rh.setTexture(
+                CableBusTextures.PartMonitorSides.getIcon(),
+                CableBusTextures.PartMonitorSides.getIcon(),
+                CableBusTextures.PartMonitorBack.getIcon(),
+                FCPartsTexture.BlockInterface_Face.getIcon(),
+                CableBusTextures.PartMonitorSides.getIcon(),
+                CableBusTextures.PartMonitorSides.getIcon());
 
-        rh.setBounds( 2, 2, 14, 14, 14, 16 );
-        rh.renderInventoryBox( renderer );
+        rh.setBounds(2, 2, 14, 14, 14, 16);
+        rh.renderInventoryBox(renderer);
 
-        rh.setBounds( 5, 5, 12, 11, 11, 13 );
-        rh.renderInventoryBox( renderer );
+        rh.setBounds(5, 5, 12, 11, 11, 13);
+        rh.renderInventoryBox(renderer);
 
-        rh.setBounds( 5, 5, 13, 11, 11, 14 );
-        rh.renderInventoryBox( renderer );
+        rh.setBounds(5, 5, 13, 11, 11, 14);
+        rh.renderInventoryBox(renderer);
     }
 
     @MENetworkEventSubscribe
@@ -123,12 +145,11 @@ public class PartFluidInterface extends PartInterface implements IFluidHandler, 
     }
 
     public AppEngInternalAEInventory getConfig() {
-        for (int i = 0; i < fluidDuality.getConfig().getSlots(); i ++) {
+        for (int i = 0; i < fluidDuality.getConfig().getSlots(); i++) {
             IAEFluidStack fluid = fluidDuality.getConfig().getFluidInSlot(i);
             if (fluid == null) {
                 config.setInventorySlotContents(i, null);
-            }
-            else {
+            } else {
                 config.setInventorySlotContents(i, ItemFluidPacket.newDisplayStack(fluid.getFluidStack()));
             }
         }
@@ -140,7 +161,7 @@ public class PartFluidInterface extends PartInterface implements IFluidHandler, 
         super.writeToStream(data);
         for (int i = 0; i < config.getSizeInventory(); i++) {
             ByteBufUtils.writeItemStack(data, config.getStackInSlot(i));
-            for (int j = 0; j < config.getSizeInventory(); j ++) {
+            for (int j = 0; j < config.getSizeInventory(); j++) {
                 FluidStack fluid = ItemFluidPacket.getFluidStack(config.getStackInSlot(j));
                 fluidDuality.getConfig().setFluidInSlot(j, fluidDuality.getStandardFluid(fluid));
             }
@@ -170,7 +191,7 @@ public class PartFluidInterface extends PartInterface implements IFluidHandler, 
                 config.setInventorySlotContents(i, stack);
                 changed = true;
             }
-            for (int j = 0; j < config.getSizeInventory(); j ++) {
+            for (int j = 0; j < config.getSizeInventory(); j++) {
                 FluidStack fluid = ItemFluidPacket.getFluidStack(config.getStackInSlot(j));
                 fluidDuality.getConfig().setFluidInSlot(j, fluidDuality.getStandardFluid(fluid));
             }
@@ -195,10 +216,10 @@ public class PartFluidInterface extends PartInterface implements IFluidHandler, 
     }
 
     @Override
-    public void readFromNBT( NBTTagCompound data ) {
-        super.readFromNBT( data );
+    public void readFromNBT(NBTTagCompound data) {
+        super.readFromNBT(data);
         config.readFromNBT(data, "ConfigInv");
-        for (int i = 0; i < config.getSizeInventory(); i ++) {
+        for (int i = 0; i < config.getSizeInventory(); i++) {
             FluidStack fluid = ItemFluidPacket.getFluidStack(config.getStackInSlot(i));
             fluidDuality.getConfig().setFluidInSlot(i, fluidDuality.getStandardFluid(fluid));
         }
@@ -206,21 +227,23 @@ public class PartFluidInterface extends PartInterface implements IFluidHandler, 
     }
 
     @Override
-    public void writeToNBT( NBTTagCompound data ) {
+    public void writeToNBT(NBTTagCompound data) {
         super.writeToNBT(data);
         config.writeToNBT(data, "ConfigInv");
         getInternalFluid().writeToNBT(data, "FluidInv");
     }
 
     @Override
-    public int getInstalledUpgrades( final Upgrades u )
-    {
-        return getInterfaceDuality().getInstalledUpgrades( u );
+    public int getInstalledUpgrades(final Upgrades u) {
+        return getInterfaceDuality().getInstalledUpgrades(u);
     }
 
     private IMEMonitor<IAEFluidStack> getFluidGrid() {
         try {
-            return getProxy().getGrid().<IStorageGrid>getCache(IStorageGrid.class).getFluidInventory();
+            return getProxy()
+                    .getGrid()
+                    .<IStorageGrid>getCache(IStorageGrid.class)
+                    .getFluidInventory();
         } catch (GridAccessException e) {
             return null;
         }
@@ -238,8 +261,7 @@ public class PartFluidInterface extends PartInterface implements IFluidHandler, 
     public int fill(ForgeDirection from, FluidStack resource, boolean doFill) {
         IMEMonitor<IAEFluidStack> fluidGrid = getFluidGrid();
         IEnergyGrid energyGrid = getEnergyGrid();
-        if (energyGrid == null || fluidGrid == null || resource == null)
-            return 0;
+        if (energyGrid == null || fluidGrid == null || resource == null) return 0;
         int ori = resource.amount;
         IAEFluidStack remove;
         if (doFill) {
@@ -276,15 +298,17 @@ public class PartFluidInterface extends PartInterface implements IFluidHandler, 
     }
 
     @Override
-    public boolean onPartActivate(final EntityPlayer player, final Vec3 pos)
-    {
-        if( player.isSneaking() )
-        {
+    public boolean onPartActivate(final EntityPlayer player, final Vec3 pos) {
+        if (player.isSneaking()) {
             return false;
         }
-        if( Platform.isServer() )
-        {
-            InventoryHandler.openGui(player, this.getHost().getTile().getWorldObj(), new BlockPos(this.getHost().getTile()), Objects.requireNonNull(Util.from(this.getSide())), GuiType.DUAL_INTERFACE_PART);
+        if (Platform.isServer()) {
+            InventoryHandler.openGui(
+                    player,
+                    this.getHost().getTile().getWorldObj(),
+                    new BlockPos(this.getHost().getTile()),
+                    Objects.requireNonNull(Util.from(this.getSide())),
+                    GuiType.DUAL_INTERFACE_PART);
         }
         return true;
     }
@@ -298,7 +322,8 @@ public class PartFluidInterface extends PartInterface implements IFluidHandler, 
 
     public void setConfig(int id, IAEFluidStack fluid) {
         if (id >= 0 && id < 6) {
-            config.setInventorySlotContents(id, ItemFluidPacket.newDisplayStack(fluid == null ? null : fluid.getFluidStack()));
+            config.setInventorySlotContents(
+                    id, ItemFluidPacket.newDisplayStack(fluid == null ? null : fluid.getFluidStack()));
             fluidDuality.getConfig().setFluidInSlot(id, fluidDuality.getStandardFluid(fluid));
         }
     }
@@ -310,15 +335,14 @@ public class PartFluidInterface extends PartInterface implements IFluidHandler, 
     }
 
     @Override
-    public TickingRequest getTickingRequest( final IGridNode node )
-    {
+    public TickingRequest getTickingRequest(final IGridNode node) {
         TickingRequest item = super.getTickingRequest(node);
         TickingRequest fluid = fluidDuality.getTickingRequest(node);
         return new TickingRequest(
-            Math.min(item.minTickRate, fluid.minTickRate),
-            Math.max(item.maxTickRate, fluid.maxTickRate),
-            item.isSleeping && fluid.isSleeping,
-            true);
+                Math.min(item.minTickRate, fluid.minTickRate),
+                Math.max(item.maxTickRate, fluid.maxTickRate),
+                item.isSleeping && fluid.isSleeping,
+                true);
     }
 
     @Override
@@ -331,5 +355,4 @@ public class PartFluidInterface extends PartInterface implements IFluidHandler, 
             return fluid;
         }
     }
-
 }

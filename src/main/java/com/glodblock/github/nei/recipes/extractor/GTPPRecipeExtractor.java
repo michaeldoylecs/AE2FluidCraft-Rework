@@ -9,5 +9,4 @@ public class GTPPRecipeExtractor extends GregTech5RecipeExtractor {
     public GTPPRecipeExtractor(boolean removeSpecial) {
         super(removeSpecial);
     }
-
 }

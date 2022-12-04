@@ -25,9 +25,12 @@ public final class Util {
 
     public static EnumFacing from(ForgeDirection direction) {
         switch (direction) {
-            case WEST: return EnumFacing.EAST;
-            case EAST: return EnumFacing.WEST;
-            case UNKNOWN: return null;
+            case WEST:
+                return EnumFacing.EAST;
+            case EAST:
+                return EnumFacing.WEST;
+            case UNKNOWN:
+                return null;
             default: {
                 int o = direction.ordinal();
                 return EnumFacing.values()[o];
@@ -63,7 +66,8 @@ public final class Util {
         return hasPermission(player, permission, host, ForgeDirection.UNKNOWN);
     }
 
-    public static boolean hasPermission(EntityPlayer player, SecurityPermissions permission, IGridHost host, ForgeDirection side) {
+    public static boolean hasPermission(
+            EntityPlayer player, SecurityPermissions permission, IGridHost host, ForgeDirection side) {
         return host == null || hasPermission(player, permission, host.getGridNode(side));
     }
 
@@ -75,20 +79,24 @@ public final class Util {
         return part == null || hasPermission(player, permission, part.getGridNode());
     }
 
-    public static boolean hasPermission(EntityPlayer player, SecurityPermissions permission, ISecurityGrid securityGrid) {
-        return player == null || permission == null || securityGrid == null || securityGrid.hasPermission(player, permission);
+    public static boolean hasPermission(
+            EntityPlayer player, SecurityPermissions permission, ISecurityGrid securityGrid) {
+        return player == null
+                || permission == null
+                || securityGrid == null
+                || securityGrid.hasPermission(player, permission);
     }
 
     public static ItemStack copyStackWithSize(ItemStack itemStack, int size) {
-        if (size == 0 || itemStack == null)
-            return null;
+        if (size == 0 || itemStack == null) return null;
         ItemStack copy = itemStack.copy();
         copy.stackSize = size;
         return copy;
     }
 
     public static AEFluidStack getAEFluidFromItem(ItemStack stack) {
-        if (stack != null && (stack.getItem() instanceof IFluidContainerItem || FluidContainerRegistry.isContainer(stack))) {
+        if (stack != null
+                && (stack.getItem() instanceof IFluidContainerItem || FluidContainerRegistry.isContainer(stack))) {
             if (stack.getItem() instanceof IFluidContainerItem) {
                 FluidStack fluid = ((IFluidContainerItem) stack.getItem()).getFluid(stack);
                 if (fluid != null) {
@@ -110,7 +118,8 @@ public final class Util {
     }
 
     public static FluidStack getFluidFromItem(ItemStack stack) {
-        if (stack != null && (stack.getItem() instanceof IFluidContainerItem || FluidContainerRegistry.isContainer(stack))) {
+        if (stack != null
+                && (stack.getItem() instanceof IFluidContainerItem || FluidContainerRegistry.isContainer(stack))) {
             if (stack.getItem() instanceof IFluidContainerItem) {
                 FluidStack fluid = ((IFluidContainerItem) stack.getItem()).getFluid(stack);
                 if (fluid != null) {
@@ -164,11 +173,10 @@ public final class Util {
         } catch (Exception e) {
             return "";
         }
-
     }
 
     public static IAEFluidStack loadFluidStackFromNBT(final NBTTagCompound i) {
-        //Fuck ae2
+        // Fuck ae2
         final FluidStack t = FluidRegistry.getFluidStack(i.getString("FluidName"), 1);
         final AEFluidStack fluid = AEFluidStack.create(t);
         fluid.setStackSize(i.getLong("Cnt"));
@@ -184,8 +192,7 @@ public final class Util {
 
     public static class FluidUtil {
         public static IAEFluidStack createAEFluidStack(Fluid fluid) {
-            return createAEFluidStack(new FluidStack(fluid,
-                FluidContainerRegistry.BUCKET_VOLUME));
+            return createAEFluidStack(new FluidStack(fluid, FluidContainerRegistry.BUCKET_VOLUME));
         }
 
         public static IAEFluidStack createAEFluidStack(Fluid fluid, long amount) {
@@ -197,45 +204,38 @@ public final class Util {
         }
 
         public static IAEFluidStack createAEFluidStack(int fluidId, long amount) {
-            return createAEFluidStack(new FluidStack(FluidRegistry.getFluid(fluidId), 1)).setStackSize(
-                amount);
+            return createAEFluidStack(new FluidStack(FluidRegistry.getFluid(fluidId), 1))
+                    .setStackSize(amount);
         }
 
         public static boolean isEmpty(ItemStack itemStack) {
-            if (itemStack == null)
-                return false;
+            if (itemStack == null) return false;
             Item item = itemStack.getItem();
             if (item instanceof IFluidContainerItem) {
-                FluidStack content = ((IFluidContainerItem) item)
-                    .getFluid(itemStack);
+                FluidStack content = ((IFluidContainerItem) item).getFluid(itemStack);
                 return content == null || content.amount <= 0;
             }
             return FluidContainerRegistry.isEmptyContainer(itemStack);
         }
 
         public static boolean isFilled(ItemStack itemStack) {
-            if (itemStack == null)
-                return false;
+            if (itemStack == null) return false;
             Item item = itemStack.getItem();
             if (item instanceof IFluidContainerItem) {
-                FluidStack content = ((IFluidContainerItem) item)
-                    .getFluid(itemStack);
+                FluidStack content = ((IFluidContainerItem) item).getFluid(itemStack);
                 return content != null && content.amount > 0;
             }
             return FluidContainerRegistry.isFilledContainer(itemStack);
         }
 
         public static boolean isFluidContainer(ItemStack itemStack) {
-            if (itemStack == null)
-                return false;
+            if (itemStack == null) return false;
             Item item = itemStack.getItem();
-            return item instanceof IFluidContainerItem
-                || FluidContainerRegistry.isContainer(itemStack);
+            return item instanceof IFluidContainerItem || FluidContainerRegistry.isContainer(itemStack);
         }
 
         public static FluidStack getFluidFromContainer(ItemStack itemStack) {
-            if (itemStack == null)
-                return null;
+            if (itemStack == null) return null;
 
             ItemStack container = itemStack.copy();
             Item item = container.getItem();
@@ -247,8 +247,7 @@ public final class Util {
         }
 
         public static int getCapacity(ItemStack itemStack, Fluid fluid) {
-            if (itemStack == null)
-                return 0;
+            if (itemStack == null) return 0;
             Item item = itemStack.getItem();
             if (item instanceof IFluidContainerItem) {
                 IFluidContainerItem fluidContainerItem = (IFluidContainerItem) item;
@@ -268,12 +267,11 @@ public final class Util {
         }
 
         public static ItemStack clearFluid(ItemStack itemStack) {
-            if (itemStack == null)
-                return null;
+            if (itemStack == null) return null;
             Item item = itemStack.getItem();
             if (item instanceof IFluidContainerItem) {
-                ((IFluidContainerItem) item).drain(itemStack,
-                    ((IFluidContainerItem) item).getFluid(itemStack).amount, true);
+                ((IFluidContainerItem) item)
+                        .drain(itemStack, ((IFluidContainerItem) item).getFluid(itemStack).amount, true);
                 return itemStack;
             } else if (FluidContainerRegistry.isContainer(itemStack)) {
                 return FluidContainerRegistry.drainFluidContainer(itemStack);
@@ -281,55 +279,40 @@ public final class Util {
             return null;
         }
 
-        public static MutablePair<Integer, ItemStack> drainStack(
-            ItemStack itemStack, FluidStack fluid) {
-            if (itemStack == null)
-                return null;
+        public static MutablePair<Integer, ItemStack> drainStack(ItemStack itemStack, FluidStack fluid) {
+            if (itemStack == null) return null;
             Item item = itemStack.getItem();
             if (item instanceof IFluidContainerItem) {
-                FluidStack drained = ((IFluidContainerItem) item).drain(itemStack,
-                    fluid.amount, true);
-                int amountDrained = drained != null
-                    && drained.getFluid() == fluid.getFluid() ? drained.amount
-                    : 0;
+                FluidStack drained = ((IFluidContainerItem) item).drain(itemStack, fluid.amount, true);
+                int amountDrained = drained != null && drained.getFluid() == fluid.getFluid() ? drained.amount : 0;
                 return new MutablePair<Integer, ItemStack>(amountDrained, itemStack);
             } else if (FluidContainerRegistry.isContainer(itemStack)) {
-                FluidStack content = FluidContainerRegistry
-                    .getFluidForFilledItem(itemStack);
-                int amountDrained = content != null
-                    && content.getFluid() == fluid.getFluid() ? content.amount
-                    : 0;
-                return new MutablePair<Integer, ItemStack>(amountDrained,
-                    FluidContainerRegistry.drainFluidContainer(itemStack));
+                FluidStack content = FluidContainerRegistry.getFluidForFilledItem(itemStack);
+                int amountDrained = content != null && content.getFluid() == fluid.getFluid() ? content.amount : 0;
+                return new MutablePair<Integer, ItemStack>(
+                        amountDrained, FluidContainerRegistry.drainFluidContainer(itemStack));
             }
 
             return null;
         }
 
-        public static MutablePair<Integer, ItemStack> fillStack(
-            ItemStack itemStack, FluidStack fluid) {
-            if (itemStack == null || itemStack.stackSize != 1)
-                return null;
+        public static MutablePair<Integer, ItemStack> fillStack(ItemStack itemStack, FluidStack fluid) {
+            if (itemStack == null || itemStack.stackSize != 1) return null;
             Item item = itemStack.getItem();
-            //If its a fluid container item instance
+            // If its a fluid container item instance
             if (item instanceof IFluidContainerItem) {
-                //Call the fill method on it.
-                int filled = ((IFluidContainerItem) item).fill(itemStack, fluid,
-                    true);
+                // Call the fill method on it.
+                int filled = ((IFluidContainerItem) item).fill(itemStack, fluid, true);
 
-                //Return the filled itemstack.
+                // Return the filled itemstack.
                 return new MutablePair<Integer, ItemStack>(filled, itemStack);
             } else if (FluidContainerRegistry.isContainer(itemStack)) {
-                //Fill it through the fluidcontainer registry.
-                ItemStack filledContainer = FluidContainerRegistry
-                    .fillFluidContainer(fluid, itemStack);
-                //get the filled fluidstack.
-                FluidStack filled = FluidContainerRegistry
-                    .getFluidForFilledItem(filledContainer);
-                //Return filled container and fill amount.
-                return new MutablePair<Integer, ItemStack>(
-                    filled != null ? filled.amount : 0, filledContainer);
-
+                // Fill it through the fluidcontainer registry.
+                ItemStack filledContainer = FluidContainerRegistry.fillFluidContainer(fluid, itemStack);
+                // get the filled fluidstack.
+                FluidStack filled = FluidContainerRegistry.getFluidForFilledItem(filledContainer);
+                // Return filled container and fill amount.
+                return new MutablePair<Integer, ItemStack>(filled != null ? filled.amount : 0, filledContainer);
             }
             return null;
         }

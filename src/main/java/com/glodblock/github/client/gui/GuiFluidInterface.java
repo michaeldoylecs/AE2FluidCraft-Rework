@@ -15,6 +15,7 @@ import com.glodblock.github.inventory.gui.TankMouseHandler;
 import com.glodblock.github.loader.ItemAndBlockHolder;
 import com.glodblock.github.network.CPacketSwitchGuis;
 import com.glodblock.github.util.NameConst;
+import javax.annotation.Nullable;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.inventory.GuiContainer;
@@ -27,8 +28,6 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.StatCollector;
 import net.minecraftforge.common.util.ForgeDirection;
 import org.lwjgl.opengl.GL11;
-
-import javax.annotation.Nullable;
 
 public class GuiFluidInterface extends AEBaseGui {
 
@@ -57,10 +56,16 @@ public class GuiFluidInterface extends AEBaseGui {
 
     private void addMouseRegin() {
         for (int i = 0; i < 6; i++) {
-            mouseRegions.addRegion(TANK_X + TANK_X_OFF * i, TANK_Y, TANK_WIDTH, TANK_HEIGHT,
-                new TankMouseHandler(
-                    isPart() ? ((PartFluidInterface) cont.getTile()).getInternalFluid() : ((TileFluidInterface) cont.getTile()).getInternalFluid(),
-                    i));
+            mouseRegions.addRegion(
+                    TANK_X + TANK_X_OFF * i,
+                    TANK_Y,
+                    TANK_WIDTH,
+                    TANK_HEIGHT,
+                    new TankMouseHandler(
+                            isPart()
+                                    ? ((PartFluidInterface) cont.getTile()).getInternalFluid()
+                                    : ((TileFluidInterface) cont.getTile()).getInternalFluid(),
+                            i));
         }
     }
 
@@ -68,19 +73,23 @@ public class GuiFluidInterface extends AEBaseGui {
     public void func_146977_a(final Slot s) {
         try {
             GuiContainer.class
-                .getDeclaredMethod("func_146977_a_original", Slot.class)
-                .invoke(this, s);
+                    .getDeclaredMethod("func_146977_a_original", Slot.class)
+                    .invoke(this, s);
         } catch (final Exception ignore) {
         }
     }
 
     @Override
     @SuppressWarnings("unchecked")
-    public void initGui()
-    {
+    public void initGui() {
         super.initGui();
-        this.switcher = new GuiTabButton( this.guiLeft + 154, this.guiTop, isPart() ? ItemAndBlockHolder.FLUID_INTERFACE.stack() : ItemAndBlockHolder.INTERFACE.stack(), StatCollector.translateToLocal("ae2fc.tooltip.switch_fluid_interface"), itemRender );
-        this.buttonList.add( this.switcher );
+        this.switcher = new GuiTabButton(
+                this.guiLeft + 154,
+                this.guiTop,
+                isPart() ? ItemAndBlockHolder.FLUID_INTERFACE.stack() : ItemAndBlockHolder.INTERFACE.stack(),
+                StatCollector.translateToLocal("ae2fc.tooltip.switch_fluid_interface"),
+                itemRender);
+        this.buttonList.add(this.switcher);
     }
 
     @Override
@@ -101,8 +110,13 @@ public class GuiFluidInterface extends AEBaseGui {
             if (!isPart()) {
                 fontRendererObj.drawString(dirName(i), TANK_X + i * TANK_X_OFF + 5, 22, 0x404040);
             }
-            renderFluidIntoGui(TANK_X + i * TANK_X_OFF, TANK_Y, TANK_WIDTH, TANK_HEIGHT,
-                fluidInv.getFluidInSlot(i), fluidInv.getTankInfo(ForgeDirection.UNKNOWN)[i].capacity);
+            renderFluidIntoGui(
+                    TANK_X + i * TANK_X_OFF,
+                    TANK_Y,
+                    TANK_WIDTH,
+                    TANK_HEIGHT,
+                    fluidInv.getFluidInSlot(i),
+                    fluidInv.getTankInfo(ForgeDirection.UNKNOWN)[i].capacity);
         }
         GL11.glColor4f(1F, 1F, 1F, 1F);
         mouseRegions.render(mouseX, mouseY);
@@ -118,8 +132,8 @@ public class GuiFluidInterface extends AEBaseGui {
         drawTexturedModalRect(offsetX, offsetY, 0, 0, 176, ySize);
     }
 
-    public void renderFluidIntoGui(int x, int y, int width, int height,
-                                   @Nullable IAEFluidStack aeFluidStack, int capacity) {
+    public void renderFluidIntoGui(
+            int x, int y, int width, int height, @Nullable IAEFluidStack aeFluidStack, int capacity) {
         if (aeFluidStack != null) {
             GL11.glDisable(2896);
             GL11.glColor3f(1.0F, 1.0F, 1.0F);
@@ -127,10 +141,14 @@ public class GuiFluidInterface extends AEBaseGui {
             if (aeFluidStack.getStackSize() > 0 && hi > 0) {
                 Minecraft.getMinecraft().renderEngine.bindTexture(TextureMap.locationBlocksTexture);
                 IIcon fluidIcon = aeFluidStack.getFluid().getStillIcon();
-                GL11.glColor3f((float)(aeFluidStack.getFluid().getColor() >> 16 & 255) / 255.0F, (float)(aeFluidStack.getFluid().getColor() >> 8 & 255) / 255.0F, (float)(aeFluidStack.getFluid().getColor() & 255) / 255.0F);
+                GL11.glColor3f(
+                        (float) (aeFluidStack.getFluid().getColor() >> 16 & 255) / 255.0F,
+                        (float) (aeFluidStack.getFluid().getColor() >> 8 & 255) / 255.0F,
+                        (float) (aeFluidStack.getFluid().getColor() & 255) / 255.0F);
                 for (int th = 0; th <= hi; th += 16) {
                     if (hi - th <= 0) break;
-                    this.drawTexturedModelRectFromIcon(x, y + height - Math.min(16, hi - th) - th, fluidIcon, width, Math.min(16, hi - th));
+                    this.drawTexturedModelRectFromIcon(
+                            x, y + height - Math.min(16, hi - th) - th, fluidIcon, width, Math.min(16, hi - th));
                 }
                 GL11.glColor3f(1.0F, 1.0F, 1.0F);
             }
@@ -138,11 +156,11 @@ public class GuiFluidInterface extends AEBaseGui {
     }
 
     @Override
-    protected void actionPerformed( final GuiButton btn )
-    {
+    protected void actionPerformed(final GuiButton btn) {
         super.actionPerformed(btn);
         if (btn == this.switcher) {
-            FluidCraft.proxy.netHandler.sendToServer(new CPacketSwitchGuis(isPart() ? GuiType.DUAL_INTERFACE_PART : GuiType.DUAL_INTERFACE));
+            FluidCraft.proxy.netHandler.sendToServer(
+                    new CPacketSwitchGuis(isPart() ? GuiType.DUAL_INTERFACE_PART : GuiType.DUAL_INTERFACE));
         }
     }
 
@@ -154,9 +172,8 @@ public class GuiFluidInterface extends AEBaseGui {
             } else {
                 ((TileFluidInterface) cont.getTile()).setConfig(id, stack);
             }
-        }
-        else {
-            if(isPart()) {
+        } else {
+            if (isPart()) {
                 ((PartFluidInterface) cont.getTile()).setFluidInv(id, stack);
             } else {
                 ((TileFluidInterface) cont.getTile()).setFluidInv(id, stack);
@@ -167,6 +184,4 @@ public class GuiFluidInterface extends AEBaseGui {
     private boolean isPart() {
         return this.cont.getTile() instanceof PartFluidInterface;
     }
-
 }
-

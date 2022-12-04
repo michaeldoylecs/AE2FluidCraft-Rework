@@ -50,132 +50,136 @@ public class GuiBaseFluidPatternTerminal extends GuiFCBaseMonitor {
     }
 
     @Override
-    protected void actionPerformed( final GuiButton btn )
-    {
-        super.actionPerformed( btn );
+    protected void actionPerformed(final GuiButton btn) {
+        super.actionPerformed(btn);
 
-        if( this.tabCraftButton == btn || this.tabProcessButton == btn )
-        {
-            FluidCraft.proxy.netHandler.sendToServer( new CPacketFluidPatternTermBtns( "PatternTerminal.CraftMode", this.tabProcessButton == btn ? CRAFTMODE_CRFTING : CRAFTMODE_PROCESSING ) );
-        }
-        else if( this.encodeBtn == btn )
-        {
-            FluidCraft.proxy.netHandler.sendToServer( new CPacketFluidPatternTermBtns( "PatternTerminal.Encode", (isCtrlKeyDown() ? 1 : 0) << 1 | (isShiftKeyDown() ? 1 : 0) ));
-        }
-        else if( this.clearBtn == btn )
-        {
-            FluidCraft.proxy.netHandler.sendToServer( new CPacketFluidPatternTermBtns( "PatternTerminal.Clear", "1" ) );
-        }
-        else if( this.substitutionsEnabledBtn == btn || this.substitutionsDisabledBtn == btn )
-        {
-            FluidCraft.proxy.netHandler.sendToServer( new CPacketFluidPatternTermBtns( "PatternTerminal.Substitute", this.substitutionsEnabledBtn == btn ? SUBSITUTION_DISABLE : SUBSITUTION_ENABLE ) );
-        }
-        else if( this.combineDisableBtn == btn || this.combineEnableBtn == btn )
-        {
-            FluidCraft.proxy.netHandler.sendToServer( new CPacketFluidPatternTermBtns( "PatternTerminal.Combine", this.combineDisableBtn == btn ? "1" : "0" ) );
-        }
-        else if (ModAndClassUtil.isDoubleButton && doubleBtn == btn) {
-            FluidCraft.proxy.netHandler.sendToServer(new CPacketFluidPatternTermBtns("PatternTerminal.Double", Keyboard.isKeyDown(Keyboard.KEY_LSHIFT) ? "1" : "0"));
+        if (this.tabCraftButton == btn || this.tabProcessButton == btn) {
+            FluidCraft.proxy.netHandler.sendToServer(new CPacketFluidPatternTermBtns(
+                    "PatternTerminal.CraftMode",
+                    this.tabProcessButton == btn ? CRAFTMODE_CRFTING : CRAFTMODE_PROCESSING));
+        } else if (this.encodeBtn == btn) {
+            FluidCraft.proxy.netHandler.sendToServer(new CPacketFluidPatternTermBtns(
+                    "PatternTerminal.Encode", (isCtrlKeyDown() ? 1 : 0) << 1 | (isShiftKeyDown() ? 1 : 0)));
+        } else if (this.clearBtn == btn) {
+            FluidCraft.proxy.netHandler.sendToServer(new CPacketFluidPatternTermBtns("PatternTerminal.Clear", "1"));
+        } else if (this.substitutionsEnabledBtn == btn || this.substitutionsDisabledBtn == btn) {
+            FluidCraft.proxy.netHandler.sendToServer(new CPacketFluidPatternTermBtns(
+                    "PatternTerminal.Substitute",
+                    this.substitutionsEnabledBtn == btn ? SUBSITUTION_DISABLE : SUBSITUTION_ENABLE));
+        } else if (this.combineDisableBtn == btn || this.combineEnableBtn == btn) {
+            FluidCraft.proxy.netHandler.sendToServer(new CPacketFluidPatternTermBtns(
+                    "PatternTerminal.Combine", this.combineDisableBtn == btn ? "1" : "0"));
+        } else if (ModAndClassUtil.isDoubleButton && doubleBtn == btn) {
+            FluidCraft.proxy.netHandler.sendToServer(new CPacketFluidPatternTermBtns(
+                    "PatternTerminal.Double", Keyboard.isKeyDown(Keyboard.KEY_LSHIFT) ? "1" : "0"));
         } else if (ModAndClassUtil.isBeSubstitutionsButton && beSubstitutionsDisabledBtn == btn) {
-            FluidCraft.proxy.netHandler.sendToServer(new CPacketFluidPatternTermBtns("PatternTerminal.beSubstitute", "1"));
+            FluidCraft.proxy.netHandler.sendToServer(
+                    new CPacketFluidPatternTermBtns("PatternTerminal.beSubstitute", "1"));
         } else if (ModAndClassUtil.isBeSubstitutionsButton && beSubstitutionsEnabledBtn == btn) {
-            FluidCraft.proxy.netHandler.sendToServer(new CPacketFluidPatternTermBtns("PatternTerminal.beSubstitute", "0"));
+            FluidCraft.proxy.netHandler.sendToServer(
+                    new CPacketFluidPatternTermBtns("PatternTerminal.beSubstitute", "0"));
         }
     }
 
     @Override
     @SuppressWarnings("unchecked")
-    public void initGui()
-    {
+    public void initGui() {
         super.initGui();
-        this.tabCraftButton = new GuiTabButton( this.guiLeft + 173, this.guiTop + this.ySize - 177, new ItemStack( Blocks.crafting_table ), GuiText.CraftingPattern.getLocal(), itemRender );
-        this.buttonList.add( this.tabCraftButton );
+        this.tabCraftButton = new GuiTabButton(
+                this.guiLeft + 173,
+                this.guiTop + this.ySize - 177,
+                new ItemStack(Blocks.crafting_table),
+                GuiText.CraftingPattern.getLocal(),
+                itemRender);
+        this.buttonList.add(this.tabCraftButton);
 
-        this.tabProcessButton = new GuiTabButton( this.guiLeft + 173, this.guiTop + this.ySize - 177, new ItemStack( Blocks.furnace ), GuiText.ProcessingPattern.getLocal(), itemRender );
-        this.buttonList.add( this.tabProcessButton );
+        this.tabProcessButton = new GuiTabButton(
+                this.guiLeft + 173,
+                this.guiTop + this.ySize - 177,
+                new ItemStack(Blocks.furnace),
+                GuiText.ProcessingPattern.getLocal(),
+                itemRender);
+        this.buttonList.add(this.tabProcessButton);
 
-        this.substitutionsEnabledBtn = new GuiImgButton( this.guiLeft + 84, this.guiTop + this.ySize - 163, Settings.ACTIONS, ItemSubstitution.ENABLED );
-        this.substitutionsEnabledBtn.setHalfSize( true );
-        this.buttonList.add( this.substitutionsEnabledBtn );
+        this.substitutionsEnabledBtn = new GuiImgButton(
+                this.guiLeft + 84, this.guiTop + this.ySize - 163, Settings.ACTIONS, ItemSubstitution.ENABLED);
+        this.substitutionsEnabledBtn.setHalfSize(true);
+        this.buttonList.add(this.substitutionsEnabledBtn);
 
-        this.substitutionsDisabledBtn = new GuiImgButton( this.guiLeft + 84, this.guiTop + this.ySize - 163, Settings.ACTIONS, ItemSubstitution.DISABLED );
-        this.substitutionsDisabledBtn.setHalfSize( true );
-        this.buttonList.add( this.substitutionsDisabledBtn );
+        this.substitutionsDisabledBtn = new GuiImgButton(
+                this.guiLeft + 84, this.guiTop + this.ySize - 163, Settings.ACTIONS, ItemSubstitution.DISABLED);
+        this.substitutionsDisabledBtn.setHalfSize(true);
+        this.buttonList.add(this.substitutionsDisabledBtn);
 
-        this.clearBtn = new GuiImgButton( this.guiLeft + 74, this.guiTop + this.ySize - 163, Settings.ACTIONS, ActionItems.CLOSE );
-        this.clearBtn.setHalfSize( true );
-        this.buttonList.add( this.clearBtn );
+        this.clearBtn = new GuiImgButton(
+                this.guiLeft + 74, this.guiTop + this.ySize - 163, Settings.ACTIONS, ActionItems.CLOSE);
+        this.clearBtn.setHalfSize(true);
+        this.buttonList.add(this.clearBtn);
 
-        this.encodeBtn = new GuiImgButton( this.guiLeft + 147, this.guiTop + this.ySize - 142, Settings.ACTIONS, ActionItems.ENCODE );
+        this.encodeBtn = new GuiImgButton(
+                this.guiLeft + 147, this.guiTop + this.ySize - 142, Settings.ACTIONS, ActionItems.ENCODE);
         this.buttonList.add(this.encodeBtn);
 
         int combineLeft = 74;
         int combineTop = 153;
         if (ModAndClassUtil.isDoubleButton) {
-            this.doubleBtn = new GuiImgButton(this.guiLeft + 74, this.guiTop + this.ySize - 153, Settings.ACTIONS, ActionItems.DOUBLE);
+            this.doubleBtn = new GuiImgButton(
+                    this.guiLeft + 74, this.guiTop + this.ySize - 153, Settings.ACTIONS, ActionItems.DOUBLE);
             this.doubleBtn.setHalfSize(true);
             this.buttonList.add(this.doubleBtn);
             combineLeft = 84;
         }
-//        if (ModAndClassUtil.isBeSubstitutionsButton) {
-//            combineLeft = 74;
-//            combineTop -= 11;
-//            this.beSubstitutionsEnabledBtn = new GuiImgButton(
-//                this.guiLeft + 84, this.guiTop + this.ySize - 153, Settings.ACTIONS, PatternBeSubstitution.ENABLED);
-//            this.beSubstitutionsEnabledBtn.setHalfSize(true);
-//            this.buttonList.add(this.beSubstitutionsEnabledBtn);
-//
-//            this.beSubstitutionsDisabledBtn = new GuiImgButton(
-//                this.guiLeft + 84, this.guiTop + this.ySize - 153, Settings.ACTIONS, PatternBeSubstitution.DISABLED);
-//            this.beSubstitutionsDisabledBtn.setHalfSize(true);
-//            this.buttonList.add(this.beSubstitutionsDisabledBtn);
-//        }
-        this.combineEnableBtn = new GuiFCImgButton(this.guiLeft + combineLeft, this.guiTop + this.ySize - combineTop, "FORCE_COMBINE", "DO_COMBINE");
+        //        if (ModAndClassUtil.isBeSubstitutionsButton) {
+        //            combineLeft = 74;
+        //            combineTop -= 11;
+        //            this.beSubstitutionsEnabledBtn = new GuiImgButton(
+        //                this.guiLeft + 84, this.guiTop + this.ySize - 153, Settings.ACTIONS,
+        // PatternBeSubstitution.ENABLED);
+        //            this.beSubstitutionsEnabledBtn.setHalfSize(true);
+        //            this.buttonList.add(this.beSubstitutionsEnabledBtn);
+        //
+        //            this.beSubstitutionsDisabledBtn = new GuiImgButton(
+        //                this.guiLeft + 84, this.guiTop + this.ySize - 153, Settings.ACTIONS,
+        // PatternBeSubstitution.DISABLED);
+        //            this.beSubstitutionsDisabledBtn.setHalfSize(true);
+        //            this.buttonList.add(this.beSubstitutionsDisabledBtn);
+        //        }
+        this.combineEnableBtn = new GuiFCImgButton(
+                this.guiLeft + combineLeft, this.guiTop + this.ySize - combineTop, "FORCE_COMBINE", "DO_COMBINE");
         this.combineEnableBtn.setHalfSize(true);
         this.buttonList.add(this.combineEnableBtn);
 
-        this.combineDisableBtn = new GuiFCImgButton(this.guiLeft + combineLeft, this.guiTop + this.ySize - combineTop, "NOT_COMBINE", "DONT_COMBINE");
+        this.combineDisableBtn = new GuiFCImgButton(
+                this.guiLeft + combineLeft, this.guiTop + this.ySize - combineTop, "NOT_COMBINE", "DONT_COMBINE");
         this.combineDisableBtn.setHalfSize(true);
         this.buttonList.add(this.combineDisableBtn);
     }
 
     @Override
-    public void drawFG( final int offsetX, final int offsetY, final int mouseX, final int mouseY )
-    {
-        if( !this.container.isCraftingMode() )
-        {
+    public void drawFG(final int offsetX, final int offsetY, final int mouseX, final int mouseY) {
+        if (!this.container.isCraftingMode()) {
             this.tabCraftButton.visible = false;
             this.tabProcessButton.visible = true;
-            if (ModAndClassUtil.isDoubleButton)
-                this.doubleBtn.visible = true;
-        }
-        else
-        {
+            if (ModAndClassUtil.isDoubleButton) this.doubleBtn.visible = true;
+        } else {
             this.tabCraftButton.visible = true;
             this.tabProcessButton.visible = false;
-            if (ModAndClassUtil.isDoubleButton)
-                this.doubleBtn.visible = false;
+            if (ModAndClassUtil.isDoubleButton) this.doubleBtn.visible = false;
         }
 
-        if( this.container.substitute )
-        {
+        if (this.container.substitute) {
             this.substitutionsEnabledBtn.visible = true;
             this.substitutionsDisabledBtn.visible = false;
-        }
-        else
-        {
+        } else {
             this.substitutionsEnabledBtn.visible = false;
             this.substitutionsDisabledBtn.visible = true;
         }
 
-        if (!this.container.isCraftingMode())
-        {
-            if ( this.container.combine )
-            {
+        if (!this.container.isCraftingMode()) {
+            if (this.container.combine) {
                 this.combineEnableBtn.visible = true;
                 this.combineDisableBtn.visible = false;
-            }
-            else {
+            } else {
                 this.combineEnableBtn.visible = false;
                 this.combineDisableBtn.visible = true;
             }
@@ -194,30 +198,27 @@ public class GuiBaseFluidPatternTerminal extends GuiFCBaseMonitor {
         }
 
         super.drawFG(offsetX, offsetY, mouseX, mouseY);
-        this.fontRendererObj.drawString(StatCollector.translateToLocal(NameConst.GUI_FLUID_PATTERN_TERMINAL), 8, this.ySize - 96 + 2 - getReservedSpace(), 4210752);
+        this.fontRendererObj.drawString(
+                StatCollector.translateToLocal(NameConst.GUI_FLUID_PATTERN_TERMINAL),
+                8,
+                this.ySize - 96 + 2 - getReservedSpace(),
+                4210752);
     }
 
     @Override
-    protected String getBackground()
-    {
-        if( this.container.isCraftingMode() )
-        {
+    protected String getBackground() {
+        if (this.container.isCraftingMode()) {
             return "gui/pattern.png";
         }
         return "gui/pattern2.png";
     }
 
     @Override
-    protected void repositionSlot( final AppEngSlot s )
-    {
-        if( s.isPlayerSide() )
-        {
+    protected void repositionSlot(final AppEngSlot s) {
+        if (s.isPlayerSide()) {
             s.yDisplayPosition = s.getY() + this.ySize - 78 - 5;
-        }
-        else
-        {
+        } else {
             s.yDisplayPosition = s.getY() + this.ySize - 78 - 3;
         }
     }
-
 }

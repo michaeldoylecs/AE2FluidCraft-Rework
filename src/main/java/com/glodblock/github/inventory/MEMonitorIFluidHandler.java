@@ -12,12 +12,11 @@ import appeng.api.storage.StorageChannel;
 import appeng.api.storage.data.IAEFluidStack;
 import appeng.api.storage.data.IItemList;
 import appeng.util.item.AEFluidStack;
+import java.util.*;
 import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTankInfo;
 import net.minecraftforge.fluids.IFluidHandler;
-
-import java.util.*;
 
 public class MEMonitorIFluidHandler implements IMEMonitor<IAEFluidStack> {
     private final IFluidHandler handler;
@@ -43,11 +42,11 @@ public class MEMonitorIFluidHandler implements IMEMonitor<IAEFluidStack> {
         int filled = this.handler.fill(ForgeDirection.UNKNOWN, input.getFluidStack(), type == Actionable.MODULATE);
         if (filled == 0) {
             return input.copy();
-        } else if ((long)filled == input.getStackSize()) {
+        } else if ((long) filled == input.getStackSize()) {
             return null;
         } else {
             IAEFluidStack o = input.copy();
-            o.setStackSize(input.getStackSize() - (long)filled);
+            o.setStackSize(input.getStackSize() - (long) filled);
             if (type == Actionable.MODULATE) {
                 IAEFluidStack added = o.copy();
                 this.cache.add(added);
@@ -59,7 +58,8 @@ public class MEMonitorIFluidHandler implements IMEMonitor<IAEFluidStack> {
     }
 
     public IAEFluidStack extractItems(IAEFluidStack request, Actionable type, BaseActionSource src) {
-        FluidStack removed = this.handler.drain(ForgeDirection.UNKNOWN, request.getFluidStack(), type == Actionable.MODULATE);
+        FluidStack removed =
+                this.handler.drain(ForgeDirection.UNKNOWN, request.getFluidStack(), type == Actionable.MODULATE);
         if (removed != null && removed.amount != 0) {
             IAEFluidStack o = request.copy();
             o.setStackSize(removed.amount);
@@ -77,12 +77,11 @@ public class MEMonitorIFluidHandler implements IMEMonitor<IAEFluidStack> {
     }
 
     @Override
-    public StorageChannel getChannel()
-    {
+    public StorageChannel getChannel() {
         return StorageChannel.FLUIDS;
     }
 
-    //*Decompiled Stuff*//
+    // *Decompiled Stuff*//
 
     public TickRateModulation onTick() {
         boolean changed = false;
@@ -91,7 +90,8 @@ public class MEMonitorIFluidHandler implements IMEMonitor<IAEFluidStack> {
         IItemList<IAEFluidStack> currentlyOnStorage = AEApi.instance().storage().createFluidList();
 
         for (FluidTankInfo tankProperty : tankProperties) {
-            if (this.mode != StorageFilter.EXTRACTABLE_ONLY || this.handler.drain(ForgeDirection.UNKNOWN, 1, false) != null) {
+            if (this.mode != StorageFilter.EXTRACTABLE_ONLY
+                    || this.handler.drain(ForgeDirection.UNKNOWN, 1, false) != null) {
                 currentlyOnStorage.add(AEFluidStack.create(tankProperty.fluid));
             }
         }
@@ -99,22 +99,22 @@ public class MEMonitorIFluidHandler implements IMEMonitor<IAEFluidStack> {
         Iterator<?> var9 = this.cache.iterator();
 
         IAEFluidStack is;
-        while(var9.hasNext()) {
-            is = (IAEFluidStack)var9.next();
+        while (var9.hasNext()) {
+            is = (IAEFluidStack) var9.next();
             is.setStackSize(-is.getStackSize());
         }
 
         var9 = currentlyOnStorage.iterator();
 
-        while(var9.hasNext()) {
-            is = (IAEFluidStack)var9.next();
+        while (var9.hasNext()) {
+            is = (IAEFluidStack) var9.next();
             this.cache.add(is);
         }
 
         var9 = this.cache.iterator();
 
-        while(var9.hasNext()) {
-            is = (IAEFluidStack)var9.next();
+        while (var9.hasNext()) {
+            is = (IAEFluidStack) var9.next();
             if (is.getStackSize() != 0L) {
                 changes.add(is);
             }
@@ -133,8 +133,8 @@ public class MEMonitorIFluidHandler implements IMEMonitor<IAEFluidStack> {
         if (a != null) {
             Iterator i = this.listeners.entrySet().iterator();
 
-            while(i.hasNext()) {
-                Map.Entry<IMEMonitorHandlerReceiver<IAEFluidStack>, Object> l = (Map.Entry)i.next();
+            while (i.hasNext()) {
+                Map.Entry<IMEMonitorHandlerReceiver<IAEFluidStack>, Object> l = (Map.Entry) i.next();
                 IMEMonitorHandlerReceiver key = l.getKey();
                 if (key.isValid(l.getValue())) {
                     key.postChange(this, a, this.getActionSource());
@@ -143,7 +143,6 @@ public class MEMonitorIFluidHandler implements IMEMonitor<IAEFluidStack> {
                 }
             }
         }
-
     }
 
     public AccessRestriction getAccess() {
@@ -173,8 +172,8 @@ public class MEMonitorIFluidHandler implements IMEMonitor<IAEFluidStack> {
     public IItemList<IAEFluidStack> getAvailableItems(IItemList out) {
         Iterator var2 = this.cache.iterator();
 
-        while(var2.hasNext()) {
-            IAEFluidStack fs = (IAEFluidStack)var2.next();
+        while (var2.hasNext()) {
+            IAEFluidStack fs = (IAEFluidStack) var2.next();
             out.addStorage(fs);
         }
 

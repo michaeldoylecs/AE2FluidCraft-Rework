@@ -15,14 +15,13 @@ import com.glodblock.github.util.NameConst;
 import cpw.mods.fml.common.registry.GameRegistry;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import java.util.EnumSet;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
-
-import java.util.EnumSet;
 
 public class BlockFluidInterface extends FCBaseBlock {
 
@@ -31,29 +30,34 @@ public class BlockFluidInterface extends FCBaseBlock {
         setFullBlock(true);
         setOpaque(true);
         setTileEntity(TileFluidInterface.class);
-        setFeature( EnumSet.of( AEFeature.Core ) );
+        setFeature(EnumSet.of(AEFeature.Core));
     }
 
     @Override
-    @SideOnly( Side.CLIENT )
-    protected RenderBlockFluidInterface getRenderer()
-    {
+    @SideOnly(Side.CLIENT)
+    protected RenderBlockFluidInterface getRenderer() {
         return new RenderBlockFluidInterface();
     }
 
     @Override
-    public boolean onActivated(final World world, final int x, final int y, final int z, final EntityPlayer player, final int facing, final float hitX, final float hitY, final float hitZ )
-    {
-        if( player.isSneaking() )
-        {
+    public boolean onActivated(
+            final World world,
+            final int x,
+            final int y,
+            final int z,
+            final EntityPlayer player,
+            final int facing,
+            final float hitX,
+            final float hitY,
+            final float hitZ) {
+        if (player.isSneaking()) {
             return false;
         }
-        final TileInterface tg = this.getTileEntity( world, x, y, z );
-        if( tg != null )
-        {
-            if( Platform.isServer() )
-            {
-                InventoryHandler.openGui(player, world, new BlockPos(x, y, z), EnumFacing.getFront(facing), GuiType.DUAL_INTERFACE);
+        final TileInterface tg = this.getTileEntity(world, x, y, z);
+        if (tg != null) {
+            if (Platform.isServer()) {
+                InventoryHandler.openGui(
+                        player, world, new BlockPos(x, y, z), EnumFacing.getFront(facing), GuiType.DUAL_INTERFACE);
             }
             return true;
         }
@@ -61,17 +65,14 @@ public class BlockFluidInterface extends FCBaseBlock {
     }
 
     @Override
-    protected boolean hasCustomRotation()
-    {
+    protected boolean hasCustomRotation() {
         return true;
     }
 
     @Override
-    protected void customRotateBlock(final IOrientable rotatable, final ForgeDirection axis )
-    {
-        if( rotatable instanceof TileInterface )
-        {
-            ( (TileInterface) rotatable ).setSide( axis );
+    protected void customRotateBlock(final IOrientable rotatable, final ForgeDirection axis) {
+        if (rotatable instanceof TileInterface) {
+            ((TileInterface) rotatable).setSide(axis);
         }
     }
 
@@ -89,5 +90,4 @@ public class BlockFluidInterface extends FCBaseBlock {
     public ItemStack stack() {
         return new ItemStack(this, 1);
     }
-
 }

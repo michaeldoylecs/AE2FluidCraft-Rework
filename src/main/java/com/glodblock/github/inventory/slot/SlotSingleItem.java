@@ -98,5 +98,4 @@ public class SlotSingleItem extends Slot {
     public int getSlotIndex() {
         return delegate.getSlotIndex();
     }
-
 }

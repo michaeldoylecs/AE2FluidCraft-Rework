@@ -30,15 +30,15 @@ public class ContainerFluidPatternTerminalEx extends FCBasePartContainerEx imple
         super(ip, monitorable);
     }
 
-    public void encodeAllItemAndMoveToInventory(){
+    public void encodeAllItemAndMoveToInventory() {
         encode();
         ItemStack output = this.patternSlotOUT.getStack();
-        if(output != null){
-            if(this.patternSlotIN.getStack() != null) output.stackSize += this.patternSlotIN.getStack().stackSize;
-            if (!getPlayerInv().addItemStackToInventory( output )){
+        if (output != null) {
+            if (this.patternSlotIN.getStack() != null) output.stackSize += this.patternSlotIN.getStack().stackSize;
+            if (!getPlayerInv().addItemStackToInventory(output)) {
                 getPlayerInv().player.entityDropItem(output, 0);
             }
-            this.patternSlotOUT.putStack( null );
+            this.patternSlotOUT.putStack(null);
             this.patternSlotIN.putStack(null);
         }
     }
@@ -58,7 +58,7 @@ public class ContainerFluidPatternTerminalEx extends FCBasePartContainerEx imple
             if (stack.stackSize == 1) {
                 this.patternSlotIN.putStack(null);
             } else {
-                stack.stackSize --;
+                stack.stackSize--;
             }
             encodeFluidPattern();
         } else if (isPattern(stack)) {
@@ -74,7 +74,8 @@ public class ContainerFluidPatternTerminalEx extends FCBasePartContainerEx imple
             return true;
         }
         final IDefinitions defs = AEApi.instance().definitions();
-        return defs.items().encodedPattern().isSameAs(output) || defs.materials().blankPattern().isSameAs(output);
+        return defs.items().encodedPattern().isSameAs(output)
+                || defs.materials().blankPattern().isSameAs(output);
     }
 
     private boolean checkHasFluidPattern() {
@@ -113,10 +114,10 @@ public class ContainerFluidPatternTerminalEx extends FCBasePartContainerEx imple
     private void encodeFluidPattern() {
         ItemStack patternStack = new ItemStack(ItemAndBlockHolder.PATTERN);
         FluidPatternDetails pattern = new FluidPatternDetails(patternStack);
-        pattern.setCombine(this.combine ? 1:0);
+        pattern.setCombine(this.combine ? 1 : 0);
         pattern.setInputs(collectInventory(craftingSlots));
         pattern.setOutputs(collectInventory(outputSlots));
-//        pattern.setCanBeSubstitute(this.beSubstitute ? 1 : 0);
+        //        pattern.setCanBeSubstitute(this.beSubstitute ? 1 : 0);
         patternSlotOUT.putStack(pattern.writeToStack());
     }
 
@@ -167,7 +168,9 @@ public class ContainerFluidPatternTerminalEx extends FCBasePartContainerEx imple
             super.doAction(player, action, slotId, id);
             return;
         }
-        if ((slot instanceof OptionalSlotFake) && stack != null && (stack.getItem() instanceof IFluidContainerItem || FluidContainerRegistry.isContainer(stack))) {
+        if ((slot instanceof OptionalSlotFake)
+                && stack != null
+                && (stack.getItem() instanceof IFluidContainerItem || FluidContainerRegistry.isContainer(stack))) {
             FluidStack fluid = null;
             switch (action) {
                 case PICKUP_OR_SET_DOWN:
@@ -202,7 +205,10 @@ public class ContainerFluidPatternTerminalEx extends FCBasePartContainerEx imple
     public ItemStack transferStackInSlot(EntityPlayer p, int idx) {
         Slot clickSlot = (Slot) this.inventorySlots.get(idx);
         ItemStack is = clickSlot.getStack();
-        if (is != null && !patternSlotOUT.getHasStack() && is.stackSize == 1 && (is.getItem() instanceof ItemFluidEncodedPattern || is.getItem() instanceof ItemEncodedPattern)) {
+        if (is != null
+                && !patternSlotOUT.getHasStack()
+                && is.stackSize == 1
+                && (is.getItem() instanceof ItemFluidEncodedPattern || is.getItem() instanceof ItemEncodedPattern)) {
             ItemStack output = is.copy();
             patternSlotOUT.putStack(output);
             p.inventory.setInventorySlotContents(clickSlot.getSlotIndex(), null);

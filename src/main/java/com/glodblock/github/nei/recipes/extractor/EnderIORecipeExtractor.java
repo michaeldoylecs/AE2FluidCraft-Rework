@@ -8,22 +8,20 @@ import com.glodblock.github.nei.object.OrderStack;
 import com.glodblock.github.util.Ae2Reflect;
 import crazypants.enderio.machine.crusher.CrusherRecipeManager;
 import crazypants.enderio.nei.VatRecipeHandler;
-import net.minecraftforge.fluids.FluidStack;
-
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
+import net.minecraftforge.fluids.FluidStack;
 
 public class EnderIORecipeExtractor implements IRecipeExtractor {
 
-    public EnderIORecipeExtractor() {
-    }
+    public EnderIORecipeExtractor() {}
 
     @Override
     public List<OrderStack<?>> getInputIngredients(List<PositionedStack> rawInputs) {
         List<OrderStack<?>> tmp = new LinkedList<>();
-        for (int i = 0; i < rawInputs.size(); i ++) {
+        for (int i = 0; i < rawInputs.size(); i++) {
             if (rawInputs.get(i) == null) continue;
             OrderStack<?> stack = OrderStack.pack(rawInputs.get(i), i);
             if (stack != null) tmp.add(stack);
@@ -34,7 +32,7 @@ public class EnderIORecipeExtractor implements IRecipeExtractor {
     @Override
     public List<OrderStack<?>> getOutputIngredients(List<PositionedStack> rawOutputs) {
         List<OrderStack<?>> tmp = new LinkedList<>();
-        for (int i = 0; i < rawOutputs.size(); i ++) {
+        for (int i = 0; i < rawOutputs.size(); i++) {
             if (rawOutputs.get(i) == null) continue;
             OrderStack<?> stack = OrderStack.pack(rawOutputs.get(i), i);
             if (stack != null) tmp.add(stack);
@@ -49,7 +47,7 @@ public class EnderIORecipeExtractor implements IRecipeExtractor {
         if (tRecipe.arecipes.get(index) instanceof VatRecipeHandler.InnerVatRecipe) {
             VatRecipeHandler.InnerVatRecipe vatRecipe = (VatRecipeHandler.InnerVatRecipe) tRecipe.arecipes.get(index);
             ArrayList<PositionedStack> inputs = ReflectEIO.getInputs(vatRecipe);
-            for (int i = 0; i < inputs.size(); i ++) {
+            for (int i = 0; i < inputs.size(); i++) {
                 if (inputs.get(i) == null) continue;
                 OrderStack<?> stack = OrderStack.pack(rawInputs.get(i), i);
                 if (stack != null) tmp.add(stack);
@@ -60,7 +58,7 @@ public class EnderIORecipeExtractor implements IRecipeExtractor {
             }
             return tmp;
         } else if (tRecipe.getOverlayIdentifier().equals("EnderIOSagMill")) {
-            for (int i = rawInputs.size() - 1; i >= 0; i --) {
+            for (int i = rawInputs.size() - 1; i >= 0; i--) {
                 PositionedStack stack = rawInputs.get(i);
                 if (stack != null && CrusherRecipeManager.getInstance().isValidSagBall(stack.items[0])) {
                     rawInputs.remove(i);
@@ -68,14 +66,14 @@ public class EnderIORecipeExtractor implements IRecipeExtractor {
                 }
             }
             return getInputIngredients(rawInputs);
-        }
-        else {
+        } else {
             return getInputIngredients(rawInputs);
         }
     }
 
     @Override
-    public List<OrderStack<?>> getOutputIngredients(List<PositionedStack> rawOutputs, IRecipeHandler recipe, int index) {
+    public List<OrderStack<?>> getOutputIngredients(
+            List<PositionedStack> rawOutputs, IRecipeHandler recipe, int index) {
         TemplateRecipeHandler tRecipe = (TemplateRecipeHandler) recipe;
         List<OrderStack<?>> tmp = new LinkedList<>();
         if (tRecipe.arecipes.get(index) instanceof VatRecipeHandler.InnerVatRecipe) {
@@ -85,17 +83,16 @@ public class EnderIORecipeExtractor implements IRecipeExtractor {
                 tmp.add(new OrderStack<>(result, 0));
             }
             return tmp;
-        }
-        else {
+        } else {
             return getOutputIngredients(rawOutputs);
         }
     }
 
     private static class ReflectEIO {
 
-        private final static Field inputsF;
-        private final static Field resultF;
-        private final static Field inFluidF;
+        private static final Field inputsF;
+        private static final Field resultF;
+        private static final Field inFluidF;
 
         static {
             try {
@@ -118,7 +115,5 @@ public class EnderIORecipeExtractor implements IRecipeExtractor {
         private static FluidStack getInputFluid(VatRecipeHandler.InnerVatRecipe vat) {
             return Ae2Reflect.readField(vat, inFluidF);
         }
-
     }
-
 }

@@ -14,58 +14,54 @@ import com.glodblock.github.inventory.slot.OptionalFluidSlotFakeTypeOnly;
 import com.glodblock.github.network.SPacketFluidUpdate;
 import com.glodblock.github.util.Ae2Reflect;
 import com.glodblock.github.util.Util;
+import java.util.HashMap;
+import java.util.Map;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.IInventory;
-import net.minecraft.inventory.Slot;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fluids.FluidStack;
 
-import java.util.HashMap;
-import java.util.Map;
-
 public abstract class ContainerFluidConfigurable extends ContainerUpgradeable {
 
-    public ContainerFluidConfigurable(InventoryPlayer ip, IUpgradeableHost te)
-    {
-        super( ip, te );
+    public ContainerFluidConfigurable(InventoryPlayer ip, IUpgradeableHost te) {
+        super(ip, te);
     }
 
     public abstract AppEngInternalAEInventory getFakeFluidInv();
 
     @Override
-    public ItemStack transferStackInSlot(final EntityPlayer p, final int idx )
-    {
-        AppEngSlot clickSlot = (AppEngSlot)this.inventorySlots.get(idx);
+    public ItemStack transferStackInSlot(final EntityPlayer p, final int idx) {
+        AppEngSlot clickSlot = (AppEngSlot) this.inventorySlots.get(idx);
         if (clickSlot == null || !clickSlot.getHasStack()) return null;
 
         ItemStack tis = clickSlot.getStack();
         FluidStack fs = Util.getFluidFromItem(tis);
-        if( fs != null )
-        {
+        if (fs != null) {
             final AppEngInternalAEInventory inv = this.getFakeFluidInv();
-            final IAEFluidStack stack = AEFluidStack.create( fs );
-            for( int i = 0; i < inv.getSizeInventory(); ++i )
-            {
-                if( inv.getStackInSlot(i) == null && this.isValidForConfig( i, stack ) )
-                {
+            final IAEFluidStack stack = AEFluidStack.create(fs);
+            for (int i = 0; i < inv.getSizeInventory(); ++i) {
+                if (inv.getStackInSlot(i) == null && this.isValidForConfig(i, stack)) {
                     ItemStack tmp = ItemFluidPacket.newStack(fs);
                     if (tmp != null) {
                         tmp.setStackDisplayName(fs.getLocalizedName());
                     }
-                    inv.setInventorySlotContents( i, tmp );
+                    inv.setInventorySlotContents(i, tmp);
                     break;
                 }
             }
             this.standardDetectAndSendChanges();
             return null;
         } else {
-            if(idx < this.availableUpgrades()){
-                if(!mergeItemStack(tis, this.getFakeFluidInv().getSizeInventory()+this.availableUpgrades(), this.inventorySlots.size(), false)) return null;
-            }else if(idx>=this.getFakeFluidInv().getSizeInventory()+this.availableUpgrades()){
-                if(!mergeItemStack(tis, 0, this.availableUpgrades(), false)) return null;
+            if (idx < this.availableUpgrades()) {
+                if (!mergeItemStack(
+                        tis,
+                        this.getFakeFluidInv().getSizeInventory() + this.availableUpgrades(),
+                        this.inventorySlots.size(),
+                        false)) return null;
+            } else if (idx >= this.getFakeFluidInv().getSizeInventory() + this.availableUpgrades()) {
+                if (!mergeItemStack(tis, 0, this.availableUpgrades(), false)) return null;
             }
             if (tis.stackSize == 0) {
                 clickSlot.putStack(null);
@@ -77,37 +73,32 @@ public abstract class ContainerFluidConfigurable extends ContainerUpgradeable {
         }
     }
 
-    protected void setupConfig()
-    {
+    protected void setupConfig() {
         this.setupUpgrades();
 
-        final IInventory inv = Ae2Reflect.getUpgradeList(this).getInventoryByName( "config" );
+        final IInventory inv = Ae2Reflect.getUpgradeList(this).getInventoryByName("config");
         final int y = 40;
         final int x = 80;
-        this.addSlotToContainer( new OptionalFluidSlotFakeTypeOnly( inv, null, this, 0, x, y, 0, 0, 0 ) );
-        if( this.supportCapacity() )
-        {
-            this.addSlotToContainer( new OptionalFluidSlotFakeTypeOnly( inv, null, this, 1, x, y, -1, 0, 1 ) );
-            this.addSlotToContainer( new OptionalFluidSlotFakeTypeOnly( inv, null, this, 2, x, y, 1, 0, 1 ) );
-            this.addSlotToContainer( new OptionalFluidSlotFakeTypeOnly( inv, null, this, 3, x, y, 0, -1, 1 ) );
-            this.addSlotToContainer( new OptionalFluidSlotFakeTypeOnly( inv, null, this, 4, x, y, 0, 1, 1 ) );
+        this.addSlotToContainer(new OptionalFluidSlotFakeTypeOnly(inv, null, this, 0, x, y, 0, 0, 0));
+        if (this.supportCapacity()) {
+            this.addSlotToContainer(new OptionalFluidSlotFakeTypeOnly(inv, null, this, 1, x, y, -1, 0, 1));
+            this.addSlotToContainer(new OptionalFluidSlotFakeTypeOnly(inv, null, this, 2, x, y, 1, 0, 1));
+            this.addSlotToContainer(new OptionalFluidSlotFakeTypeOnly(inv, null, this, 3, x, y, 0, -1, 1));
+            this.addSlotToContainer(new OptionalFluidSlotFakeTypeOnly(inv, null, this, 4, x, y, 0, 1, 1));
 
-            this.addSlotToContainer( new OptionalFluidSlotFakeTypeOnly( inv, null, this, 5, x, y, -1, -1, 2 ) );
-            this.addSlotToContainer( new OptionalFluidSlotFakeTypeOnly( inv, null, this, 6, x, y, 1, -1, 2 ) );
-            this.addSlotToContainer( new OptionalFluidSlotFakeTypeOnly( inv, null, this, 7, x, y, -1, 1, 2 ) );
-            this.addSlotToContainer( new OptionalFluidSlotFakeTypeOnly( inv, null, this, 8, x, y, 1, 1, 2 ) );
+            this.addSlotToContainer(new OptionalFluidSlotFakeTypeOnly(inv, null, this, 5, x, y, -1, -1, 2));
+            this.addSlotToContainer(new OptionalFluidSlotFakeTypeOnly(inv, null, this, 6, x, y, 1, -1, 2));
+            this.addSlotToContainer(new OptionalFluidSlotFakeTypeOnly(inv, null, this, 7, x, y, -1, 1, 2));
+            this.addSlotToContainer(new OptionalFluidSlotFakeTypeOnly(inv, null, this, 8, x, y, 1, 1, 2));
         }
     }
 
-    protected boolean isValidForConfig( int slot, IAEFluidStack fs )
-    {
-        if( this.supportCapacity() )
-        {
+    protected boolean isValidForConfig(int slot, IAEFluidStack fs) {
+        if (this.supportCapacity()) {
             // assumes 4 slots per upgrade
-            final int upgrades = Ae2Reflect.getUpgradeList(this).getInstalledUpgrades( Upgrades.CAPACITY );
+            final int upgrades = Ae2Reflect.getUpgradeList(this).getInstalledUpgrades(Upgrades.CAPACITY);
 
-            if( slot > 0 && upgrades < 1 )
-            {
+            if (slot > 0 && upgrades < 1) {
                 return false;
             }
             return slot <= 4 || upgrades >= 2;
@@ -117,30 +108,25 @@ public abstract class ContainerFluidConfigurable extends ContainerUpgradeable {
     }
 
     @Override
-    protected void standardDetectAndSendChanges()
-    {
-        if( Platform.isServer() )
-        {
+    protected void standardDetectAndSendChanges() {
+        if (Platform.isServer()) {
             // clear out config items that are no longer valid (eg capacity upgrade removed)
             final AppEngInternalAEInventory inv = this.getFakeFluidInv();
             final Map<Integer, IAEFluidStack> tmp = new HashMap<>();
-            for( int i = 0; i < inv.getSizeInventory(); ++i )
-            {
-                if( inv.getStackInSlot( i ) != null && !this.isValidForConfig( i, AEFluidStack.create(ItemFluidPacket.getFluidStack(inv.getStackInSlot( i )))) )
-                {
-                    inv.setInventorySlotContents( i, null );
+            for (int i = 0; i < inv.getSizeInventory(); ++i) {
+                if (inv.getStackInSlot(i) != null
+                        && !this.isValidForConfig(
+                                i, AEFluidStack.create(ItemFluidPacket.getFluidStack(inv.getStackInSlot(i))))) {
+                    inv.setInventorySlotContents(i, null);
                 }
-                tmp.put(i, AEFluidStack.create(ItemFluidPacket.getFluidStack(inv.getStackInSlot( i ))));
+                tmp.put(i, AEFluidStack.create(ItemFluidPacket.getFluidStack(inv.getStackInSlot(i))));
             }
-            for( final Object g : this.crafters )
-            {
-                if( g instanceof EntityPlayer)
-                {
+            for (final Object g : this.crafters) {
+                if (g instanceof EntityPlayer) {
                     FluidCraft.proxy.netHandler.sendTo(new SPacketFluidUpdate(tmp), (EntityPlayerMP) g);
                 }
             }
         }
         super.standardDetectAndSendChanges();
     }
-
 }

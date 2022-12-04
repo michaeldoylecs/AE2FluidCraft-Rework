@@ -9,7 +9,6 @@ import net.minecraft.client.gui.GuiButton;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 
-
 public class GuiBaseFluidTerminal extends GuiFCBaseFluidMonitor {
     protected EntityPlayer player;
 
@@ -51,5 +50,4 @@ public class GuiBaseFluidTerminal extends GuiFCBaseFluidMonitor {
             super.actionPerformed(btn);
         }
     }
-
 }

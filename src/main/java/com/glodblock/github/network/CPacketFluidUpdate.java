@@ -8,14 +8,13 @@ import cpw.mods.fml.common.network.simpleimpl.IMessage;
 import cpw.mods.fml.common.network.simpleimpl.IMessageHandler;
 import cpw.mods.fml.common.network.simpleimpl.MessageContext;
 import io.netty.buffer.ByteBuf;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.inventory.Container;
-import net.minecraft.item.ItemStack;
-
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.inventory.Container;
+import net.minecraft.item.ItemStack;
 
 public class CPacketFluidUpdate implements IMessage {
 
@@ -23,8 +22,7 @@ public class CPacketFluidUpdate implements IMessage {
     private ItemStack itemStack;
     private int slotIndex;
 
-    public CPacketFluidUpdate() {
-    }
+    public CPacketFluidUpdate() {}
 
     public CPacketFluidUpdate(Map<Integer, IAEFluidStack> data, ItemStack itemStack) {
         this.list = data;
@@ -50,8 +48,7 @@ public class CPacketFluidUpdate implements IMessage {
             for (int i = 0; i < size; i++) {
                 int id = buf.readInt();
                 boolean isNull = buf.readBoolean();
-                if (!isNull)
-                    list.put(id, null);
+                if (!isNull) list.put(id, null);
                 else {
                     IAEFluidStack fluid = AEFluidStack.loadFluidStackFromPacket(buf);
                     list.put(id, fluid);
@@ -73,8 +70,7 @@ public class CPacketFluidUpdate implements IMessage {
         try {
             for (Map.Entry<Integer, IAEFluidStack> fs : list.entrySet()) {
                 buf.writeInt(fs.getKey());
-                if (fs.getValue() == null)
-                    buf.writeBoolean(false);
+                if (fs.getValue() == null) buf.writeBoolean(false);
                 else {
                     buf.writeBoolean(true);
                     fs.getValue().writeToPacket(buf);
@@ -100,10 +96,14 @@ public class CPacketFluidUpdate implements IMessage {
             EntityPlayer player = ctx.getServerHandler().playerEntity;
             if (container instanceof FCBaseFluidMonitorContain) {
                 ItemStack item = player.inventory.getItemStack();
-                ((FCBaseFluidMonitorContain) container).postChange(new ArrayList<IAEFluidStack>(message.list.values()), message.itemStack == null ? item : message.itemStack, player, message.slotIndex);
+                ((FCBaseFluidMonitorContain) container)
+                        .postChange(
+                                new ArrayList<IAEFluidStack>(message.list.values()),
+                                message.itemStack == null ? item : message.itemStack,
+                                player,
+                                message.slotIndex);
             }
             return null;
         }
-
     }
 }

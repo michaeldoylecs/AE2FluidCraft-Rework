@@ -24,12 +24,11 @@ public class TileOCPatternEditor extends AEBaseInvTile {
 
     @Override
     public int[] getAccessibleSlotsBySide(ForgeDirection whichSide) {
-        return new int[]{0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15};
+        return new int[] {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15};
     }
 
     @Override
-    public boolean isItemValidForSlot( final int i, final ItemStack itemstack ) {
+    public boolean isItemValidForSlot(final int i, final ItemStack itemstack) {
         return itemstack == null || itemstack.getItem() instanceof ItemEncodedPattern;
     }
-
 }

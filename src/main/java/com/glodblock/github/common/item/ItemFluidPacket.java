@@ -8,6 +8,9 @@ import com.glodblock.github.util.NameConst;
 import cpw.mods.fml.common.registry.GameRegistry;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import java.util.List;
+import java.util.Objects;
+import javax.annotation.Nullable;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
@@ -19,10 +22,6 @@ import net.minecraft.util.StatCollector;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
-
-import javax.annotation.Nullable;
-import java.util.List;
-import java.util.Objects;
 
 public class ItemFluidPacket extends Item {
 
@@ -38,8 +37,9 @@ public class ItemFluidPacket extends Item {
         if (display) {
             return fluid != null ? fluid.getLocalizedName() : super.getItemStackDisplayName(stack);
         }
-        return fluid != null ? String.format("%s, %,d mB", fluid.getLocalizedName(), fluid.amount)
-            : super.getItemStackDisplayName(stack);
+        return fluid != null
+                ? String.format("%s, %,d mB", fluid.getLocalizedName(), fluid.amount)
+                : super.getItemStackDisplayName(stack);
     }
 
     @Override
@@ -49,7 +49,8 @@ public class ItemFluidPacket extends Item {
         boolean display = isDisplay(stack);
         if (display) return;
         if (fluid != null) {
-            for (String line : StatCollector.translateToLocalFormatted(NameConst.TT_FLUID_PACKET).split("\\\\n")) {
+            for (String line : StatCollector.translateToLocalFormatted(NameConst.TT_FLUID_PACKET)
+                    .split("\\\\n")) {
                 tooltip.add(EnumChatFormatting.GRAY + line);
             }
         } else {
@@ -68,7 +69,8 @@ public class ItemFluidPacket extends Item {
         if (stack == null || !stack.hasTagCompound()) {
             return null;
         }
-        FluidStack fluid = FluidStack.loadFluidStackFromNBT(Objects.requireNonNull(stack.getTagCompound()).getCompoundTag("FluidStack"));
+        FluidStack fluid = FluidStack.loadFluidStackFromNBT(
+                Objects.requireNonNull(stack.getTagCompound()).getCompoundTag("FluidStack"));
         return (fluid != null && fluid.amount > 0) ? fluid : null;
     }
 
@@ -117,8 +119,7 @@ public class ItemFluidPacket extends Item {
 
     @Override
     @SideOnly(Side.CLIENT)
-    public void registerIcons(IIconRegister aIconRegister) {
-    }
+    public void registerIcons(IIconRegister aIconRegister) {}
 
     @SideOnly(Side.CLIENT)
     public IIcon getIconFromDamage(int p_77617_1_) {

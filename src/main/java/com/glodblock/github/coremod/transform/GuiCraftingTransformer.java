@@ -31,7 +31,6 @@ public class GuiCraftingTransformer extends FCClassTransformer.ClassMapper {
             }
             return super.visitMethod(access, name, desc, signature, exceptions);
         }
-
     }
 
     private static class TransformFluidIcon extends MethodVisitor {
@@ -42,17 +41,18 @@ public class GuiCraftingTransformer extends FCClassTransformer.ClassMapper {
 
         @Override
         public void visitMethodInsn(int opcode, String owner, String name, String desc, boolean itf) {
-            if (opcode == Opcodes.INVOKEINTERFACE && owner.equals("appeng/api/storage/data/IAEItemStack") && name.equals("getItemStack")) {
-                super.visitMethodInsn(Opcodes.INVOKESTATIC,
-                    "com/glodblock/github/coremod/hooker/CoreModHooks",
-                    "displayFluid",
-                    "(Lappeng/api/storage/data/IAEItemStack;)Lnet/minecraft/item/ItemStack;",
-                    false);
-            }
-            else {
+            if (opcode == Opcodes.INVOKEINTERFACE
+                    && owner.equals("appeng/api/storage/data/IAEItemStack")
+                    && name.equals("getItemStack")) {
+                super.visitMethodInsn(
+                        Opcodes.INVOKESTATIC,
+                        "com/glodblock/github/coremod/hooker/CoreModHooks",
+                        "displayFluid",
+                        "(Lappeng/api/storage/data/IAEItemStack;)Lnet/minecraft/item/ItemStack;",
+                        false);
+            } else {
                 super.visitMethodInsn(opcode, owner, name, desc, itf);
             }
         }
-
     }
 }

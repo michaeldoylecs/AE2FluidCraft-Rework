@@ -10,12 +10,11 @@ import cpw.mods.fml.common.network.simpleimpl.IMessage;
 import cpw.mods.fml.common.network.simpleimpl.IMessageHandler;
 import cpw.mods.fml.common.network.simpleimpl.MessageContext;
 import io.netty.buffer.ByteBuf;
+import java.util.Objects;
+import javax.annotation.Nullable;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.inventory.Container;
 import net.minecraft.tileentity.TileEntity;
-
-import javax.annotation.Nullable;
-import java.util.Objects;
 
 public class CPacketSwitchGuis implements IMessage {
 
@@ -51,7 +50,7 @@ public class CPacketSwitchGuis implements IMessage {
             if (!(cont instanceof AEBaseContainer)) {
                 return null;
             }
-            ContainerOpenContext context = ((AEBaseContainer)cont).getOpenContext();
+            ContainerOpenContext context = ((AEBaseContainer) cont).getOpenContext();
             if (context == null) {
                 return null;
             }
@@ -59,9 +58,13 @@ public class CPacketSwitchGuis implements IMessage {
             if (te == null) {
                 return null;
             }
-            InventoryHandler.openGui(player, player.worldObj, new BlockPos(te), Objects.requireNonNull(Util.from(context.getSide())), message.guiType);
+            InventoryHandler.openGui(
+                    player,
+                    player.worldObj,
+                    new BlockPos(te),
+                    Objects.requireNonNull(Util.from(context.getSide())),
+                    message.guiType);
             return null;
         }
     }
 }
-

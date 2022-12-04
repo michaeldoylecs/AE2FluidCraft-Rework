@@ -7,16 +7,14 @@ import cpw.mods.fml.common.network.simpleimpl.IMessage;
 import cpw.mods.fml.common.network.simpleimpl.IMessageHandler;
 import cpw.mods.fml.common.network.simpleimpl.MessageContext;
 import io.netty.buffer.ByteBuf;
-import net.minecraft.inventory.Container;
-
 import java.io.IOException;
+import net.minecraft.inventory.Container;
 
 public class CPacketSetTargetItem implements IMessage {
 
     private IAEItemStack stack;
 
-    public CPacketSetTargetItem() {
-    }
+    public CPacketSetTargetItem() {}
 
     public CPacketSetTargetItem(IAEItemStack stack) {
         this.stack = stack;
@@ -50,7 +48,5 @@ public class CPacketSetTargetItem implements IMessage {
             }
             return null;
         }
-
     }
-
 }

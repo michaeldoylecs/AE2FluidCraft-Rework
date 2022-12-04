@@ -24,6 +24,8 @@ import com.glodblock.github.loader.ItemAndBlockHolder;
 import com.glodblock.github.util.DualityFluidInterface;
 import cpw.mods.fml.common.network.ByteBufUtils;
 import io.netty.buffer.ByteBuf;
+import java.io.IOException;
+import javax.annotation.Nullable;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.common.util.ForgeDirection;
@@ -32,19 +34,15 @@ import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTankInfo;
 import net.minecraftforge.fluids.IFluidHandler;
 
-import javax.annotation.Nullable;
-import java.io.IOException;
-
-public class TileFluidInterface extends TileInterface implements IFluidHandler, IAEFluidInventory
-{
+public class TileFluidInterface extends TileInterface implements IFluidHandler, IAEFluidInventory {
 
     public TileFluidInterface() {
-        super.getInterfaceDuality().getConfigManager()
-            .registerSetting(Settings.SIDELESS_MODE, SidelessMode.SIDELESS);
+        super.getInterfaceDuality().getConfigManager().registerSetting(Settings.SIDELESS_MODE, SidelessMode.SIDELESS);
     }
 
     private final DualityFluidInterface fluidDuality = new DualityFluidInterface(this.getProxy(), this) {
-        private final IConfigManager dualityConfigManager = getInterfaceDuality().getConfigManager();
+        private final IConfigManager dualityConfigManager =
+                getInterfaceDuality().getConfigManager();
 
         @Override
         public FluidStack drain(ForgeDirection from, int maxDrain, boolean doDrain) {
@@ -85,12 +83,11 @@ public class TileFluidInterface extends TileInterface implements IFluidHandler, 
     }
 
     public AppEngInternalAEInventory getConfig() {
-        for (int i = 0; i < fluidDuality.getConfig().getSlots(); i ++) {
+        for (int i = 0; i < fluidDuality.getConfig().getSlots(); i++) {
             IAEFluidStack fluid = fluidDuality.getConfig().getFluidInSlot(i);
             if (fluid == null) {
                 config.setInventorySlotContents(i, null);
-            }
-            else {
+            } else {
                 config.setInventorySlotContents(i, ItemFluidPacket.newDisplayStack(fluid.getFluidStack()));
             }
         }
@@ -102,10 +99,10 @@ public class TileFluidInterface extends TileInterface implements IFluidHandler, 
         TickingRequest item = super.getTickingRequest(node);
         TickingRequest fluid = fluidDuality.getTickingRequest(node);
         return new TickingRequest(
-            Math.min(item.minTickRate, fluid.minTickRate),
-            Math.max(item.maxTickRate, fluid.maxTickRate),
-            item.isSleeping && fluid.isSleeping,
-            true);
+                Math.min(item.minTickRate, fluid.minTickRate),
+                Math.max(item.maxTickRate, fluid.maxTickRate),
+                item.isSleeping && fluid.isSleeping,
+                true);
     }
 
     @Override
@@ -119,11 +116,11 @@ public class TileFluidInterface extends TileInterface implements IFluidHandler, 
         }
     }
 
-    @TileEvent( TileEventType.NETWORK_WRITE )
+    @TileEvent(TileEventType.NETWORK_WRITE)
     protected void writeToStream(ByteBuf data) throws IOException {
         for (int i = 0; i < config.getSizeInventory(); i++) {
             ByteBufUtils.writeItemStack(data, config.getStackInSlot(i));
-            for (int j = 0; j < config.getSizeInventory(); j ++) {
+            for (int j = 0; j < config.getSizeInventory(); j++) {
                 FluidStack fluid = ItemFluidPacket.getFluidStack(config.getStackInSlot(j));
                 fluidDuality.getConfig().setFluidInSlot(j, fluidDuality.getStandardFluid(fluid));
             }
@@ -143,7 +140,7 @@ public class TileFluidInterface extends TileInterface implements IFluidHandler, 
         }
     }
 
-    @TileEvent( TileEventType.NETWORK_READ )
+    @TileEvent(TileEventType.NETWORK_READ)
     protected boolean readFromStream(ByteBuf data) throws IOException {
         boolean changed = false;
         for (int i = 0; i < config.getSizeInventory(); i++) {
@@ -152,7 +149,7 @@ public class TileFluidInterface extends TileInterface implements IFluidHandler, 
                 config.setInventorySlotContents(i, stack);
                 changed = true;
             }
-            for (int j = 0; j < config.getSizeInventory(); j ++) {
+            for (int j = 0; j < config.getSizeInventory(); j++) {
                 FluidStack fluid = ItemFluidPacket.getFluidStack(config.getStackInSlot(j));
                 fluidDuality.getConfig().setFluidInSlot(j, fluidDuality.getStandardFluid(fluid));
             }
@@ -176,17 +173,17 @@ public class TileFluidInterface extends TileInterface implements IFluidHandler, 
         return changed;
     }
 
-    @TileEvent( TileEventType.WORLD_NBT_READ )
+    @TileEvent(TileEventType.WORLD_NBT_READ)
     public void readFromNBTEvent(NBTTagCompound data) {
         config.readFromNBT(data, "ConfigInv");
-        for (int i = 0; i < config.getSizeInventory(); i ++) {
+        for (int i = 0; i < config.getSizeInventory(); i++) {
             FluidStack fluid = ItemFluidPacket.getFluidStack(config.getStackInSlot(i));
             fluidDuality.getConfig().setFluidInSlot(i, fluidDuality.getStandardFluid(fluid));
         }
         getInternalFluid().readFromNBT(data, "FluidInv");
     }
 
-    @TileEvent( TileEventType.WORLD_NBT_WRITE )
+    @TileEvent(TileEventType.WORLD_NBT_WRITE)
     public NBTTagCompound writeToNBTEvent(NBTTagCompound data) {
         config.writeToNBT(data, "ConfigInv");
         getInternalFluid().writeToNBT(data, "FluidInv");
@@ -194,8 +191,7 @@ public class TileFluidInterface extends TileInterface implements IFluidHandler, 
     }
 
     @Nullable
-    protected ItemStack getItemFromTile( final Object obj )
-    {
+    protected ItemStack getItemFromTile(final Object obj) {
         if (obj instanceof TileFluidInterface) {
             return ItemAndBlockHolder.INTERFACE.stack();
         }
@@ -203,9 +199,8 @@ public class TileFluidInterface extends TileInterface implements IFluidHandler, 
     }
 
     @Override
-    public int getInstalledUpgrades( final Upgrades u )
-    {
-        return getInterfaceDuality().getInstalledUpgrades( u );
+    public int getInstalledUpgrades(final Upgrades u) {
+        return getInterfaceDuality().getInstalledUpgrades(u);
     }
 
     @Override
@@ -247,7 +242,8 @@ public class TileFluidInterface extends TileInterface implements IFluidHandler, 
 
     public void setConfig(int id, IAEFluidStack fluid) {
         if (id >= 0 && id < 6) {
-            config.setInventorySlotContents(id, ItemFluidPacket.newDisplayStack(fluid == null ? null : fluid.getFluidStack()));
+            config.setInventorySlotContents(
+                    id, ItemFluidPacket.newDisplayStack(fluid == null ? null : fluid.getFluidStack()));
             fluidDuality.getConfig().setFluidInSlot(id, fluidDuality.getStandardFluid(fluid));
         }
     }
@@ -257,5 +253,4 @@ public class TileFluidInterface extends TileInterface implements IFluidHandler, 
             getInternalFluid().setFluidInSlot(id, fluid);
         }
     }
-
 }

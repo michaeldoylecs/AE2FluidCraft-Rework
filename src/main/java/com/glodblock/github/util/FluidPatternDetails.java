@@ -4,6 +4,9 @@ import appeng.api.networking.crafting.ICraftingPatternDetails;
 import appeng.api.storage.data.IAEItemStack;
 import appeng.helpers.PatternHelper;
 import appeng.util.item.AEItemStack;
+import java.util.Arrays;
+import java.util.Objects;
+import javax.annotation.Nullable;
 import net.minecraft.inventory.InventoryCrafting;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -11,11 +14,7 @@ import net.minecraft.nbt.NBTTagList;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.Constants;
 
-import javax.annotation.Nullable;
-import java.util.Arrays;
-import java.util.Objects;
-
-public class FluidPatternDetails implements ICraftingPatternDetails, Comparable<FluidPatternDetails>{
+public class FluidPatternDetails implements ICraftingPatternDetails, Comparable<FluidPatternDetails> {
 
     private final ItemStack patternStack;
     private IAEItemStack patternStackAe;
@@ -105,9 +104,7 @@ public class FluidPatternDetails implements ICraftingPatternDetails, Comparable<
         if (condensed.length == 0) {
             return false;
         }
-        this.outputs = Arrays.stream(outputs)
-                .filter(Objects::nonNull)
-                .toArray(IAEItemStack[]::new);
+        this.outputs = Arrays.stream(outputs).filter(Objects::nonNull).toArray(IAEItemStack[]::new);
         this.outputsCond = condensed;
         return true;
     }
@@ -143,7 +140,7 @@ public class FluidPatternDetails implements ICraftingPatternDetails, Comparable<
         // ae2 null-checks the pattern stack here for some reason, but doesn't null-check in hashCode()
         // this is inconsistent, so i've just decided to assert non-null in the constructor, which is to say that
         // the pattern stack can never be null here
-        return obj instanceof FluidPatternDetails && patternStackAe.equals(((FluidPatternDetails)obj).patternStackAe);
+        return obj instanceof FluidPatternDetails && patternStackAe.equals(((FluidPatternDetails) obj).patternStackAe);
     }
 
     @Override
@@ -155,7 +152,7 @@ public class FluidPatternDetails implements ICraftingPatternDetails, Comparable<
         NBTTagCompound tag = new NBTTagCompound();
         tag.setTag("Inputs", writeStackArray(checkInitialized(inputs)));
         tag.setTag("Outputs", writeStackArray(checkInitialized(outputs)));
-        //Shits
+        // Shits
         tag.setTag("in", writeStackArray(checkInitialized(inputs)));
         tag.setTag("out", writeStackArray(checkInitialized(outputs)));
         tag.setInteger("combine", this.getCombine());
@@ -184,7 +181,7 @@ public class FluidPatternDetails implements ICraftingPatternDetails, Comparable<
         // may be possible to enter a partially-correct state if setInputs succeeds but setOutputs failed
         // but outside code should treat it as completely incorrect and not attempt to make calls
         return setInputs(readStackArray(tag.getTagList("in", Constants.NBT.TAG_COMPOUND)))
-            && setOutputs(readStackArray(tag.getTagList("out", Constants.NBT.TAG_COMPOUND)));
+                && setOutputs(readStackArray(tag.getTagList("out", Constants.NBT.TAG_COMPOUND)));
     }
 
     public static IAEItemStack[] readStackArray(NBTTagList listTag) {
@@ -195,5 +192,4 @@ public class FluidPatternDetails implements ICraftingPatternDetails, Comparable<
         }
         return stacks;
     }
-
 }
