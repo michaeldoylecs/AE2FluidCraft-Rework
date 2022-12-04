@@ -62,8 +62,10 @@ public class GuiDualInterface extends GuiUpgradeable {
         this.insertionMode = new GuiImgButton( this.guiLeft - 18, this.guiTop + 44,  Settings.INSERTION_MODE, InsertionMode.DEFAULT );
         this.buttonList.add( this.insertionMode );
 
-        this.sidelessMode = new GuiImgButton( this.guiLeft - 18, this.guiTop + 62,  Settings.SIDELESS_MODE, SidelessMode.SIDELESS);
-        this.buttonList.add( this.sidelessMode );
+        if (isTile()) {
+            this.sidelessMode = new GuiImgButton( this.guiLeft - 18, this.guiTop + 62,  Settings.SIDELESS_MODE, SidelessMode.SIDELESS);
+            this.buttonList.add( this.sidelessMode );
+        }
     }
 
     @Override
@@ -115,20 +117,20 @@ public class GuiDualInterface extends GuiUpgradeable {
 
         if( btn == this.priority )
         {
-            if (host instanceof TileFluidInterface) {
+            if (isTile()) {
                 FluidCraft.proxy.netHandler.sendToServer(new CPacketSwitchGuis(GuiType.DUAL_INTERFACE_PRIORITY));
             }
-            else if(host instanceof PartFluidInterface) {
+            else if(isPart()) {
                 FluidCraft.proxy.netHandler.sendToServer(new CPacketSwitchGuis(GuiType.DUAL_INTERFACE_PRIORITY_PART));
             }
         }
 
         if( btn == this.switcher )
         {
-            if (host instanceof TileFluidInterface) {
+            if (isTile()) {
                 FluidCraft.proxy.netHandler.sendToServer(new CPacketSwitchGuis(GuiType.DUAL_INTERFACE_FLUID));
             }
-            else if (host instanceof PartFluidInterface) {
+            else if (isPart()) {
                 FluidCraft.proxy.netHandler.sendToServer(new CPacketSwitchGuis(GuiType.DUAL_INTERFACE_FLUID_PART));
             }
         }
@@ -146,9 +148,17 @@ public class GuiDualInterface extends GuiUpgradeable {
         {
             NetworkHandler.instance.sendToServer( new PacketConfigButton( this.insertionMode.getSetting(), backwards ) );
         }
-        if (btn == this.sidelessMode)
+        if (btn == this.sidelessMode && this.sidelessMode != null)
         {
             NetworkHandler.instance.sendToServer( new PacketConfigButton( this.sidelessMode.getSetting(), backwards ) );
         }
+    }
+
+    private boolean isPart() {
+        return this.host instanceof PartFluidInterface;
+    }
+
+    private boolean isTile() {
+        return this.host instanceof TileFluidInterface;
     }
 }
