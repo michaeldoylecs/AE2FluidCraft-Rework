@@ -2,6 +2,7 @@ package com.glodblock.github.client.gui;
 
 import appeng.api.config.InsertionMode;
 import appeng.api.config.Settings;
+import appeng.api.config.SidelessMode;
 import appeng.api.config.YesNo;
 import appeng.client.gui.implementations.GuiUpgradeable;
 import appeng.client.gui.widgets.GuiImgButton;
@@ -13,6 +14,7 @@ import appeng.core.sync.network.NetworkHandler;
 import appeng.core.sync.packets.PacketConfigButton;
 import appeng.helpers.IInterfaceHost;
 import com.glodblock.github.FluidCraft;
+import com.glodblock.github.client.gui.container.ContainerDualInterface;
 import com.glodblock.github.common.parts.PartFluidInterface;
 import com.glodblock.github.common.tile.TileFluidInterface;
 import com.glodblock.github.inventory.gui.GuiType;
@@ -32,10 +34,11 @@ public class GuiDualInterface extends GuiUpgradeable {
     private GuiImgButton BlockMode;
     private GuiToggleButton interfaceMode;
     private GuiImgButton insertionMode;
+    private GuiImgButton sidelessMode;
     private final IInterfaceHost host;
 
     public GuiDualInterface(InventoryPlayer inventoryPlayer, IInterfaceHost te) {
-        super(new ContainerInterface(inventoryPlayer, te));
+        super(new ContainerDualInterface(inventoryPlayer, te));
         this.host = te;
         this.ySize = 211;
     }
@@ -58,6 +61,11 @@ public class GuiDualInterface extends GuiUpgradeable {
 
         this.insertionMode = new GuiImgButton( this.guiLeft - 18, this.guiTop + 44,  Settings.INSERTION_MODE, InsertionMode.DEFAULT );
         this.buttonList.add( this.insertionMode );
+
+        if (isTile()) {
+            this.sidelessMode = new GuiImgButton( this.guiLeft - 18, this.guiTop + 62,  Settings.SIDELESS_MODE, SidelessMode.SIDELESS);
+            this.buttonList.add( this.sidelessMode );
+        }
     }
 
     @Override
@@ -75,6 +83,9 @@ public class GuiDualInterface extends GuiUpgradeable {
         if( this.insertionMode != null )
         {
             this.insertionMode.set( ( (ContainerInterface) this.cvb ).getInsertionMode());
+        }
+        if (this.sidelessMode != null) {
+            this.sidelessMode.set( ( (ContainerDualInterface) this.cvb ).getSidelessMode());
         }
 
         this.fontRendererObj.drawString( getGuiDisplayName(StatCollector.translateToLocal(NameConst.GUI_FLUID_INTERFACE)), 8, 6, 4210752 );
@@ -106,20 +117,20 @@ public class GuiDualInterface extends GuiUpgradeable {
 
         if( btn == this.priority )
         {
-            if (host instanceof TileFluidInterface) {
+            if (isTile()) {
                 FluidCraft.proxy.netHandler.sendToServer(new CPacketSwitchGuis(GuiType.DUAL_INTERFACE_PRIORITY));
             }
-            else if(host instanceof PartFluidInterface) {
+            else if(isPart()) {
                 FluidCraft.proxy.netHandler.sendToServer(new CPacketSwitchGuis(GuiType.DUAL_INTERFACE_PRIORITY_PART));
             }
         }
 
         if( btn == this.switcher )
         {
-            if (host instanceof TileFluidInterface) {
+            if (isTile()) {
                 FluidCraft.proxy.netHandler.sendToServer(new CPacketSwitchGuis(GuiType.DUAL_INTERFACE_FLUID));
             }
-            else if (host instanceof PartFluidInterface) {
+            else if (isPart()) {
                 FluidCraft.proxy.netHandler.sendToServer(new CPacketSwitchGuis(GuiType.DUAL_INTERFACE_FLUID_PART));
             }
         }
@@ -137,5 +148,17 @@ public class GuiDualInterface extends GuiUpgradeable {
         {
             NetworkHandler.instance.sendToServer( new PacketConfigButton( this.insertionMode.getSetting(), backwards ) );
         }
+        if (btn == this.sidelessMode && this.sidelessMode != null)
+        {
+            NetworkHandler.instance.sendToServer( new PacketConfigButton( this.sidelessMode.getSetting(), backwards ) );
+        }
+    }
+
+    private boolean isPart() {
+        return this.host instanceof PartFluidInterface;
+    }
+
+    private boolean isTile() {
+        return this.host instanceof TileFluidInterface;
     }
 }

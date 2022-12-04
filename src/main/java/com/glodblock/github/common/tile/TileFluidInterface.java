@@ -1,5 +1,7 @@
 package com.glodblock.github.common.tile;
 
+import appeng.api.config.Settings;
+import appeng.api.config.SidelessMode;
 import appeng.api.config.Upgrades;
 import appeng.api.networking.IGridNode;
 import appeng.api.networking.events.MENetworkChannelsChanged;
@@ -8,6 +10,7 @@ import appeng.api.networking.events.MENetworkPowerStatusChange;
 import appeng.api.networking.ticking.TickRateModulation;
 import appeng.api.networking.ticking.TickingRequest;
 import appeng.api.storage.data.IAEFluidStack;
+import appeng.api.util.IConfigManager;
 import appeng.tile.TileEvent;
 import appeng.tile.events.TileEventType;
 import appeng.tile.inventory.AppEngInternalAEInventory;
@@ -35,9 +38,21 @@ import java.io.IOException;
 public class TileFluidInterface extends TileInterface implements IFluidHandler, IAEFluidInventory
 {
 
+    public TileFluidInterface() {
+        super.getInterfaceDuality().getConfigManager()
+            .registerSetting(Settings.SIDELESS_MODE, SidelessMode.SIDELESS);
+    }
+
     private final DualityFluidInterface fluidDuality = new DualityFluidInterface(this.getProxy(), this) {
+        private final IConfigManager dualityConfigManager = getInterfaceDuality().getConfigManager();
+
         @Override
         public FluidStack drain(ForgeDirection from, int maxDrain, boolean doDrain) {
+            SidelessMode mode = (SidelessMode) dualityConfigManager.getSetting(Settings.SIDELESS_MODE);
+            if (mode == SidelessMode.SIDELESS) {
+                return this.getTanks().drain(from, maxDrain, doDrain);
+            }
+
             return this.getTanks().drain(from.ordinal(), maxDrain, doDrain);
         }
     };

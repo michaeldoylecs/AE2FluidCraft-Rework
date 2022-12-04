@@ -69,7 +69,7 @@ public enum GuiType {
     DUAL_INTERFACE(new TileGuiFactory<TileFluidInterface>(TileFluidInterface.class) {
         @Override
         protected Object createServerGui(EntityPlayer player, TileFluidInterface inv) {
-            return new ContainerInterface(player.inventory, inv);
+            return new ContainerDualInterface(player.inventory, inv);
         }
 
         @Override
