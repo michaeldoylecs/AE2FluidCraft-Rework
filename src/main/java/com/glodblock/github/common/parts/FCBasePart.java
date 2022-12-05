@@ -31,6 +31,8 @@ import com.glodblock.github.client.textures.FCPartsTexture;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import io.netty.buffer.ByteBuf;
+import java.io.IOException;
+import java.util.List;
 import net.minecraft.client.renderer.RenderBlocks;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.entity.player.EntityPlayer;
@@ -43,10 +45,8 @@ import net.minecraft.util.MathHelper;
 import net.minecraft.util.Vec3;
 import net.minecraftforge.common.util.ForgeDirection;
 
-import java.io.IOException;
-import java.util.List;
-
-public abstract class FCBasePart extends AEBasePart implements IPowerChannelState, ITerminalHost, IConfigManagerHost, IViewCellStorage, IAEAppEngInventory {
+public abstract class FCBasePart extends AEBasePart
+        implements IPowerChannelState, ITerminalHost, IConfigManagerHost, IViewCellStorage, IAEAppEngInventory {
 
     protected static final int POWERED_FLAG = 4;
     protected static final int CHANNEL_FLAG = 16;
@@ -56,172 +56,140 @@ public abstract class FCBasePart extends AEBasePart implements IPowerChannelStat
     private int clientFlags = 0; // sent as byte.
     private float opacity = -1;
 
-    private final IConfigManager cm = new ConfigManager( this );
-    private final AppEngInternalInventory viewCell = new AppEngInternalInventory( this, 5 );
+    private final IConfigManager cm = new ConfigManager(this);
+    private final AppEngInternalInventory viewCell = new AppEngInternalInventory(this, 5);
 
-    public FCBasePart( final ItemStack is )
-    {
-        this( is, false );
+    public FCBasePart(final ItemStack is) {
+        this(is, false);
     }
 
-    protected FCBasePart( final ItemStack is, final boolean requireChannel )
-    {
-        super( is );
+    protected FCBasePart(final ItemStack is, final boolean requireChannel) {
+        super(is);
 
-        if( requireChannel )
-        {
-            this.getProxy().setFlags( GridFlags.REQUIRE_CHANNEL );
-            this.getProxy().setIdlePowerUsage( 1.0 / 2.0 );
+        if (requireChannel) {
+            this.getProxy().setFlags(GridFlags.REQUIRE_CHANNEL);
+            this.getProxy().setIdlePowerUsage(1.0 / 2.0);
+        } else {
+            this.getProxy().setIdlePowerUsage(1.0 / 16.0); // lights drain a little bit.
         }
-        else
-        {
-            this.getProxy().setIdlePowerUsage( 1.0 / 16.0 ); // lights drain a little bit.
-        }
-        this.cm.registerSetting( Settings.SORT_BY, SortOrder.NAME );
-        this.cm.registerSetting( Settings.VIEW_MODE, ViewItems.ALL );
-        this.cm.registerSetting( Settings.SORT_DIRECTION, SortDir.ASCENDING );
+        this.cm.registerSetting(Settings.SORT_BY, SortOrder.NAME);
+        this.cm.registerSetting(Settings.VIEW_MODE, ViewItems.ALL);
+        this.cm.registerSetting(Settings.SORT_DIRECTION, SortDir.ASCENDING);
     }
 
     @MENetworkEventSubscribe
-    public final void bootingRender( final MENetworkBootingStatusChange c )
-    {
-        if( !this.isLightSource() )
-        {
+    public final void bootingRender(final MENetworkBootingStatusChange c) {
+        if (!this.isLightSource()) {
             this.getHost().markForUpdate();
         }
     }
 
     @MENetworkEventSubscribe
-    public final void powerRender( final MENetworkPowerStatusChange c )
-    {
+    public final void powerRender(final MENetworkPowerStatusChange c) {
         this.getHost().markForUpdate();
     }
 
     @Override
-    public final void getBoxes( final IPartCollisionHelper bch )
-    {
-        bch.addBox( 2, 2, 14, 14, 14, 16 );
-        bch.addBox( 4, 4, 13, 12, 12, 14 );
+    public final void getBoxes(final IPartCollisionHelper bch) {
+        bch.addBox(2, 2, 14, 14, 14, 16);
+        bch.addBox(4, 4, 13, 12, 12, 14);
     }
 
     @Override
-    public void onNeighborChanged()
-    {
+    public void onNeighborChanged() {
         this.opacity = -1;
         this.getHost().markForUpdate();
     }
 
     @Override
-    public void getDrops(final List<ItemStack> drops, final boolean wrenched )
-    {
-        super.getDrops( drops, wrenched );
+    public void getDrops(final List<ItemStack> drops, final boolean wrenched) {
+        super.getDrops(drops, wrenched);
 
-        for( final ItemStack is : this.viewCell )
-        {
-            if( is != null )
-            {
-                drops.add( is );
+        for (final ItemStack is : this.viewCell) {
+            if (is != null) {
+                drops.add(is);
             }
         }
     }
 
     @Override
-    public IConfigManager getConfigManager()
-    {
+    public IConfigManager getConfigManager() {
         return this.cm;
     }
 
     @Override
-    public void readFromNBT( final NBTTagCompound data )
-    {
-        super.readFromNBT( data );
-        if( data.hasKey( "opacity" ) )
-        {
-            this.opacity = data.getFloat( "opacity" );
+    public void readFromNBT(final NBTTagCompound data) {
+        super.readFromNBT(data);
+        if (data.hasKey("opacity")) {
+            this.opacity = data.getFloat("opacity");
         }
-        this.spin = data.getByte( "spin" );
-        this.cm.readFromNBT( data );
-        this.viewCell.readFromNBT( data, "viewCell" );
+        this.spin = data.getByte("spin");
+        this.cm.readFromNBT(data);
+        this.viewCell.readFromNBT(data, "viewCell");
     }
 
     @Override
-    public void writeToNBT( final NBTTagCompound data )
-    {
-        super.writeToNBT( data );
-        data.setFloat( "opacity", this.opacity );
-        data.setByte( "spin", this.getSpin() );
-        this.cm.writeToNBT( data );
-        this.viewCell.writeToNBT( data, "viewCell" );
+    public void writeToNBT(final NBTTagCompound data) {
+        super.writeToNBT(data);
+        data.setFloat("opacity", this.opacity);
+        data.setByte("spin", this.getSpin());
+        this.cm.writeToNBT(data);
+        this.viewCell.writeToNBT(data, "viewCell");
     }
 
-    public GuiBridge getGui(final EntityPlayer player )
-    {
+    public GuiBridge getGui(final EntityPlayer player) {
         return GuiBridge.GUI_ME;
     }
 
-
     @Override
-    public void writeToStream( final ByteBuf data ) throws IOException
-    {
-        super.writeToStream( data );
+    public void writeToStream(final ByteBuf data) throws IOException {
+        super.writeToStream(data);
         this.clientFlags = this.getSpin() & 3;
 
-        try
-        {
-            if( this.getProxy().getEnergy().isNetworkPowered() )
-            {
+        try {
+            if (this.getProxy().getEnergy().isNetworkPowered()) {
                 this.clientFlags = this.getClientFlags() | FCBasePart.POWERED_FLAG;
             }
 
-            if( this.getProxy().getPath().isNetworkBooting() )
-            {
+            if (this.getProxy().getPath().isNetworkBooting()) {
                 this.clientFlags = this.getClientFlags() | FCBasePart.BOOTING_FLAG;
             }
 
-            if( this.getProxy().getNode().meetsChannelRequirements() )
-            {
+            if (this.getProxy().getNode().meetsChannelRequirements()) {
                 this.clientFlags = this.getClientFlags() | FCBasePart.CHANNEL_FLAG;
             }
-        }
-        catch( final GridAccessException e )
-        {
+        } catch (final GridAccessException e) {
             // um.. nothing.
         }
 
-        data.writeByte( (byte) this.getClientFlags() );
+        data.writeByte((byte) this.getClientFlags());
     }
 
     @Override
-    public boolean readFromStream( final ByteBuf data ) throws IOException
-    {
-        super.readFromStream( data );
+    public boolean readFromStream(final ByteBuf data) throws IOException {
+        super.readFromStream(data);
         final int oldFlags = this.getClientFlags();
         this.clientFlags = data.readByte();
-        this.spin = (byte) ( this.getClientFlags() & 3 );
+        this.spin = (byte) (this.getClientFlags() & 3);
         return this.getClientFlags() != oldFlags;
     }
 
     @Override
-    public final int getLightLevel()
-    {
-        return this.blockLight( this.isPowered() ? ( this.isLightSource() ? 15 : 9 ) : 0 );
+    public final int getLightLevel() {
+        return this.blockLight(this.isPowered() ? (this.isLightSource() ? 15 : 9) : 0);
     }
 
-    public boolean onPartActivate0(final EntityPlayer player, final Vec3 pos )
-    {
+    public boolean onPartActivate0(final EntityPlayer player, final Vec3 pos) {
         final TileEntity te = this.getTile();
 
-        if( !player.isSneaking() && Platform.isWrench( player, player.inventory.getCurrentItem(), te.xCoord, te.yCoord, te.zCoord ) )
-        {
-            if( Platform.isServer() )
-            {
-                if( this.getSpin() > 3 )
-                {
+        if (!player.isSneaking()
+                && Platform.isWrench(player, player.inventory.getCurrentItem(), te.xCoord, te.yCoord, te.zCoord)) {
+            if (Platform.isServer()) {
+                if (this.getSpin() > 3) {
                     this.spin = 0;
                 }
 
-                switch( this.getSpin() )
-                {
+                switch (this.getSpin()) {
                     case 0:
                         this.spin = 1;
                         break;
@@ -240,26 +208,20 @@ public abstract class FCBasePart extends AEBasePart implements IPowerChannelStat
                 this.saveChanges();
             }
             return true;
-        }
-        else
-        {
-            return super.onPartActivate( player, pos );
+        } else {
+            return super.onPartActivate(player, pos);
         }
     }
 
     @Override
-    public boolean onPartActivate( final EntityPlayer player, final Vec3 pos )
-    {
-        if( !onPartActivate0( player, pos ) )
-        {
-            if( !player.isSneaking() )
-            {
-                if( Platform.isClient() )
-                {
+    public boolean onPartActivate(final EntityPlayer player, final Vec3 pos) {
+        if (!onPartActivate0(player, pos)) {
+            if (!player.isSneaking()) {
+                if (Platform.isClient()) {
                     return true;
                 }
 
-                Platform.openGUI( player, this.getHost().getTile(), this.getSide(), this.getGui( player ) );
+                Platform.openGUI(player, this.getHost().getTile(), this.getSide(), this.getGui(player));
 
                 return true;
             }
@@ -268,213 +230,206 @@ public abstract class FCBasePart extends AEBasePart implements IPowerChannelStat
     }
 
     @Override
-    public final void onPlacement( final EntityPlayer player, final ItemStack held, final ForgeDirection side )
-    {
-        super.onPlacement( player, held, side );
+    public final void onPlacement(final EntityPlayer player, final ItemStack held, final ForgeDirection side) {
+        super.onPlacement(player, held, side);
 
-        final byte rotation = (byte) ( MathHelper.floor_double( ( player.rotationYaw * 4F ) / 360F + 2.5D ) & 3 );
-        if( side == ForgeDirection.UP )
-        {
+        final byte rotation = (byte) (MathHelper.floor_double((player.rotationYaw * 4F) / 360F + 2.5D) & 3);
+        if (side == ForgeDirection.UP) {
             this.spin = rotation;
-        }
-        else if( side == ForgeDirection.DOWN )
-        {
+        } else if (side == ForgeDirection.DOWN) {
             this.spin = rotation;
         }
     }
 
-    private int blockLight(final int emit )
-    {
-        if( this.opacity < 0 )
-        {
+    private int blockLight(final int emit) {
+        if (this.opacity < 0) {
             final TileEntity te = this.getTile();
-            this.opacity = 255 - te.getWorldObj().getBlockLightOpacity( te.xCoord + this.getSide().offsetX, te.yCoord + this.getSide().offsetY, te.zCoord + this.getSide().offsetZ );
+            this.opacity = 255
+                    - te.getWorldObj()
+                            .getBlockLightOpacity(
+                                    te.xCoord + this.getSide().offsetX,
+                                    te.yCoord + this.getSide().offsetY,
+                                    te.zCoord + this.getSide().offsetZ);
         }
 
-        return (int) ( emit * ( this.opacity / 255.0f ) );
+        return (int) (emit * (this.opacity / 255.0f));
     }
 
     @Override
-    public final boolean isPowered()
-    {
-        try
-        {
-            if( Platform.isServer() )
-            {
+    public final boolean isPowered() {
+        try {
+            if (Platform.isServer()) {
                 return this.getProxy().getEnergy().isNetworkPowered();
+            } else {
+                return ((this.getClientFlags() & FCBasePart.POWERED_FLAG) == FCBasePart.POWERED_FLAG);
             }
-            else
-            {
-                return ( ( this.getClientFlags() & FCBasePart.POWERED_FLAG ) == FCBasePart.POWERED_FLAG );
-            }
-        }
-        catch( final GridAccessException e )
-        {
+        } catch (final GridAccessException e) {
             return false;
         }
     }
 
     @Override
-    public IMEMonitor<IAEItemStack> getItemInventory()
-    {
-        try
-        {
+    public IMEMonitor<IAEItemStack> getItemInventory() {
+        try {
             return this.getProxy().getStorage().getItemInventory();
-        }
-        catch( final GridAccessException e )
-        {
+        } catch (final GridAccessException e) {
             // err nope?
         }
         return null;
     }
 
     @Override
-    public IMEMonitor<IAEFluidStack> getFluidInventory()
-    {
-        try
-        {
+    public IMEMonitor<IAEFluidStack> getFluidInventory() {
+        try {
             return this.getProxy().getStorage().getFluidInventory();
-        }
-        catch( final GridAccessException e )
-        {
+        } catch (final GridAccessException e) {
             // err nope?
         }
         return null;
     }
 
     @Override
-    public void updateSetting( final IConfigManager manager, final Enum settingName, final Enum newValue )
-    {
-
-    }
+    public void updateSetting(final IConfigManager manager, final Enum settingName, final Enum newValue) {}
 
     @Override
-    public IInventory getViewCellStorage()
-    {
+    public IInventory getViewCellStorage() {
         return this.viewCell;
     }
 
     @Override
-    public void onChangeInventory(final IInventory inv, final int slot, final InvOperation mc, final ItemStack removedStack, final ItemStack newStack )
-    {
+    public void onChangeInventory(
+            final IInventory inv,
+            final int slot,
+            final InvOperation mc,
+            final ItemStack removedStack,
+            final ItemStack newStack) {
         this.getHost().markForSave();
     }
 
     @Override
-    public final boolean isActive()
-    {
-        if( !this.isLightSource() )
-        {
-            return ( ( this.getClientFlags() & ( FCBasePart.CHANNEL_FLAG | FCBasePart.POWERED_FLAG ) ) == ( FCBasePart.CHANNEL_FLAG | FCBasePart.POWERED_FLAG ) );
-        }
-        else
-        {
+    public final boolean isActive() {
+        if (!this.isLightSource()) {
+            return ((this.getClientFlags() & (FCBasePart.CHANNEL_FLAG | FCBasePart.POWERED_FLAG))
+                    == (FCBasePart.CHANNEL_FLAG | FCBasePart.POWERED_FLAG));
+        } else {
             return this.isPowered();
         }
     }
 
-    public final int getClientFlags()
-    {
+    public final int getClientFlags() {
         return this.clientFlags;
     }
 
-    public final byte getSpin()
-    {
+    public final byte getSpin() {
         return this.spin;
     }
 
     @Override
-    @SideOnly( Side.CLIENT )
-    public void renderInventory(final IPartRenderHelper rh, final RenderBlocks renderer )
-    {
-        rh.setBounds( 2, 2, 14, 14, 14, 16 );
+    @SideOnly(Side.CLIENT)
+    public void renderInventory(final IPartRenderHelper rh, final RenderBlocks renderer) {
+        rh.setBounds(2, 2, 14, 14, 14, 16);
 
         final IIcon sideTexture = CableBusTextures.PartMonitorSides.getIcon();
         final IIcon backTexture = CableBusTextures.PartMonitorBack.getIcon();
 
-        rh.setTexture( sideTexture, sideTexture, backTexture, FCPartsTexture.PartTerminalBroad.getIcon(), sideTexture, sideTexture );
-        rh.renderInventoryBox( renderer );
+        rh.setTexture(
+                sideTexture,
+                sideTexture,
+                backTexture,
+                FCPartsTexture.PartTerminalBroad.getIcon(),
+                sideTexture,
+                sideTexture);
+        rh.renderInventoryBox(renderer);
 
-        rh.setInvColor( this.getColor().whiteVariant );
-        rh.renderInventoryFace( this.getFrontBright().getIcon(), ForgeDirection.SOUTH, renderer );
+        rh.setInvColor(this.getColor().whiteVariant);
+        rh.renderInventoryFace(this.getFrontBright().getIcon(), ForgeDirection.SOUTH, renderer);
 
-        rh.setInvColor( this.getColor().mediumVariant );
-        rh.renderInventoryFace( this.getFrontDark().getIcon(), ForgeDirection.SOUTH, renderer );
+        rh.setInvColor(this.getColor().mediumVariant);
+        rh.renderInventoryFace(this.getFrontDark().getIcon(), ForgeDirection.SOUTH, renderer);
 
-        rh.setInvColor( this.getColor().blackVariant );
-        rh.renderInventoryFace( this.getFrontColored().getIcon(), ForgeDirection.SOUTH, renderer );
+        rh.setInvColor(this.getColor().blackVariant);
+        rh.renderInventoryFace(this.getFrontColored().getIcon(), ForgeDirection.SOUTH, renderer);
 
-        rh.setBounds( 4, 4, 13, 12, 12, 14 );
-        rh.renderInventoryBox( renderer );
+        rh.setBounds(4, 4, 13, 12, 12, 14);
+        rh.renderInventoryBox(renderer);
     }
 
     @Override
-    @SideOnly( Side.CLIENT )
-    public void renderStatic( final int x, final int y, final int z, final IPartRenderHelper rh, final RenderBlocks renderer )
-    {
-        this.setRenderCache( rh.useSimplifiedRendering( x, y, z, this, this.getRenderCache() ) );
+    @SideOnly(Side.CLIENT)
+    public void renderStatic(
+            final int x, final int y, final int z, final IPartRenderHelper rh, final RenderBlocks renderer) {
+        this.setRenderCache(rh.useSimplifiedRendering(x, y, z, this, this.getRenderCache()));
 
         final IIcon sideTexture = CableBusTextures.PartMonitorSides.getIcon();
         final IIcon backTexture = CableBusTextures.PartMonitorBack.getIcon();
 
-        rh.setTexture( sideTexture, sideTexture, backTexture, FCPartsTexture.PartTerminalBroad.getIcon(), sideTexture, sideTexture );
+        rh.setTexture(
+                sideTexture,
+                sideTexture,
+                backTexture,
+                FCPartsTexture.PartTerminalBroad.getIcon(),
+                sideTexture,
+                sideTexture);
 
-        rh.setBounds( 2, 2, 14, 14, 14, 16 );
-        rh.renderBlock( x, y, z, renderer );
+        rh.setBounds(2, 2, 14, 14, 14, 16);
+        rh.renderBlock(x, y, z, renderer);
 
-        if( this.getLightLevel() > 0 )
-        {
+        if (this.getLightLevel() > 0) {
             final int l = 13;
-            Tessellator.instance.setBrightness( l << 20 | l << 4 );
+            Tessellator.instance.setBrightness(l << 20 | l << 4);
         }
 
-        renderer.uvRotateBottom = renderer.uvRotateEast = renderer.uvRotateNorth = renderer.uvRotateSouth = renderer.uvRotateTop = renderer.uvRotateWest = this.getSpin();
+        renderer.uvRotateBottom = renderer.uvRotateEast = renderer.uvRotateNorth =
+                renderer.uvRotateSouth = renderer.uvRotateTop = renderer.uvRotateWest = this.getSpin();
 
-        Tessellator.instance.setColorOpaque_I( this.getColor().whiteVariant );
-        rh.renderFace( x, y, z, this.getFrontBright().getIcon(), ForgeDirection.SOUTH, renderer );
+        Tessellator.instance.setColorOpaque_I(this.getColor().whiteVariant);
+        rh.renderFace(x, y, z, this.getFrontBright().getIcon(), ForgeDirection.SOUTH, renderer);
 
-        Tessellator.instance.setColorOpaque_I( this.getColor().mediumVariant );
-        rh.renderFace( x, y, z, this.getFrontDark().getIcon(), ForgeDirection.SOUTH, renderer );
+        Tessellator.instance.setColorOpaque_I(this.getColor().mediumVariant);
+        rh.renderFace(x, y, z, this.getFrontDark().getIcon(), ForgeDirection.SOUTH, renderer);
 
-        Tessellator.instance.setColorOpaque_I( this.getColor().blackVariant );
-        rh.renderFace( x, y, z, this.getFrontColored().getIcon(), ForgeDirection.SOUTH, renderer );
+        Tessellator.instance.setColorOpaque_I(this.getColor().blackVariant);
+        rh.renderFace(x, y, z, this.getFrontColored().getIcon(), ForgeDirection.SOUTH, renderer);
 
-        renderer.uvRotateBottom = renderer.uvRotateEast = renderer.uvRotateNorth = renderer.uvRotateSouth = renderer.uvRotateTop = renderer.uvRotateWest = 0;
+        renderer.uvRotateBottom = renderer.uvRotateEast =
+                renderer.uvRotateNorth = renderer.uvRotateSouth = renderer.uvRotateTop = renderer.uvRotateWest = 0;
 
         final IIcon sideStatusTexture = CableBusTextures.PartMonitorSidesStatus.getIcon();
 
-        rh.setTexture( sideStatusTexture, sideStatusTexture, backTexture, this.getItemStack().getIconIndex(), sideStatusTexture, sideStatusTexture );
+        rh.setTexture(
+                sideStatusTexture,
+                sideStatusTexture,
+                backTexture,
+                this.getItemStack().getIconIndex(),
+                sideStatusTexture,
+                sideStatusTexture);
 
-        rh.setBounds( 4, 4, 13, 12, 12, 14 );
-        rh.renderBlock( x, y, z, renderer );
+        rh.setBounds(4, 4, 13, 12, 12, 14);
+        rh.renderBlock(x, y, z, renderer);
 
-        final boolean hasChan = ( this.getClientFlags() & ( FCBasePart.POWERED_FLAG | FCBasePart.CHANNEL_FLAG ) ) == ( FCBasePart.POWERED_FLAG | FCBasePart.CHANNEL_FLAG );
-        final boolean hasPower = ( this.getClientFlags() & FCBasePart.POWERED_FLAG ) == FCBasePart.POWERED_FLAG;
+        final boolean hasChan = (this.getClientFlags() & (FCBasePart.POWERED_FLAG | FCBasePart.CHANNEL_FLAG))
+                == (FCBasePart.POWERED_FLAG | FCBasePart.CHANNEL_FLAG);
+        final boolean hasPower = (this.getClientFlags() & FCBasePart.POWERED_FLAG) == FCBasePart.POWERED_FLAG;
 
-        if( hasChan )
-        {
+        if (hasChan) {
             final int l = 14;
-            Tessellator.instance.setBrightness( l << 20 | l << 4 );
-            Tessellator.instance.setColorOpaque_I( this.getColor().blackVariant );
-        }
-        else if( hasPower )
-        {
+            Tessellator.instance.setBrightness(l << 20 | l << 4);
+            Tessellator.instance.setColorOpaque_I(this.getColor().blackVariant);
+        } else if (hasPower) {
             final int l = 9;
-            Tessellator.instance.setBrightness( l << 20 | l << 4 );
-            Tessellator.instance.setColorOpaque_I( this.getColor().whiteVariant );
-        }
-        else
-        {
-            Tessellator.instance.setBrightness( 0 );
-            Tessellator.instance.setColorOpaque_I( 0x000000 );
+            Tessellator.instance.setBrightness(l << 20 | l << 4);
+            Tessellator.instance.setColorOpaque_I(this.getColor().whiteVariant);
+        } else {
+            Tessellator.instance.setBrightness(0);
+            Tessellator.instance.setColorOpaque_I(0x000000);
         }
 
         final IIcon sideStatusLightTexture = CableBusTextures.PartMonitorSidesStatusLights.getIcon();
 
-        rh.renderFace( x, y, z, sideStatusLightTexture, ForgeDirection.EAST, renderer );
-        rh.renderFace( x, y, z, sideStatusLightTexture, ForgeDirection.WEST, renderer );
-        rh.renderFace( x, y, z, sideStatusLightTexture, ForgeDirection.UP, renderer );
-        rh.renderFace( x, y, z, sideStatusLightTexture, ForgeDirection.DOWN, renderer );
+        rh.renderFace(x, y, z, sideStatusLightTexture, ForgeDirection.EAST, renderer);
+        rh.renderFace(x, y, z, sideStatusLightTexture, ForgeDirection.WEST, renderer);
+        rh.renderFace(x, y, z, sideStatusLightTexture, ForgeDirection.UP, renderer);
+        rh.renderFace(x, y, z, sideStatusLightTexture, ForgeDirection.DOWN, renderer);
     }
 
     /**
@@ -503,5 +458,4 @@ public abstract class FCBasePart extends AEBasePart implements IPowerChannelStat
      * light source 9.
      */
     public abstract boolean isLightSource();
-
 }

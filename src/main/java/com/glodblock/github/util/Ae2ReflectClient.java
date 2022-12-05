@@ -6,13 +6,12 @@ import appeng.client.gui.widgets.GuiTabButton;
 import appeng.client.render.AppEngRenderItem;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import net.minecraft.inventory.Slot;
-import net.minecraft.item.ItemStack;
-
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.List;
 import java.util.Set;
+import net.minecraft.inventory.Slot;
+import net.minecraft.item.ItemStack;
 
 @SideOnly(Side.CLIENT)
 public class Ae2ReflectClient {
@@ -22,7 +21,6 @@ public class Ae2ReflectClient {
     private static final Field fGuiCPUStatus_icon;
     private static final Field fGui_drag;
     private static final Method mGuiPatternTerm_inventorySlots;
-
 
     static {
         try {
@@ -60,5 +58,4 @@ public class Ae2ReflectClient {
     public static GuiTabButton getOriginalGuiButton(GuiCraftingStatus gui) {
         return Ae2Reflect.readField(gui, fGuiCraftingStatus_originalGuiBtn);
     }
-
 }

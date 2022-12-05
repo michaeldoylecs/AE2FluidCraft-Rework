@@ -11,6 +11,7 @@ import com.glodblock.github.inventory.gui.ButtonMouseHandler;
 import com.glodblock.github.inventory.gui.MouseRegionManager;
 import com.glodblock.github.inventory.gui.TankMouseHandler;
 import com.glodblock.github.util.NameConst;
+import javax.annotation.Nullable;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.client.resources.I18n;
@@ -19,8 +20,6 @@ import net.minecraft.util.IIcon;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.util.ForgeDirection;
 import org.lwjgl.opengl.GL11;
-
-import javax.annotation.Nullable;
 
 public class GuiLargeIngredientBuffer extends AEBaseGui {
 
@@ -36,10 +35,14 @@ public class GuiLargeIngredientBuffer extends AEBaseGui {
         this.cont = (ContainerLargeIngredientBuffer) inventorySlots;
         this.ySize = 222;
         for (int i = 0; i < 7; i++) {
-            mouseRegions.addRegion(TANK_X + TANK_X_OFF * i, TANK_Y, TANK_WIDTH, TANK_HEIGHT,
-                new TankMouseHandler(cont.getTile().getFluidInventory(), i));
-            mouseRegions.addRegion(TANK_X + 10 + 22 * i, TANK_Y + TANK_HEIGHT + 2, 7, 7,
-                ButtonMouseHandler.dumpTank(cont, i));
+            mouseRegions.addRegion(
+                    TANK_X + TANK_X_OFF * i,
+                    TANK_Y,
+                    TANK_WIDTH,
+                    TANK_HEIGHT,
+                    new TankMouseHandler(cont.getTile().getFluidInventory(), i));
+            mouseRegions.addRegion(
+                    TANK_X + 10 + 22 * i, TANK_Y + TANK_HEIGHT + 2, 7, 7, ButtonMouseHandler.dumpTank(cont, i));
         }
     }
 
@@ -58,23 +61,29 @@ public class GuiLargeIngredientBuffer extends AEBaseGui {
 
     @Override
     public void drawFG(int offsetX, int offsetY, int mouseX, int mouseY) {
-        fontRendererObj.drawString(getGuiDisplayName(I18n.format(NameConst.GUI_LARGE_INGREDIENT_BUFFER)), 8, 6, 0x404040);
+        fontRendererObj.drawString(
+                getGuiDisplayName(I18n.format(NameConst.GUI_LARGE_INGREDIENT_BUFFER)), 8, 6, 0x404040);
         fontRendererObj.drawString(GuiText.inventory.getLocal(), 8, ySize - 94, 0x404040);
         GL11.glColor4f(1F, 1F, 1F, 1F);
 
         IAEFluidTank fluidInv = cont.getTile().getFluidInventory();
         mc.getTextureManager().bindTexture(TextureMap.locationBlocksTexture);
         for (int i = 0; i < 7; i++) {
-            renderFluidIntoGui(TANK_X + i * TANK_X_OFF, TANK_Y, TANK_WIDTH, TANK_HEIGHT,
-                fluidInv.getFluidInSlot(i), fluidInv.getTankInfo(ForgeDirection.UNKNOWN)[i].capacity);
+            renderFluidIntoGui(
+                    TANK_X + i * TANK_X_OFF,
+                    TANK_Y,
+                    TANK_WIDTH,
+                    TANK_HEIGHT,
+                    fluidInv.getFluidInSlot(i),
+                    fluidInv.getTankInfo(ForgeDirection.UNKNOWN)[i].capacity);
         }
         GL11.glColor4f(1F, 1F, 1F, 1F);
 
         mouseRegions.render(mouseX, mouseY);
     }
 
-    public void renderFluidIntoGui(int x, int y, int width, int height,
-                                   @Nullable IAEFluidStack aeFluidStack, int capacity) {
+    public void renderFluidIntoGui(
+            int x, int y, int width, int height, @Nullable IAEFluidStack aeFluidStack, int capacity) {
         if (aeFluidStack != null) {
             GL11.glDisable(2896);
             GL11.glColor3f(1.0F, 1.0F, 1.0F);
@@ -82,10 +91,14 @@ public class GuiLargeIngredientBuffer extends AEBaseGui {
             if (aeFluidStack.getStackSize() > 0 && hi > 0) {
                 Minecraft.getMinecraft().renderEngine.bindTexture(TextureMap.locationBlocksTexture);
                 IIcon fluidIcon = aeFluidStack.getFluid().getStillIcon();
-                GL11.glColor3f((float)(aeFluidStack.getFluid().getColor() >> 16 & 255) / 255.0F, (float)(aeFluidStack.getFluid().getColor() >> 8 & 255) / 255.0F, (float)(aeFluidStack.getFluid().getColor() & 255) / 255.0F);
+                GL11.glColor3f(
+                        (float) (aeFluidStack.getFluid().getColor() >> 16 & 255) / 255.0F,
+                        (float) (aeFluidStack.getFluid().getColor() >> 8 & 255) / 255.0F,
+                        (float) (aeFluidStack.getFluid().getColor() & 255) / 255.0F);
                 for (int th = 0; th <= hi; th += 16) {
                     if (hi - th <= 0) break;
-                    this.drawTexturedModelRectFromIcon(x, y + height - Math.min(16, hi - th) - th, fluidIcon, width, Math.min(16, hi - th));
+                    this.drawTexturedModelRectFromIcon(
+                            x, y + height - Math.min(16, hi - th) - th, fluidIcon, width, Math.min(16, hi - th));
                 }
                 GL11.glColor3f(1.0F, 1.0F, 1.0F);
             }
@@ -95,5 +108,4 @@ public class GuiLargeIngredientBuffer extends AEBaseGui {
     public void update(int slot, IAEFluidStack aeFluidStack) {
         cont.getTile().getFluidInventory().setFluidInSlot(slot, aeFluidStack);
     }
-
 }

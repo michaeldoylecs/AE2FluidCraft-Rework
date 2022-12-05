@@ -10,25 +10,23 @@ import cpw.mods.fml.common.network.simpleimpl.IMessage;
 import cpw.mods.fml.common.network.simpleimpl.IMessageHandler;
 import cpw.mods.fml.common.network.simpleimpl.MessageContext;
 import io.netty.buffer.ByteBuf;
+import java.util.LinkedList;
+import java.util.List;
+import javax.annotation.Nullable;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.fluids.FluidStack;
 
-import javax.annotation.Nullable;
-import java.util.LinkedList;
-import java.util.List;
-
 public class CPacketTransferRecipe implements IMessage {
 
     private List<OrderStack<?>> inputs;
     private List<OrderStack<?>> outputs;
     private boolean isCraft;
-    private final static int MAX_INDEX = 32;
+    private static final int MAX_INDEX = 32;
 
-    public CPacketTransferRecipe(){
-    }
+    public CPacketTransferRecipe() {}
 
     public CPacketTransferRecipe(List<OrderStack<?>> IN, List<OrderStack<?>> OUT, boolean craft) {
         this.inputs = IN;
@@ -36,8 +34,8 @@ public class CPacketTransferRecipe implements IMessage {
         this.isCraft = craft;
     }
 
-    //I should use GZIP to compress the message, but i'm too lazy.
-    //NBT to ByteBuf has a compress stream
+    // I should use GZIP to compress the message, but i'm too lazy.
+    // NBT to ByteBuf has a compress stream
     @Override
     public void toBytes(ByteBuf buf) {
         buf.writeBoolean(isCraft);
@@ -63,11 +61,11 @@ public class CPacketTransferRecipe implements IMessage {
         NBTTagCompound nbt_m = ByteBufUtils.readTag(buf);
         NBTTagCompound nbt_i = nbt_m.getCompoundTag("i");
         NBTTagCompound nbt_o = nbt_m.getCompoundTag("o");
-        for (int i = 0; i < MAX_INDEX; i ++) {
+        for (int i = 0; i < MAX_INDEX; i++) {
             OrderStack<?> tmp = OrderStack.readFromNBT(nbt_i, null, i);
             if (tmp != null) inputs.add(tmp);
         }
-        for (int i = 0; i < MAX_INDEX; i ++) {
+        for (int i = 0; i < MAX_INDEX; i++) {
             OrderStack<?> tmp = OrderStack.readFromNBT(nbt_o, null, i);
             if (tmp != null) outputs.add(tmp);
         }
@@ -85,10 +83,10 @@ public class CPacketTransferRecipe implements IMessage {
                 cf.getPatternTerminal().setCraftingRecipe(message.isCraft);
                 IInventory inputSlot = cf.getInventoryByName("crafting");
                 IInventory outputSlot = cf.getInventoryByName("output");
-                for (int i = 0; i < inputSlot.getSizeInventory(); i ++) {
+                for (int i = 0; i < inputSlot.getSizeInventory(); i++) {
                     inputSlot.setInventorySlotContents(i, null);
                 }
-                for (int i = 0; i < outputSlot.getSizeInventory(); i ++) {
+                for (int i = 0; i < outputSlot.getSizeInventory(); i++) {
                     outputSlot.setInventorySlotContents(i, null);
                 }
 
@@ -107,13 +105,10 @@ public class CPacketTransferRecipe implements IMessage {
                         ItemStack stack1;
                         if (stack.getStack() instanceof ItemStack) {
                             stack1 = ((ItemStack) stack.getStack()).copy();
-                        }
-                        else if (stack.getStack() instanceof FluidStack) {
+                        } else if (stack.getStack() instanceof FluidStack) {
                             stack1 = ItemFluidPacket.newStack((FluidStack) stack.getStack());
-                        }
-                        else throw new UnsupportedOperationException("Trying to get an unsupported item!");
-                        if (index < inputSlot.getSizeInventory())
-                            inputSlot.setInventorySlotContents(index, stack1);
+                        } else throw new UnsupportedOperationException("Trying to get an unsupported item!");
+                        if (index < inputSlot.getSizeInventory()) inputSlot.setInventorySlotContents(index, stack1);
                     }
                 }
                 for (OrderStack<?> stack : message.outputs) {
@@ -122,13 +117,10 @@ public class CPacketTransferRecipe implements IMessage {
                         ItemStack stack1;
                         if (stack.getStack() instanceof ItemStack) {
                             stack1 = ((ItemStack) stack.getStack()).copy();
-                        }
-                        else if (stack.getStack() instanceof FluidStack) {
+                        } else if (stack.getStack() instanceof FluidStack) {
                             stack1 = ItemFluidPacket.newStack((FluidStack) stack.getStack());
-                        }
-                        else throw new UnsupportedOperationException("Trying to get an unsupported item!");
-                        if (index < outputSlot.getSizeInventory())
-                            outputSlot.setInventorySlotContents(index, stack1);
+                        } else throw new UnsupportedOperationException("Trying to get an unsupported item!");
+                        if (index < outputSlot.getSizeInventory()) outputSlot.setInventorySlotContents(index, stack1);
                     }
                 }
                 c.onCraftMatrixChanged(inputSlot);
@@ -138,10 +130,10 @@ public class CPacketTransferRecipe implements IMessage {
                 boolean combine = cf.combine;
                 IInventory inputSlot = cf.getInventoryByName("crafting");
                 IInventory outputSlot = cf.getInventoryByName("output");
-                for (int i = 0; i < inputSlot.getSizeInventory(); i ++) {
+                for (int i = 0; i < inputSlot.getSizeInventory(); i++) {
                     inputSlot.setInventorySlotContents(i, null);
                 }
-                for (int i = 0; i < outputSlot.getSizeInventory(); i ++) {
+                for (int i = 0; i < outputSlot.getSizeInventory(); i++) {
                     outputSlot.setInventorySlotContents(i, null);
                 }
 
@@ -158,13 +150,10 @@ public class CPacketTransferRecipe implements IMessage {
                         ItemStack stack1;
                         if (stack.getStack() instanceof ItemStack) {
                             stack1 = ((ItemStack) stack.getStack()).copy();
-                        }
-                        else if (stack.getStack() instanceof FluidStack) {
+                        } else if (stack.getStack() instanceof FluidStack) {
                             stack1 = ItemFluidPacket.newStack((FluidStack) stack.getStack());
-                        }
-                        else throw new UnsupportedOperationException("Trying to get an unsupported item!");
-                        if (index < inputSlot.getSizeInventory())
-                            inputSlot.setInventorySlotContents(index, stack1);
+                        } else throw new UnsupportedOperationException("Trying to get an unsupported item!");
+                        if (index < inputSlot.getSizeInventory()) inputSlot.setInventorySlotContents(index, stack1);
                     }
                 }
                 for (OrderStack<?> stack : message.outputs) {
@@ -173,13 +162,10 @@ public class CPacketTransferRecipe implements IMessage {
                         ItemStack stack1;
                         if (stack.getStack() instanceof ItemStack) {
                             stack1 = ((ItemStack) stack.getStack()).copy();
-                        }
-                        else if (stack.getStack() instanceof FluidStack) {
+                        } else if (stack.getStack() instanceof FluidStack) {
                             stack1 = ItemFluidPacket.newStack((FluidStack) stack.getStack());
-                        }
-                        else throw new UnsupportedOperationException("Trying to get an unsupported item!");
-                        if (index < outputSlot.getSizeInventory())
-                            outputSlot.setInventorySlotContents(index, stack1);
+                        } else throw new UnsupportedOperationException("Trying to get an unsupported item!");
+                        if (index < outputSlot.getSizeInventory()) outputSlot.setInventorySlotContents(index, stack1);
                     }
                 }
                 c.onCraftMatrixChanged(inputSlot);
@@ -188,5 +174,4 @@ public class CPacketTransferRecipe implements IMessage {
             return null;
         }
     }
-
 }

@@ -28,7 +28,8 @@ public class NEITransfermer extends FCClassTransformer.ClassMapper {
         public MethodVisitor visitMethod(int access, String name, String desc, String signature, String[] exceptions) {
             switch (name) {
                 case "getStackUnderMouse":
-                    return new TransformStackUnderMouse(api, super.visitMethod(access, name, desc, signature, exceptions));
+                    return new TransformStackUnderMouse(
+                            api, super.visitMethod(access, name, desc, signature, exceptions));
                 case "shouldShowTooltip":
                     return new TransformShowTooltip(api, super.visitMethod(access, name, desc, signature, exceptions));
                 default:
@@ -49,12 +50,12 @@ public class NEITransfermer extends FCClassTransformer.ClassMapper {
                 super.visitVarInsn(Opcodes.ALOAD, 1);
                 super.visitVarInsn(Opcodes.ILOAD, 2);
                 super.visitVarInsn(Opcodes.ILOAD, 3);
-                super.visitMethodInsn(Opcodes.INVOKESTATIC,
-                    "com/glodblock/github/coremod/hooker/CoreModHooks",
-                    "getStackUnderMouse",
-                    "(Lnet/minecraft/client/gui/inventory/GuiContainer;II)Lnet/minecraft/item/ItemStack;",
-                    false
-                );
+                super.visitMethodInsn(
+                        Opcodes.INVOKESTATIC,
+                        "com/glodblock/github/coremod/hooker/CoreModHooks",
+                        "getStackUnderMouse",
+                        "(Lnet/minecraft/client/gui/inventory/GuiContainer;II)Lnet/minecraft/item/ItemStack;",
+                        false);
                 return;
             }
             super.visitInsn(opcode);
@@ -73,21 +74,19 @@ public class NEITransfermer extends FCClassTransformer.ClassMapper {
         public void visitInsn(int opcode) {
             if (opcode == Opcodes.ICONST_1 && const_1 == 2) {
                 super.visitVarInsn(Opcodes.ALOAD, 1);
-                super.visitMethodInsn(Opcodes.INVOKESTATIC,
-                    "com/glodblock/github/coremod/hooker/CoreModHooks",
-                    "shouldShowTooltip",
-                    "(Lnet/minecraft/client/gui/inventory/GuiContainer;)Z",
-                    false
-                );
-                const_1 ++;
+                super.visitMethodInsn(
+                        Opcodes.INVOKESTATIC,
+                        "com/glodblock/github/coremod/hooker/CoreModHooks",
+                        "shouldShowTooltip",
+                        "(Lnet/minecraft/client/gui/inventory/GuiContainer;)Z",
+                        false);
+                const_1++;
                 return;
             }
             if (opcode == Opcodes.ICONST_1) {
-                const_1 ++;
+                const_1++;
             }
             super.visitInsn(opcode);
         }
-
     }
-
 }

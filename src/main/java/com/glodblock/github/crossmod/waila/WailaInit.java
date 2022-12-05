@@ -23,5 +23,4 @@ public class WailaInit {
         registrar.registerBodyProvider(tile, AEBaseTile.class);
         registrar.registerNBTProvider(tile, AEBaseTile.class);
     }
-
 }

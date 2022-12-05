@@ -8,5 +8,4 @@ public class ListenerLoader implements Runnable {
     public void run() {
         ClientHelper.register();
     }
-
 }

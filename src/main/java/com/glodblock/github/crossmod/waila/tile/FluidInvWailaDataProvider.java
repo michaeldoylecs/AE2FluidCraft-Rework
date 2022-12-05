@@ -7,6 +7,7 @@ import com.glodblock.github.common.tile.TileFluidPacketDecoder;
 import com.glodblock.github.crossmod.waila.Tooltip;
 import com.glodblock.github.inventory.IAEFluidInventory;
 import com.glodblock.github.inventory.IAEFluidTank;
+import java.util.List;
 import mcp.mobius.waila.api.IWailaConfigHandler;
 import mcp.mobius.waila.api.IWailaDataAccessor;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -17,16 +18,14 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import net.minecraftforge.fluids.FluidStack;
 
-import java.util.List;
-
 public class FluidInvWailaDataProvider extends BaseWailaDataProvider {
 
     @Override
     public List<String> getWailaBody(
-        final ItemStack itemStack,
-        final List<String> currentToolTip,
-        final IWailaDataAccessor accessor,
-        final IWailaConfigHandler config) {
+            final ItemStack itemStack,
+            final List<String> currentToolTip,
+            final IWailaDataAccessor accessor,
+            final IWailaConfigHandler config) {
         final TileEntity te = accessor.getTileEntity();
         if (te instanceof TileFluidInterface) {
             ((IAEFluidInventory) te).getInternalFluid().readFromNBT(accessor.getNBTData(), "fluidInv");
@@ -53,7 +52,8 @@ public class FluidInvWailaDataProvider extends BaseWailaDataProvider {
             if (ft.getFluidInSlot(i) == null) continue;
             FluidStack fs = ft.getFluidInSlot(i).getFluidStack();
             if (prefix) {
-                currentToolTip.add(Tooltip.tileFluidInterfaceFormat(fs.getFluid().getLocalizedName(), fs.amount, i));
+                currentToolTip.add(
+                        Tooltip.tileFluidInterfaceFormat(fs.getFluid().getLocalizedName(), fs.amount, i));
             } else {
                 currentToolTip.add(Tooltip.fluidFormat(fs.getFluid().getLocalizedName(), fs.amount));
             }
@@ -66,13 +66,13 @@ public class FluidInvWailaDataProvider extends BaseWailaDataProvider {
 
     @Override
     public NBTTagCompound getNBTData(
-        final EntityPlayerMP player,
-        final TileEntity te,
-        final NBTTagCompound tag,
-        final World world,
-        final int x,
-        final int y,
-        final int z) {
+            final EntityPlayerMP player,
+            final TileEntity te,
+            final NBTTagCompound tag,
+            final World world,
+            final int x,
+            final int y,
+            final int z) {
         if (te instanceof IAEFluidInventory) {
             ((IAEFluidInventory) te).getInternalFluid().writeToNBT(tag, "fluidInv");
         } else if (te instanceof TileFluidPacketDecoder) {

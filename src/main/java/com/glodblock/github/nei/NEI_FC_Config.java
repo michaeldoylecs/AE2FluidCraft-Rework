@@ -14,8 +14,10 @@ public class NEI_FC_Config implements IConfigureNEI {
         API.registerNEIGuiHandler(new NEIGuiHandler());
 
         for (String identifier : FluidRecipe.getSupportRecipes()) {
-            API.registerGuiOverlayHandler(GuiFluidPatternTerminal.class, FluidPatternTerminalRecipeTransferHandler.INSTANCE, identifier);
-            API.registerGuiOverlayHandler(GuiFluidPatternTerminalEx.class, FluidPatternTerminalRecipeTransferHandler.INSTANCE, identifier);
+            API.registerGuiOverlayHandler(
+                    GuiFluidPatternTerminal.class, FluidPatternTerminalRecipeTransferHandler.INSTANCE, identifier);
+            API.registerGuiOverlayHandler(
+                    GuiFluidPatternTerminalEx.class, FluidPatternTerminalRecipeTransferHandler.INSTANCE, identifier);
         }
     }
 

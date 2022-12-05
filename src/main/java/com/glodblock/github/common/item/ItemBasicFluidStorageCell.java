@@ -31,6 +31,9 @@ import com.google.common.base.Optional;
 import cpw.mods.fml.common.registry.GameRegistry;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import java.util.EnumSet;
+import java.util.HashMap;
+import java.util.List;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.entity.player.EntityPlayer;
@@ -43,12 +46,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.event.ForgeEventFactory;
 
-import java.util.EnumSet;
-import java.util.HashMap;
-import java.util.List;
-
-public class ItemBasicFluidStorageCell extends AEBaseItem implements IStorageFluidCell
-{
+public class ItemBasicFluidStorageCell extends AEBaseItem implements IStorageFluidCell {
     private final CellType component;
     private final int totalBytes;
     private final int perType;
@@ -61,13 +59,12 @@ public class ItemBasicFluidStorageCell extends AEBaseItem implements IStorageFlu
     {
         super( Optional.of( kilobytes + "k" ) );
         setUnlocalizedName(NameConst.ITEM_FLUID_STORAGE + kilobytes);
-        this.setFeature( EnumSet.of( AEFeature.StorageCells ) );
-        this.setMaxStackSize( 1 );
+        this.setFeature(EnumSet.of(AEFeature.StorageCells));
+        this.setMaxStackSize(1);
         this.totalBytes = kilobytes * 1024;
         this.component = whichCell;
 
-        switch( this.component )
-        {
+        switch (this.component) {
             case Cell1kPart:
                 this.idleDrain = 0.5;
                 this.perType = 8;
@@ -114,7 +111,10 @@ public class ItemBasicFluidStorageCell extends AEBaseItem implements IStorageFlu
     @Override
     @SideOnly(Side.CLIENT)
     public void registerIcons(IIconRegister iconRegister) {
-        icon.put(this.totalBytes / 1024, iconRegister.registerIcon(NameConst.RES_KEY + NameConst.ITEM_FLUID_STORAGE + "." + this.totalBytes / 1024));
+        icon.put(
+                this.totalBytes / 1024,
+                iconRegister.registerIcon(
+                        NameConst.RES_KEY + NameConst.ITEM_FLUID_STORAGE + "." + this.totalBytes / 1024));
     }
 
     @Override
@@ -125,20 +125,21 @@ public class ItemBasicFluidStorageCell extends AEBaseItem implements IStorageFlu
     }
 
     @Override
-    public void addCheckedInformation(final ItemStack stack, final EntityPlayer player, final List<String> lines, final boolean displayMoreInfo )
-    {
-        final IMEInventoryHandler<?> inventory = AEApi.instance().registries().cell().getCellInventory( stack, null, StorageChannel.FLUIDS );
+    public void addCheckedInformation(
+            final ItemStack stack, final EntityPlayer player, final List<String> lines, final boolean displayMoreInfo) {
+        final IMEInventoryHandler<?> inventory =
+                AEApi.instance().registries().cell().getCellInventory(stack, null, StorageChannel.FLUIDS);
 
-        if( inventory instanceof IFluidCellInventoryHandler)
-        {
+        if (inventory instanceof IFluidCellInventoryHandler) {
             final IFluidCellInventoryHandler handler = (IFluidCellInventoryHandler) inventory;
             final IFluidCellInventory cellInventory = handler.getCellInv();
 
-            if( cellInventory != null )
-            {
-                lines.add( cellInventory.getUsedBytes() + " " + GuiText.Of.getLocal() + ' ' + cellInventory.getTotalBytes() + ' ' + GuiText.BytesUsed.getLocal() );
+            if (cellInventory != null) {
+                lines.add(cellInventory.getUsedBytes() + " " + GuiText.Of.getLocal() + ' '
+                        + cellInventory.getTotalBytes() + ' ' + GuiText.BytesUsed.getLocal());
 
-                lines.add( cellInventory.getStoredFluidTypes() + " " + GuiText.Of.getLocal() + ' ' + cellInventory.getTotalFluidTypes() + ' ' + GuiText.Types.getLocal() );
+                lines.add(cellInventory.getStoredFluidTypes() + " " + GuiText.Of.getLocal() + ' '
+                        + cellInventory.getTotalFluidTypes() + ' ' + GuiText.Types.getLocal());
 
                 if (GuiScreen.isCtrlKeyDown()) {
                     if (cellInventory.getStoredFluidTypes() > 0) {
@@ -156,11 +157,11 @@ public class ItemBasicFluidStorageCell extends AEBaseItem implements IStorageFlu
                     final String list = (handler.getIncludeExcludeMode() == IncludeExclude.WHITELIST ? GuiText.Included : GuiText.Excluded).getLocal();
                     lines.add(GuiText.Partitioned.getLocal() + " - " + list + ' ' + GuiText.Precise.getLocal());
 
-                    if (GuiScreen.isShiftKeyDown())
-                    {
+                    if (GuiScreen.isShiftKeyDown()) {
                         lines.add(GuiText.Filter.getLocal() + ": ");
                         for (IAEFluidStack aeFluidStack : handler.getPartitionInv()) {
-                            if (aeFluidStack != null) lines.add("  " + aeFluidStack.getFluidStack().getLocalizedName());
+                            if (aeFluidStack != null)
+                                lines.add("  " + aeFluidStack.getFluidStack().getLocalizedName());
                         }
                     }
                 }
@@ -169,14 +170,12 @@ public class ItemBasicFluidStorageCell extends AEBaseItem implements IStorageFlu
     }
 
     @Override
-    public int getBytes( final ItemStack cellItem )
-    {
+    public int getBytes(final ItemStack cellItem) {
         return this.totalBytes;
     }
 
     @Override
-    public int getBytesPerType( final ItemStack cellItem )
-    {
+    public int getBytesPerType(final ItemStack cellItem) {
         return this.perType;
     }
 
@@ -189,131 +188,113 @@ public class ItemBasicFluidStorageCell extends AEBaseItem implements IStorageFlu
     }
 
     @Override
-    public int getTotalTypes( final ItemStack cellItem )
-    {
+    public int getTotalTypes(final ItemStack cellItem) {
         return 1;
     }
 
     @Override
-    public boolean storableInStorageCell()
-    {
+    public boolean storableInStorageCell() {
         return false;
     }
 
     @Override
-    public boolean isStorageCell( final ItemStack i )
-    {
+    public boolean isStorageCell(final ItemStack i) {
         return true;
     }
 
     @Override
-    public double getIdleDrain()
-    {
+    public double getIdleDrain() {
         return this.idleDrain;
     }
 
     @Override
-    public boolean isEditable( final ItemStack is )
-    {
+    public boolean isEditable(final ItemStack is) {
         return true;
     }
 
     @Override
-    public IInventory getUpgradesInventory(final ItemStack is )
-    {
-        return new CellUpgrades( is, 0 );
+    public IInventory getUpgradesInventory(final ItemStack is) {
+        return new CellUpgrades(is, 0);
     }
 
     @Override
-    public IInventory getConfigInventory( final ItemStack is )
-    {
-        return new CellConfig( is );
+    public IInventory getConfigInventory(final ItemStack is) {
+        return new CellConfig(is);
     }
 
     @Override
-    public FuzzyMode getFuzzyMode(final ItemStack is )
-    {
-        final String fz = Platform.openNbtData( is ).getString( "FuzzyMode" );
-        try
-        {
-            return FuzzyMode.valueOf( fz );
-        }
-        catch( final Throwable t )
-        {
+    public FuzzyMode getFuzzyMode(final ItemStack is) {
+        final String fz = Platform.openNbtData(is).getString("FuzzyMode");
+        try {
+            return FuzzyMode.valueOf(fz);
+        } catch (final Throwable t) {
             return FuzzyMode.IGNORE_ALL;
         }
     }
 
     @Override
-    public void setFuzzyMode( final ItemStack is, final FuzzyMode fzMode )
-    {
-        Platform.openNbtData( is ).setString( "FuzzyMode", fzMode.name() );
+    public void setFuzzyMode(final ItemStack is, final FuzzyMode fzMode) {
+        Platform.openNbtData(is).setString("FuzzyMode", fzMode.name());
     }
 
     public String getOreFilter(ItemStack is) {
-        return Platform.openNbtData( is ).getString( "OreFilter" );
+        return Platform.openNbtData(is).getString("OreFilter");
     }
 
     public void setOreFilter(ItemStack is, String filter) {
-        Platform.openNbtData( is ).setString("OreFilter", filter);
+        Platform.openNbtData(is).setString("OreFilter", filter);
     }
 
     @Override
-    public ItemStack onItemRightClick(final ItemStack stack, final World world, final EntityPlayer player )
-    {
-        this.disassembleDrive( stack, world, player );
+    public ItemStack onItemRightClick(final ItemStack stack, final World world, final EntityPlayer player) {
+        this.disassembleDrive(stack, world, player);
         return stack;
     }
 
-    private boolean disassembleDrive( final ItemStack stack, final World world, final EntityPlayer player )
-    {
-        if( player.isSneaking() )
-        {
-            if( Platform.isClient() )
-            {
+    private boolean disassembleDrive(final ItemStack stack, final World world, final EntityPlayer player) {
+        if (player.isSneaking()) {
+            if (Platform.isClient()) {
                 return false;
             }
             final InventoryPlayer playerInventory = player.inventory;
-            final IMEInventoryHandler<?> inv = AEApi.instance().registries().cell().getCellInventory( stack, null, StorageChannel.FLUIDS );
-            if( inv != null && playerInventory.getCurrentItem() == stack )
-            {
-                final InventoryAdaptor ia = InventoryAdaptor.getAdaptor( player, ForgeDirection.UNKNOWN );
-                final IItemList<IAEFluidStack> list = inv.getAvailableItems( StorageChannel.FLUIDS.createList() );
-                if( list.isEmpty() && ia != null )
-                {
-                    playerInventory.setInventorySlotContents( playerInventory.currentItem, null );
+            final IMEInventoryHandler<?> inv =
+                    AEApi.instance().registries().cell().getCellInventory(stack, null, StorageChannel.FLUIDS);
+            if (inv != null && playerInventory.getCurrentItem() == stack) {
+                final InventoryAdaptor ia = InventoryAdaptor.getAdaptor(player, ForgeDirection.UNKNOWN);
+                final IItemList<IAEFluidStack> list = inv.getAvailableItems(StorageChannel.FLUIDS.createList());
+                if (list.isEmpty() && ia != null) {
+                    playerInventory.setInventorySlotContents(playerInventory.currentItem, null);
 
                     // drop core
-                    final ItemStack extraB = ia.addItems( this.component.stack( 1 ) );
-                    if( extraB != null )
-                    {
-                        player.dropPlayerItemWithRandomChoice( extraB, false );
+                    final ItemStack extraB = ia.addItems(this.component.stack(1));
+                    if (extraB != null) {
+                        player.dropPlayerItemWithRandomChoice(extraB, false);
                     }
 
                     // drop upgrades
-                    final IInventory upgradesInventory = this.getUpgradesInventory( stack );
-                    for( int upgradeIndex = 0; upgradeIndex < upgradesInventory.getSizeInventory(); upgradeIndex++ )
-                    {
-                        final ItemStack upgradeStack = upgradesInventory.getStackInSlot( upgradeIndex );
-                        final ItemStack leftStack = ia.addItems( upgradeStack );
-                        if( leftStack != null && upgradeStack.getItem() instanceof IUpgradeModule)
-                        {
-                            player.dropPlayerItemWithRandomChoice( upgradeStack, false );
+                    final IInventory upgradesInventory = this.getUpgradesInventory(stack);
+                    for (int upgradeIndex = 0; upgradeIndex < upgradesInventory.getSizeInventory(); upgradeIndex++) {
+                        final ItemStack upgradeStack = upgradesInventory.getStackInSlot(upgradeIndex);
+                        final ItemStack leftStack = ia.addItems(upgradeStack);
+                        if (leftStack != null && upgradeStack.getItem() instanceof IUpgradeModule) {
+                            player.dropPlayerItemWithRandomChoice(upgradeStack, false);
                         }
                     }
 
                     // drop empty storage cell case
-                    for( final ItemStack storageCellStack : AEApi.instance().definitions().materials().emptyStorageCell().maybeStack( 1 ).asSet() )
-                    {
-                        final ItemStack extraA = ia.addItems( storageCellStack );
-                        if( extraA != null )
-                        {
-                            player.dropPlayerItemWithRandomChoice( extraA, false );
+                    for (final ItemStack storageCellStack : AEApi.instance()
+                            .definitions()
+                            .materials()
+                            .emptyStorageCell()
+                            .maybeStack(1)
+                            .asSet()) {
+                        final ItemStack extraA = ia.addItems(storageCellStack);
+                        if (extraA != null) {
+                            player.dropPlayerItemWithRandomChoice(extraA, false);
                         }
                     }
 
-                    if( player.inventoryContainer != null )
-                    {
+                    if (player.inventoryContainer != null) {
                         player.inventoryContainer.detectAndSendChanges();
                     }
 
@@ -325,34 +306,44 @@ public class ItemBasicFluidStorageCell extends AEBaseItem implements IStorageFlu
     }
 
     @Override
-    public boolean onItemUseFirst( final ItemStack stack, final EntityPlayer player, final World world, final int x, final int y, final int z, final int side, final float hitX, final float hitY, final float hitZ )
-    {
-        if( ForgeEventFactory.onItemUseStart( player, stack, 1 ) <= 0 )
-            return true;
+    public boolean onItemUseFirst(
+            final ItemStack stack,
+            final EntityPlayer player,
+            final World world,
+            final int x,
+            final int y,
+            final int z,
+            final int side,
+            final float hitX,
+            final float hitY,
+            final float hitZ) {
+        if (ForgeEventFactory.onItemUseStart(player, stack, 1) <= 0) return true;
 
-        return this.disassembleDrive( stack, world, player );
+        return this.disassembleDrive(stack, world, player);
     }
 
     @Override
-    public ItemStack getContainerItem( final ItemStack itemStack )
-    {
-        for( final ItemStack stack : AEApi.instance().definitions().materials().emptyStorageCell().maybeStack( 1 ).asSet() )
-        {
+    public ItemStack getContainerItem(final ItemStack itemStack) {
+        for (final ItemStack stack : AEApi.instance()
+                .definitions()
+                .materials()
+                .emptyStorageCell()
+                .maybeStack(1)
+                .asSet()) {
             return stack;
         }
 
-        throw new MissingDefinition( "Tried to use empty storage cells while basic storage cells are defined." );
+        throw new MissingDefinition("Tried to use empty storage cells while basic storage cells are defined.");
     }
 
     @Override
-    public boolean hasContainerItem( final ItemStack stack )
-    {
-        return AEConfig.instance.isFeatureEnabled( AEFeature.EnableDisassemblyCrafting );
+    public boolean hasContainerItem(final ItemStack stack) {
+        return AEConfig.instance.isFeatureEnabled(AEFeature.EnableDisassemblyCrafting);
     }
 
     public ItemBasicFluidStorageCell register() {
         if (!Config.fluidCells) return null;
-        GameRegistry.registerItem(this, NameConst.ITEM_FLUID_STORAGE + this.totalBytes / 1024 , FluidCraft.MODID);
+        GameRegistry.registerItem(this, NameConst.ITEM_FLUID_STORAGE + this.totalBytes / 1024, FluidCraft.MODID);
         setCreativeTab(FluidCraftingTabs.INSTANCE);
         return this;
     }
@@ -364,5 +355,4 @@ public class ItemBasicFluidStorageCell extends AEBaseItem implements IStorageFlu
     public ItemStack stack() {
         return new ItemStack(this, 1);
     }
-
 }

@@ -7,7 +7,6 @@ import appeng.core.AEConfig;
 import appeng.core.localization.ButtonToolTips;
 import appeng.core.localization.GuiText;
 import cpw.mods.fml.common.Loader;
-
 import java.lang.reflect.Field;
 
 public final class ModAndClassUtil {
@@ -73,7 +72,7 @@ public final class ModAndClassUtil {
         }
         try {
             Field d = ButtonToolTips.class.getDeclaredField("BeSubstitutionsDescEnabled");
-//            isBeSubstitutionsButton = true;
+            //            isBeSubstitutionsButton = true;
         } catch (NoSuchFieldException e) {
             isBeSubstitutionsButton = false;
         }
@@ -108,31 +107,18 @@ public final class ModAndClassUtil {
             essentiaGas = null;
         }
 
-        if (Loader.isModLoaded("gregtech") && !Loader.isModLoaded("gregapi"))
-            GT5 = true;
-        if (Loader.isModLoaded("gregapi") && Loader.isModLoaded("gregapi_post"))
-            GT6 = true;
-        if (Loader.isModLoaded("extracells"))
-            EC2 = true;
-        if (Loader.isModLoaded("EnderIO"))
-            EIO = true;
-        if (Loader.isModLoaded("Forestry"))
-            FTR = true;
-        if (Loader.isModLoaded("OpenComputers"))
-            OC = true;
-        if (Loader.isModLoaded("thaumicenergistics"))
-            ThE = true;
-        if (Loader.isModLoaded("ae2wct"))
-            WCT = true;
-        if (Loader.isModLoaded("IC2"))
-            IC2 = true;
-        if (Loader.isModLoaded("NotEnoughItems"))
-            NEI = true;
-        if (Loader.isModLoaded("CoFHCore"))
-            COFH = true;
-        if (Loader.isModLoaded("miscutils"))
-            GTPP = true;
-        if (Loader.isModLoaded("Waila"))
-            WAILA = true;
+        if (Loader.isModLoaded("gregtech") && !Loader.isModLoaded("gregapi")) GT5 = true;
+        if (Loader.isModLoaded("gregapi") && Loader.isModLoaded("gregapi_post")) GT6 = true;
+        if (Loader.isModLoaded("extracells")) EC2 = true;
+        if (Loader.isModLoaded("EnderIO")) EIO = true;
+        if (Loader.isModLoaded("Forestry")) FTR = true;
+        if (Loader.isModLoaded("OpenComputers")) OC = true;
+        if (Loader.isModLoaded("thaumicenergistics")) ThE = true;
+        if (Loader.isModLoaded("ae2wct")) WCT = true;
+        if (Loader.isModLoaded("IC2")) IC2 = true;
+        if (Loader.isModLoaded("NotEnoughItems")) NEI = true;
+        if (Loader.isModLoaded("CoFHCore")) COFH = true;
+        if (Loader.isModLoaded("miscutils")) GTPP = true;
+        if (Loader.isModLoaded("Waila")) WAILA = true;
     }
 }

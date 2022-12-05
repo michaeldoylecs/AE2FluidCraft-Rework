@@ -25,14 +25,16 @@ public class BlockIngredientBuffer extends FCBaseBlock {
     }
 
     @Override
-    public boolean onActivated(World world, int x, int y, int z, EntityPlayer player, int facing, float hitX, float hitY, float hitZ) {
+    public boolean onActivated(
+            World world, int x, int y, int z, EntityPlayer player, int facing, float hitX, float hitY, float hitZ) {
         if (player.isSneaking()) {
             return false;
         }
         TileIngredientBuffer tile = getTileEntity(world, x, y, z);
         if (tile != null) {
             if (!world.isRemote) {
-                InventoryHandler.openGui(player, world, new BlockPos(x, y, z), EnumFacing.getFront(facing), GuiType.INGREDIENT_BUFFER);
+                InventoryHandler.openGui(
+                        player, world, new BlockPos(x, y, z), EnumFacing.getFront(facing), GuiType.INGREDIENT_BUFFER);
             }
             return true;
         }
@@ -53,5 +55,4 @@ public class BlockIngredientBuffer extends FCBaseBlock {
     public ItemStack stack() {
         return new ItemStack(this, 1);
     }
-
 }

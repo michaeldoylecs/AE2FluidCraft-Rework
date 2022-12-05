@@ -14,26 +14,22 @@ import cpw.mods.fml.common.network.simpleimpl.IMessage;
 import cpw.mods.fml.common.network.simpleimpl.IMessageHandler;
 import cpw.mods.fml.common.network.simpleimpl.MessageContext;
 import io.netty.buffer.ByteBuf;
+import java.util.Objects;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.fluids.FluidStack;
 
-import java.util.Objects;
-
 public class CPacketPatternValueSet implements IMessage {
-
 
     private GuiType originGui;
     private int amount;
     private int valueIndex;
 
-    public CPacketPatternValueSet() {
+    public CPacketPatternValueSet() {}
 
-    }
-
-    public CPacketPatternValueSet( int originalGui, int amount, int valueIndex ){
+    public CPacketPatternValueSet(int originalGui, int amount, int valueIndex) {
         this.originGui = GuiType.getByOrdinal(originalGui);
         this.amount = amount;
         this.valueIndex = valueIndex;
@@ -65,15 +61,22 @@ public class CPacketPatternValueSet implements IMessage {
                     final ContainerOpenContext context = cpv.getOpenContext();
                     if (context != null) {
                         final TileEntity te = context.getTile();
-                        InventoryHandler.openGui(player, player.worldObj, new BlockPos(te), Objects.requireNonNull(Util.from(context.getSide())), message.originGui);
-                        if (player.openContainer instanceof ContainerFluidPatternTerminal || player.openContainer instanceof ContainerFluidPatternTerminalEx) {
+                        InventoryHandler.openGui(
+                                player,
+                                player.worldObj,
+                                new BlockPos(te),
+                                Objects.requireNonNull(Util.from(context.getSide())),
+                                message.originGui);
+                        if (player.openContainer instanceof ContainerFluidPatternTerminal
+                                || player.openContainer instanceof ContainerFluidPatternTerminalEx) {
                             Slot slot = player.openContainer.getSlot(message.valueIndex);
                             if (slot != null && slot.getHasStack()) {
                                 ItemStack stack = slot.getStack().copy();
                                 if (Util.isFluidPacket(stack)) {
                                     FluidStack fluidStack = ItemFluidPacket.getFluidStack(stack);
                                     if (fluidStack != null) {
-                                        fluidStack = ItemFluidPacket.getFluidStack(stack).copy();
+                                        fluidStack = ItemFluidPacket.getFluidStack(stack)
+                                                .copy();
                                         fluidStack.amount = message.amount;
                                     }
                                     slot.putStack(ItemFluidPacket.newStack(fluidStack));
@@ -82,13 +85,11 @@ public class CPacketPatternValueSet implements IMessage {
                                     slot.putStack(stack);
                                 }
                             }
-
                         }
                     }
                 }
             }
             return null;
         }
-
     }
 }

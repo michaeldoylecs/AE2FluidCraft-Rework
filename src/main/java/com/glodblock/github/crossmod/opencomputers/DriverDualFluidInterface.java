@@ -44,7 +44,9 @@ public class DriverDualFluidInterface implements SidedBlock {
             super(tileEntity, NameConst.BLOCK_FLUID_INTERFACE);
         }
 
-        @Callback(doc = "function(index:number):table -- Get the configuration of the dual fluid interface on the specified slot.")
+        @Callback(
+                doc =
+                        "function(index:number):table -- Get the configuration of the dual fluid interface on the specified slot.")
         public Object[] getFluidInterfaceConfiguration(Context context, Arguments args) {
             int index = args.checkInteger(0);
             if (index >= 0 && index < DualityFluidInterface.NUMBER_OF_TANKS) {
@@ -54,12 +56,14 @@ public class DriverDualFluidInterface implements SidedBlock {
             throw new IllegalArgumentException("invalid slot");
         }
 
-        @Callback(doc = "function(index:number[, database:address, entry:number]):boolean -- Configure the filter in fluid interface on the specified slot.")
+        @Callback(
+                doc =
+                        "function(index:number[, database:address, entry:number]):boolean -- Configure the filter in fluid interface on the specified slot.")
         public Object[] setFluidInterfaceConfiguration(Context context, Arguments args) {
             int index = args.checkInteger(0);
             String address;
             int entry;
-            if (args.count() == 3){
+            if (args.count() == 3) {
                 address = args.checkString(1);
                 entry = args.checkInteger(2);
             } else {
@@ -68,17 +72,14 @@ public class DriverDualFluidInterface implements SidedBlock {
                 return new Object[] {true};
             }
             Node node = node().network().node(address);
-            if (!(node instanceof Component))
-                throw new IllegalArgumentException("no such component");
-            if (!(node.host() instanceof Database))
-                throw new IllegalArgumentException("not a database");
+            if (!(node instanceof Component)) throw new IllegalArgumentException("no such component");
+            if (!(node.host() instanceof Database)) throw new IllegalArgumentException("not a database");
             Database database = (Database) node.host();
             if (index >= 0 && index < DualityFluidInterface.NUMBER_OF_TANKS) {
                 ItemStack data = database.getStackInSlot(entry - 1);
                 if (data == null) {
                     tileEntity.getConfig().setFluidInSlot(index, null);
-                }
-                else {
+                } else {
                     FluidStack fluid = Util.getFluidFromItem(data);
                     tileEntity.getConfig().setFluidInSlot(index, tileEntity.getStandardFluid(fluid));
                 }
@@ -124,17 +125,16 @@ public class DriverDualFluidInterface implements SidedBlock {
     }
 
     public static class Provider implements EnvironmentProvider {
-        Provider() {
-        }
+        Provider() {}
 
         @Override
         public Class<?> getEnvironment(ItemStack itemStack) {
-            if (itemStack != null && (itemStack.isItemEqual(ItemAndBlockHolder.FLUID_INTERFACE.stack())
-                || itemStack.isItemEqual(ItemAndBlockHolder.INTERFACE.stack()))) {
+            if (itemStack != null
+                    && (itemStack.isItemEqual(ItemAndBlockHolder.FLUID_INTERFACE.stack())
+                            || itemStack.isItemEqual(ItemAndBlockHolder.INTERFACE.stack()))) {
                 return DriverDualFluidInterface.Environment.class;
             }
             return null;
         }
     }
-
 }

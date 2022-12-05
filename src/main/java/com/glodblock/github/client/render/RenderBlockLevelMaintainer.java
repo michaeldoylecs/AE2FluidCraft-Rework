@@ -15,9 +15,14 @@ public class RenderBlockLevelMaintainer extends BaseBlockRender<BlockLevelMainta
         super(false, 20);
     }
 
-
     @Override
-    public boolean renderInWorld(final BlockLevelMaintainer block, final IBlockAccess world, final int x, final int y, final int z, final RenderBlocks renderer) {
+    public boolean renderInWorld(
+            final BlockLevelMaintainer block,
+            final IBlockAccess world,
+            final int x,
+            final int y,
+            final int z,
+            final RenderBlocks renderer) {
         final TileLevelMaintainer ti = block.getTileEntity(world, x, y, z);
         final BlockRenderInfo info = block.getRendererInstance();
 

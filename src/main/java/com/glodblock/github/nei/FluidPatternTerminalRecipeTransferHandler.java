@@ -7,18 +7,17 @@ import com.glodblock.github.FluidCraft;
 import com.glodblock.github.client.gui.GuiBaseFluidPatternTerminalEx;
 import com.glodblock.github.client.gui.GuiFluidPatternTerminal;
 import com.glodblock.github.client.gui.GuiFluidPatternTerminalEx;
-import com.glodblock.github.client.gui.container.FluidPrioritization;
 import com.glodblock.github.nei.object.OrderStack;
 import com.glodblock.github.nei.recipes.FluidRecipe;
 import com.glodblock.github.network.CPacketTransferRecipe;
-import net.minecraft.client.gui.inventory.GuiContainer;
-
 import java.util.HashSet;
 import java.util.List;
+import net.minecraft.client.gui.inventory.GuiContainer;
 
 public class FluidPatternTerminalRecipeTransferHandler implements IOverlayHandler {
 
-    public static final FluidPatternTerminalRecipeTransferHandler INSTANCE = new FluidPatternTerminalRecipeTransferHandler();
+    public static final FluidPatternTerminalRecipeTransferHandler INSTANCE =
+            new FluidPatternTerminalRecipeTransferHandler();
     public static final HashSet<String> notOtherSet = new HashSet<>();
     public static final HashSet<String> craftSet = new HashSet<>();
 
@@ -34,7 +33,7 @@ public class FluidPatternTerminalRecipeTransferHandler implements IOverlayHandle
         if (isCorrectGui(firstGui)) {
             boolean priority = false;
             if (firstGui instanceof GuiBaseFluidPatternTerminalEx) {
-                priority = ((GuiBaseFluidPatternTerminalEx)firstGui).container.prioritize;
+                priority = ((GuiBaseFluidPatternTerminalEx) firstGui).container.prioritize;
             }
             List<OrderStack<?>> in = FluidRecipe.getPackageInputs(recipe, recipeIndex, priority);
             List<OrderStack<?>> out = FluidRecipe.getPackageOutputs(recipe, recipeIndex, !notUseOther(recipe));
@@ -56,5 +55,4 @@ public class FluidPatternTerminalRecipeTransferHandler implements IOverlayHandle
         TemplateRecipeHandler tRecipe = (TemplateRecipeHandler) recipeHandler;
         return craftSet.contains(tRecipe.getOverlayIdentifier());
     }
-
 }

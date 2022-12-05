@@ -13,10 +13,9 @@ import com.glodblock.github.common.parts.PartFluidInterface;
 import com.glodblock.github.common.parts.PartSharedFluidBus;
 import com.glodblock.github.common.tile.*;
 import com.google.common.collect.ImmutableList;
-import net.minecraft.entity.player.EntityPlayer;
-
-import javax.annotation.Nullable;
 import java.util.List;
+import javax.annotation.Nullable;
+import net.minecraft.entity.player.EntityPlayer;
 
 public enum GuiType {
     LEVEL_MAINTAINER(new TileGuiFactory<TileLevelMaintainer>(TileLevelMaintainer.class) {
@@ -69,7 +68,7 @@ public enum GuiType {
     DUAL_INTERFACE(new TileGuiFactory<TileFluidInterface>(TileFluidInterface.class) {
         @Override
         protected Object createServerGui(EntityPlayer player, TileFluidInterface inv) {
-            return new ContainerInterface(player.inventory, inv);
+            return new ContainerDualInterface(player.inventory, inv);
         }
 
         @Override
@@ -270,5 +269,4 @@ public enum GuiType {
     GuiType(GuiFactory guiFactory) {
         this.guiFactory = guiFactory;
     }
-
 }

@@ -9,12 +9,20 @@ import net.minecraft.util.IIcon;
 import net.minecraft.util.ResourceLocation;
 
 public enum FCPartsTexture {
-    PartFluidTerminal_Bright("fluid_terminal_bright"), PartFluidTerminal_Dark("fluid_terminal_dark"), PartFluidTerminal_Colored("fluid_terminal_medium"),
-    PartFluidPatternTerminal_Bright("pattern_terminal_bright"), PartFluidPatternTerminal_Dark("pattern_terminal_dark"),
-    PartFluidPatternTerminal_Colored("pattern_terminal_medium"), PartTerminalBroad("terminal_broad"),
-    PartFluidImportBus("fluid_import_face"), PartFluidExportBus("fluid_export_face"),
-    BlockFluidInterfaceAlternate_Arrow("fluid_interface_arrow"), BlockInterfaceAlternate("fluid_interface_a"),
-    BlockInterface_Face("fluid_interface"), BlockLevelMaintainer("level_maintainer"), BlockLevelMaintainer_Active("level_maintainer_active");
+    PartFluidTerminal_Bright("fluid_terminal_bright"),
+    PartFluidTerminal_Dark("fluid_terminal_dark"),
+    PartFluidTerminal_Colored("fluid_terminal_medium"),
+    PartFluidPatternTerminal_Bright("pattern_terminal_bright"),
+    PartFluidPatternTerminal_Dark("pattern_terminal_dark"),
+    PartFluidPatternTerminal_Colored("pattern_terminal_medium"),
+    PartTerminalBroad("terminal_broad"),
+    PartFluidImportBus("fluid_import_face"),
+    PartFluidExportBus("fluid_export_face"),
+    BlockFluidInterfaceAlternate_Arrow("fluid_interface_arrow"),
+    BlockInterfaceAlternate("fluid_interface_a"),
+    BlockInterface_Face("fluid_interface"),
+    BlockLevelMaintainer("level_maintainer"),
+    BlockLevelMaintainer_Active("level_maintainer_active");
 
     private final String name;
     public net.minecraft.util.IIcon IIcon;
@@ -27,24 +35,21 @@ public enum FCPartsTexture {
         return null;
     }
 
-    @SideOnly( Side.CLIENT )
-    public static IIcon getMissing()
-    {
-        return ( (TextureMap) Minecraft.getMinecraft().getTextureManager().getTexture( TextureMap.locationBlocksTexture ) ).getAtlasSprite( "missingno" );
+    @SideOnly(Side.CLIENT)
+    public static IIcon getMissing() {
+        return ((TextureMap) Minecraft.getMinecraft().getTextureManager().getTexture(TextureMap.locationBlocksTexture))
+                .getAtlasSprite("missingno");
     }
 
-    public String getName()
-    {
+    public String getName() {
         return this.name;
     }
 
-    public IIcon getIcon()
-    {
+    public IIcon getIcon() {
         return this.IIcon;
     }
 
-    public void registerIcon( final TextureMap map )
-    {
-        this.IIcon = map.registerIcon( NameConst.RES_KEY + this.name );
+    public void registerIcon(final TextureMap map) {
+        this.IIcon = map.registerIcon(NameConst.RES_KEY + this.name);
     }
 }

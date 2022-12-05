@@ -34,6 +34,7 @@ import com.glodblock.github.inventory.AEFluidInventory;
 import com.glodblock.github.inventory.IAEFluidInventory;
 import com.glodblock.github.inventory.IAEFluidTank;
 import com.glodblock.github.inventory.MEMonitorIFluidHandler;
+import java.util.Objects;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
@@ -43,9 +44,13 @@ import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTankInfo;
 import net.minecraftforge.fluids.IFluidHandler;
 
-import java.util.Objects;
-
-public class DualityFluidInterface implements IGridTickable, IStorageMonitorable, IAEFluidInventory, IUpgradeableHost, IConfigManagerHost, IFluidHandler {
+public class DualityFluidInterface
+        implements IGridTickable,
+                IStorageMonitorable,
+                IAEFluidInventory,
+                IUpgradeableHost,
+                IConfigManagerHost,
+                IFluidHandler {
 
     public static final int NUMBER_OF_TANKS = 6;
     public static final long TANK_CAPACITY = 16000;
@@ -55,11 +60,13 @@ public class DualityFluidInterface implements IGridTickable, IStorageMonitorable
     private final BaseActionSource mySource;
     private boolean hasConfig = false;
     private final AEFluidInventory tanks = new AEFluidInventory(this, NUMBER_OF_TANKS, (int) TANK_CAPACITY);
-    private final AEFluidInventory config = new AEFluidInventory( this, NUMBER_OF_TANKS, Integer.MAX_VALUE );
+    private final AEFluidInventory config = new AEFluidInventory(this, NUMBER_OF_TANKS, Integer.MAX_VALUE);
     private final IAEFluidStack[] requireWork;
     private int isWorking = -1;
-    private final MEMonitorPassThrough<IAEItemStack> items = new MEMonitorPassThrough<IAEItemStack>( new NullInventory<IAEItemStack>(), StorageChannel.ITEMS );
-    private final MEMonitorPassThrough<IAEFluidStack> fluids = new MEMonitorPassThrough<IAEFluidStack>(new NullInventory<>(), StorageChannel.FLUIDS );
+    private final MEMonitorPassThrough<IAEItemStack> items =
+            new MEMonitorPassThrough<IAEItemStack>(new NullInventory<IAEItemStack>(), StorageChannel.ITEMS);
+    private final MEMonitorPassThrough<IAEFluidStack> fluids =
+            new MEMonitorPassThrough<IAEFluidStack>(new NullInventory<>(), StorageChannel.FLUIDS);
     private boolean resetConfigCache = true;
 
     public DualityFluidInterface(final AENetworkProxy networkProxy, final IInterfaceHost ih) {
@@ -71,7 +78,7 @@ public class DualityFluidInterface implements IGridTickable, IStorageMonitorable
         this.items.setChangeSource(this.mySource);
         this.requireWork = new IAEFluidStack[6];
 
-        for(int i = 0; i < 6; ++i) {
+        for (int i = 0; i < 6; ++i) {
             this.requireWork[i] = null;
         }
     }
@@ -79,8 +86,7 @@ public class DualityFluidInterface implements IGridTickable, IStorageMonitorable
     public IAEFluidStack getStandardFluid(IAEFluidStack fluid) {
         if (fluid == null) {
             return null;
-        }
-        else {
+        } else {
             return AEFluidStack.create(new FluidStack(fluid.getFluid(), 8000));
         }
     }
@@ -88,8 +94,7 @@ public class DualityFluidInterface implements IGridTickable, IStorageMonitorable
     public IAEFluidStack getStandardFluid(FluidStack fluid) {
         if (fluid == null) {
             return null;
-        }
-        else {
+        } else {
             return AEFluidStack.create(new FluidStack(fluid.getFluid(), 8000));
         }
     }
@@ -134,7 +139,10 @@ public class DualityFluidInterface implements IGridTickable, IStorageMonitorable
 
     private IMEMonitor<IAEFluidStack> getFluidGrid() {
         try {
-            return gridProxy.getGrid().<IStorageGrid>getCache(IStorageGrid.class).getFluidInventory();
+            return gridProxy
+                    .getGrid()
+                    .<IStorageGrid>getCache(IStorageGrid.class)
+                    .getFluidInventory();
         } catch (GridAccessException e) {
             return null;
         }
@@ -161,7 +169,8 @@ public class DualityFluidInterface implements IGridTickable, IStorageMonitorable
 
     @Override
     public TickingRequest getTickingRequest(IGridNode node) {
-        return new TickingRequest(TickRates.Interface.getMin(), TickRates.Interface.getMax(), !this.hasWorkToDo(), true);
+        return new TickingRequest(
+                TickRates.Interface.getMin(), TickRates.Interface.getMax(), !this.hasWorkToDo(), true);
     }
 
     @Override
@@ -170,14 +179,15 @@ public class DualityFluidInterface implements IGridTickable, IStorageMonitorable
             return TickRateModulation.SLEEP;
         } else {
             boolean couldDoWork = this.updateStorage();
-            return this.hasWorkToDo() ? (couldDoWork ? TickRateModulation.URGENT : TickRateModulation.SLOWER) : TickRateModulation.SLEEP;
+            return this.hasWorkToDo()
+                    ? (couldDoWork ? TickRateModulation.URGENT : TickRateModulation.SLOWER)
+                    : TickRateModulation.SLEEP;
         }
     }
 
     @Override
     public IMEMonitor<IAEItemStack> getItemInventory() {
-        if( this.hasConfig )
-        {
+        if (this.hasConfig) {
             return null;
         }
         return this.items;
@@ -185,8 +195,7 @@ public class DualityFluidInterface implements IGridTickable, IStorageMonitorable
 
     @Override
     public IMEMonitor<IAEFluidStack> getFluidInventory() {
-        if( this.hasConfig )
-        {
+        if (this.hasConfig) {
             if (this.resetConfigCache) {
                 this.resetConfigCache = false;
                 return new InterfaceInventory(this);
@@ -201,9 +210,7 @@ public class DualityFluidInterface implements IGridTickable, IStorageMonitorable
     }
 
     @Override
-    public void updateSetting(IConfigManager manager, Enum settingName, Enum newValue) {
-
-    }
+    public void updateSetting(IConfigManager manager, Enum settingName, Enum newValue) {}
 
     @Override
     public void onFluidInventoryChanged(IAEFluidTank inventory, int slot) {
@@ -232,7 +239,6 @@ public class DualityFluidInterface implements IGridTickable, IStorageMonitorable
                     }
                 }
             }
-
         }
     }
 
@@ -252,7 +258,7 @@ public class DualityFluidInterface implements IGridTickable, IStorageMonitorable
 
     private boolean updateStorage() {
         boolean didSomething = false;
-        for(int x = 0; x < 6; ++x) {
+        for (int x = 0; x < 6; ++x) {
             if (this.requireWork[x] != null) {
                 didSomething = this.usePlan(x) || didSomething;
             }
@@ -272,14 +278,14 @@ public class DualityFluidInterface implements IGridTickable, IStorageMonitorable
         }
         IAEFluidStack toStore;
         if (work.getStackSize() > 0L) {
-            if ((long)this.tanks.fill(slot, work.getFluidStack(), false) != work.getStackSize()) {
+            if ((long) this.tanks.fill(slot, work.getFluidStack(), false) != work.getStackSize()) {
                 changed = true;
             } else if (Objects.requireNonNull(getFluidGrid()).getStorageList().findPrecise(work) != null) {
                 toStore = dest.extractItems(work, Actionable.MODULATE, this.mySource);
                 if (toStore != null) {
                     changed = true;
                     int filled = this.tanks.fill(slot, toStore.getFluidStack(), true);
-                    if ((long)filled != toStore.getStackSize()) {
+                    if ((long) filled != toStore.getStackSize()) {
                         throw new IllegalStateException("bad attempt at managing tanks. ( fill )");
                     }
                 }
@@ -288,13 +294,14 @@ public class DualityFluidInterface implements IGridTickable, IStorageMonitorable
             toStore = work.copy();
             toStore.setStackSize(-toStore.getStackSize());
             FluidStack canExtract = this.tanks.drain(slot, toStore.getFluidStack(), false);
-            if (canExtract != null && (long)canExtract.amount == toStore.getStackSize()) {
-                IAEFluidStack notStored = dest.injectItems(toStore, Actionable.MODULATE, this.mySource);;
+            if (canExtract != null && (long) canExtract.amount == toStore.getStackSize()) {
+                IAEFluidStack notStored = dest.injectItems(toStore, Actionable.MODULATE, this.mySource);
+                ;
                 toStore.setStackSize(toStore.getStackSize() - (notStored == null ? 0L : notStored.getStackSize()));
                 if (toStore.getStackSize() > 0L) {
                     changed = true;
                     FluidStack removed = this.tanks.drain(slot, toStore.getFluidStack(), true);
-                    if (removed == null || toStore.getStackSize() != (long)removed.amount) {
+                    if (removed == null || toStore.getStackSize() != (long) removed.amount) {
                         throw new IllegalStateException("bad attempt at managing tanks. ( drain )");
                     }
                 }
@@ -362,7 +369,7 @@ public class DualityFluidInterface implements IGridTickable, IStorageMonitorable
     private void readConfig() {
         this.hasConfig = false;
 
-        for(int i = 0; i < this.config.getSlots(); ++i) {
+        for (int i = 0; i < this.config.getSlots(); ++i) {
             if (this.config.getFluidInSlot(i) != null) {
                 this.hasConfig = true;
                 break;
@@ -371,7 +378,7 @@ public class DualityFluidInterface implements IGridTickable, IStorageMonitorable
 
         boolean had = this.hasWorkToDo();
 
-        for(int x = 0; x < 6; ++x) {
+        for (int x = 0; x < 6; ++x) {
             this.updatePlan(x);
         }
 
@@ -393,8 +400,7 @@ public class DualityFluidInterface implements IGridTickable, IStorageMonitorable
     @Override
     public int fill(ForgeDirection from, FluidStack resource, boolean doFill) {
         IMEMonitor<IAEFluidStack> fluidGrid = getFluidGrid();
-        if (fluidGrid == null || resource == null)
-            return 0;
+        if (fluidGrid == null || resource == null) return 0;
         int ori = resource.amount;
         IAEFluidStack remove;
         if (doFill) {
@@ -435,5 +441,4 @@ public class DualityFluidInterface implements IGridTickable, IStorageMonitorable
             super(tileInterface.tanks);
         }
     }
-
 }

@@ -3,12 +3,11 @@ package com.glodblock.github.inventory.gui;
 import appeng.container.AEBaseContainer;
 import appeng.container.ContainerOpenContext;
 import com.glodblock.github.util.Util;
+import javax.annotation.Nullable;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.world.World;
-
-import javax.annotation.Nullable;
 
 public abstract class TileGuiFactory<T> implements GuiFactory {
 
@@ -42,7 +41,7 @@ public abstract class TileGuiFactory<T> implements GuiFactory {
             ctx.setY(y);
             ctx.setZ(z);
             ctx.setSide(Util.from(face));
-            ((AEBaseContainer)gui).setOpenContext(ctx);
+            ((AEBaseContainer) gui).setOpenContext(ctx);
         }
         return gui;
     }

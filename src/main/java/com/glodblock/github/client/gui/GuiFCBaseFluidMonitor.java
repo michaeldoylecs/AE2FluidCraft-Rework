@@ -40,6 +40,9 @@ import com.glodblock.github.util.Ae2ReflectClient;
 import com.glodblock.github.util.ModAndClassUtil;
 import com.glodblock.github.util.NameConst;
 import com.glodblock.github.util.Util;
+import java.io.IOException;
+import java.lang.reflect.Field;
+import java.util.List;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.resources.I18n;
@@ -51,11 +54,8 @@ import net.minecraft.util.ResourceLocation;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 
-import java.io.IOException;
-import java.lang.reflect.Field;
-import java.util.List;
-
-public class GuiFCBaseFluidMonitor extends AEBaseMEGui implements ISortSource, IConfigManagerHost, IDropToFillTextField {
+public class GuiFCBaseFluidMonitor extends AEBaseMEGui
+        implements ISortSource, IConfigManagerHost, IDropToFillTextField {
 
     public static int craftingGridOffsetX;
     public static int craftingGridOffsetY;
@@ -84,7 +84,8 @@ public class GuiFCBaseFluidMonitor extends AEBaseMEGui implements ISortSource, I
     private GuiImgButton terminalStyleBox;
     private GuiImgButton searchStringSave;
 
-    public GuiFCBaseFluidMonitor(final InventoryPlayer inventoryPlayer, final ITerminalHost te, final FCBaseFluidMonitorContain c) {
+    public GuiFCBaseFluidMonitor(
+            final InventoryPlayer inventoryPlayer, final ITerminalHost te, final FCBaseFluidMonitorContain c) {
 
         super(c);
 
@@ -101,7 +102,6 @@ public class GuiFCBaseFluidMonitor extends AEBaseMEGui implements ISortSource, I
         (this.monitorableContainer = (FCBaseFluidMonitorContain) this.inventorySlots).setGui(this);
 
         this.viewCell = te instanceof IViewCellStorage;
-
     }
 
     public void postUpdate(final List<IAEFluidStack> list) {
@@ -117,7 +117,9 @@ public class GuiFCBaseFluidMonitor extends AEBaseMEGui implements ISortSource, I
 
     private void setScrollBar() {
         this.getScrollBar().setTop(18).setLeft(175).setHeight(this.rows * 18 - 2);
-        this.getScrollBar().setRange(0, (this.repo.size() + this.perRow - 1) / this.perRow - this.rows, Math.max(1, this.rows / 6));
+        this.getScrollBar()
+                .setRange(
+                        0, (this.repo.size() + this.perRow - 1) / this.perRow - this.rows, Math.max(1, this.rows / 6));
     }
 
     @Override
@@ -133,7 +135,8 @@ public class GuiFCBaseFluidMonitor extends AEBaseMEGui implements ISortSource, I
             final GuiImgButton iBtn = (GuiImgButton) btn;
             if (iBtn.getSetting() != Settings.ACTIONS) {
                 final Enum<?> cv = iBtn.getCurrentValue();
-                final Enum<?> next = Platform.rotateEnum(cv, backwards, iBtn.getSetting().getPossibleValues());
+                final Enum<?> next =
+                        Platform.rotateEnum(cv, backwards, iBtn.getSetting().getPossibleValues());
 
                 if (btn == this.terminalStyleBox) {
                     AEConfig.instance.settings.putSetting(iBtn.getSetting(), next);
@@ -143,7 +146,8 @@ public class GuiFCBaseFluidMonitor extends AEBaseMEGui implements ISortSource, I
                     AEConfig.instance.preserveSearchBar = next == YesNo.YES;
                 } else {
                     try {
-                        NetworkHandler.instance.sendToServer(new PacketValueConfig(iBtn.getSetting().name(), next.name()));
+                        NetworkHandler.instance.sendToServer(
+                                new PacketValueConfig(iBtn.getSetting().name(), next.name()));
                     } catch (final IOException e) {
                         AELog.debug(e);
                     }
@@ -169,7 +173,9 @@ public class GuiFCBaseFluidMonitor extends AEBaseMEGui implements ISortSource, I
         Keyboard.enableRepeatEvents(true);
 
         this.maxRows = this.getMaxRows();
-        this.perRow = AEConfig.instance.getConfigManager().getSetting(Settings.TERMINAL_STYLE) != TerminalStyle.FULL ? 9 : 9 + ((this.width - this.standardSize) / 18);
+        this.perRow = AEConfig.instance.getConfigManager().getSetting(Settings.TERMINAL_STYLE) != TerminalStyle.FULL
+                ? 9
+                : 9 + ((this.width - this.standardSize) / 18);
 
         final boolean hasNEI = IntegrationRegistry.INSTANCE.isEnabled(IntegrationType.NEI);
 
@@ -196,7 +202,8 @@ public class GuiFCBaseFluidMonitor extends AEBaseMEGui implements ISortSource, I
         this.getMeSlots().clear();
         for (int y = 0; y < this.rows; y++) {
             for (int x = 0; x < this.perRow; x++) {
-                this.getMeSlots().add(new InternalSlotME(this.repo, x + y * this.perRow, this.offsetX + x * 18, 18 + y * 18));
+                this.getMeSlots()
+                        .add(new InternalSlotME(this.repo, x + y * this.perRow, this.offsetX + x * 18, 18 + y * 18));
             }
         }
 
@@ -219,28 +226,52 @@ public class GuiFCBaseFluidMonitor extends AEBaseMEGui implements ISortSource, I
         int offset = this.guiTop + 8;
 
         if (this.customSortOrder) {
-            this.buttonList.add(this.SortByBox = new GuiImgButton(this.guiLeft - 18, offset, Settings.SORT_BY, this.configSrc.getSetting(Settings.SORT_BY)));
+            this.buttonList.add(
+                    this.SortByBox = new GuiImgButton(
+                            this.guiLeft - 18, offset, Settings.SORT_BY, this.configSrc.getSetting(Settings.SORT_BY)));
             offset += 20;
         }
 
-//        this.buttonList.add( this.ViewBox = new GuiImgButton( this.guiLeft - 18, offset, Settings.VIEW_MODE, this.configSrc.getSetting( Settings.VIEW_MODE ) ) );
-//        offset += 20;
+        //        this.buttonList.add( this.ViewBox = new GuiImgButton( this.guiLeft - 18, offset, Settings.VIEW_MODE,
+        // this.configSrc.getSetting( Settings.VIEW_MODE ) ) );
+        //        offset += 20;
 
-        this.buttonList.add(this.SortDirBox = new GuiImgButton(this.guiLeft - 18, offset, Settings.SORT_DIRECTION, this.configSrc.getSetting(Settings.SORT_DIRECTION)));
+        this.buttonList.add(
+                this.SortDirBox = new GuiImgButton(
+                        this.guiLeft - 18,
+                        offset,
+                        Settings.SORT_DIRECTION,
+                        this.configSrc.getSetting(Settings.SORT_DIRECTION)));
         offset += 20;
 
-        this.buttonList.add(this.searchBoxSettings = new GuiImgButton(this.guiLeft - 18, offset, Settings.SEARCH_MODE, AEConfig.instance.settings.getSetting(Settings.SEARCH_MODE)));
+        this.buttonList.add(
+                this.searchBoxSettings = new GuiImgButton(
+                        this.guiLeft - 18,
+                        offset,
+                        Settings.SEARCH_MODE,
+                        AEConfig.instance.settings.getSetting(Settings.SEARCH_MODE)));
         offset += 20;
 
         if (ModAndClassUtil.isSaveText) {
-            this.buttonList.add(this.searchStringSave = new GuiImgButton(this.guiLeft - 18, offset, Settings.SAVE_SEARCH, AEConfig.instance.preserveSearchBar ? YesNo.YES : YesNo.NO));
+            this.buttonList.add(
+                    this.searchStringSave = new GuiImgButton(
+                            this.guiLeft - 18,
+                            offset,
+                            Settings.SAVE_SEARCH,
+                            AEConfig.instance.preserveSearchBar ? YesNo.YES : YesNo.NO));
             offset += 20;
         }
 
-        this.buttonList.add(this.terminalStyleBox = new GuiImgButton(this.guiLeft - 18, offset, Settings.TERMINAL_STYLE, AEConfig.instance.settings.getSetting(Settings.TERMINAL_STYLE)));
+        this.buttonList.add(
+                this.terminalStyleBox = new GuiImgButton(
+                        this.guiLeft - 18,
+                        offset,
+                        Settings.TERMINAL_STYLE,
+                        AEConfig.instance.settings.getSetting(Settings.TERMINAL_STYLE)));
         offset += 20;
 
-        this.searchField = new FCGuiTextField(this.fontRendererObj, this.guiLeft + Math.max(80, this.offsetX), this.guiTop + 4, 90, 12);
+        this.searchField = new FCGuiTextField(
+                this.fontRendererObj, this.guiLeft + Math.max(80, this.offsetX), this.guiTop + 4, 90, 12);
         this.searchField.setEnableBackgroundDrawing(false);
         this.searchField.setMaxStringLength(25);
         this.searchField.setTextColor(0xFFFFFF);
@@ -249,10 +280,25 @@ public class GuiFCBaseFluidMonitor extends AEBaseMEGui implements ISortSource, I
             searchField.setMessage(ButtonToolTips.SearchStringTooltip.getLocal());
 
         if (this.viewCell) {
-            if (ModAndClassUtil.isCraftStatus && AEConfig.instance.getConfigManager().getSetting(Settings.CRAFTING_STATUS).equals(CraftingStatus.BUTTON)) {
-                this.buttonList.add(this.craftingStatusImgBtn = new GuiImgButton(this.guiLeft - 18, offset, Settings.CRAFTING_STATUS, AEConfig.instance.settings.getSetting(Settings.CRAFTING_STATUS)));
+            if (ModAndClassUtil.isCraftStatus
+                    && AEConfig.instance
+                            .getConfigManager()
+                            .getSetting(Settings.CRAFTING_STATUS)
+                            .equals(CraftingStatus.BUTTON)) {
+                this.buttonList.add(
+                        this.craftingStatusImgBtn = new GuiImgButton(
+                                this.guiLeft - 18,
+                                offset,
+                                Settings.CRAFTING_STATUS,
+                                AEConfig.instance.settings.getSetting(Settings.CRAFTING_STATUS)));
             } else {
-                this.buttonList.add(this.craftingStatusBtn = new GuiTabButton(this.guiLeft + 170, this.guiTop - 4, 2 + 11 * 16, GuiText.CraftingStatus.getLocal(), itemRender));
+                this.buttonList.add(
+                        this.craftingStatusBtn = new GuiTabButton(
+                                this.guiLeft + 170,
+                                this.guiTop - 4,
+                                2 + 11 * 16,
+                                GuiText.CraftingStatus.getLocal(),
+                                itemRender));
                 this.craftingStatusBtn.setHideEdge(13); // GuiTabButton implementation //
             }
         }
@@ -303,7 +349,8 @@ public class GuiFCBaseFluidMonitor extends AEBaseMEGui implements ISortSource, I
 
     @Override
     public void drawFG(final int offsetX, final int offsetY, final int mouseX, final int mouseY) {
-        this.fontRendererObj.drawString(this.getGuiDisplayName(I18n.format(NameConst.GUI_FLUID_TERMINAL)), 8, 6, 4210752);
+        this.fontRendererObj.drawString(
+                this.getGuiDisplayName(I18n.format(NameConst.GUI_FLUID_TERMINAL)), 8, 6, 4210752);
         this.fontRendererObj.drawString(GuiText.inventory.getLocal(), 8, this.ySize - 96 + 3, 4210752);
     }
 
@@ -340,11 +387,11 @@ public class GuiFCBaseFluidMonitor extends AEBaseMEGui implements ISortSource, I
                         direction = TextHistory.Direction.NEXT;
                     }
                     history.get(direction, this.searchField.getText())
-                        .map(newText -> {
-                            setSearchString(newText, true);
-                            return true;
-                        })
-                        .orElse(false);
+                            .map(newText -> {
+                                setSearchString(newText, true);
+                                return true;
+                            })
+                            .orElse(false);
                     return;
                 } catch (NoSuchFieldException | IllegalAccessException e) {
                 }
@@ -364,14 +411,16 @@ public class GuiFCBaseFluidMonitor extends AEBaseMEGui implements ISortSource, I
                     IAEItemStack stack = AEItemStack.create(slot.getStack());
 
                     ((AEBaseContainer) this.inventorySlots).setTargetStack(stack);
-                    FluidCraft.proxy.netHandler.sendToServer(new CPacketInventoryAction(action, Ae2ReflectClient.getInventorySlots(this).size(), 0, stack));
+                    FluidCraft.proxy.netHandler.sendToServer(new CPacketInventoryAction(
+                            action, Ae2ReflectClient.getInventorySlots(this).size(), 0, stack));
                     return;
                 }
             }
         }
 
         if (slot instanceof SlotFake) {
-            InventoryAction action = ctrlDown == 1 ? InventoryAction.SPLIT_OR_PLACE_SINGLE : InventoryAction.PICKUP_OR_SET_DOWN;
+            InventoryAction action =
+                    ctrlDown == 1 ? InventoryAction.SPLIT_OR_PLACE_SINGLE : InventoryAction.PICKUP_OR_SET_DOWN;
 
             if (Keyboard.isKeyDown(Keyboard.KEY_LMENU) || Keyboard.isKeyDown(Keyboard.KEY_RMENU)) {
                 if (action == InventoryAction.SPLIT_OR_PLACE_SINGLE) {
@@ -449,20 +498,19 @@ public class GuiFCBaseFluidMonitor extends AEBaseMEGui implements ISortSource, I
 
             switch (mouseButton) {
                 case 0: // pickup / set-down.
-                {
-                    ItemStack heldStack = player.inventory.getItemStack();
-                    if (slot.getStack() == null && heldStack != null)
-                        action = InventoryAction.SPLIT_OR_PLACE_SINGLE;
-                    else if (slot.getStack() != null && (heldStack == null || heldStack.stackSize <= 1))
-                        action = InventoryAction.PICKUP_OR_SET_DOWN;
-                }
-                break;
+                    {
+                        ItemStack heldStack = player.inventory.getItemStack();
+                        if (slot.getStack() == null && heldStack != null)
+                            action = InventoryAction.SPLIT_OR_PLACE_SINGLE;
+                        else if (slot.getStack() != null && (heldStack == null || heldStack.stackSize <= 1))
+                            action = InventoryAction.PICKUP_OR_SET_DOWN;
+                    }
+                    break;
                 case 1:
                     action = ctrlDown == 1 ? InventoryAction.PICKUP_SINGLE : InventoryAction.SHIFT_CLICK;
                     break;
 
                 case 3: // creative dupe:
-
                     if (player.capabilities.isCreativeMode) {
                         action = InventoryAction.CREATIVE_DUPLICATE;
                     }
@@ -475,7 +523,10 @@ public class GuiFCBaseFluidMonitor extends AEBaseMEGui implements ISortSource, I
             }
 
             if (action != null) {
-                final PacketInventoryAction p = new PacketInventoryAction(action, slot.getSlotIndex(), ((SlotDisconnected) slot).getSlot().getId());
+                final PacketInventoryAction p = new PacketInventoryAction(
+                        action,
+                        slot.getSlotIndex(),
+                        ((SlotDisconnected) slot).getSlot().getId());
                 NetworkHandler.instance.sendToServer(p);
             }
 
@@ -491,7 +542,10 @@ public class GuiFCBaseFluidMonitor extends AEBaseMEGui implements ISortSource, I
                     action = ctrlDown == 1 ? InventoryAction.SPLIT_OR_PLACE_SINGLE : InventoryAction.PICKUP_OR_SET_DOWN;
                     stack = ((SlotME) slot).getAEStack();
 
-                    if (stack != null && action == InventoryAction.PICKUP_OR_SET_DOWN && stack.getStackSize() == 0 && player.inventory.getItemStack() == null) {
+                    if (stack != null
+                            && action == InventoryAction.PICKUP_OR_SET_DOWN
+                            && stack.getStackSize() == 0
+                            && player.inventory.getItemStack() == null) {
                         action = InventoryAction.AUTO_CRAFT;
                     }
 
@@ -502,7 +556,6 @@ public class GuiFCBaseFluidMonitor extends AEBaseMEGui implements ISortSource, I
                     break;
 
                 case 3: // creative dupe:
-
                     stack = ((SlotME) slot).getAEStack();
                     if (stack.getItem() instanceof ItemFluidDrop) {
                         stack = ItemFluidDrop.newAeStack(ItemFluidDrop.getAeFluidStack(stack));
@@ -524,10 +577,12 @@ public class GuiFCBaseFluidMonitor extends AEBaseMEGui implements ISortSource, I
 
             if (action == InventoryAction.AUTO_CRAFT) {
                 ((AEBaseContainer) this.inventorySlots).setTargetStack(stack);
-                FluidCraft.proxy.netHandler.sendToServer(new CPacketInventoryAction(action, Ae2ReflectClient.getInventorySlots(this).size(), 0, stack));
+                FluidCraft.proxy.netHandler.sendToServer(new CPacketInventoryAction(
+                        action, Ae2ReflectClient.getInventorySlots(this).size(), 0, stack));
             } else if (action != null) {
                 ((AEBaseContainer) this.inventorySlots).setTargetStack(stack);
-                final PacketInventoryAction p = new PacketInventoryAction(action, Ae2ReflectClient.getInventorySlots(this).size(), 0);
+                final PacketInventoryAction p = new PacketInventoryAction(
+                        action, Ae2ReflectClient.getInventorySlots(this).size(), 0);
                 NetworkHandler.instance.sendToServer(p);
             }
 
@@ -564,15 +619,23 @@ public class GuiFCBaseFluidMonitor extends AEBaseMEGui implements ISortSource, I
             this.drawTexturedModalRect(offsetX, offsetY + 18 + x * 18, 0, 18, x_width, 18);
         }
 
-        this.drawTexturedModalRect(offsetX, offsetY + 16 + this.rows * 18 + this.lowerTextureOffset, 0, 106 - 18 - 18, x_width, 99 + this.reservedSpace - this.lowerTextureOffset);
+        this.drawTexturedModalRect(
+                offsetX,
+                offsetY + 16 + this.rows * 18 + this.lowerTextureOffset,
+                0,
+                106 - 18 - 18,
+                x_width,
+                99 + this.reservedSpace - this.lowerTextureOffset);
 
         if (this.viewCell) {
             boolean update = false;
 
             for (int i = 0; i < 5; i++) {
-                if (this.myCurrentViewCells[i] != this.monitorableContainer.getCellViewSlot(i).getStack()) {
+                if (this.myCurrentViewCells[i]
+                        != this.monitorableContainer.getCellViewSlot(i).getStack()) {
                     update = true;
-                    this.myCurrentViewCells[i] = this.monitorableContainer.getCellViewSlot(i).getStack();
+                    this.myCurrentViewCells[i] =
+                            this.monitorableContainer.getCellViewSlot(i).getStack();
                 }
             }
 
@@ -596,7 +659,9 @@ public class GuiFCBaseFluidMonitor extends AEBaseMEGui implements ISortSource, I
     }
 
     int getMaxRows() {
-        return AEConfig.instance.getConfigManager().getSetting(Settings.TERMINAL_STYLE) == TerminalStyle.SMALL ? 6 : Integer.MAX_VALUE;
+        return AEConfig.instance.getConfigManager().getSetting(Settings.TERMINAL_STYLE) == TerminalStyle.SMALL
+                ? 6
+                : Integer.MAX_VALUE;
     }
 
     protected void repositionSlot(final AppEngSlot s) {

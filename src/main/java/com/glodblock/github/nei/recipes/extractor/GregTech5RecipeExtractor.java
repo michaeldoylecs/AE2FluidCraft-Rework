@@ -5,13 +5,12 @@ import com.glodblock.github.nei.object.IRecipeExtractor;
 import com.glodblock.github.nei.object.OrderStack;
 import gregtech.api.enums.ItemList;
 import gregtech.common.items.GT_FluidDisplayItem;
+import java.util.LinkedList;
+import java.util.List;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
-
-import java.util.LinkedList;
-import java.util.List;
 
 public class GregTech5RecipeExtractor implements IRecipeExtractor {
 
@@ -25,7 +24,7 @@ public class GregTech5RecipeExtractor implements IRecipeExtractor {
     public List<OrderStack<?>> getInputIngredients(List<PositionedStack> rawInputs) {
         if (removeSpecial) removeSpecial(rawInputs);
         List<OrderStack<?>> tmp = new LinkedList<>();
-        for (int i = 0; i < rawInputs.size(); i ++) {
+        for (int i = 0; i < rawInputs.size(); i++) {
             if (rawInputs.get(i) == null) continue;
             ItemStack item = rawInputs.get(i).items[0].copy();
             OrderStack<?> stack;
@@ -46,7 +45,7 @@ public class GregTech5RecipeExtractor implements IRecipeExtractor {
     @Override
     public List<OrderStack<?>> getOutputIngredients(List<PositionedStack> rawOutputs) {
         List<OrderStack<?>> tmp = new LinkedList<>();
-        for (int i = 0; i < rawOutputs.size(); i ++) {
+        for (int i = 0; i < rawOutputs.size(); i++) {
             if (rawOutputs.get(i) == null) continue;
             ItemStack item = rawOutputs.get(i).items[0].copy();
             OrderStack<?> stack;
@@ -65,14 +64,14 @@ public class GregTech5RecipeExtractor implements IRecipeExtractor {
     }
 
     private void removeSpecial(List<PositionedStack> list) {
-        for (int i = list.size() - 1; i >= 0; i --) {
+        for (int i = list.size() - 1; i >= 0; i--) {
             PositionedStack positionedStack = list.get(i);
-            if (positionedStack != null &&
-                (positionedStack.items[0].isItemEqual(ItemList.Tool_DataStick.get(1)) || positionedStack.items[0].isItemEqual(ItemList.Tool_DataOrb.get(1)))) {
+            if (positionedStack != null
+                    && (positionedStack.items[0].isItemEqual(ItemList.Tool_DataStick.get(1))
+                            || positionedStack.items[0].isItemEqual(ItemList.Tool_DataOrb.get(1)))) {
                 list.remove(i);
                 break;
             }
         }
     }
-
 }

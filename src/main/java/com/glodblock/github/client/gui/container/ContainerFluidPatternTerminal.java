@@ -31,15 +31,27 @@ public class ContainerFluidPatternTerminal extends FCBasePartContainer implement
         super(ip, monitorable);
     }
 
-    public void encodeAllItemAndMoveToInventory(){
+    private static boolean isPattern(final ItemStack output) {
+        if (output == null) {
+            return false;
+        }
+        if (output.getItem() instanceof ItemFluidEncodedPattern) {
+            return true;
+        }
+        final IDefinitions defs = AEApi.instance().definitions();
+        return defs.items().encodedPattern().isSameAs(output)
+                || defs.materials().blankPattern().isSameAs(output);
+    }
+
+    public void encodeAllItemAndMoveToInventory() {
         encode();
         ItemStack output = this.patternSlotOUT.getStack();
-        if(output != null){
-            if(this.patternSlotIN.getStack() != null) output.stackSize += this.patternSlotIN.getStack().stackSize;
-            if (!getPlayerInv().addItemStackToInventory( output )){
+        if (output != null) {
+            if (this.patternSlotIN.getStack() != null) output.stackSize += this.patternSlotIN.getStack().stackSize;
+            if (!getPlayerInv().addItemStackToInventory(output)) {
                 getPlayerInv().player.entityDropItem(output, 0);
             }
-            this.patternSlotOUT.putStack( null );
+            this.patternSlotOUT.putStack(null);
             this.patternSlotIN.putStack(null);
         }
     }
@@ -59,23 +71,12 @@ public class ContainerFluidPatternTerminal extends FCBasePartContainer implement
             if (stack.stackSize == 1) {
                 this.patternSlotIN.putStack(null);
             } else {
-                stack.stackSize --;
+                stack.stackSize--;
             }
             encodeFluidPattern();
         } else if (isPattern(stack)) {
             encodeFluidPattern();
         }
-    }
-
-    private static boolean isPattern(final ItemStack output) {
-        if (output == null) {
-            return false;
-        }
-        if (output.getItem() instanceof ItemFluidEncodedPattern) {
-            return true;
-        }
-        final IDefinitions defs = AEApi.instance().definitions();
-        return defs.items().encodedPattern().isSameAs(output) || defs.materials().blankPattern().isSameAs(output);
     }
 
     private boolean checkHasFluidPattern() {
@@ -119,7 +120,7 @@ public class ContainerFluidPatternTerminal extends FCBasePartContainer implement
         FluidPatternDetails pattern = new FluidPatternDetails(patternStack);
         pattern.setInputs(collectInventory(craftingSlots));
         pattern.setOutputs(collectInventory(outputSlots));
-//        pattern.setCanBeSubstitute(this.beSubstitute ? 1 : 0);
+        //        pattern.setCanBeSubstitute(this.beSubstitute ? 1 : 0);
         patternSlotOUT.putStack(pattern.writeToStack());
     }
 
@@ -174,7 +175,8 @@ public class ContainerFluidPatternTerminal extends FCBasePartContainer implement
             super.doAction(player, action, slotId, id);
             return;
         }
-        if ((slot instanceof SlotFakeCraftingMatrix || slot instanceof SlotPatternOutputs) && (stack.getItem() instanceof IFluidContainerItem || FluidContainerRegistry.isContainer(stack))) {
+        if ((slot instanceof SlotFakeCraftingMatrix || slot instanceof SlotPatternOutputs)
+                && (stack.getItem() instanceof IFluidContainerItem || FluidContainerRegistry.isContainer(stack))) {
             FluidStack fluid = null;
             switch (action) {
                 case PICKUP_OR_SET_DOWN:
@@ -204,7 +206,10 @@ public class ContainerFluidPatternTerminal extends FCBasePartContainer implement
     public ItemStack transferStackInSlot(EntityPlayer p, int idx) {
         Slot clickSlot = (Slot) this.inventorySlots.get(idx);
         ItemStack is = clickSlot.getStack();
-        if (is != null && !patternSlotOUT.getHasStack() && is.stackSize == 1 && (is.getItem() instanceof ItemFluidEncodedPattern || is.getItem() instanceof ItemEncodedPattern)) {
+        if (is != null
+                && !patternSlotOUT.getHasStack()
+                && is.stackSize == 1
+                && (is.getItem() instanceof ItemFluidEncodedPattern || is.getItem() instanceof ItemEncodedPattern)) {
             ItemStack output = is.copy();
             patternSlotOUT.putStack(output);
             p.inventory.setInventorySlotContents(clickSlot.getSlotIndex(), null);
