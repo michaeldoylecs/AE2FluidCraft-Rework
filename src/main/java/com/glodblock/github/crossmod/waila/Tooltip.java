@@ -1,28 +1,29 @@
 package com.glodblock.github.crossmod.waila;
 
-import appeng.util.Utility;
 import com.glodblock.github.util.NameConst;
 import com.glodblock.github.util.Util;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.I18n;
 import net.minecraftforge.fluids.FluidStack;
 
+import java.text.NumberFormat;
+
 public class Tooltip {
     public static String fluidFormat(String name, int amount) {
-        return String.format("%s: %s mB", name, Utility.formatNumbers(amount));
+        return String.format("%s: %s mB", name, NumberFormat.getInstance().format(amount));
     }
 
     public static String partFluidBusFormat(int amount) {
-        return String.format("%s: %s mB/t", I18n.format(NameConst.WAILA_SPEED), Utility.formatNumbers(amount / 5));
+        return String.format("%s: %s mB/t", I18n.format(NameConst.WAILA_SPEED), NumberFormat.getInstance().format(amount));
     }
 
     public static String tileFluidInterfaceFormat(String name, int amount, int face) {
-        return String.format("%s %s: %s mB", I18n.format(NameConst.GUI_FLUID_INTERFACE + "." + face), name, Utility.formatNumbers(amount));
+        return String.format("%s %s: %s mB", I18n.format(NameConst.GUI_FLUID_INTERFACE + "." + face), name, NumberFormat.getInstance().format(amount));
     }
 
     public static String tileLevelMaintainerFormat(String name, long quantity, long batch, boolean isEnable) {
         return String.format("%s: %s / %s %s",
-            name, Utility.formatNumbers(quantity), Utility.formatNumbers(batch),
+            name, NumberFormat.getInstance().format(quantity), NumberFormat.getInstance().format(batch),
             isEnable ? I18n.format(NameConst.WAILA_ENABLE) : I18n.format(NameConst.WAILA_DISABLE)
         );
     }

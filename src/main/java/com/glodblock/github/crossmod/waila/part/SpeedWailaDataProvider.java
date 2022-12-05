@@ -23,7 +23,7 @@ public class SpeedWailaDataProvider extends BasePartWailaDataProvider {
         final IWailaConfigHandler config) {
         if (part instanceof PartSharedFluidBus) {
             part.readFromNBT(accessor.getNBTData());
-            currentToolTip.add(Tooltip.partFluidBusFormat(((PartSharedFluidBus) part).calculateAmountToSend()));
+            currentToolTip.add(Tooltip.partFluidBusFormat(((PartSharedFluidBus) part).calculateAmountToSend() / 5));
         }
         return currentToolTip;
     }
