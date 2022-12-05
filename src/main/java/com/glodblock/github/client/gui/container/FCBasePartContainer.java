@@ -385,10 +385,9 @@ public class FCBasePartContainer extends FCBaseMonitorContain
     private NBTBase createItemTag(final ItemStack i) {
         final NBTTagCompound c = new NBTTagCompound();
 
-        if( i != null )
-        {
-            i.writeToNBT( c );
-            c.setInteger( "Count", i.stackSize );
+        if (i != null) {
+            i.writeToNBT(c);
+            c.setInteger("Count", i.stackSize);
         }
 
         return c;
