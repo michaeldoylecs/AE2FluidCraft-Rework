@@ -41,6 +41,11 @@ import com.glodblock.github.network.CPacketFluidUpdate;
 import com.glodblock.github.network.SPacketFluidUpdate;
 import com.glodblock.github.network.SPacketMEInventoryUpdate;
 import com.glodblock.github.util.Util;
+import java.io.IOException;
+import java.nio.BufferOverflowException;
+import java.util.HashMap;
+import java.util.Map;
+import javax.annotation.Nonnull;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.entity.player.InventoryPlayer;
@@ -53,22 +58,20 @@ import net.minecraftforge.fluids.FluidContainerRegistry;
 import net.minecraftforge.fluids.IFluidContainerItem;
 import org.apache.commons.lang3.tuple.MutablePair;
 
-import javax.annotation.Nonnull;
-import java.io.IOException;
-import java.nio.BufferOverflowException;
-import java.util.HashMap;
-import java.util.Map;
-
-public class FCBaseFluidMonitorContain extends AEBaseContainer implements IConfigManagerHost, IConfigurableObject, IMEMonitorHandlerReceiver<IAEFluidStack> {
+public class FCBaseFluidMonitorContain extends AEBaseContainer
+        implements IConfigManagerHost, IConfigurableObject, IMEMonitorHandlerReceiver<IAEFluidStack> {
     private final SlotRestrictedInput[] cellView = new SlotRestrictedInput[5];
     private final IMEMonitor<IAEFluidStack> monitor;
     private final IItemList<IAEFluidStack> items = AEApi.instance().storage().createFluidList();
     private final IConfigManager clientCM;
     private final ITerminalHost host;
+
     @GuiSync(99)
     public boolean canAccessViewCells = false;
+
     @GuiSync(98)
     public boolean hasPower = false;
+
     private IConfigManagerHost gui;
     private IConfigManager serverCM;
     private IGridNode networkNode;
@@ -77,8 +80,12 @@ public class FCBaseFluidMonitorContain extends AEBaseContainer implements IConfi
         this(ip, monitorable, true);
     }
 
-    protected FCBaseFluidMonitorContain(final InventoryPlayer ip, final ITerminalHost monitorable, final boolean bindInventory) {
-        super(ip, monitorable instanceof TileEntity ? (TileEntity) monitorable : null, monitorable instanceof IPart ? (IPart) monitorable : null);
+    protected FCBaseFluidMonitorContain(
+            final InventoryPlayer ip, final ITerminalHost monitorable, final boolean bindInventory) {
+        super(
+                ip,
+                monitorable instanceof TileEntity ? (TileEntity) monitorable : null,
+                monitorable instanceof IPart ? (IPart) monitorable : null);
         this.host = monitorable;
         this.clientCM = new ConfigManager(this);
 
@@ -92,7 +99,7 @@ public class FCBaseFluidMonitorContain extends AEBaseContainer implements IConfi
             if (this.monitor != null) {
                 this.monitor.addListener(this, null);
 
-//                this.setCellInventory( this.monitor );
+                //                this.setCellInventory( this.monitor );
 
                 if (monitorable instanceof IPortableCell) {
                     this.setPowerSource((IEnergySource) monitorable);
@@ -118,7 +125,13 @@ public class FCBaseFluidMonitorContain extends AEBaseContainer implements IConfi
         this.canAccessViewCells = false;
         if (monitorable instanceof IViewCellStorage) {
             for (int y = 0; y < 5; y++) {
-                this.cellView[y] = new SlotRestrictedInput(SlotRestrictedInput.PlacableItemType.VIEW_CELL, ((IViewCellStorage) monitorable).getViewCellStorage(), y, 206, y * 18 + 8, this.getInventoryPlayer());
+                this.cellView[y] = new SlotRestrictedInput(
+                        SlotRestrictedInput.PlacableItemType.VIEW_CELL,
+                        ((IViewCellStorage) monitorable).getViewCellStorage(),
+                        y,
+                        206,
+                        y * 18 + 8,
+                        this.getInventoryPlayer());
                 this.cellView[y].setAllowEdit(this.canAccessViewCells);
                 this.addSlotToContainer(this.cellView[y]);
             }
@@ -137,7 +150,9 @@ public class FCBaseFluidMonitorContain extends AEBaseContainer implements IConfi
     public ItemStack transferStackInSlot(final EntityPlayer p, final int idx) {
         if (Platform.isClient()) {
             Slot clickSlot = (Slot) this.inventorySlots.get(idx);
-            if ((clickSlot instanceof SlotPlayerInv || clickSlot instanceof SlotPlayerHotBar) && clickSlot.getHasStack() && Util.FluidUtil.isFluidContainer(clickSlot.getStack())) {
+            if ((clickSlot instanceof SlotPlayerInv || clickSlot instanceof SlotPlayerHotBar)
+                    && clickSlot.getHasStack()
+                    && Util.FluidUtil.isFluidContainer(clickSlot.getStack())) {
                 ItemStack tis = clickSlot.getStack();
                 Map<Integer, IAEFluidStack> tmp = new HashMap<>();
                 tmp.put(0, ItemFluidDrop.getAeFluidStack(AEItemStack.create(tis)));
@@ -163,7 +178,8 @@ public class FCBaseFluidMonitorContain extends AEBaseContainer implements IConfi
                     this.clientCM.putSetting(set, sideLocal);
                     for (final Object crafter : this.crafters) {
                         try {
-                            NetworkHandler.instance.sendTo(new PacketValueConfig(set.name(), sideLocal.name()), (EntityPlayerMP) crafter);
+                            NetworkHandler.instance.sendTo(
+                                    new PacketValueConfig(set.name(), sideLocal.name()), (EntityPlayerMP) crafter);
                         } catch (final IOException e) {
                             AELog.debug(e);
                         }
@@ -201,8 +217,7 @@ public class FCBaseFluidMonitorContain extends AEBaseContainer implements IConfi
 
             final boolean oldAccessible = this.canAccessViewCells;
             this.canAccessViewCells =
-                this.host instanceof WirelessTerminalGuiObject
-                    || this.hasAccess(SecurityPermissions.BUILD, false);
+                    this.host instanceof WirelessTerminalGuiObject || this.hasAccess(SecurityPermissions.BUILD, false);
             if (this.canAccessViewCells != oldAccessible) {
                 for (int y = 0; y < 5; y++) {
                     if (this.cellView[y] != null) {
@@ -221,7 +236,8 @@ public class FCBaseFluidMonitorContain extends AEBaseContainer implements IConfi
             } else if (this.getPowerSource() instanceof IEnergyGrid) {
                 this.setPowered(((IEnergyGrid) this.getPowerSource()).isNetworkPowered());
             } else {
-                this.setPowered(this.getPowerSource().extractAEPower(1, Actionable.SIMULATE, PowerMultiplier.CONFIG) > 0.8);
+                this.setPowered(
+                        this.getPowerSource().extractAEPower(1, Actionable.SIMULATE, PowerMultiplier.CONFIG) > 0.8);
             }
         } catch (final Throwable t) {
             // :P
@@ -318,7 +334,8 @@ public class FCBaseFluidMonitorContain extends AEBaseContainer implements IConfi
     }
 
     @Override
-    public void postChange(IBaseMonitor<IAEFluidStack> monitor, Iterable<IAEFluidStack> change, BaseActionSource actionSource) {
+    public void postChange(
+            IBaseMonitor<IAEFluidStack> monitor, Iterable<IAEFluidStack> change, BaseActionSource actionSource) {
         for (final IAEFluidStack is : change) {
             this.items.add(is);
         }
@@ -352,26 +369,33 @@ public class FCBaseFluidMonitorContain extends AEBaseContainer implements IConfi
         this.dropItem(is);
     }
 
-    public void postChange(Iterable<IAEFluidStack> change, ItemStack fluidContainer, EntityPlayer player, int slotIndex) {
+    public void postChange(
+            Iterable<IAEFluidStack> change, ItemStack fluidContainer, EntityPlayer player, int slotIndex) {
         for (IAEFluidStack fluid : change) {
             IAEFluidStack nfluid = this.monitor.getStorageList().findPrecise(fluid);
             ItemStack out = fluidContainer.copy();
             out.stackSize = 1;
             if (Util.FluidUtil.isEmpty(fluidContainer) && fluid != null) {
-//              add fluid to tanks
+                //              add fluid to tanks
                 if (nfluid.getStackSize() <= 0) continue;
                 final IAEFluidStack toExtract = nfluid.copy();
                 MutablePair<Integer, ItemStack> fillStack = Util.FluidUtil.fillStack(out, toExtract.getFluidStack());
                 if (fillStack.right == null || fillStack.left <= 0) continue;
                 toExtract.setStackSize((long) fillStack.left * fluidContainer.stackSize);
-                IAEFluidStack tmp = this.host.getFluidInventory().extractItems(toExtract, Actionable.SIMULATE, this.getActionSource());
+                IAEFluidStack tmp = this.host
+                        .getFluidInventory()
+                        .extractItems(toExtract, Actionable.SIMULATE, this.getActionSource());
                 fillStack.right.stackSize = (int) (tmp.getStackSize() / fillStack.left);
                 this.dropItem(fillStack.right);
                 out.stackSize = fillStack.right.stackSize;
                 if (fillStack.right.getItem() instanceof IFluidContainerItem) {
                     this.host.getFluidInventory().extractItems(toExtract, Actionable.MODULATE, this.getActionSource());
                     if ((int) (tmp.getStackSize() % fillStack.left) > 0) {
-                        ((IFluidContainerItem) fillStack.right.getItem()).drain(fillStack.right, fillStack.left - (int) (tmp.getStackSize() % fillStack.left), true);
+                        ((IFluidContainerItem) fillStack.right.getItem())
+                                .drain(
+                                        fillStack.right,
+                                        fillStack.left - (int) (tmp.getStackSize() % fillStack.left),
+                                        true);
                         this.dropItem(fillStack.right, 1);
                         out.stackSize++;
                     }
@@ -380,34 +404,44 @@ public class FCBaseFluidMonitorContain extends AEBaseContainer implements IConfi
                     this.host.getFluidInventory().extractItems(toExtract, Actionable.MODULATE, this.getActionSource());
                 }
             } else if (!Util.FluidUtil.isEmpty(fluidContainer)) {
-//              add fluid to ae network
+                //              add fluid to ae network
                 AEFluidStack fluidStack = Util.getAEFluidFromItem(fluidContainer);
                 final IAEFluidStack aeFluidStack = fluidStack.copy();
                 // simulate result is incorrect. so I'm using other solution and ec2 both mod have same issues
-                final IAEFluidStack notInserted = this.host.getFluidInventory().injectItems(aeFluidStack, Actionable.MODULATE, this.getActionSource());
-                MutablePair<Integer, ItemStack> drainStack = Util.FluidUtil.drainStack(out.copy(), aeFluidStack.getFluidStack());
+                final IAEFluidStack notInserted = this.host
+                        .getFluidInventory()
+                        .injectItems(aeFluidStack, Actionable.MODULATE, this.getActionSource());
+                MutablePair<Integer, ItemStack> drainStack =
+                        Util.FluidUtil.drainStack(out.copy(), aeFluidStack.getFluidStack());
                 if (notInserted != null && notInserted.getStackSize() > 0) {
                     if (fluidStack.getStackSize() == notInserted.getStackSize()) continue;
                     aeFluidStack.decStackSize(notInserted.getStackSize());
 
-                    if (drainStack.left > aeFluidStack.getStackSize() && FluidContainerRegistry.isContainer(drainStack.right)) {
+                    if (drainStack.left > aeFluidStack.getStackSize()
+                            && FluidContainerRegistry.isContainer(drainStack.right)) {
                         aeFluidStack.setStackSize(drainStack.left - aeFluidStack.getStackSize());
-                        this.host.getFluidInventory().extractItems(aeFluidStack, Actionable.MODULATE, this.getActionSource());
+                        this.host
+                                .getFluidInventory()
+                                .extractItems(aeFluidStack, Actionable.MODULATE, this.getActionSource());
                         continue;
                     }
 
-                    this.dropItem(drainStack.right, (int) (aeFluidStack.getStackSize() / drainStack.left)); // drop empty item
+                    this.dropItem(
+                            drainStack.right, (int) (aeFluidStack.getStackSize() / drainStack.left)); // drop empty item
                     out.stackSize = (int) (notInserted.getStackSize() / drainStack.left);
                     if (drainStack.right.getItem() instanceof IFluidContainerItem) {
                         if (notInserted.getStackSize() % drainStack.left > 0) {
                             fluidStack.setStackSize((notInserted.getStackSize() % drainStack.left));
-                            ((IFluidContainerItem) drainStack.right.getItem()).fill(drainStack.right, fluidStack.getFluidStack(), true);
+                            ((IFluidContainerItem) drainStack.right.getItem())
+                                    .fill(drainStack.right, fluidStack.getFluidStack(), true);
                             this.dropItem(drainStack.right, 1);
                         }
                     } else if (FluidContainerRegistry.isContainer(drainStack.right)) {
                         if (notInserted.getStackSize() % drainStack.left > 0) {
                             aeFluidStack.setStackSize(aeFluidStack.getStackSize() % drainStack.left);
-                            this.host.getFluidInventory().extractItems(aeFluidStack, Actionable.MODULATE, this.getActionSource());
+                            this.host
+                                    .getFluidInventory()
+                                    .extractItems(aeFluidStack, Actionable.MODULATE, this.getActionSource());
                             out.stackSize++;
                         }
                     }
@@ -423,10 +457,13 @@ public class FCBaseFluidMonitorContain extends AEBaseContainer implements IConfi
             if (slotIndex == -1) {
                 player.inventory.getItemStack().stackSize = player.inventory.getItemStack().stackSize - out.stackSize;
                 if (player.inventory.getItemStack().stackSize > 0) {
-                    FluidCraft.proxy.netHandler.sendTo(new SPacketFluidUpdate(new HashMap<>(), player.inventory.getItemStack()), (EntityPlayerMP) player);
+                    FluidCraft.proxy.netHandler.sendTo(
+                            new SPacketFluidUpdate(new HashMap<>(), player.inventory.getItemStack()),
+                            (EntityPlayerMP) player);
                 } else {
                     player.inventory.setItemStack(null);
-                    FluidCraft.proxy.netHandler.sendTo(new SPacketFluidUpdate(new HashMap<>()), (EntityPlayerMP) player);
+                    FluidCraft.proxy.netHandler.sendTo(
+                            new SPacketFluidUpdate(new HashMap<>()), (EntityPlayerMP) player);
                 }
             } else {
                 player.inventory.setInventorySlotContents(slotIndex, out.stackSize > 0 ? out : null);

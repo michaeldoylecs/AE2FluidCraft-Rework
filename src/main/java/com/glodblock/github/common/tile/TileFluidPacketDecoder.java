@@ -66,7 +66,8 @@ public class TileFluidPacketDecoder extends AENetworkTile implements IGridTickab
         }
         IAEFluidStack aeFluid = AEFluidStack.create(fluid.copy());
         IEnergyGrid energyGrid = node.getGrid().getCache(IEnergyGrid.class);
-        IMEMonitor<IAEFluidStack> fluidGrid = node.getGrid().<IStorageGrid>getCache(IStorageGrid.class).getFluidInventory();
+        IMEMonitor<IAEFluidStack> fluidGrid =
+                node.getGrid().<IStorageGrid>getCache(IStorageGrid.class).getFluidInventory();
         IAEFluidStack remaining = Platform.poweredInsert(energyGrid, fluidGrid, aeFluid, ownActionSource);
         if (remaining != null) {
             if (remaining.getStackSize() == aeFluid.getStackSize()) {
@@ -82,7 +83,8 @@ public class TileFluidPacketDecoder extends AENetworkTile implements IGridTickab
     }
 
     @Override
-    public void onChangeInventory(IInventory inv, int slot, InvOperation mc, ItemStack removedStack, ItemStack newStack) {
+    public void onChangeInventory(
+            IInventory inv, int slot, InvOperation mc, ItemStack removedStack, ItemStack newStack) {
         try {
             getProxy().getTick().alertDevice(getProxy().getNode());
         } catch (GridAccessException e) {
@@ -90,13 +92,13 @@ public class TileFluidPacketDecoder extends AENetworkTile implements IGridTickab
         }
     }
 
-    @TileEvent( TileEventType.WORLD_NBT_WRITE )
+    @TileEvent(TileEventType.WORLD_NBT_WRITE)
     public NBTTagCompound writeToNBTEvent(NBTTagCompound data) {
         inventory.writeToNBT(data, "Inventory");
         return data;
     }
 
-    @TileEvent( TileEventType.WORLD_NBT_READ )
+    @TileEvent(TileEventType.WORLD_NBT_READ)
     public void readFromNBTEvent(NBTTagCompound data) {
         inventory.readFromNBT(data, "Inventory");
     }

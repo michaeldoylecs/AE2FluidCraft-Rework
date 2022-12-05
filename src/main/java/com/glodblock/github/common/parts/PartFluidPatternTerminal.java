@@ -17,6 +17,8 @@ import com.glodblock.github.inventory.InventoryHandler;
 import com.glodblock.github.inventory.gui.GuiType;
 import com.glodblock.github.util.BlockPos;
 import com.glodblock.github.util.Util;
+import java.util.List;
+import java.util.Objects;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
@@ -25,18 +27,15 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.Vec3;
 
-import java.util.List;
-import java.util.Objects;
-
 public class PartFluidPatternTerminal extends FCBasePart {
 
     private static final FCPartsTexture FRONT_BRIGHT_ICON = FCPartsTexture.PartFluidPatternTerminal_Bright;
     private static final FCPartsTexture FRONT_DARK_ICON = FCPartsTexture.PartFluidPatternTerminal_Colored;
     private static final FCPartsTexture FRONT_COLORED_ICON = FCPartsTexture.PartFluidPatternTerminal_Dark;
 
-    private final AppEngInternalInventory crafting = new BiggerAppEngInventory( this, 9 );
-    private final AppEngInternalInventory output = new BiggerAppEngInventory( this, 3 );
-    private final AppEngInternalInventory pattern = new AppEngInternalInventory( this, 2 );
+    private final AppEngInternalInventory crafting = new BiggerAppEngInventory(this, 9);
+    private final AppEngInternalInventory output = new BiggerAppEngInventory(this, 3);
+    private final AppEngInternalInventory pattern = new AppEngInternalInventory(this, 2);
 
     private boolean craftingMode = true;
     private boolean substitute = false;
@@ -48,29 +47,31 @@ public class PartFluidPatternTerminal extends FCBasePart {
     }
 
     @Override
-    public void getDrops(final List<ItemStack> drops, final boolean wrenched )
-    {
-        for( final ItemStack is : this.pattern )
-        {
-            if( is != null )
-            {
-                drops.add( is );
+    public void getDrops(final List<ItemStack> drops, final boolean wrenched) {
+        for (final ItemStack is : this.pattern) {
+            if (is != null) {
+                drops.add(is);
             }
         }
     }
 
     @Override
-    public boolean onPartActivate( final EntityPlayer player, final Vec3 pos ) {
+    public boolean onPartActivate(final EntityPlayer player, final Vec3 pos) {
         TileEntity te = this.getTile();
         BlockPos tePos = new BlockPos(te);
         if (Platform.isWrench(player, player.inventory.getCurrentItem(), tePos.getX(), tePos.getY(), tePos.getZ())) {
             return super.onPartActivate(player, pos);
         }
         if (Platform.isServer()) {
-            if (Util.hasPermission(player, SecurityPermissions.INJECT, (IGridHost) this) || Util.hasPermission(player, SecurityPermissions.EXTRACT, (IGridHost) this)) {
-                InventoryHandler.openGui(player, te.getWorldObj(), tePos, Objects.requireNonNull(Util.from(getSide())), GuiType.FLUID_PATTERN_TERMINAL);
-            }
-            else {
+            if (Util.hasPermission(player, SecurityPermissions.INJECT, (IGridHost) this)
+                    || Util.hasPermission(player, SecurityPermissions.EXTRACT, (IGridHost) this)) {
+                InventoryHandler.openGui(
+                        player,
+                        te.getWorldObj(),
+                        tePos,
+                        Objects.requireNonNull(Util.from(getSide())),
+                        GuiType.FLUID_PATTERN_TERMINAL);
+            } else {
                 player.addChatComponentMessage(new ChatComponentText("You don't have permission to view."));
             }
         }
@@ -78,69 +79,69 @@ public class PartFluidPatternTerminal extends FCBasePart {
     }
 
     @Override
-    public void readFromNBT( final NBTTagCompound data )
-    {
-        super.readFromNBT( data );
-        this.setCraftingRecipe( data.getBoolean( "craftingMode" ) );
-        this.setSubstitution( data.getBoolean( "substitute" ) );
+    public void readFromNBT(final NBTTagCompound data) {
+        super.readFromNBT(data);
+        this.setCraftingRecipe(data.getBoolean("craftingMode"));
+        this.setSubstitution(data.getBoolean("substitute"));
         this.setCombineMode(data.getBoolean("combine"));
         this.setBeSubstitute(data.getBoolean("beSubstitute"));
         this.pattern.readFromNBT(data, "pattern");
-        this.output.readFromNBT( data, "outputList" );
-        this.crafting.readFromNBT( data, "craftingGrid" );
+        this.output.readFromNBT(data, "outputList");
+        this.crafting.readFromNBT(data, "craftingGrid");
     }
 
     @Override
-    public void writeToNBT( final NBTTagCompound data )
-    {
-        super.writeToNBT( data );
-        data.setBoolean( "craftingMode", this.craftingMode );
-        data.setBoolean( "substitute", this.substitute );
+    public void writeToNBT(final NBTTagCompound data) {
+        super.writeToNBT(data);
+        data.setBoolean("craftingMode", this.craftingMode);
+        data.setBoolean("substitute", this.substitute);
         data.setBoolean("combine", this.combine);
         data.setBoolean("beSubstitute", this.beSubstitute);
         this.pattern.writeToNBT(data, "pattern");
-        this.output.writeToNBT( data, "outputList" );
-        this.crafting.writeToNBT( data, "craftingGrid" );
+        this.output.writeToNBT(data, "outputList");
+        this.crafting.writeToNBT(data, "craftingGrid");
     }
 
     @Override
-    public GuiBridge getGui(final EntityPlayer p )
-    {
+    public GuiBridge getGui(final EntityPlayer p) {
         int x = (int) p.posX;
         int y = (int) p.posY;
         int z = (int) p.posZ;
-        if( this.getHost().getTile() != null )
-        {
+        if (this.getHost().getTile() != null) {
             x = this.getTile().xCoord;
             y = this.getTile().yCoord;
             z = this.getTile().zCoord;
         }
 
-        if( GuiBridge.GUI_PATTERN_TERMINAL.hasPermissions( this.getHost().getTile(), x, y, z, this.getSide(), p ) )
-        {
+        if (GuiBridge.GUI_PATTERN_TERMINAL.hasPermissions(this.getHost().getTile(), x, y, z, this.getSide(), p)) {
             return GuiBridge.GUI_PATTERN_TERMINAL;
         }
         return GuiBridge.GUI_ME;
     }
 
     @Override
-    public void onChangeInventory(final IInventory inv, final int slot, final InvOperation mc, final ItemStack removedStack, final ItemStack newStack )
-    {
+    public void onChangeInventory(
+            final IInventory inv,
+            final int slot,
+            final InvOperation mc,
+            final ItemStack removedStack,
+            final ItemStack newStack) {
         if (inv == this.pattern && slot == 1) {
             final ItemStack is = inv.getStackInSlot(1);
             if (is != null && is.getItem() instanceof ICraftingPatternItem) {
                 final ICraftingPatternItem pattern = (ICraftingPatternItem) is.getItem();
-                final ICraftingPatternDetails details = pattern.getPatternForItem(is, this.getHost().getTile().getWorldObj());
+                final ICraftingPatternDetails details =
+                        pattern.getPatternForItem(is, this.getHost().getTile().getWorldObj());
                 if (details != null) {
                     final IAEItemStack[] inItems = details.getInputs();
                     final IAEItemStack[] outItems = details.getOutputs();
 
                     this.setCraftingRecipe(details.isCraftable());
                     this.setSubstitution(details.canSubstitute());
-                    if(newStack != null){
+                    if (newStack != null) {
                         NBTTagCompound data = newStack.getTagCompound();
                         this.setCombineMode(data.getInteger("combine") == 1);
-//                        this.setBeSubstitute(data.getBoolean("beSubstitute"));
+                        //                        this.setBeSubstitute(data.getBoolean("beSubstitute"));
                     }
                     for (int i = 0; i < this.crafting.getSizeInventory(); i++) {
                         this.crafting.setInventorySlotContents(i, null);
@@ -154,10 +155,10 @@ public class PartFluidPatternTerminal extends FCBasePart {
                         if (inItems[i] != null) {
                             final IAEItemStack item = inItems[i];
                             if (item != null && item.getItem() instanceof ItemFluidDrop) {
-                                ItemStack packet = ItemFluidPacket.newStack(ItemFluidDrop.getFluidStack(item.getItemStack()));
+                                ItemStack packet =
+                                        ItemFluidPacket.newStack(ItemFluidDrop.getFluidStack(item.getItemStack()));
                                 this.crafting.setInventorySlotContents(i, packet);
-                            } else
-                                this.crafting.setInventorySlotContents(i, item == null ? null : item.getItemStack());
+                            } else this.crafting.setInventorySlotContents(i, item == null ? null : item.getItemStack());
                         }
                     }
 
@@ -165,10 +166,10 @@ public class PartFluidPatternTerminal extends FCBasePart {
                         if (outItems[i] != null) {
                             final IAEItemStack item = outItems[i];
                             if (item != null && item.getItem() instanceof ItemFluidDrop) {
-                                ItemStack packet = ItemFluidPacket.newStack(ItemFluidDrop.getFluidStack(item.getItemStack()));
+                                ItemStack packet =
+                                        ItemFluidPacket.newStack(ItemFluidDrop.getFluidStack(item.getItemStack()));
                                 this.output.setInventorySlotContents(i, packet);
-                            } else
-                                this.output.setInventorySlotContents(i, item == null ? null : item.getItemStack());
+                            } else this.output.setInventorySlotContents(i, item == null ? null : item.getItemStack());
                         }
                     }
                 }
@@ -177,39 +178,31 @@ public class PartFluidPatternTerminal extends FCBasePart {
         this.getHost().markForSave();
     }
 
-    private void fixCraftingRecipes()
-    {
-        if( this.craftingMode )
-        {
-            for( int x = 0; x < this.crafting.getSizeInventory(); x++ )
-            {
-                final ItemStack is = this.crafting.getStackInSlot( x );
-                if( is != null )
-                {
+    private void fixCraftingRecipes() {
+        if (this.craftingMode) {
+            for (int x = 0; x < this.crafting.getSizeInventory(); x++) {
+                final ItemStack is = this.crafting.getStackInSlot(x);
+                if (is != null) {
                     is.stackSize = 1;
                 }
             }
         }
     }
 
-    public boolean isCraftingRecipe()
-    {
+    public boolean isCraftingRecipe() {
         return this.craftingMode;
     }
 
-    public void setCraftingRecipe( final boolean craftingMode )
-    {
+    public void setCraftingRecipe(final boolean craftingMode) {
         this.craftingMode = craftingMode;
         this.fixCraftingRecipes();
     }
 
-    public boolean isSubstitution()
-    {
+    public boolean isSubstitution() {
         return this.substitute;
     }
 
-    public boolean shouldCombine()
-    {
+    public boolean shouldCombine() {
         return this.combine;
     }
 
@@ -245,24 +238,20 @@ public class PartFluidPatternTerminal extends FCBasePart {
     }
 
     @Override
-    public IInventory getInventoryByName( final String name )
-    {
-        if( name.equals( "crafting" ) )
-        {
+    public IInventory getInventoryByName(final String name) {
+        if (name.equals("crafting")) {
             return this.crafting;
         }
 
-        if( name.equals( "output" ) )
-        {
+        if (name.equals("output")) {
             return this.output;
         }
 
-        if( name.equals( "pattern" ) )
-        {
+        if (name.equals("pattern")) {
             return this.pattern;
         }
 
-        return super.getInventoryByName( name );
+        return super.getInventoryByName(name);
     }
 
     @Override

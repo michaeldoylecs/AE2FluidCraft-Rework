@@ -16,5 +16,4 @@ public class NEIGuiHandler extends INEIGuiAdapter {
         }
         return false;
     }
-
 }

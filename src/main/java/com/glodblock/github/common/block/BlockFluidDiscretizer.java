@@ -31,5 +31,4 @@ public class BlockFluidDiscretizer extends FCBaseBlock {
     public ItemStack stack() {
         return new ItemStack(this, 1);
     }
-
 }

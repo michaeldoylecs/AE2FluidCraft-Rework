@@ -26,7 +26,8 @@ public class TitleIOPortTransformer extends FCClassTransformer.ClassMapper {
         @Override
         public MethodVisitor visitMethod(int access, String name, String desc, String signature, String[] exceptions) {
             if (name.equals("transferContents")) {
-                return new TitleIOPortTransformer.TransformTransferContents(api, super.visitMethod(access, name, desc, signature, exceptions));
+                return new TitleIOPortTransformer.TransformTransferContents(
+                        api, super.visitMethod(access, name, desc, signature, exceptions));
             }
             return super.visitMethod(access, name, desc, signature, exceptions);
         }
@@ -42,11 +43,12 @@ public class TitleIOPortTransformer extends FCClassTransformer.ClassMapper {
         public void visitMethodInsn(int opcode, String owner, String name, String desc, boolean itf) {
             if (opcode == Opcodes.INVOKESTATIC && owner.equals("java/lang/Math") && name.equals("min")) {
                 super.visitVarInsn(Opcodes.ALOAD, 6);
-                super.visitMethodInsn(Opcodes.INVOKESTATIC,
-                    "com/glodblock/github/coremod/hooker/CoreModHooks",
-                    "IOPortMinSpeed",
-                    "(JJLappeng/api/storage/StorageChannel;)J",
-                    false);
+                super.visitMethodInsn(
+                        Opcodes.INVOKESTATIC,
+                        "com/glodblock/github/coremod/hooker/CoreModHooks",
+                        "IOPortMinSpeed",
+                        "(JJLappeng/api/storage/StorageChannel;)J",
+                        false);
             } else {
                 super.visitMethodInsn(opcode, owner, name, desc, itf);
             }

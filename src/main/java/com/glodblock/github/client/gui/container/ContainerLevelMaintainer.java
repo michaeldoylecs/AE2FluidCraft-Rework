@@ -9,7 +9,6 @@ import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 
-
 public class ContainerLevelMaintainer extends AEBaseContainer {
     private final TileLevelMaintainer tile;
     private final FakeSlot[] requestSlots = new FakeSlot[TileLevelMaintainer.REQ_COUNT];

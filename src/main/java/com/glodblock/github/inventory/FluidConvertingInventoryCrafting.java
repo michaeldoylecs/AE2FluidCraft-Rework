@@ -22,11 +22,11 @@ public class FluidConvertingInventoryCrafting extends InventoryCrafting {
                 super.setInventorySlotContents(index, ItemFluidPacket.newStack(new FluidStack(fluid, stack.stackSize)));
             } else {
                 // wtf?
-                super.setInventorySlotContents(index, ItemFluidPacket.newStack(new FluidStack(FluidRegistry.WATER, 1000)));
+                super.setInventorySlotContents(
+                        index, ItemFluidPacket.newStack(new FluidStack(FluidRegistry.WATER, 1000)));
             }
         } else {
             super.setInventorySlotContents(index, stack);
         }
     }
-
 }

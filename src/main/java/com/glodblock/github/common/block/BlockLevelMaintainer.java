@@ -44,7 +44,8 @@ public class BlockLevelMaintainer extends FCBaseBlock {
     }
 
     @Override
-    public boolean onActivated(World world, int x, int y, int z, EntityPlayer player, int facing, float hitX, float hitY, float hitZ) {
+    public boolean onActivated(
+            World world, int x, int y, int z, EntityPlayer player, int facing, float hitX, float hitY, float hitZ) {
         if (player.isSneaking()) {
             return false;
         }
@@ -52,7 +53,12 @@ public class BlockLevelMaintainer extends FCBaseBlock {
         if (tile != null) {
             if (Platform.isServer()) {
                 if (Util.hasPermission(player, SecurityPermissions.CRAFT, tile)) {
-                    InventoryHandler.openGui(player, world, new BlockPos(x, y, z), EnumFacing.getFront(facing), GuiType.LEVEL_MAINTAINER);
+                    InventoryHandler.openGui(
+                            player,
+                            world,
+                            new BlockPos(x, y, z),
+                            EnumFacing.getFront(facing),
+                            GuiType.LEVEL_MAINTAINER);
                 } else {
                     player.addChatComponentMessage(new ChatComponentText("You don't have permission to view."));
                 }

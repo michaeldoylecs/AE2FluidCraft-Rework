@@ -14,6 +14,9 @@ import com.glodblock.github.inventory.slot.SlotSingleItem;
 import com.glodblock.github.network.CPacketEncodePattern;
 import com.glodblock.github.util.Ae2ReflectClient;
 import com.glodblock.github.util.NameConst;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.InventoryPlayer;
@@ -22,10 +25,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fluids.FluidStack;
-
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
 
 public class GuiFluidPatternEncoder extends AEBaseGui {
 
@@ -37,7 +36,7 @@ public class GuiFluidPatternEncoder extends AEBaseGui {
 
     public GuiFluidPatternEncoder(InventoryPlayer ipl, TileFluidPatternEncoder tile) {
         super(new ContainerFluidPatternEncoder(ipl, tile));
-        this.cont = (ContainerFluidPatternEncoder)inventorySlots;
+        this.cont = (ContainerFluidPatternEncoder) inventorySlots;
         mouseRegions.addRegion(141, 38, 10, 10, new MouseRegionManager.Handler() {
             @Override
             public List<String> getTooltip() {
@@ -78,14 +77,13 @@ public class GuiFluidPatternEncoder extends AEBaseGui {
     }
 
     @Override
-    public void func_146977_a( final Slot s )
-    {
-        this.drawSlot0( s );
+    public void func_146977_a(final Slot s) {
+        this.drawSlot0(s);
     }
 
     public void drawSlot0(Slot slot) {
         if (slot instanceof SlotFluid) {
-            IAEItemStack stack = ((SlotFluid)slot).getAeStack();
+            IAEItemStack stack = ((SlotFluid) slot).getAeStack();
             super.func_146977_a(new SlotSingleItem(slot));
             if (stack == null) return;
             IAEItemStack fake = stack.copy();
@@ -94,7 +92,12 @@ public class GuiFluidPatternEncoder extends AEBaseGui {
                     fake.setStackSize(ItemFluidPacket.getFluidStack(stack).amount);
             }
             stackSizeRenderer.setAeStack(fake);
-            stackSizeRenderer.renderItemOverlayIntoGUI(fontRendererObj, mc.getTextureManager(), stack.getItemStack(), slot.xDisplayPosition, slot.yDisplayPosition);
+            stackSizeRenderer.renderItemOverlayIntoGUI(
+                    fontRendererObj,
+                    mc.getTextureManager(),
+                    stack.getItemStack(),
+                    slot.xDisplayPosition,
+                    slot.yDisplayPosition);
         } else {
             super.func_146977_a(slot);
         }
@@ -107,29 +110,23 @@ public class GuiFluidPatternEncoder extends AEBaseGui {
         if (stack.getItem() instanceof ItemFluidPacket) {
             FluidStack fluid = ItemFluidPacket.getFluidStack(stack);
             if (fluid != null) {
-                list = Arrays.asList(fluid.getLocalizedName(), String.format(EnumChatFormatting.GRAY + "%,d mB", fluid.amount));
-            }
-            else {
+                list = Arrays.asList(
+                        fluid.getLocalizedName(), String.format(EnumChatFormatting.GRAY + "%,d mB", fluid.amount));
+            } else {
                 list = stack.getTooltip(this.mc.thePlayer, this.mc.gameSettings.advancedItemTooltips);
             }
-        }
-        else {
+        } else {
             list = stack.getTooltip(this.mc.thePlayer, this.mc.gameSettings.advancedItemTooltips);
         }
 
-        for (int k = 0; k < list.size(); ++k)
-        {
-            if (k == 0)
-            {
-                list.set(k, stack.getRarity().rarityColor + (String)list.get(k));
-            }
-            else
-            {
-                list.set(k, EnumChatFormatting.GRAY + (String)list.get(k));
+        for (int k = 0; k < list.size(); ++k) {
+            if (k == 0) {
+                list.set(k, stack.getRarity().rarityColor + (String) list.get(k));
+            } else {
+                list.set(k, EnumChatFormatting.GRAY + (String) list.get(k));
             }
         }
         FontRenderer font = stack.getItem().getFontRenderer(stack);
         drawHoveringText(list, x, y, (font == null ? fontRendererObj : font));
     }
-
 }

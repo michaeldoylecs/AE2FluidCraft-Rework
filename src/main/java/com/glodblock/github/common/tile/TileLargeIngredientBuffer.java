@@ -12,6 +12,8 @@ import com.glodblock.github.inventory.IAEFluidInventory;
 import com.glodblock.github.inventory.IAEFluidTank;
 import cpw.mods.fml.common.network.ByteBufUtils;
 import io.netty.buffer.ByteBuf;
+import java.io.IOException;
+import javax.annotation.Nonnull;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -20,9 +22,6 @@ import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTankInfo;
 import net.minecraftforge.fluids.IFluidHandler;
-
-import javax.annotation.Nonnull;
-import java.io.IOException;
 
 public class TileLargeIngredientBuffer extends AEBaseInvTile implements IAEFluidInventory, IFluidHandler {
 
@@ -51,7 +50,9 @@ public class TileLargeIngredientBuffer extends AEBaseInvTile implements IAEFluid
 
     @Override
     public int[] getAccessibleSlotsBySide(ForgeDirection whichSide) {
-        return new int[]{0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26};
+        return new int[] {
+            0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26
+        };
     }
 
     @Override

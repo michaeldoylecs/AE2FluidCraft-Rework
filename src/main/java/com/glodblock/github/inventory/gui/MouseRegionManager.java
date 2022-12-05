@@ -1,13 +1,12 @@
 package com.glodblock.github.inventory.gui;
 
 import appeng.client.gui.AEBaseGui;
+import java.util.ArrayList;
+import java.util.List;
+import javax.annotation.Nullable;
 import net.minecraft.client.audio.PositionedSoundRecord;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.util.ResourceLocation;
-
-import javax.annotation.Nullable;
-import java.util.ArrayList;
-import java.util.List;
 
 public class MouseRegionManager {
     private final GuiContainer gui;
@@ -26,7 +25,9 @@ public class MouseRegionManager {
         mY -= gui.guiTop;
         for (Region region : regions) {
             if (region.containsMouse(mX, mY) && region.handler.onClick(button)) {
-                gui.mc.getSoundHandler().playSound(PositionedSoundRecord.func_147674_a(new ResourceLocation("gui.button.press"), 1F));
+                gui.mc
+                        .getSoundHandler()
+                        .playSound(PositionedSoundRecord.func_147674_a(new ResourceLocation("gui.button.press"), 1F));
                 return false;
             }
         }
@@ -40,7 +41,7 @@ public class MouseRegionManager {
             if (region.containsMouse(mX, mY)) {
                 List<String> tooltip = region.handler.getTooltip();
                 if (tooltip != null) {
-                    ((AEBaseGui)gui).drawTooltip(mX,mY,0,String.join("\n",tooltip));
+                    ((AEBaseGui) gui).drawTooltip(mX, mY, 0, String.join("\n", tooltip));
                     return;
                 }
             }
@@ -63,7 +64,6 @@ public class MouseRegionManager {
         boolean containsMouse(int mX, int mY) {
             return mX >= x && mX < x + width && mY >= y && mY < y + height;
         }
-
     }
 
     public interface Handler {
@@ -76,7 +76,5 @@ public class MouseRegionManager {
         default boolean onClick(int button) {
             return false;
         }
-
     }
-
 }

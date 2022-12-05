@@ -5,6 +5,8 @@ import com.glodblock.github.loader.ItemAndBlockHolder;
 import com.glodblock.github.util.RenderUtil;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import java.util.HashMap;
+import java.util.Map;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.ItemRenderer;
 import net.minecraft.client.renderer.Tessellator;
@@ -17,9 +19,6 @@ import net.minecraftforge.client.MinecraftForgeClient;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidStack;
 import org.lwjgl.opengl.GL11;
-
-import java.util.HashMap;
-import java.util.Map;
 
 @SideOnly(Side.CLIENT)
 public class ItemDropRender implements IItemRenderer {
@@ -62,7 +61,15 @@ public class ItemDropRender implements IItemRenderer {
         if (type.equals(ItemRenderType.INVENTORY)) {
             RenderUtil.renderItemIcon(shape, 16.0D, 0.001D, 0.0F, 0.0F, -1.0F);
         } else {
-            ItemRenderer.renderItemIn2D(Tessellator.instance, shape.getMaxU(), shape.getMinV(), shape.getMinU(), shape.getMaxV(), shape.getIconWidth(), shape.getIconHeight(), 0.0625F);
+            ItemRenderer.renderItemIn2D(
+                    Tessellator.instance,
+                    shape.getMaxU(),
+                    shape.getMinV(),
+                    shape.getMinU(),
+                    shape.getMaxV(),
+                    shape.getIconWidth(),
+                    shape.getIconHeight(),
+                    0.0625F);
         }
 
         GL11.glDisable(GL11.GL_ALPHA_TEST);
@@ -84,8 +91,9 @@ public class ItemDropRender implements IItemRenderer {
         if (colour == 0xFFFFFF) {
             TextureAtlasSprite sprite;
             try {
-                sprite = Minecraft.getMinecraft().getTextureMapBlocks()
-                    .getTextureExtry(fluid.getStillIcon().getIconName());
+                sprite = Minecraft.getMinecraft()
+                        .getTextureMapBlocks()
+                        .getTextureExtry(fluid.getStillIcon().getIconName());
             } catch (NullPointerException e) {
                 colourCache.put(fluid.getName(), colour);
                 return colour;

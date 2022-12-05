@@ -17,17 +17,16 @@ import net.minecraft.item.ItemStack;
 
 public class FluidCellInventoryHandler extends MEInventoryHandler<IAEFluidStack> implements IFluidCellInventoryHandler {
 
-    FluidCellInventoryHandler( final IMEInventory<IAEFluidStack> c )
-    {
-        super( c, StorageChannel.FLUIDS );
+    FluidCellInventoryHandler(final IMEInventory<IAEFluidStack> c) {
+        super(c, StorageChannel.FLUIDS);
 
         final IFluidCellInventory ci = this.getCellInv();
 
-        if( ci != null )
-        {
+        if (ci != null) {
             final IInventory config = ci.getConfigInventory();
 
-            final IItemList<IAEFluidStack> priorityList = AEApi.instance().storage().createFluidList();
+            final IItemList<IAEFluidStack> priorityList =
+                    AEApi.instance().storage().createFluidList();
             for (int x = 0; x < config.getSizeInventory(); x++) {
                 final ItemStack is = config.getStackInSlot(x);
                 if (is != null && Util.getFluidFromItem(is) != null) {
@@ -42,16 +41,14 @@ public class FluidCellInventoryHandler extends MEInventoryHandler<IAEFluidStack>
     }
 
     @Override
-    public IFluidCellInventory getCellInv()
-    {
+    public IFluidCellInventory getCellInv() {
         Object o = this.getInternal();
 
-        if( o instanceof MEPassThrough)
-        {
-            o = Ae2Reflect.getInternal( (MEPassThrough) o );
+        if (o instanceof MEPassThrough) {
+            o = Ae2Reflect.getInternal((MEPassThrough) o);
         }
 
-        return (IFluidCellInventory) ( o instanceof IFluidCellInventory ? o : null );
+        return (IFluidCellInventory) (o instanceof IFluidCellInventory ? o : null);
     }
 
     @Override
@@ -60,23 +57,19 @@ public class FluidCellInventoryHandler extends MEInventoryHandler<IAEFluidStack>
     }
 
     @Override
-    public boolean isPreformatted()
-    {
+    public boolean isPreformatted() {
         return !Ae2Reflect.getPartitionList(this).isEmpty();
     }
 
     @Override
-    public IncludeExclude getIncludeExcludeMode()
-    {
+    public IncludeExclude getIncludeExcludeMode() {
         return IncludeExclude.WHITELIST;
     }
 
-    public int getStatusForCell()
-    {
+    public int getStatusForCell() {
         int val = this.getCellInv().getStatusForCell();
 
-        if( val == 1 && this.isPreformatted() )
-        {
+        if (val == 1 && this.isPreformatted()) {
             val = 2;
         }
 

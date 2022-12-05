@@ -9,13 +9,10 @@ import net.minecraftforge.common.MinecraftForge;
 public class ClientHelper {
 
     @SubscribeEvent
-    public void updateTextureSheet( final TextureStitchEvent.Pre ev )
-    {
-        if( ev.map.getTextureType() == 0 )
-        {
-            for( final FCPartsTexture cb : FCPartsTexture.values() )
-            {
-                cb.registerIcon( ev.map );
+    public void updateTextureSheet(final TextureStitchEvent.Pre ev) {
+        if (ev.map.getTextureType() == 0) {
+            for (final FCPartsTexture cb : FCPartsTexture.values()) {
+                cb.registerIcon(ev.map);
             }
         }
     }
@@ -25,5 +22,4 @@ public class ClientHelper {
         MinecraftForge.EVENT_BUS.register(handler);
         FMLCommonHandler.instance().bus().register(handler);
     }
-
 }

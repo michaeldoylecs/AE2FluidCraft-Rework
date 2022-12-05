@@ -45,10 +45,9 @@ public class FCClassTransformer implements IClassTransformer {
     public interface Transform {
 
         byte[] transformClass(byte[] code);
-
     }
 
-    public static abstract class ClassMapper implements Transform {
+    public abstract static class ClassMapper implements Transform {
 
         @Override
         public byte[] transformClass(byte[] code) {
@@ -63,6 +62,5 @@ public class FCClassTransformer implements IClassTransformer {
         }
 
         protected abstract ClassVisitor getClassMapper(ClassVisitor downstream);
-
     }
 }

@@ -12,5 +12,4 @@ public interface IFluidCellInventoryHandler {
     boolean isPreformatted();
 
     IncludeExclude getIncludeExcludeMode();
-
 }

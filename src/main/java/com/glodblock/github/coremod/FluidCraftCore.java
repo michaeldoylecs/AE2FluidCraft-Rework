@@ -1,9 +1,8 @@
 package com.glodblock.github.coremod;
 
 import cpw.mods.fml.relauncher.IFMLLoadingPlugin;
-
-import javax.annotation.Nullable;
 import java.util.Map;
+import javax.annotation.Nullable;
 
 @IFMLLoadingPlugin.Name("FluidCraftCore")
 @IFMLLoadingPlugin.MCVersion("1.7.10")
@@ -12,7 +11,7 @@ public class FluidCraftCore implements IFMLLoadingPlugin {
 
     @Override
     public String[] getASMTransformerClass() {
-        return new String[] { FluidCraftCore.class.getPackage().getName() + ".FCClassTransformer" };
+        return new String[] {FluidCraftCore.class.getPackage().getName() + ".FCClassTransformer"};
     }
 
     @Nullable
@@ -37,5 +36,4 @@ public class FluidCraftCore implements IFMLLoadingPlugin {
     public String getAccessTransformerClass() {
         return null;
     }
-
 }

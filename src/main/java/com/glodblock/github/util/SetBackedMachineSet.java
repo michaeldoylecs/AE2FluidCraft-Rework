@@ -3,12 +3,11 @@ package com.glodblock.github.util;
 import appeng.api.networking.IGridHost;
 import appeng.api.networking.IGridNode;
 import appeng.api.networking.IMachineSet;
-
-import javax.annotation.Nonnull;
 import java.util.Iterator;
 import java.util.Set;
 import java.util.Spliterator;
 import java.util.function.Consumer;
+import javax.annotation.Nonnull;
 
 public class SetBackedMachineSet implements IMachineSet {
 
@@ -56,5 +55,4 @@ public class SetBackedMachineSet implements IMachineSet {
     public Spliterator<IGridNode> spliterator() {
         return backingSet.spliterator();
     }
-
 }

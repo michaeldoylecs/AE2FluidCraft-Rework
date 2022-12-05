@@ -14,14 +14,22 @@ public class OptionalFluidSlotFakeTypeOnly extends OptionalSlotFakeTypeOnly {
 
     AEFluidInventory fluidInv;
 
-    public OptionalFluidSlotFakeTypeOnly(IInventory inv, AEFluidInventory fluidInv, IOptionalSlotHost containerBus, int idx, int x, int y, int offX, int offY, int groupNum) {
+    public OptionalFluidSlotFakeTypeOnly(
+            IInventory inv,
+            AEFluidInventory fluidInv,
+            IOptionalSlotHost containerBus,
+            int idx,
+            int x,
+            int y,
+            int offX,
+            int offY,
+            int groupNum) {
         super(inv, containerBus, idx, x, y, offX, offY, groupNum);
         this.fluidInv = fluidInv;
     }
 
     @Override
-    public void putStack( ItemStack is )
-    {
+    public void putStack(ItemStack is) {
         FluidStack fluidStack = Util.getFluidFromItem(is);
         if (fluidStack != null) {
             ItemStack tmp = ItemFluidPacket.newDisplayStack(fluidStack);
@@ -31,13 +39,11 @@ public class OptionalFluidSlotFakeTypeOnly extends OptionalSlotFakeTypeOnly {
                 fluidInv.setFluidInSlot(getSlotIndex(), AEFluidStack.create(standard));
             }
             super.putStack(tmp);
-        }
-        else {
+        } else {
             super.putStack(null);
             if (fluidInv != null) {
                 fluidInv.setFluidInSlot(getSlotIndex(), null);
             }
         }
     }
-
 }
