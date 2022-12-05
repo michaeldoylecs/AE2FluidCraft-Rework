@@ -140,7 +140,7 @@ public class ItemBasicFluidStorageCell extends AEBaseItem implements IStorageFlu
 
                 lines.add( cellInventory.getStoredFluidTypes() + " " + GuiText.Of.getLocal() + ' ' + cellInventory.getTotalFluidTypes() + ' ' + GuiText.Types.getLocal() );
 
-                if (GuiScreen.isShiftKeyDown()) {
+                if (GuiScreen.isCtrlKeyDown()) {
                     if (cellInventory.getStoredFluidTypes() > 0) {
                         lines.add(StatCollector.translateToLocal(NameConst.TT_CELL_CONTENTS));
                         for (IAEFluidStack fluid : cellInventory.getContents()) {
