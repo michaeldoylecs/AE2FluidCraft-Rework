@@ -357,6 +357,7 @@ public class FCBasePartContainerEx extends FCBaseMonitorContain
 
         if (i != null) {
             i.writeToNBT(c);
+            c.setInteger("Count", i.stackSize);
         }
 
         return c;

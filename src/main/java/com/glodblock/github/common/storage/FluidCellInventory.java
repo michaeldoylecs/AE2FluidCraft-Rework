@@ -11,6 +11,8 @@ import appeng.api.storage.data.IAEFluidStack;
 import appeng.api.storage.data.IItemList;
 import appeng.util.Platform;
 import appeng.util.item.AEFluidStack;
+import java.util.ArrayList;
+import java.util.List;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -409,8 +411,16 @@ public class FluidCellInventory implements IFluidCellInventory {
         for (final IAEFluidStack i : this.getCellItems()) {
             out.add(i);
         }
-
         return out;
+    }
+
+    @Override
+    public List<IAEFluidStack> getContents() {
+        List<IAEFluidStack> ret = new ArrayList<>();
+        for (IAEFluidStack fluid : this.getCellItems()) {
+            ret.add(fluid);
+        }
+        return ret;
     }
 
     @Override
