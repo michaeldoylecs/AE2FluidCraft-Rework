@@ -17,6 +17,7 @@ import appeng.items.contents.CellConfig;
 import appeng.items.contents.CellUpgrades;
 import appeng.util.InventoryAdaptor;
 import appeng.util.Platform;
+import appeng.util.ReadableNumberConverter;
 import com.glodblock.github.FluidCraft;
 import com.glodblock.github.common.Config;
 import com.glodblock.github.common.storage.CellType;
@@ -50,10 +51,13 @@ public class ItemBasicFluidStorageCell extends AEBaseItem implements IStorageFlu
     private final int totalBytes;
     private final int perType;
     private final double idleDrain;
-    private static final HashMap<Integer, IIcon> icon = new HashMap<>();
+    private final ReadableNumberConverter format = ReadableNumberConverter.INSTANCE;
+    private final static HashMap<Integer, IIcon> icon = new HashMap<>();
 
-    public ItemBasicFluidStorageCell(final CellType whichCell, final int kilobytes) {
-        super(Optional.of(kilobytes + "k"));
+    @SuppressWarnings("Guava")
+    public ItemBasicFluidStorageCell( final CellType whichCell, final int kilobytes )
+    {
+        super( Optional.of( kilobytes + "k" ) );
         setUnlocalizedName(NameConst.ITEM_FLUID_STORAGE + kilobytes);
         this.setFeature(EnumSet.of(AEFeature.StorageCells));
         this.setMaxStackSize(1);
@@ -137,11 +141,20 @@ public class ItemBasicFluidStorageCell extends AEBaseItem implements IStorageFlu
                 lines.add(cellInventory.getStoredFluidTypes() + " " + GuiText.Of.getLocal() + ' '
                         + cellInventory.getTotalFluidTypes() + ' ' + GuiText.Types.getLocal());
 
-                if (handler.isPreformatted()) {
-                    final String list = (handler.getIncludeExcludeMode() == IncludeExclude.WHITELIST
-                                    ? GuiText.Included
-                                    : GuiText.Excluded)
-                            .getLocal();
+                if (GuiScreen.isCtrlKeyDown()) {
+                    if (cellInventory.getStoredFluidTypes() > 0) {
+                        lines.add(StatCollector.translateToLocal(NameConst.TT_CELL_CONTENTS));
+                        for (IAEFluidStack fluid : cellInventory.getContents()) {
+                            if (fluid != null) {
+                                lines.add(String.format("  %s x%smB", fluid.getFluidStack().getLocalizedName(), format.toWideReadableForm(fluid.getStackSize())));
+                            }
+                        }
+                    }
+                }
+
+                if( handler.isPreformatted() )
+                {
+                    final String list = (handler.getIncludeExcludeMode() == IncludeExclude.WHITELIST ? GuiText.Included : GuiText.Excluded).getLocal();
                     lines.add(GuiText.Partitioned.getLocal() + " - " + list + ' ' + GuiText.Precise.getLocal());
 
                     if (GuiScreen.isShiftKeyDown()) {

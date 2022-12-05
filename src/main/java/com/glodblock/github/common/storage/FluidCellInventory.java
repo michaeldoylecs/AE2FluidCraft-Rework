@@ -18,6 +18,9 @@ import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.fluids.FluidStack;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class FluidCellInventory implements IFluidCellInventory {
 
     private static final String FLUID_TYPE_TAG = "ft";
@@ -409,8 +412,16 @@ public class FluidCellInventory implements IFluidCellInventory {
         for (final IAEFluidStack i : this.getCellItems()) {
             out.add(i);
         }
-
         return out;
+    }
+
+    @Override
+    public List<IAEFluidStack> getContents() {
+        List<IAEFluidStack> ret = new ArrayList<>();
+        for (IAEFluidStack fluid : this.getCellItems()) {
+            ret.add(fluid);
+        }
+        return ret;
     }
 
     @Override

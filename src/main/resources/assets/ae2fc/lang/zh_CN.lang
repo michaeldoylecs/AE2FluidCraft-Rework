@@ -37,6 +37,7 @@ ae2fc.waila.disable=禁用
 
 ae2fc.tooltip.request_size=缓存量
 ae2fc.tooltip.batch_size=批量制作数量
+ae2fc.tooltip.cell_contents=内含流体:
 ae2fc.tooltip.fluid_terminal=我们不再需要EC2了吗?
 ae2fc.tooltip.invalid_fluid=流体无效！
 ae2fc.tooltip.encode_pattern=编写样板
