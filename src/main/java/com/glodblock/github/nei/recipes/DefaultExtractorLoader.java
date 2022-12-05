@@ -18,7 +18,10 @@ public class DefaultExtractorLoader implements Runnable {
 
         if (ModAndClassUtil.GT5) {
             for (GT_Recipe.GT_Recipe_Map tMap : GT_Recipe.GT_Recipe_Map.sMappings) {
-                FluidRecipe.addRecipeMap(tMap.mNEIName, new GregTech5RecipeExtractor(tMap.mNEIName.equals("gt.recipe.scanner") || tMap.mNEIName.equals("gt.recipe.fakeAssemblylineProcess")));
+                FluidRecipe.addRecipeMap(
+                        tMap.mNEIName,
+                        new GregTech5RecipeExtractor(tMap.mNEIName.equals("gt.recipe.scanner")
+                                || tMap.mNEIName.equals("gt.recipe.fakeAssemblylineProcess")));
             }
         }
 
@@ -79,7 +82,5 @@ public class DefaultExtractorLoader implements Runnable {
             FluidRecipe.addRecipeMap("oreWashing", new IndustrialCraftRecipeExtractor());
             FluidRecipe.addRecipeMap("solidcanner", new IndustrialCraftRecipeExtractor());
         }
-
     }
-
 }

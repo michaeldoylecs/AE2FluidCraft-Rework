@@ -1,14 +1,13 @@
 package com.glodblock.github.nei;
 
 import com.glodblock.github.nei.object.OrderStack;
-import net.minecraft.item.ItemStack;
-import net.minecraftforge.fluids.FluidStack;
-
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
+import net.minecraft.item.ItemStack;
+import net.minecraftforge.fluids.FluidStack;
 
 public class NEIUtils {
 
@@ -26,8 +25,10 @@ public class NEIUtils {
             for (OrderStack<?> storedStack : comp) {
                 if (storedStack == null || !(storedStack.getStack() instanceof ItemStack)) continue;
                 ItemStack firstStack = (ItemStack) storedStack.getStack();
-                boolean areItemStackEqual = firstStack.isItemEqual(currentStack) && ItemStack.areItemStackTagsEqual(firstStack, currentStack);
-                if (areItemStackEqual && (firstStack.stackSize + currentStack.stackSize) <= firstStack.getMaxStackSize()) {
+                boolean areItemStackEqual = firstStack.isItemEqual(currentStack)
+                        && ItemStack.areItemStackTagsEqual(firstStack, currentStack);
+                if (areItemStackEqual
+                        && (firstStack.stackSize + currentStack.stackSize) <= firstStack.getMaxStackSize()) {
                     find = true;
                     ((ItemStack) storedStack.getStack()).stackSize = firstStack.stackSize + currentStack.stackSize;
                 }
@@ -52,13 +53,12 @@ public class NEIUtils {
             }
         }
         int id = 0;
-        for (int i = 0; i <= upper; i ++) {
+        for (int i = 0; i <= upper; i++) {
             if (map.containsKey(i)) {
                 cleared.add(new OrderStack<>(map.get(i), id));
-                id ++;
+                id++;
             }
         }
         return cleared;
     }
-
 }

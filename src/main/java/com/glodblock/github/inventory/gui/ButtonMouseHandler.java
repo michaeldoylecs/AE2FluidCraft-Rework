@@ -4,16 +4,16 @@ import com.glodblock.github.FluidCraft;
 import com.glodblock.github.client.gui.TankDumpable;
 import com.glodblock.github.network.CPacketDumpTank;
 import com.glodblock.github.util.NameConst;
-import net.minecraft.client.resources.I18n;
-
-import javax.annotation.Nullable;
 import java.util.Collections;
 import java.util.List;
+import javax.annotation.Nullable;
+import net.minecraft.client.resources.I18n;
 
 public class ButtonMouseHandler implements MouseRegionManager.Handler {
 
     @Nullable
     private final String tooltipKey;
+
     private final Runnable callback;
 
     public ButtonMouseHandler(@Nullable String tooltipKey, Runnable callback) {
@@ -43,5 +43,4 @@ public class ButtonMouseHandler implements MouseRegionManager.Handler {
             }
         });
     }
-
 }

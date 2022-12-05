@@ -9,13 +9,12 @@ import com.glodblock.github.inventory.InventoryHandler;
 import com.glodblock.github.inventory.gui.GuiType;
 import com.glodblock.github.util.BlockPos;
 import com.glodblock.github.util.Util;
+import java.util.Objects;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.Vec3;
-
-import java.util.Objects;
 
 public class PartFluidTerminal extends FCBasePart {
     private static final FCPartsTexture FRONT_BRIGHT_ICON = FCPartsTexture.PartFluidTerminal_Bright;
@@ -59,8 +58,14 @@ public class PartFluidTerminal extends FCBasePart {
             return super.onPartActivate(player, pos);
         }
         if (Platform.isServer()) {
-            if (Util.hasPermission(player, SecurityPermissions.INJECT, (IGridHost) this) || Util.hasPermission(player, SecurityPermissions.EXTRACT, (IGridHost) this)) {
-                InventoryHandler.openGui(player, te.getWorldObj(), tePos, Objects.requireNonNull(Util.from(getSide())), GuiType.FLUID_TERMINAL);
+            if (Util.hasPermission(player, SecurityPermissions.INJECT, (IGridHost) this)
+                    || Util.hasPermission(player, SecurityPermissions.EXTRACT, (IGridHost) this)) {
+                InventoryHandler.openGui(
+                        player,
+                        te.getWorldObj(),
+                        tePos,
+                        Objects.requireNonNull(Util.from(getSide())),
+                        GuiType.FLUID_TERMINAL);
             } else {
                 player.addChatComponentMessage(new ChatComponentText("You don't have permission to view."));
             }
@@ -84,5 +89,4 @@ public class PartFluidTerminal extends FCBasePart {
         }
         return GuiBridge.GUI_ME;
     }
-
 }

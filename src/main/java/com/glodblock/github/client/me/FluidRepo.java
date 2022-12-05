@@ -32,16 +32,14 @@ import com.glodblock.github.common.item.ItemFluidDrop;
 import com.glodblock.github.util.FluidSorters;
 import com.glodblock.github.util.Util;
 import cpw.mods.fml.relauncher.ReflectionHelper;
-import net.minecraft.item.ItemStack;
-import net.minecraftforge.fluids.Fluid;
-
-import javax.annotation.Nonnull;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.regex.Pattern;
-
+import javax.annotation.Nonnull;
+import net.minecraft.item.ItemStack;
+import net.minecraftforge.fluids.Fluid;
 
 public class FluidRepo extends ItemRepo {
 
@@ -117,7 +115,7 @@ public class FluidRepo extends ItemRepo {
 
         this.innerSearch = this.searchString;
         final boolean terminalSearchToolTips =
-            AEConfig.instance.settings.getSetting(Settings.SEARCH_TOOLTIPS) != YesNo.NO;
+                AEConfig.instance.settings.getSetting(Settings.SEARCH_TOOLTIPS) != YesNo.NO;
         // boolean terminalSearchMods = Configuration.INSTANCE.settings.getSetting( Settings.SEARCH_MODS ) != YesNo.NO;
 
         boolean searchMod = false;
@@ -159,8 +157,8 @@ public class FluidRepo extends ItemRepo {
             }
             Fluid fluid = ItemFluidDrop.getAeFluidStack(is).getFluid();
             if (searchMod) {
-                if (m.matcher(Util.getFluidModID(fluid).toLowerCase()).find() ||
-                    m.matcher(Util.getFluidModName(fluid).toLowerCase()).find()) {
+                if (m.matcher(Util.getFluidModID(fluid).toLowerCase()).find()
+                        || m.matcher(Util.getFluidModName(fluid).toLowerCase()).find()) {
                     this.view.add(is);
                 }
             } else {
@@ -200,7 +198,7 @@ public class FluidRepo extends ItemRepo {
         try {
             if (this.NEIWord == null || !this.NEIWord.equals(filter)) {
                 final Class c =
-                    ReflectionHelper.getClass(this.getClass().getClassLoader(), "codechicken.nei.LayoutManager");
+                        ReflectionHelper.getClass(this.getClass().getClassLoader(), "codechicken.nei.LayoutManager");
                 final Field fldSearchField = c.getField("searchField");
                 final Object searchField = fldSearchField.get(c);
 

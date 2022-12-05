@@ -10,5 +10,4 @@ public class RenderLoader implements Runnable {
         new ItemDropRender();
         new ItemPacketRender();
     }
-
 }

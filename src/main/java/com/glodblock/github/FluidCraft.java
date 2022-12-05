@@ -22,7 +22,11 @@ import cpw.mods.fml.common.network.NetworkRegistry;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 
-@Mod(modid = FluidCraft.MODID, version = FluidCraft.VERSION, name = FluidCraft.MODNAME, dependencies = "required-after:appliedenergistics2;after:waila")
+@Mod(
+        modid = FluidCraft.MODID,
+        version = FluidCraft.VERSION,
+        name = FluidCraft.MODNAME,
+        dependencies = "required-after:appliedenergistics2;after:waila")
 public class FluidCraft {
 
     public static final String MODID = "GRADLETOKEN_MODID";
@@ -32,7 +36,9 @@ public class FluidCraft {
     @Mod.Instance(MODID)
     public static FluidCraft INSTANCE;
 
-    @SidedProxy(clientSide = "com.glodblock.github.proxy.ClientProxy", serverSide = "com.glodblock.github.proxy.CommonProxy")
+    @SidedProxy(
+            clientSide = "com.glodblock.github.proxy.ClientProxy",
+            serverSide = "com.glodblock.github.proxy.CommonProxy")
     public static CommonProxy proxy;
 
     @Mod.EventHandler
@@ -66,31 +72,29 @@ public class FluidCraft {
         }
 
         if (ModAndClassUtil.isBigInterface) {
-            Upgrades.PATTERN_CAPACITY.registerItem(new ItemStack(ItemAndBlockHolder.FLUID_INTERFACE), 3 );
-            Upgrades.PATTERN_CAPACITY.registerItem(new ItemStack(ItemAndBlockHolder.INTERFACE), 3 );
+            Upgrades.PATTERN_CAPACITY.registerItem(new ItemStack(ItemAndBlockHolder.FLUID_INTERFACE), 3);
+            Upgrades.PATTERN_CAPACITY.registerItem(new ItemStack(ItemAndBlockHolder.INTERFACE), 3);
         }
-        Upgrades.CRAFTING.registerItem(new ItemStack(ItemAndBlockHolder.FLUID_INTERFACE), 1 );
-        Upgrades.CRAFTING.registerItem(new ItemStack(ItemAndBlockHolder.INTERFACE), 1 );
+        Upgrades.CRAFTING.registerItem(new ItemStack(ItemAndBlockHolder.FLUID_INTERFACE), 1);
+        Upgrades.CRAFTING.registerItem(new ItemStack(ItemAndBlockHolder.INTERFACE), 1);
 
         if (Config.fluidIOBus) {
-            Upgrades.CAPACITY.registerItem(new ItemStack(ItemAndBlockHolder.FLUID_EXPORT_BUS), 2 );
-            Upgrades.CAPACITY.registerItem(new ItemStack(ItemAndBlockHolder.FLUID_IMPORT_BUS), 2 );
-            Upgrades.REDSTONE.registerItem(new ItemStack(ItemAndBlockHolder.FLUID_EXPORT_BUS), 1 );
-            Upgrades.REDSTONE.registerItem(new ItemStack(ItemAndBlockHolder.FLUID_IMPORT_BUS), 1 );
-            Upgrades.SPEED.registerItem(new ItemStack(ItemAndBlockHolder.FLUID_EXPORT_BUS), 4 );
-            Upgrades.SPEED.registerItem(new ItemStack(ItemAndBlockHolder.FLUID_IMPORT_BUS), 4 );
-            Upgrades.CRAFTING.registerItem(new ItemStack(ItemAndBlockHolder.FLUID_EXPORT_BUS), 1 );
+            Upgrades.CAPACITY.registerItem(new ItemStack(ItemAndBlockHolder.FLUID_EXPORT_BUS), 2);
+            Upgrades.CAPACITY.registerItem(new ItemStack(ItemAndBlockHolder.FLUID_IMPORT_BUS), 2);
+            Upgrades.REDSTONE.registerItem(new ItemStack(ItemAndBlockHolder.FLUID_EXPORT_BUS), 1);
+            Upgrades.REDSTONE.registerItem(new ItemStack(ItemAndBlockHolder.FLUID_IMPORT_BUS), 1);
+            Upgrades.SPEED.registerItem(new ItemStack(ItemAndBlockHolder.FLUID_EXPORT_BUS), 4);
+            Upgrades.SPEED.registerItem(new ItemStack(ItemAndBlockHolder.FLUID_IMPORT_BUS), 4);
+            Upgrades.CRAFTING.registerItem(new ItemStack(ItemAndBlockHolder.FLUID_EXPORT_BUS), 1);
         }
 
         proxy.postInit(event);
     }
 
     @Mod.EventHandler
-    public void onLoadComplete(FMLLoadCompleteEvent event) {
-    }
+    public void onLoadComplete(FMLLoadCompleteEvent event) {}
 
     public static ResourceLocation resource(String path) {
         return new ResourceLocation(MODID, path);
     }
-
 }

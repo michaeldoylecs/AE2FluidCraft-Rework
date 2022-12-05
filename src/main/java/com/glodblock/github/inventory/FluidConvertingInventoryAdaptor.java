@@ -20,6 +20,11 @@ import com.glodblock.github.util.Ae2Reflect;
 import com.glodblock.github.util.BlockPos;
 import com.glodblock.github.util.ModAndClassUtil;
 import com.glodblock.github.util.Util;
+import java.util.Collections;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
+import javax.annotation.Nullable;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
@@ -28,20 +33,43 @@ import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTankInfo;
 import net.minecraftforge.fluids.IFluidHandler;
 
-import javax.annotation.Nullable;
-import java.util.Collections;
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
-
 public class FluidConvertingInventoryAdaptor extends InventoryAdaptor {
+
+    public FluidConvertingInventoryAdaptor(
+            @Nullable InventoryAdaptor invItems,
+            @Nullable IFluidHandler invFluids,
+            EnumFacing facing,
+            BlockPos pos,
+            boolean isOnmi,
+            Object eioConduct) {
+        this.invItems = invItems;
+        this.invFluids = invFluids;
+        this.side = Util.from(facing);
+        this.posInterface = pos;
+        this.eioDuct = eioConduct;
+        this.onmi = isOnmi;
+    }
+
+    private final InventoryAdaptor invItems;
+    private final IFluidHandler invFluids;
+    private final ForgeDirection side;
+    private final BlockPos posInterface;
+    private final Object eioDuct;
+    private final boolean onmi;
 
     public static InventoryAdaptor wrap(TileEntity capProvider, EnumFacing face) {
         // sometimes i wish 1.7.10 has cap system.
         ForgeDirection f = Util.from(face);
-        TileEntity inter = capProvider.getWorldObj().getTileEntity(capProvider.xCoord + f.offsetX, capProvider.yCoord + f.offsetY, capProvider.zCoord + f.offsetZ);
-        if (!Config.noFluidPacket && !(inter instanceof TileFluidInterface ||
-            (inter instanceof TileCableBus && (((TileCableBus) inter).getPart(f.getOpposite()) instanceof PartFluidInterface || ((TileCableBus) inter).getPart(f.getOpposite()) instanceof PartFluidExportBus))))
+        TileEntity inter = capProvider
+                .getWorldObj()
+                .getTileEntity(
+                        capProvider.xCoord + f.offsetX, capProvider.yCoord + f.offsetY, capProvider.zCoord + f.offsetZ);
+        if (!Config.noFluidPacket
+                && !(inter instanceof TileFluidInterface
+                        || (inter instanceof TileCableBus
+                                && (((TileCableBus) inter).getPart(f.getOpposite()) instanceof PartFluidInterface
+                                        || ((TileCableBus) inter).getPart(f.getOpposite())
+                                                instanceof PartFluidExportBus))))
             return InventoryAdaptor.getAdaptor(capProvider, f);
         InventoryAdaptor item = InventoryAdaptor.getAdaptor(capProvider, f);
         IFluidHandler fluid = capProvider instanceof IFluidHandler ? (IFluidHandler) capProvider : null;
@@ -56,27 +84,11 @@ public class FluidConvertingInventoryAdaptor extends InventoryAdaptor {
         return new FluidConvertingInventoryAdaptor(item, fluid, face, new BlockPos(inter), onmi, conduct);
     }
 
-    private final InventoryAdaptor invItems;
-    private final IFluidHandler invFluids;
-    private final ForgeDirection side;
-    private final BlockPos posInterface;
-    private final Object eioDuct;
-    private final boolean onmi;
-
-    public FluidConvertingInventoryAdaptor(@Nullable InventoryAdaptor invItems, @Nullable IFluidHandler invFluids, EnumFacing facing, BlockPos pos, boolean isOnmi, Object eioConduct) {
-        this.invItems = invItems;
-        this.invFluids = invFluids;
-        this.side = Util.from(facing);
-        this.posInterface = pos;
-        this.eioDuct = eioConduct;
-        this.onmi = isOnmi;
-    }
-
-    public ItemStack addItems( ItemStack toBeAdded, InsertionMode insertionMode ) {
+    public ItemStack addItems(ItemStack toBeAdded, InsertionMode insertionMode) {
         if (toBeAdded.getItem() instanceof ItemFluidPacket || toBeAdded.getItem() instanceof ItemFluidDrop) {
             if (invFluids != null) {
                 FluidStack fluid;
-                if( toBeAdded.getItem() instanceof ItemFluidPacket ) {
+                if (toBeAdded.getItem() instanceof ItemFluidPacket) {
                     fluid = ItemFluidPacket.getFluidStack(toBeAdded);
                 } else {
                     fluid = ItemFluidDrop.getFluidStack(toBeAdded);
@@ -95,7 +107,7 @@ public class FluidConvertingInventoryAdaptor extends InventoryAdaptor {
         if (eioDuct != null) {
             return ((IItemDuct) eioDuct).insertItem(side, toBeAdded);
         }
-        return invItems != null ? invItems.addItems(toBeAdded,insertionMode) : toBeAdded;
+        return invItems != null ? invItems.addItems(toBeAdded, insertionMode) : toBeAdded;
     }
 
     @Override
@@ -114,7 +126,7 @@ public class FluidConvertingInventoryAdaptor extends InventoryAdaptor {
             if (onmi) {
                 boolean sus = false;
                 FluidStack fluid;
-                if( toBeSimulated.getItem() instanceof ItemFluidPacket ) {
+                if (toBeSimulated.getItem() instanceof ItemFluidPacket) {
                     fluid = ItemFluidPacket.getFluidStack(toBeSimulated);
                 } else {
                     fluid = ItemFluidDrop.getFluidStack(toBeSimulated);
@@ -138,7 +150,7 @@ public class FluidConvertingInventoryAdaptor extends InventoryAdaptor {
             }
             if (invFluids != null) {
                 FluidStack fluid;
-                if( toBeSimulated.getItem() instanceof ItemFluidPacket ) {
+                if (toBeSimulated.getItem() instanceof ItemFluidPacket) {
                     fluid = ItemFluidPacket.getFluidStack(toBeSimulated);
                 } else {
                     fluid = ItemFluidDrop.getFluidStack(toBeSimulated);
@@ -154,7 +166,7 @@ public class FluidConvertingInventoryAdaptor extends InventoryAdaptor {
             }
             return toBeSimulated;
         }
-        //Assert EIO conduct can hold all item, as it is the origin practice in AE2
+        // Assert EIO conduct can hold all item, as it is the origin practice in AE2
         if (eioDuct != null) {
             return null;
         }
@@ -172,12 +184,14 @@ public class FluidConvertingInventoryAdaptor extends InventoryAdaptor {
     }
 
     @Override
-    public ItemStack removeSimilarItems(int amount, ItemStack filter, FuzzyMode fuzzyMode, IInventoryDestination destination) {
+    public ItemStack removeSimilarItems(
+            int amount, ItemStack filter, FuzzyMode fuzzyMode, IInventoryDestination destination) {
         return invItems != null ? invItems.removeSimilarItems(amount, filter, fuzzyMode, destination) : null;
     }
 
     @Override
-    public ItemStack simulateSimilarRemove(int amount, ItemStack filter, FuzzyMode fuzzyMode, IInventoryDestination destination) {
+    public ItemStack simulateSimilarRemove(
+            int amount, ItemStack filter, FuzzyMode fuzzyMode, IInventoryDestination destination) {
         return invItems != null ? invItems.simulateSimilarRemove(amount, filter, fuzzyMode, destination) : null;
     }
 
@@ -189,7 +203,8 @@ public class FluidConvertingInventoryAdaptor extends InventoryAdaptor {
         }
         if (invFluids != null && invFluids.getTankInfo(this.side) != null) {
             List<FluidTankInfo[]> tankInfos = new LinkedList<>();
-            if (invFluids instanceof TileCableBus && ((TileCableBus) invFluids).getPart(this.side) instanceof PartP2PLiquids) {
+            if (invFluids instanceof TileCableBus
+                    && ((TileCableBus) invFluids).getPart(this.side) instanceof PartP2PLiquids) {
                 // read other ends of p2p for blocking mode
                 PartP2PLiquids invFluidsP2P = (PartP2PLiquids) ((TileCableBus) invFluids).getPart(this.side);
                 try {
@@ -203,11 +218,9 @@ public class FluidConvertingInventoryAdaptor extends InventoryAdaptor {
                             p2p = invFluidsP2P.getInput();
                             checkedInput = true;
                         }
-                        if (p2p == invFluidsP2P || p2p == null)
-                            continue;
+                        if (p2p == invFluidsP2P || p2p == null) continue;
                         IFluidHandler target = Ae2Reflect.getP2PLiquidTarget(p2p);
-                        if (target == null)
-                            continue;
+                        if (target == null) continue;
                         tankInfos.add(target.getTankInfo(p2p.getSide().getOpposite()));
                     }
                 } catch (GridAccessException e) {
@@ -235,15 +248,14 @@ public class FluidConvertingInventoryAdaptor extends InventoryAdaptor {
     }
 
     public boolean hasSlots() {
-        return (invFluids != null && invFluids.getTankInfo(side).length > 0)
-            || (invItems != null);
+        return (invFluids != null && invFluids.getTankInfo(side).length > 0) || (invItems != null);
     }
 
     @Override
     public Iterator<ItemSlot> iterator() {
         return new SlotIterator(
-            invFluids != null ? invFluids.getTankInfo(side) : new FluidTankInfo[0],
-            invItems != null ? invItems.iterator() : Collections.emptyIterator());
+                invFluids != null ? invFluids.getTankInfo(side) : new FluidTankInfo[0],
+                invItems != null ? invItems.iterator() : Collections.emptyIterator());
     }
 
     private static class SlotIterator implements Iterator<ItemSlot> {
@@ -277,7 +289,5 @@ public class FluidConvertingInventoryAdaptor extends InventoryAdaptor {
                 return slot;
             }
         }
-
     }
-
 }

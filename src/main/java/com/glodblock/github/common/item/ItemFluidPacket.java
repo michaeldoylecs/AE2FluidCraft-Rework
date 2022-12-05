@@ -8,6 +8,9 @@ import com.glodblock.github.util.NameConst;
 import cpw.mods.fml.common.registry.GameRegistry;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import java.util.List;
+import java.util.Objects;
+import javax.annotation.Nullable;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
@@ -20,15 +23,20 @@ import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
 
-import javax.annotation.Nullable;
-import java.util.List;
-import java.util.Objects;
-
 public class ItemFluidPacket extends Item {
 
     public ItemFluidPacket() {
         setUnlocalizedName(NameConst.ITEM_FLUID_PACKET);
         setMaxStackSize(1);
+    }
+
+    public static FluidStack getFluidStack(ItemStack stack) {
+        if (stack == null || !stack.hasTagCompound()) {
+            return null;
+        }
+        FluidStack fluid = FluidStack.loadFluidStackFromNBT(
+                Objects.requireNonNull(stack.getTagCompound()).getCompoundTag("FluidStack"));
+        return (fluid != null && fluid.amount > 0) ? fluid : null;
     }
 
     @Override
@@ -38,23 +46,9 @@ public class ItemFluidPacket extends Item {
         if (display) {
             return fluid != null ? fluid.getLocalizedName() : super.getItemStackDisplayName(stack);
         }
-        return fluid != null ? String.format("%s, %,d mB", fluid.getLocalizedName(), fluid.amount)
-            : super.getItemStackDisplayName(stack);
-    }
-
-    @Override
-    @SuppressWarnings("unchecked")
-    public void addInformation(ItemStack stack, EntityPlayer player, List tooltip, boolean flags) {
-        FluidStack fluid = getFluidStack(stack);
-        boolean display = isDisplay(stack);
-        if (display) return;
-        if (fluid != null) {
-            for (String line : StatCollector.translateToLocalFormatted(NameConst.TT_FLUID_PACKET).split("\\\\n")) {
-                tooltip.add(EnumChatFormatting.GRAY + line);
-            }
-        } else {
-            tooltip.add(EnumChatFormatting.RED + StatCollector.translateToLocalFormatted(NameConst.TT_INVALID_FLUID));
-        }
+        return fluid != null
+                ? String.format("%s, %,d mB", fluid.getLocalizedName(), fluid.amount)
+                : super.getItemStackDisplayName(stack);
     }
 
     public static boolean isDisplay(ItemStack stack) {
@@ -64,12 +58,20 @@ public class ItemFluidPacket extends Item {
         return stack.getTagCompound().getBoolean("DisplayOnly");
     }
 
-    public static FluidStack getFluidStack(ItemStack stack) {
-        if (stack == null || !stack.hasTagCompound()) {
-            return null;
+    @Override
+    @SuppressWarnings("unchecked")
+    public void addInformation(ItemStack stack, EntityPlayer player, List tooltip, boolean flags) {
+        FluidStack fluid = getFluidStack(stack);
+        boolean display = isDisplay(stack);
+        if (display) return;
+        if (fluid != null) {
+            for (String line : StatCollector.translateToLocalFormatted(NameConst.TT_FLUID_PACKET)
+                    .split("\\\\n")) {
+                tooltip.add(EnumChatFormatting.GRAY + line);
+            }
+        } else {
+            tooltip.add(EnumChatFormatting.RED + StatCollector.translateToLocalFormatted(NameConst.TT_INVALID_FLUID));
         }
-        FluidStack fluid = FluidStack.loadFluidStackFromNBT(Objects.requireNonNull(stack.getTagCompound()).getCompoundTag("FluidStack"));
-        return (fluid != null && fluid.amount > 0) ? fluid : null;
     }
 
     public static FluidStack getFluidStack(@Nullable IAEItemStack stack) {
@@ -117,8 +119,7 @@ public class ItemFluidPacket extends Item {
 
     @Override
     @SideOnly(Side.CLIENT)
-    public void registerIcons(IIconRegister aIconRegister) {
-    }
+    public void registerIcons(IIconRegister aIconRegister) {}
 
     @SideOnly(Side.CLIENT)
     public IIcon getIconFromDamage(int p_77617_1_) {

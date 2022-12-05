@@ -9,7 +9,7 @@ public class FluidCraftingTabs extends CreativeTabs {
 
     public static final FluidCraftingTabs INSTANCE = new FluidCraftingTabs(FluidCraft.MODID);
 
-    public FluidCraftingTabs(String name){
+    public FluidCraftingTabs(String name) {
         super(name);
     }
 

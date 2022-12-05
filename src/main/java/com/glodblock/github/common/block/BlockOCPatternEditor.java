@@ -25,14 +25,16 @@ public class BlockOCPatternEditor extends FCBaseBlock {
     }
 
     @Override
-    public boolean onActivated(World world, int x, int y, int z, EntityPlayer player, int facing, float hitX, float hitY, float hitZ) {
+    public boolean onActivated(
+            World world, int x, int y, int z, EntityPlayer player, int facing, float hitX, float hitY, float hitZ) {
         if (player.isSneaking()) {
             return false;
         }
         TileOCPatternEditor tile = getTileEntity(world, x, y, z);
         if (tile != null) {
             if (!world.isRemote) {
-                InventoryHandler.openGui(player, world, new BlockPos(x, y, z), EnumFacing.getFront(facing), GuiType.OC_PATTERN_EDITOR);
+                InventoryHandler.openGui(
+                        player, world, new BlockPos(x, y, z), EnumFacing.getFront(facing), GuiType.OC_PATTERN_EDITOR);
             }
             return true;
         }
@@ -56,5 +58,4 @@ public class BlockOCPatternEditor extends FCBaseBlock {
     public ItemStack stack() {
         return new ItemStack(this, 1);
     }
-
 }

@@ -9,13 +9,12 @@ import com.glodblock.github.util.NameConst;
 import cpw.mods.fml.common.registry.GameRegistry;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import javax.annotation.Nullable;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
-
-import javax.annotation.Nullable;
 
 public class ItemPartFluidInterface extends Item implements IPartItem {
 
@@ -32,7 +31,17 @@ public class ItemPartFluidInterface extends Item implements IPartItem {
     }
 
     @Override
-    public boolean onItemUse(ItemStack stack, EntityPlayer player, World world, int x, int y, int z, int side, float xOffset, float yOffset, float zOffset) {
+    public boolean onItemUse(
+            ItemStack stack,
+            EntityPlayer player,
+            World world,
+            int x,
+            int y,
+            int z,
+            int side,
+            float xOffset,
+            float yOffset,
+            float zOffset) {
         return AEApi.instance().partHelper().placeBus(player.getHeldItem(), x, y, z, side, player, world);
     }
 
@@ -43,8 +52,7 @@ public class ItemPartFluidInterface extends Item implements IPartItem {
     }
 
     @Override
-    public void registerIcons(IIconRegister _iconRegister) {
-    }
+    public void registerIcons(IIconRegister _iconRegister) {}
 
     @Override
     @SideOnly(Side.CLIENT)
@@ -59,5 +67,4 @@ public class ItemPartFluidInterface extends Item implements IPartItem {
     public ItemStack stack() {
         return new ItemStack(this, 1);
     }
-
 }

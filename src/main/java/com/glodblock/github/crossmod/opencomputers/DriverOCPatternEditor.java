@@ -29,8 +29,7 @@ import net.minecraftforge.fluids.FluidStack;
 
 public class DriverOCPatternEditor extends DriverSidedTileEntity {
 
-    public DriverOCPatternEditor() {
-    }
+    public DriverOCPatternEditor() {}
 
     @Override
     public Class<?> getTileEntityClass() {
@@ -42,8 +41,7 @@ public class DriverOCPatternEditor extends DriverSidedTileEntity {
         return new DriverOCPatternEditor.Environment((TileOCPatternEditor) world.getTileEntity(x, y, z));
     }
 
-    public static class Environment extends ManagedTileEntityEnvironment<TileOCPatternEditor>
-        implements NamedBlock {
+    public static class Environment extends ManagedTileEntityEnvironment<TileOCPatternEditor> implements NamedBlock {
 
         public Environment(TileOCPatternEditor tileEntity) {
             super(tileEntity, NameConst.BLOCK_OC_PATTERN_EDITOR);
@@ -56,8 +54,7 @@ public class DriverOCPatternEditor extends DriverSidedTileEntity {
                     throw new IllegalArgumentException("invalid slot");
                 }
                 return slot;
-            }
-            else {
+            } else {
                 return def;
             }
         }
@@ -69,8 +66,7 @@ public class DriverOCPatternEditor extends DriverSidedTileEntity {
                     throw new IllegalArgumentException("invalid slot");
                 }
                 return slot;
-            }
-            else {
+            } else {
                 throw new IllegalArgumentException("invalid slot");
             }
         }
@@ -79,7 +75,8 @@ public class DriverOCPatternEditor extends DriverSidedTileEntity {
             if (pattern == null) {
                 throw new IllegalArgumentException("No pattern here!");
             }
-            if (pattern.getItem() instanceof ItemEncodedPattern && !(pattern.getItem() instanceof ItemFluidEncodedPattern)) {
+            if (pattern.getItem() instanceof ItemEncodedPattern
+                    && !(pattern.getItem() instanceof ItemFluidEncodedPattern)) {
                 ItemEncodedPattern iep = (ItemEncodedPattern) pattern.getItem();
                 return iep.getOutput(pattern) == null;
             }
@@ -95,8 +92,7 @@ public class DriverOCPatternEditor extends DriverSidedTileEntity {
                     address = args.checkString(0);
                     entry = args.checkInteger(1);
                     size = args.optInteger(2, 1);
-                }
-                else {
+                } else {
                     address = args.checkString(1);
                     entry = args.checkInteger(2);
                     size = args.optInteger(3, 1);
@@ -107,21 +103,17 @@ public class DriverOCPatternEditor extends DriverSidedTileEntity {
                         ItemStack dbStack = ((Database) node.host()).getStackInSlot(entry - 1);
                         if (dbStack == null || size < 1) {
                             return null;
-                        }
-                        else {
+                        } else {
                             dbStack.stackSize = Math.min(size, dbStack.getMaxStackSize());
                             return dbStack;
                         }
-                    }
-                    else {
+                    } else {
                         throw new IllegalArgumentException("not a database");
                     }
-                }
-                else {
+                } else {
                     throw new IllegalArgumentException("no such component");
                 }
-            }
-            else {
+            } else {
                 return null;
             }
         }
@@ -132,12 +124,10 @@ public class DriverOCPatternEditor extends DriverSidedTileEntity {
             if (validPattern(pattern)) {
                 NBTTagCompound encodedValue = pattern.getTagCompound();
                 int slot = checkSlot(args, inv, 0);
-                if (encodedValue == null)
-                    throw new IllegalArgumentException("No pattern here!");
+                if (encodedValue == null) throw new IllegalArgumentException("No pattern here!");
                 NBTTagList nbt = encodedValue.getTagList(tag, 10);
                 int index = args.checkInteger(1) - 1;
-                if (index < 0)
-                    throw new IllegalArgumentException("Invalid index!");
+                if (index < 0) throw new IllegalArgumentException("Invalid index!");
                 nbt.removeTag(index);
                 encodedValue.setTag(tag, nbt);
                 pattern.setTagCompound(encodedValue);
@@ -159,24 +149,20 @@ public class DriverOCPatternEditor extends DriverSidedTileEntity {
                 stack = ItemFluidDrop.newStack(fluids);
             }
             int index = args.checkInteger(4) - 1;
-            if (index < 0 || index > 511)
-                throw new IllegalArgumentException("Invalid index!");
+            if (index < 0 || index > 511) throw new IllegalArgumentException("Invalid index!");
             ItemStack pattern = inv.getStackInSlot(slot);
             if (validPattern(pattern)) {
                 NBTTagCompound encodedValue = pattern.getTagCompound();
-                if (encodedValue == null)
-                    throw new IllegalArgumentException("No pattern here!");
+                if (encodedValue == null) throw new IllegalArgumentException("No pattern here!");
 
                 NBTTagList inTag = encodedValue.getTagList(tag, 10);
-                while (inTag.tagCount() <= index)
-                    inTag.appendTag(new NBTTagCompound());
+                while (inTag.tagCount() <= index) inTag.appendTag(new NBTTagCompound());
                 if (stack != null) {
                     NBTTagCompound nbt = new NBTTagCompound();
                     AEItemStack aeStack = AEItemStack.create(stack);
                     aeStack.writeToNBT(nbt);
                     inTag.func_150304_a(index, nbt);
-                }
-                else {
+                } else {
                     inTag.removeTag(index);
                 }
                 encodedValue.setTag(tag, inTag);
@@ -194,14 +180,16 @@ public class DriverOCPatternEditor extends DriverSidedTileEntity {
         public Object[] getInterfaceConfiguration(Context context, Arguments args) {
             IInventory config = tileEntity.getInternalInventory();
             int slot = optSlot(args, config, 0, 0);
-            ItemStack stack  = config.getStackInSlot(slot);
-            if (!validPattern(stack )) {
+            ItemStack stack = config.getStackInSlot(slot);
+            if (!validPattern(stack)) {
                 throw new IllegalArgumentException("Not Fluid Encoded pattern!");
             }
-            return new Object[]{stack};
+            return new Object[] {stack};
         }
 
-        @Callback(doc = "function([slot:number][, database:address, entry:number[, size:number]]):boolean -- Configure the interface.")
+        @Callback(
+                doc =
+                        "function([slot:number][, database:address, entry:number[, size:number]]):boolean -- Configure the interface.")
         public Object[] setInterfaceConfiguration(Context context, Arguments args) {
             IInventory config = tileEntity.getInternalInventory();
             int slot = args.isString(0) ? 0 : optSlot(args, config, 0, 0);
@@ -218,22 +206,30 @@ public class DriverOCPatternEditor extends DriverSidedTileEntity {
             return new Object[] {stack};
         }
 
-        @Callback(doc = "function(slot:number, database:address, entry:number, size:number, index:number):boolean -- Set the pattern item input at the given index.")
+        @Callback(
+                doc =
+                        "function(slot:number, database:address, entry:number, size:number, index:number):boolean -- Set the pattern item input at the given index.")
         public Object[] setInterfacePatternItemInput(Context context, Arguments args) {
             return setPatternSlot(context, args, "in", false);
         }
 
-        @Callback(doc = "function(slot:number, database:address, entry:number, size:number, index:number):boolean -- Set the pattern item output at the given index.")
+        @Callback(
+                doc =
+                        "function(slot:number, database:address, entry:number, size:number, index:number):boolean -- Set the pattern item output at the given index.")
         public Object[] setInterfacePatternItemOutput(Context context, Arguments args) {
             return setPatternSlot(context, args, "out", false);
         }
 
-        @Callback(doc = "function(slot:number, database:address, entry:number, size:number, index:number):boolean -- Set the pattern fluid input at the given index.")
+        @Callback(
+                doc =
+                        "function(slot:number, database:address, entry:number, size:number, index:number):boolean -- Set the pattern fluid input at the given index.")
         public Object[] setInterfacePatternFluidInput(Context context, Arguments args) {
             return setPatternSlot(context, args, "in", true);
         }
 
-        @Callback(doc = "function(slot:number, database:address, entry:number, size:number, index:number):boolean -- Set the pattern fluid output at the given index.")
+        @Callback(
+                doc =
+                        "function(slot:number, database:address, entry:number, size:number, index:number):boolean -- Set the pattern fluid output at the given index.")
         public Object[] setInterfacePatternFluidOutput(Context context, Arguments args) {
             return setPatternSlot(context, args, "out", true);
         }
@@ -260,8 +256,7 @@ public class DriverOCPatternEditor extends DriverSidedTileEntity {
     }
 
     public static class Provider implements EnvironmentProvider {
-        Provider() {
-        }
+        Provider() {}
 
         @Override
         public Class<?> getEnvironment(ItemStack itemStack) {
@@ -271,5 +266,4 @@ public class DriverOCPatternEditor extends DriverSidedTileEntity {
             return null;
         }
     }
-
 }

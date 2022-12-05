@@ -12,6 +12,8 @@ import com.glodblock.github.common.item.ItemFluidDrop;
 import com.glodblock.github.network.CPacketFluidUpdate;
 import com.glodblock.github.util.Ae2ReflectClient;
 import com.glodblock.github.util.Util;
+import java.util.HashMap;
+import java.util.Map;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.entity.player.InventoryPlayer;
@@ -20,9 +22,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidStack;
 import org.lwjgl.opengl.GL11;
-
-import java.util.HashMap;
-import java.util.Map;
 
 public class GuiFluidTerminal extends GuiBaseFluidTerminal {
     private final AppEngRenderItem stackSizeRenderer = Ae2ReflectClient.getStackSizeRenderer(this);
@@ -40,10 +39,8 @@ public class GuiFluidTerminal extends GuiBaseFluidTerminal {
 
     @Override
     public void func_146977_a(final Slot s) {
-        if (drawSlot0(s))
-            super.func_146977_a(s);
+        if (drawSlot0(s)) super.func_146977_a(s);
     }
-
 
     public boolean drawSlot0(Slot slot) {
         if (slot instanceof SlotME) {
@@ -52,23 +49,29 @@ public class GuiFluidTerminal extends GuiBaseFluidTerminal {
             FluidStack fluidStack = ItemFluidDrop.getFluidStack(slot.getStack());
             this.drawWidget(slot.xDisplayPosition, slot.yDisplayPosition, fluidStack.getFluid());
             stackSizeRenderer.setAeStack(stack);
-            stackSizeRenderer.renderItemOverlayIntoGUI(fontRendererObj, mc.getTextureManager(), stack.getItemStack(), slot.xDisplayPosition, slot.yDisplayPosition);
+            stackSizeRenderer.renderItemOverlayIntoGUI(
+                    fontRendererObj,
+                    mc.getTextureManager(),
+                    stack.getItemStack(),
+                    slot.xDisplayPosition,
+                    slot.yDisplayPosition);
             return false;
         }
         return true;
     }
 
     private void drawWidget(int posX, int posY, Fluid fluid) {
-        Minecraft.getMinecraft().renderEngine
-            .bindTexture(TextureMap.locationBlocksTexture);
+        Minecraft.getMinecraft().renderEngine.bindTexture(TextureMap.locationBlocksTexture);
         GL11.glDisable(GL11.GL_LIGHTING);
         GL11.glEnable(GL11.GL_BLEND);
         GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
         GL11.glColor3f(1, 1, 1);
         if (fluid != null && fluid.getIcon() != null) {
-            GL11.glColor3f((fluid.getColor() >> 16 & 0xFF) / 255.0F, (fluid.getColor() >> 8 & 0xFF) / 255.0F, (fluid.getColor() & 0xFF) / 255.0F);
-            drawTexturedModelRectFromIcon(posX, posY,
-                fluid.getIcon(), 16, 16);
+            GL11.glColor3f(
+                    (fluid.getColor() >> 16 & 0xFF) / 255.0F,
+                    (fluid.getColor() >> 8 & 0xFF) / 255.0F,
+                    (fluid.getColor() & 0xFF) / 255.0F);
+            drawTexturedModelRectFromIcon(posX, posY, fluid.getIcon(), 16, 16);
         }
         GL11.glEnable(GL11.GL_LIGHTING);
         GL11.glDisable(GL11.GL_BLEND);
