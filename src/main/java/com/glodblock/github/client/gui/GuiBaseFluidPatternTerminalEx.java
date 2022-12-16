@@ -1,9 +1,6 @@
 package com.glodblock.github.client.gui;
 
-import appeng.api.config.ActionItems;
-import appeng.api.config.ItemSubstitution;
-import appeng.api.config.PatternSlotConfig;
-import appeng.api.config.Settings;
+import appeng.api.config.*;
 import appeng.api.storage.ITerminalHost;
 import appeng.client.gui.widgets.GuiImgButton;
 import appeng.client.gui.widgets.GuiScrollbar;
@@ -144,19 +141,20 @@ public class GuiBaseFluidPatternTerminalEx extends GuiFCBaseMonitor {
                 new GuiFCImgButton(this.guiLeft + 87, this.guiTop + this.ySize - 114, "NOT_COMBINE", "DONT_COMBINE");
         this.combineDisableBtn.setHalfSize(true);
         this.buttonList.add(this.combineDisableBtn);
-        //        if (ModAndClassUtil.isBeSubstitutionsButton) {
-        //            this.beSubstitutionsEnabledBtn = new GuiImgButton(
-        //                this.guiLeft + 87, this.guiTop + this.ySize - 103, Settings.ACTIONS,
-        // PatternBeSubstitution.ENABLED);
-        //            this.beSubstitutionsEnabledBtn.setHalfSize(true);
-        //            this.buttonList.add(this.beSubstitutionsEnabledBtn);
-        //
-        //            this.beSubstitutionsDisabledBtn = new GuiImgButton(
-        //                this.guiLeft + 87, this.guiTop + this.ySize - 103, Settings.ACTIONS,
-        // PatternBeSubstitution.DISABLED);
-        //            this.beSubstitutionsDisabledBtn.setHalfSize(true);
-        //            this.buttonList.add(this.beSubstitutionsDisabledBtn);
-        //        }
+        if (ModAndClassUtil.isBeSubstitutionsButton) {
+            this.beSubstitutionsEnabledBtn = new GuiImgButton(
+                    this.guiLeft + 87, this.guiTop + this.ySize - 103, Settings.ACTIONS, PatternBeSubstitution.ENABLED);
+            this.beSubstitutionsEnabledBtn.setHalfSize(true);
+            this.buttonList.add(this.beSubstitutionsEnabledBtn);
+
+            this.beSubstitutionsDisabledBtn = new GuiImgButton(
+                    this.guiLeft + 87,
+                    this.guiTop + this.ySize - 103,
+                    Settings.ACTIONS,
+                    PatternBeSubstitution.DISABLED);
+            this.beSubstitutionsDisabledBtn.setHalfSize(true);
+            this.buttonList.add(this.beSubstitutionsDisabledBtn);
+        }
         processingScrollBar.setTop(this.ySize - 164);
     }
 
@@ -241,6 +239,8 @@ public class GuiBaseFluidPatternTerminalEx extends GuiFCBaseMonitor {
 
         substitutionsEnabledBtn.xPosition = this.guiLeft + 97 + offset;
         substitutionsDisabledBtn.xPosition = this.guiLeft + 97 + offset;
+        beSubstitutionsEnabledBtn.xPosition = this.guiLeft + 97 + offset;
+        beSubstitutionsDisabledBtn.xPosition = this.guiLeft + 97 + offset;
         fluidPrioritizedEnabledBtn.xPosition = this.guiLeft + 97 + offset;
         fluidPrioritizedDisabledBtn.xPosition = this.guiLeft + 97 + offset;
         doubleBtn.xPosition = this.guiLeft + 97 + offset;

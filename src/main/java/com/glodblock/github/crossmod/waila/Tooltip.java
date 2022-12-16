@@ -8,7 +8,7 @@ import net.minecraft.client.resources.I18n;
 import net.minecraftforge.fluids.FluidStack;
 
 public class Tooltip {
-    public static String fluidFormat(String name, int amount) {
+    public static String fluidFormat(String name, long amount) {
         return String.format("%s: %s mB", name, NumberFormat.getInstance().format(amount));
     }
 
