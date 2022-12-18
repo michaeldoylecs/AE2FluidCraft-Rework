@@ -4,15 +4,11 @@ import appeng.api.config.Actionable;
 import appeng.api.config.PowerMultiplier;
 import appeng.api.implementations.IPowerChannelState;
 import appeng.api.networking.GridFlags;
-import appeng.api.networking.IGridNode;
 import appeng.api.networking.events.MENetworkBootingStatusChange;
 import appeng.api.networking.events.MENetworkEventSubscribe;
 import appeng.api.networking.events.MENetworkPowerStatusChange;
 import appeng.api.networking.security.BaseActionSource;
 import appeng.api.networking.security.MachineSource;
-import appeng.api.networking.ticking.IGridTickable;
-import appeng.api.networking.ticking.TickRateModulation;
-import appeng.api.networking.ticking.TickingRequest;
 import appeng.api.storage.data.IAEFluidStack;
 import appeng.me.GridAccessException;
 import appeng.tile.TileEvent;
@@ -30,8 +26,7 @@ import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTankInfo;
 import net.minecraftforge.fluids.IFluidHandler;
 
-public class TileFluidBuffer extends AENetworkTile
-        implements IAEFluidInventory, IFluidHandler, IPowerChannelState {
+public class TileFluidBuffer extends AENetworkTile implements IAEFluidInventory, IFluidHandler, IPowerChannelState {
 
     private final AEFluidInventory invFluids = new AEFluidInventory(this, 1, Integer.MAX_VALUE);
     private final BaseActionSource source;
@@ -86,9 +81,9 @@ public class TileFluidBuffer extends AENetworkTile
     @Override
     public FluidStack drain(ForgeDirection forgeDirection, FluidStack fluidStack, boolean b) {
         FluidStack fs = this.getFluidStack();
-        if(fs != null && fs.getFluid() == fluidStack.getFluid()){
+        if (fs != null && fs.getFluid() == fluidStack.getFluid()) {
             return this.drainFluid(fluidStack, b ? Actionable.MODULATE : Actionable.SIMULATE);
-        }else {
+        } else {
             return null;
         }
     }
@@ -228,10 +223,11 @@ public class TileFluidBuffer extends AENetworkTile
     public AEFluidInventory getInternalFluid() {
         return this.invFluids;
     }
-    public void updateFluidStore(){
-        IAEFluidStack iaf =  this.getAEStoreFluidStack();
-        if(iaf != null){
-            this.invFluids.setFluidInSlot(0,iaf);
+
+    public void updateFluidStore() {
+        IAEFluidStack iaf = this.getAEStoreFluidStack();
+        if (iaf != null) {
+            this.invFluids.setFluidInSlot(0, iaf);
         }
     }
 }

@@ -74,7 +74,7 @@ public class FluidInvWailaDataProvider extends BaseWailaDataProvider {
             final int x,
             final int y,
             final int z) {
-        if(te instanceof TileFluidBuffer){
+        if (te instanceof TileFluidBuffer) {
             ((TileFluidBuffer) te).updateFluidStore();
         }
         if (te instanceof IAEFluidInventory) {
