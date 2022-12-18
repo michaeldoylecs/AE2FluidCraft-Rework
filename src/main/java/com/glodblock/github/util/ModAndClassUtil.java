@@ -72,7 +72,7 @@ public final class ModAndClassUtil {
         }
         try {
             Field d = ButtonToolTips.class.getDeclaredField("BeSubstitutionsDescEnabled");
-            //            isBeSubstitutionsButton = true;
+            isBeSubstitutionsButton = true;
         } catch (NoSuchFieldException e) {
             isBeSubstitutionsButton = false;
         }

@@ -9,6 +9,7 @@ public class NameConst {
     public static final String BLOCK_FLUID_PACKET_DECODER = "fluid_packet_decoder";
     public static final String BLOCK_FLUID_INTERFACE = "fluid_interface";
     public static final String BLOCK_INGREDIENT_BUFFER = "ingredient_buffer";
+    public static final String BLOCK_FLUID_BUFFER = "fluid_buffer";
     public static final String BLOCK_LARGE_INGREDIENT_BUFFER = "large_ingredient_buffer";
     public static final String BLOCK_OC_PATTERN_EDITOR = "oc_pattern_editor";
     public static final String BLOCK_LEVEL_MAINTAINER = "level_maintainer";

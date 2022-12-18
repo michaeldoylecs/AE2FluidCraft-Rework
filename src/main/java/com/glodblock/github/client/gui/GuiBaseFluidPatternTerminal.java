@@ -1,8 +1,6 @@
 package com.glodblock.github.client.gui;
 
-import appeng.api.config.ActionItems;
-import appeng.api.config.ItemSubstitution;
-import appeng.api.config.Settings;
+import appeng.api.config.*;
 import appeng.api.storage.ITerminalHost;
 import appeng.client.gui.widgets.GuiImgButton;
 import appeng.client.gui.widgets.GuiTabButton;
@@ -129,21 +127,22 @@ public class GuiBaseFluidPatternTerminal extends GuiFCBaseMonitor {
             this.buttonList.add(this.doubleBtn);
             combineLeft = 84;
         }
-        //        if (ModAndClassUtil.isBeSubstitutionsButton) {
-        //            combineLeft = 74;
-        //            combineTop -= 11;
-        //            this.beSubstitutionsEnabledBtn = new GuiImgButton(
-        //                this.guiLeft + 84, this.guiTop + this.ySize - 153, Settings.ACTIONS,
-        // PatternBeSubstitution.ENABLED);
-        //            this.beSubstitutionsEnabledBtn.setHalfSize(true);
-        //            this.buttonList.add(this.beSubstitutionsEnabledBtn);
-        //
-        //            this.beSubstitutionsDisabledBtn = new GuiImgButton(
-        //                this.guiLeft + 84, this.guiTop + this.ySize - 153, Settings.ACTIONS,
-        // PatternBeSubstitution.DISABLED);
-        //            this.beSubstitutionsDisabledBtn.setHalfSize(true);
-        //            this.buttonList.add(this.beSubstitutionsDisabledBtn);
-        //        }
+        if (ModAndClassUtil.isBeSubstitutionsButton) {
+            combineLeft = 74;
+            combineTop -= 11;
+            this.beSubstitutionsEnabledBtn = new GuiImgButton(
+                    this.guiLeft + 84, this.guiTop + this.ySize - 153, Settings.ACTIONS, PatternBeSubstitution.ENABLED);
+            this.beSubstitutionsEnabledBtn.setHalfSize(true);
+            this.buttonList.add(this.beSubstitutionsEnabledBtn);
+
+            this.beSubstitutionsDisabledBtn = new GuiImgButton(
+                    this.guiLeft + 84,
+                    this.guiTop + this.ySize - 153,
+                    Settings.ACTIONS,
+                    PatternBeSubstitution.DISABLED);
+            this.beSubstitutionsDisabledBtn.setHalfSize(true);
+            this.buttonList.add(this.beSubstitutionsDisabledBtn);
+        }
         this.combineEnableBtn = new GuiFCImgButton(
                 this.guiLeft + combineLeft, this.guiTop + this.ySize - combineTop, "FORCE_COMBINE", "DO_COMBINE");
         this.combineEnableBtn.setHalfSize(true);

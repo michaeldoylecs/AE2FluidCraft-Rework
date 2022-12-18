@@ -151,6 +151,7 @@ public class RecipeLoader implements Runnable {
                 AE2_PROCESS_ENG));
         GameRegistry.addShapelessRecipe(AE2_BLANK_PATTERN, PATTERN.stack());
         GameRegistry.addShapelessRecipe(FLUID_TERM.stack(), AE2_TERMINAL, BUFFER);
+        GameRegistry.addShapelessRecipe(FLUID_BUFFER.stack(), LARGE_BUFFER.stack(), CELL1K.getComponent());
         GameRegistry.addShapelessRecipe(
                 LEVEL_MAINTAINER.stack(), AE2_CRAFTING_CP_UNIT, ENCODER, AE2_PATTERN_CAPACITY_CARD);
         if (Config.fluidCells) {
