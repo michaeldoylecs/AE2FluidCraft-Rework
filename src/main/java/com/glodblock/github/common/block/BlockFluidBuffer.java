@@ -37,6 +37,7 @@ public class BlockFluidBuffer extends FCBaseBlock {
         if (Platform.isServer()) {
             TileFluidBuffer tile = getTileEntity(world, x, y, z);
             if (tile == null) return false;
+            if(player.isSneaking() && itemStack == null) return !tile.setFluid(null);
             IAEFluidStack ias = tile.getAEStoreFluidStack();
             if (fs == null && ias != null) {
                 player.addChatMessage(new ChatComponentText(
@@ -47,7 +48,7 @@ public class BlockFluidBuffer extends FCBaseBlock {
                 return true;
             }
         }
-        return fs != null;
+        return fs != null || (player.isSneaking() && itemStack == null);
     }
 
     public BlockFluidBuffer register() {

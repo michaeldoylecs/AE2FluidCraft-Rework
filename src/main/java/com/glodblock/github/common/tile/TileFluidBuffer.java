@@ -31,7 +31,7 @@ import net.minecraftforge.fluids.FluidTankInfo;
 import net.minecraftforge.fluids.IFluidHandler;
 
 public class TileFluidBuffer extends AENetworkTile
-        implements IAEFluidInventory, IFluidHandler, IPowerChannelState, IGridTickable {
+        implements IAEFluidInventory, IFluidHandler, IPowerChannelState {
 
     private final AEFluidInventory invFluids = new AEFluidInventory(this, 1, Integer.MAX_VALUE);
     private final BaseActionSource source;
@@ -44,10 +44,6 @@ public class TileFluidBuffer extends AENetworkTile
     }
 
     public boolean setFluid(FluidStack fs) {
-        return this.setFluid(fs, Actionable.MODULATE);
-    }
-
-    public boolean setFluid(FluidStack fs, Actionable actionable) {
         if (fs == null) {
             this.invFluids.setFluidInSlot(0, null);
             return false;
@@ -58,7 +54,7 @@ public class TileFluidBuffer extends AENetworkTile
                     .getFluidInventory()
                     .getStorageList()
                     .findPrecise(AEFluidStack.create(fs));
-            if (actionable == Actionable.MODULATE) this.invFluids.setFluidInSlot(0, ias);
+            this.invFluids.setFluidInSlot(0, ias);
             if (ias != null) return true;
         } catch (final GridAccessException e) {
             // :P
@@ -89,7 +85,12 @@ public class TileFluidBuffer extends AENetworkTile
 
     @Override
     public FluidStack drain(ForgeDirection forgeDirection, FluidStack fluidStack, boolean b) {
-        return this.drainFluid(fluidStack, b ? Actionable.MODULATE : Actionable.SIMULATE);
+        FluidStack fs = this.getFluidStack();
+        if(fs != null && fs.getFluid() == fluidStack.getFluid()){
+            return this.drainFluid(fluidStack, b ? Actionable.MODULATE : Actionable.SIMULATE);
+        }else {
+            return null;
+        }
     }
 
     public FluidStack drainFluid(FluidStack fs, Actionable actionable) {
@@ -227,24 +228,10 @@ public class TileFluidBuffer extends AENetworkTile
     public AEFluidInventory getInternalFluid() {
         return this.invFluids;
     }
-
-    @Override
-    public TickingRequest getTickingRequest(IGridNode node) {
-        return new TickingRequest(40, 120, false, true);
-    }
-
-    @Override
-    public TickRateModulation tickingRequest(IGridNode node, int TicksSinceLastCall) {
-        return this.canDoBusWork() ? this.doWork() : TickRateModulation.IDLE;
-    }
-
-    private TickRateModulation doWork() {
-        return this.setFluid(this.getFluidStack(), Actionable.SIMULATE)
-                ? TickRateModulation.SLOWER
-                : TickRateModulation.FASTER;
-    }
-
-    private boolean canDoBusWork() {
-        return this.getProxy().isActive();
+    public void updateFluidStore(){
+        IAEFluidStack iaf =  this.getAEStoreFluidStack();
+        if(iaf != null){
+            this.invFluids.setFluidInSlot(0,iaf);
+        }
     }
 }

@@ -2,6 +2,7 @@ package com.glodblock.github.crossmod.waila.tile;
 
 import appeng.integration.modules.waila.BaseWailaDataProvider;
 import com.glodblock.github.common.item.ItemFluidPacket;
+import com.glodblock.github.common.tile.TileFluidBuffer;
 import com.glodblock.github.common.tile.TileFluidInterface;
 import com.glodblock.github.common.tile.TileFluidPacketDecoder;
 import com.glodblock.github.crossmod.waila.Tooltip;
@@ -73,6 +74,9 @@ public class FluidInvWailaDataProvider extends BaseWailaDataProvider {
             final int x,
             final int y,
             final int z) {
+        if(te instanceof TileFluidBuffer){
+            ((TileFluidBuffer) te).updateFluidStore();
+        }
         if (te instanceof IAEFluidInventory) {
             ((IAEFluidInventory) te).getInternalFluid().writeToNBT(tag, "fluidInv");
         } else if (te instanceof TileFluidPacketDecoder) {
