@@ -7,6 +7,7 @@ import com.glodblock.github.common.item.ItemBasicFluidStorageCell;
 import com.glodblock.github.common.storage.CellType;
 import com.glodblock.github.util.ModAndClassUtil;
 import cpw.mods.fml.common.registry.GameRegistry;
+import extracells.registries.ItemEnum;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
@@ -151,7 +152,12 @@ public class RecipeLoader implements Runnable {
                 AE2_PROCESS_ENG));
         GameRegistry.addShapelessRecipe(AE2_BLANK_PATTERN, PATTERN.stack());
         GameRegistry.addShapelessRecipe(FLUID_TERM.stack(), AE2_TERMINAL, BUFFER);
-        GameRegistry.addShapelessRecipe(FLUID_BUFFER.stack(), LARGE_BUFFER.stack(), CELL1K.getComponent());
+        GameRegistry.addShapelessRecipe(
+                FLUID_BUFFER.stack(),
+                LARGE_BUFFER.stack(),
+                Config.fluidCells
+                        ? CELL1K.getComponent()
+                        : ModAndClassUtil.EC2 ? ItemEnum.STORAGECOMPONENT.getDamagedStack(4) : null);
         GameRegistry.addShapelessRecipe(
                 LEVEL_MAINTAINER.stack(), AE2_CRAFTING_CP_UNIT, ENCODER, AE2_PATTERN_CAPACITY_CARD);
         if (Config.fluidCells) {
