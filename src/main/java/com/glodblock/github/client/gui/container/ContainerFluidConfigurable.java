@@ -54,22 +54,7 @@ public abstract class ContainerFluidConfigurable extends ContainerUpgradeable {
             this.standardDetectAndSendChanges();
             return null;
         } else {
-            if (idx < this.availableUpgrades()) {
-                if (!mergeItemStack(
-                        tis,
-                        this.getFakeFluidInv().getSizeInventory() + this.availableUpgrades(),
-                        this.inventorySlots.size(),
-                        false)) return null;
-            } else if (idx >= this.getFakeFluidInv().getSizeInventory() + this.availableUpgrades()) {
-                if (!mergeItemStack(tis, 0, this.availableUpgrades(), false)) return null;
-            }
-            if (tis.stackSize == 0) {
-                clickSlot.putStack(null);
-            } else {
-                clickSlot.onSlotChanged();
-            }
-            this.standardDetectAndSendChanges();
-            return tis;
+            return super.transferStackInSlot(p, idx);
         }
     }
 
