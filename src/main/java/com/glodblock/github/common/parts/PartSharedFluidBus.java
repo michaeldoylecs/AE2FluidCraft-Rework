@@ -115,10 +115,18 @@ public abstract class PartSharedFluidBus extends PartUpgradeable implements IGri
                 amount = amount * 4;
             case 1:
                 amount = amount * 8;
-            case 0:
-            default:
-                return (int) Math.floor(amount);
         }
+        switch (this.getInstalledUpgrades(Upgrades.SUPERSPEED)) {
+            case 4:
+                amount = amount * 8;
+            case 3:
+                amount = amount * 12;
+            case 2:
+                amount = amount * 16;
+            case 1:
+                amount = amount * 32;
+        }
+        return (int) Math.floor(amount);
     }
 
     @Override
