@@ -385,6 +385,7 @@ public class FCBaseFluidMonitorContain extends AEBaseContainer
                 IAEFluidStack tmp = this.host
                         .getFluidInventory()
                         .extractItems(toExtract, Actionable.SIMULATE, this.getActionSource());
+                if (tmp == null) continue;
                 fillStack.right.stackSize = (int) (tmp.getStackSize() / fillStack.left);
                 this.dropItem(fillStack.right);
                 out.stackSize = fillStack.right.stackSize;
