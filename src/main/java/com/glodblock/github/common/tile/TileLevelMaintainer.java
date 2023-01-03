@@ -82,8 +82,12 @@ public class TileLevelMaintainer extends AENetworkTile
                                 .getStorage()
                                 .getFluidInventory()
                                 .injectItems(ItemFluidDrop.getAeFluidStack(items), mode, this.source);
-                        items.setStackSize(notInserted.getStackSize());
-                        return items;
+                        if (notInserted != null) {
+                            items.setStackSize(notInserted.getStackSize());
+                            return items;
+                        } else {
+                            return null;
+                        }
                     } else {
                         return this.getProxy().getStorage().getItemInventory().injectItems(items, mode, this.source);
                     }
