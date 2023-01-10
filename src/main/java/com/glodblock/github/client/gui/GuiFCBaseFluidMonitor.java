@@ -14,17 +14,11 @@ import appeng.container.slot.AppEngSlot;
 import appeng.container.slot.SlotCraftingMatrix;
 import appeng.container.slot.SlotFakeCraftingMatrix;
 import appeng.core.AEConfig;
-import appeng.core.AELog;
 import appeng.core.localization.ButtonToolTips;
 import appeng.core.localization.GuiText;
-import appeng.core.sync.GuiBridge;
-import appeng.core.sync.network.NetworkHandler;
-import appeng.core.sync.packets.PacketSwitchGuis;
-import appeng.core.sync.packets.PacketValueConfig;
 import appeng.integration.IntegrationRegistry;
 import appeng.integration.IntegrationType;
 import appeng.util.IConfigManagerHost;
-import appeng.util.Platform;
 import appeng.util.item.AEItemStack;
 import codechicken.nei.LayoutManager;
 import codechicken.nei.util.TextHistory;
@@ -35,7 +29,8 @@ import com.glodblock.github.common.item.ItemFluidDrop;
 import com.glodblock.github.util.ModAndClassUtil;
 import com.glodblock.github.util.NameConst;
 import com.glodblock.github.util.Util;
-import net.minecraft.client.gui.GuiButton;
+import java.lang.reflect.Field;
+import java.util.List;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.Slot;
@@ -43,10 +38,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
-
-import java.io.IOException;
-import java.lang.reflect.Field;
-import java.util.List;
 
 public class GuiFCBaseFluidMonitor extends AEBaseMEGui
         implements ISortSource, IConfigManagerHost, IDropToFillTextField {

@@ -97,7 +97,7 @@ public class CPacketFluidUpdate implements IMessage {
                 ItemStack item = player.inventory.getItemStack();
                 ((FCBaseFluidMonitorContain) container)
                         .postChange(
-                            new ArrayList<>(message.list.values()),
+                                new ArrayList<>(message.list.values()),
                                 message.itemStack == null ? item : message.itemStack,
                                 player,
                                 message.slotIndex);
