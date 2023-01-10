@@ -405,7 +405,7 @@ public class FCBaseFluidMonitorContain extends AEBaseContainer
                     this.host.getFluidInventory().extractItems(toExtract, Actionable.MODULATE, this.getActionSource());
                 }
             } else if (!Util.FluidUtil.isEmpty(fluidContainer)) {
-                //              add fluid to ae network
+                // add fluid to ae network
                 AEFluidStack fluidStack = Util.getAEFluidFromItem(fluidContainer);
                 final IAEFluidStack aeFluidStack = fluidStack.copy();
                 // simulate result is incorrect. so I'm using other solution and ec2 both mod have same issues
@@ -448,9 +448,8 @@ public class FCBaseFluidMonitorContain extends AEBaseContainer
                     }
                     if (slotIndex == -1) out.stackSize = fluidContainer.stackSize - out.stackSize;
                 } else {
-                    out.stackSize = (int) (fluidContainer.stackSize - (aeFluidStack.getStackSize() / drainStack.left));
+                    out.stackSize = fluidContainer.stackSize;
                     this.dropItem(drainStack.right, fluidContainer.stackSize); // drop empty item
-                    if (slotIndex == -1) out.stackSize++;
                 }
             } else {
                 continue;
@@ -467,6 +466,7 @@ public class FCBaseFluidMonitorContain extends AEBaseContainer
                             new SPacketFluidUpdate(new HashMap<>()), (EntityPlayerMP) player);
                 }
             } else {
+                out.stackSize = fluidContainer.stackSize - out.stackSize;
                 player.inventory.setInventorySlotContents(slotIndex, out.stackSize > 0 ? out : null);
             }
         }

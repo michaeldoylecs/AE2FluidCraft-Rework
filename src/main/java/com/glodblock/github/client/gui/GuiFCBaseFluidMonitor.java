@@ -10,20 +10,17 @@ import appeng.api.util.IConfigurableObject;
 import appeng.client.gui.AEBaseMEGui;
 import appeng.client.gui.widgets.*;
 import appeng.client.me.InternalSlotME;
-import appeng.client.me.SlotDisconnected;
-import appeng.client.me.SlotME;
-import appeng.container.AEBaseContainer;
-import appeng.container.slot.*;
+import appeng.container.slot.AppEngSlot;
+import appeng.container.slot.SlotCraftingMatrix;
+import appeng.container.slot.SlotFakeCraftingMatrix;
 import appeng.core.AEConfig;
 import appeng.core.AELog;
 import appeng.core.localization.ButtonToolTips;
 import appeng.core.localization.GuiText;
 import appeng.core.sync.GuiBridge;
 import appeng.core.sync.network.NetworkHandler;
-import appeng.core.sync.packets.PacketInventoryAction;
 import appeng.core.sync.packets.PacketSwitchGuis;
 import appeng.core.sync.packets.PacketValueConfig;
-import appeng.helpers.InventoryAction;
 import appeng.integration.IntegrationRegistry;
 import appeng.integration.IntegrationType;
 import appeng.util.IConfigManagerHost;
@@ -35,24 +32,21 @@ import com.glodblock.github.FluidCraft;
 import com.glodblock.github.client.gui.container.FCBaseFluidMonitorContain;
 import com.glodblock.github.client.me.FluidRepo;
 import com.glodblock.github.common.item.ItemFluidDrop;
-import com.glodblock.github.network.CPacketInventoryAction;
-import com.glodblock.github.util.Ae2ReflectClient;
 import com.glodblock.github.util.ModAndClassUtil;
 import com.glodblock.github.util.NameConst;
 import com.glodblock.github.util.Util;
-import java.io.IOException;
-import java.lang.reflect.Field;
-import java.util.List;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.resources.I18n;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
+
+import java.io.IOException;
+import java.lang.reflect.Field;
+import java.util.List;
 
 public class GuiFCBaseFluidMonitor extends AEBaseMEGui
         implements ISortSource, IConfigManagerHost, IDropToFillTextField {
@@ -120,46 +114,6 @@ public class GuiFCBaseFluidMonitor extends AEBaseMEGui
         this.getScrollBar()
                 .setRange(
                         0, (this.repo.size() + this.perRow - 1) / this.perRow - this.rows, Math.max(1, this.rows / 6));
-    }
-
-    @Override
-    protected void actionPerformed(final GuiButton btn) {
-
-        if (btn == this.craftingStatusBtn || btn == this.craftingStatusImgBtn) {
-            NetworkHandler.instance.sendToServer(new PacketSwitchGuis(GuiBridge.GUI_CRAFTING_STATUS));
-        }
-
-        if (btn instanceof GuiImgButton) {
-            final boolean backwards = Mouse.isButtonDown(1);
-
-            final GuiImgButton iBtn = (GuiImgButton) btn;
-            if (iBtn.getSetting() != Settings.ACTIONS) {
-                final Enum<?> cv = iBtn.getCurrentValue();
-                final Enum<?> next =
-                        Platform.rotateEnum(cv, backwards, iBtn.getSetting().getPossibleValues());
-
-                if (btn == this.terminalStyleBox) {
-                    AEConfig.instance.settings.putSetting(iBtn.getSetting(), next);
-                } else if (btn == this.searchBoxSettings) {
-                    AEConfig.instance.settings.putSetting(iBtn.getSetting(), next);
-                } else if (ModAndClassUtil.isSaveText && btn == this.searchStringSave) {
-                    AEConfig.instance.preserveSearchBar = next == YesNo.YES;
-                } else {
-                    try {
-                        NetworkHandler.instance.sendToServer(
-                                new PacketValueConfig(iBtn.getSetting().name(), next.name()));
-                    } catch (final IOException e) {
-                        AELog.debug(e);
-                    }
-                }
-
-                iBtn.set(next);
-
-                if (next.getClass() == SearchBoxMode.class || next.getClass() == TerminalStyle.class) {
-                    this.reinitalize();
-                }
-            }
-        }
     }
 
     private void reinitalize() {
@@ -363,7 +317,6 @@ public class GuiFCBaseFluidMonitor extends AEBaseMEGui
         if (btn == 1 && this.searchField.isMouseIn(xCoord, yCoord)) {
             setSearchString("", true);
         }
-
         super.mouseClicked(xCoord, yCoord, btn);
     }
 
@@ -398,198 +351,6 @@ public class GuiFCBaseFluidMonitor extends AEBaseMEGui
             }
         }
         super.handleMouseInput();
-    }
-
-    @Override
-    protected void handleMouseClick(final Slot slot, final int slotIdx, final int ctrlDown, final int mouseButton) {
-        final EntityPlayer player = Minecraft.getMinecraft().thePlayer;
-
-        if (mouseButton == 3) {
-            if (slot instanceof OptionalSlotFake || slot instanceof SlotFakeCraftingMatrix) {
-                if (slot.getHasStack()) {
-                    InventoryAction action = InventoryAction.valueOf("SET_PATTERN_VALUE");
-                    IAEItemStack stack = AEItemStack.create(slot.getStack());
-
-                    ((AEBaseContainer) this.inventorySlots).setTargetStack(stack);
-                    FluidCraft.proxy.netHandler.sendToServer(new CPacketInventoryAction(
-                            action, Ae2ReflectClient.getInventorySlots(this).size(), 0, stack));
-                    return;
-                }
-            }
-        }
-
-        if (slot instanceof SlotFake) {
-            InventoryAction action =
-                    ctrlDown == 1 ? InventoryAction.SPLIT_OR_PLACE_SINGLE : InventoryAction.PICKUP_OR_SET_DOWN;
-
-            if (Keyboard.isKeyDown(Keyboard.KEY_LMENU) || Keyboard.isKeyDown(Keyboard.KEY_RMENU)) {
-                if (action == InventoryAction.SPLIT_OR_PLACE_SINGLE) {
-                    action = InventoryAction.MOVE_REGION;
-                } else {
-                    action = InventoryAction.PICKUP_SINGLE;
-                }
-            }
-
-            if (Ae2ReflectClient.getDragClick(this).size() > 1) {
-                return;
-            }
-
-            final PacketInventoryAction p = new PacketInventoryAction(action, slotIdx, 0);
-            NetworkHandler.instance.sendToServer(p);
-
-            return;
-        }
-
-        if (slot instanceof SlotPatternTerm) {
-            if (mouseButton == 6) {
-                return; // prevent weird double clicks..
-            }
-
-            try {
-                NetworkHandler.instance.sendToServer(((SlotPatternTerm) slot).getRequest(isShiftKeyDown()));
-            } catch (final IOException e) {
-                AELog.debug(e);
-            }
-        } else if (slot instanceof SlotCraftingTerm) {
-            if (mouseButton == 6) {
-                return; // prevent weird double clicks..
-            }
-
-            InventoryAction action;
-            if (isShiftKeyDown()) {
-                action = InventoryAction.CRAFT_SHIFT;
-            } else {
-                // Craft stack on right-click, craft single on left-click
-                action = (mouseButton == 1) ? InventoryAction.CRAFT_STACK : InventoryAction.CRAFT_ITEM;
-            }
-
-            final PacketInventoryAction p = new PacketInventoryAction(action, slotIdx, 0);
-            NetworkHandler.instance.sendToServer(p);
-
-            return;
-        }
-
-        if (Keyboard.isKeyDown(Keyboard.KEY_SPACE)) {
-            if (this.enableSpaceClicking() && !(slot instanceof SlotPatternTerm)) {
-                IAEItemStack stack = null;
-                if (slot instanceof SlotME) {
-                    stack = ((SlotME) slot).getAEStack();
-                }
-
-                int slotNum = Ae2ReflectClient.getInventorySlots(this).size();
-
-                if (!(slot instanceof SlotME) && slot != null) {
-                    slotNum = slot.slotNumber;
-                }
-
-                ((AEBaseContainer) this.inventorySlots).setTargetStack(stack);
-                final PacketInventoryAction p = new PacketInventoryAction(InventoryAction.MOVE_REGION, slotNum, 0);
-                NetworkHandler.instance.sendToServer(p);
-                return;
-            }
-        }
-
-        if (slot instanceof SlotDisconnected) {
-            if (Ae2ReflectClient.getDragClick(this).size() > 1) {
-                return;
-            }
-
-            InventoryAction action = null;
-
-            switch (mouseButton) {
-                case 0: // pickup / set-down.
-                    {
-                        ItemStack heldStack = player.inventory.getItemStack();
-                        if (slot.getStack() == null && heldStack != null)
-                            action = InventoryAction.SPLIT_OR_PLACE_SINGLE;
-                        else if (slot.getStack() != null && (heldStack == null || heldStack.stackSize <= 1))
-                            action = InventoryAction.PICKUP_OR_SET_DOWN;
-                    }
-                    break;
-                case 1:
-                    action = ctrlDown == 1 ? InventoryAction.PICKUP_SINGLE : InventoryAction.SHIFT_CLICK;
-                    break;
-
-                case 3: // creative dupe:
-                    if (player.capabilities.isCreativeMode) {
-                        action = InventoryAction.CREATIVE_DUPLICATE;
-                    }
-
-                    break;
-
-                default:
-                case 4: // drop item:
-                case 6:
-            }
-
-            if (action != null) {
-                final PacketInventoryAction p = new PacketInventoryAction(
-                        action,
-                        slot.getSlotIndex(),
-                        ((SlotDisconnected) slot).getSlot().getId());
-                NetworkHandler.instance.sendToServer(p);
-            }
-
-            return;
-        }
-
-        if (slot instanceof SlotME) {
-            InventoryAction action = null;
-            IAEItemStack stack = null;
-
-            switch (mouseButton) {
-                case 0: // pickup / set-down.
-                    action = ctrlDown == 1 ? InventoryAction.SPLIT_OR_PLACE_SINGLE : InventoryAction.PICKUP_OR_SET_DOWN;
-                    stack = ((SlotME) slot).getAEStack();
-
-                    if (stack != null
-                            && action == InventoryAction.PICKUP_OR_SET_DOWN
-                            && stack.getStackSize() == 0
-                            && player.inventory.getItemStack() == null) {
-                        action = InventoryAction.AUTO_CRAFT;
-                    }
-
-                    break;
-                case 1:
-                    action = ctrlDown == 1 ? InventoryAction.PICKUP_SINGLE : InventoryAction.SHIFT_CLICK;
-                    stack = ((SlotME) slot).getAEStack();
-                    break;
-
-                case 3: // creative dupe:
-                    stack = ((SlotME) slot).getAEStack();
-                    if (stack.getItem() instanceof ItemFluidDrop) {
-                        stack = ItemFluidDrop.newAeStack(ItemFluidDrop.getAeFluidStack(stack));
-                    }
-                    if (stack != null && stack.isCraftable()) {
-                        action = InventoryAction.AUTO_CRAFT;
-                    } else if (player.capabilities.isCreativeMode) {
-                        final IAEItemStack slotItem = ((SlotME) slot).getAEStack();
-                        if (slotItem != null) {
-                            action = InventoryAction.CREATIVE_DUPLICATE;
-                        }
-                    }
-                    break;
-
-                default:
-                case 4: // drop item:
-                case 6:
-            }
-
-            if (action == InventoryAction.AUTO_CRAFT) {
-                ((AEBaseContainer) this.inventorySlots).setTargetStack(stack);
-                FluidCraft.proxy.netHandler.sendToServer(new CPacketInventoryAction(
-                        action, Ae2ReflectClient.getInventorySlots(this).size(), 0, stack));
-            } else if (action != null) {
-                ((AEBaseContainer) this.inventorySlots).setTargetStack(stack);
-                final PacketInventoryAction p = new PacketInventoryAction(
-                        action, Ae2ReflectClient.getInventorySlots(this).size(), 0);
-                NetworkHandler.instance.sendToServer(p);
-            }
-
-            return;
-        }
-
-        super.handleMouseClick(slot, slotIdx, ctrlDown, mouseButton);
     }
 
     @Override

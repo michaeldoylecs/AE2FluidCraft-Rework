@@ -58,7 +58,6 @@ public class CPacketFluidUpdate implements IMessage {
                 this.itemStack = AEItemStack.loadItemStackFromPacket(buf).getItemStack();
                 this.slotIndex = buf.readInt();
             }
-
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -98,7 +97,7 @@ public class CPacketFluidUpdate implements IMessage {
                 ItemStack item = player.inventory.getItemStack();
                 ((FCBaseFluidMonitorContain) container)
                         .postChange(
-                                new ArrayList<IAEFluidStack>(message.list.values()),
+                            new ArrayList<>(message.list.values()),
                                 message.itemStack == null ? item : message.itemStack,
                                 player,
                                 message.slotIndex);

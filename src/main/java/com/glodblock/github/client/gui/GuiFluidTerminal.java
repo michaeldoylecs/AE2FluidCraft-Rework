@@ -33,11 +33,6 @@ public class GuiFluidTerminal extends GuiBaseFluidTerminal {
     }
 
     @Override
-    public void initGui() {
-        super.initGui();
-    }
-
-    @Override
     public void func_146977_a(final Slot s) {
         if (drawSlot0(s)) super.func_146977_a(s);
     }
@@ -87,6 +82,7 @@ public class GuiFluidTerminal extends GuiBaseFluidTerminal {
                 itemStack.stackSize = 1;
             }
             FluidCraft.proxy.netHandler.sendToServer(new CPacketFluidUpdate(tmp, itemStack));
+            return;
         }
         super.handleMouseClick(slot, slotIdx, ctrlDown, mouseButton);
     }
