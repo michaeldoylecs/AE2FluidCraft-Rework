@@ -46,12 +46,13 @@ public class CPacketLevelMaintainer implements IMessage {
         this.size = size.isEmpty() ? 0 : Long.parseLong(size);
     }
 
-    public static IAEItemStack setTag(IAEItemStack ias, long batch, int slotIndex, boolean enable) {
+    public static IAEItemStack setTag(IAEItemStack ias, long batch, int slotIndex, boolean enable, int state) {
         NBTTagCompound data = new NBTTagCompound();
         ItemStack is = ias.getItemStack();
         data.setLong("Batch", batch);
         data.setLong("Index", slotIndex);
         data.setBoolean("Enable", enable);
+        data.setInteger("State", state);
         is.setTagCompound(data);
         IAEItemStack iaeItemStack = AEItemStack.create(is);
         iaeItemStack.setStackSize(ias.getStackSize());
@@ -90,9 +91,14 @@ public class CPacketLevelMaintainer implements IMessage {
                     if (is1 != null) {
                         NBTTagCompound data;
                         data = is1.getItemStack().getTagCompound();
-                        piu.appendItem(setTag(is, is1.getStackSize(), i, data.getBoolean("Enable")));
+                        piu.appendItem(setTag(
+                                is,
+                                is1.getStackSize(),
+                                i,
+                                data.getBoolean("Enable"),
+                                cca.getTile().requests.getState(i).ordinal()));
                     } else {
-                        piu.appendItem(setTag(is, 0, i, true));
+                        piu.appendItem(setTag(is, 0, i, true, 0));
                     }
                 }
             }

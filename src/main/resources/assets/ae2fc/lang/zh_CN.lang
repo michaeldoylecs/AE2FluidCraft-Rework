@@ -29,15 +29,33 @@ tile.fluid_interface.name=ME二合一接口
 tile.ingredient_buffer.name=原材料缓存仓
 tile.large_ingredient_buffer.name=大型原材料缓存仓
 tile.oc_pattern_editor.name=OC样板编辑器
-tile.level_maintainer.name=ME缓存指令器
+tile.level_maintainer.name=ME库存维持器
 tile.fluid_buffer.name=ME流体缓存器
 
 ae2fc.waila.speed=速度
 ae2fc.waila.enable=启用
 ae2fc.waila.disable=禁用
 
-ae2fc.tooltip.request_size=缓存量
-ae2fc.tooltip.batch_size=批量制作数量
+ae2fc.tooltip.shift_for_more=> 按 §3Shift§r 显示更多信息
+ae2fc.tooltip.fluid_packet_decoder.desc=流体解码器可以解码液体数据包。它必须与ME系统连接，并且网络内可以储存流体，否则它就无法工作。
+ae2fc.tooltip.discretizer.desc=当ME流体离散器连接到您的ME系统时，它将把存储在的ME流体存储单元（或存储总线）中的流体表现为物品液滴。它们将是流体的等价物。它只是显示流体的另一种方式，它不会真正把你的流体转换成物品。
+ae2fc.tooltip.fluid_buffer.desc=这就是一个高速的流体IO接口
+ae2fc.tooltip.level_maintainer.Who_Am_I=Who Am I?
+ae2fc.tooltip.level_maintainer.title=§6请求状态§r
+ae2fc.tooltip.level_maintainer.desc=通过在需要时请求合成，自动保持物品和流体的库存。必须连接到ME网络。
+ae2fc.tooltip.level_maintainer.current=目前:
+ae2fc.tooltip.level_maintainer.none=没有配置任何请求。
+ae2fc.tooltip.level_maintainer.idle=§a空闲中§r
+ae2fc.tooltip.level_maintainer.idle_desc=当请求的数量已经达到时，请求器处于空闲状态，该物品没有制作模板，或者没有足够的原料来请求更多的合成。
+ae2fc.tooltip.level_maintainer.link=§e合成中§r
+ae2fc.tooltip.level_maintainer.link_desc=系统当前正在制作请求的物品或流体。
+ae2fc.tooltip.level_maintainer.export=§5输出中§r
+ae2fc.tooltip.level_maintainer.export_desc=请求器正在尝试将制作结果导出到ME系统。如果请求器长期处于此状态，则说明没有可用的存储空间。
+ae2fc.tooltip.level_maintainer.batch_size=§6请求次数§r
+ae2fc.tooltip.level_maintainer.batch_size.hint=当发出合成请求时，请求器发送合成请求次数的多少。更多的请求次数将提高储存物品的速度，但需要更多的合成存储空间。
+ae2fc.tooltip.level_maintainer.request_size=§6请求数量§r
+ae2fc.tooltip.level_maintainer.request_size.hint=数量定义了在请求器开始请求新合成之前应该保留多少物品。
+
 ae2fc.tooltip.cell_contents=内含流体:
 ae2fc.tooltip.fluid_terminal=我们不再需要EC2了吗?
 ae2fc.tooltip.invalid_fluid=流体无效！
@@ -81,4 +99,4 @@ ae2fc.gui.part_fluid_terminal=流体终端
 
 error.unknown=未知流体
 
-itemGroup.ae2fc=AE2流体合成套件重置
+itemGroup.ae2fc=AE2流体合成套件重置ae2fc.tooltip.fluid_packet_decoder.desc=The Fluid Decoder can decode Fluid packets. It has to be connected to a ME System and a place to store the liquid in otherwise it won't work.ae2fc.tooltip.fluid_packet_decoder.desc=The Fluid Decoder can decode Fluid packets. It has to be connected to a ME System and a place to store the liquid in otherwise it won't work.
