@@ -20,11 +20,16 @@ public class GuiFCImgButton extends GuiButton implements ITooltip {
     private boolean halfSize = false;
     private String fillVar;
     private String currentValue;
+    private final boolean background;
     private static final String prefix = NameConst.TT_KEY;
 
     public GuiFCImgButton(final int x, final int y, final String idx, final String val) {
-        super(0, 0, 16, "");
+        this(x, y, idx, val, true);
+    }
 
+    public GuiFCImgButton(final int x, final int y, final String idx, final String val, boolean background) {
+        super(0, 0, 16, "");
+        this.background = background;
         this.buttonSetting = idx;
         this.currentValue = val;
         this.xPosition = x;
@@ -198,14 +203,15 @@ public class GuiFCImgButton extends GuiButton implements ITooltip {
 
                 final int uv_y = (int) Math.floor(iconIndex / 3.0);
                 final int uv_x = iconIndex - uv_y * 3;
-
-                this.drawTexturedModalRect(
-                        0,
-                        0,
-                        Math.round(32F * 16F / 3F),
-                        Math.round(32F * 16F / 3F),
-                        Math.round(16F * 16F / 3F),
-                        Math.round(16F * 16F / 3F));
+                if (this.background) {
+                    this.drawTexturedModalRect(
+                            0,
+                            0,
+                            Math.round(32F * 16F / 3F),
+                            Math.round(32F * 16F / 3F),
+                            Math.round(16F * 16F / 3F),
+                            Math.round(16F * 16F / 3F));
+                }
                 this.drawTexturedModalRect(
                         0,
                         0,
@@ -234,14 +240,15 @@ public class GuiFCImgButton extends GuiButton implements ITooltip {
 
                 final int uv_y = (int) Math.floor(iconIndex / 3.0);
                 final int uv_x = iconIndex - uv_y * 3;
-
-                this.drawTexturedModalRect(
-                        0,
-                        0,
-                        Math.round(32F * 16F / 3F),
-                        Math.round(32F * 16F / 3F),
-                        Math.round(16F * 16F / 3F),
-                        Math.round(16F * 16F / 3F));
+                if (this.background) {
+                    this.drawTexturedModalRect(
+                            0,
+                            0,
+                            Math.round(32F * 16F / 3F),
+                            Math.round(32F * 16F / 3F),
+                            Math.round(16F * 16F / 3F),
+                            Math.round(16F * 16F / 3F));
+                }
                 this.drawTexturedModalRect(
                         0,
                         0,

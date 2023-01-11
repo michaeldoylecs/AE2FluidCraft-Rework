@@ -1,9 +1,12 @@
 package com.glodblock.github.common.block;
 
+import static net.minecraft.client.gui.GuiScreen.isCtrlKeyDown;
+import static net.minecraft.client.gui.GuiScreen.isShiftKeyDown;
+
 import appeng.api.config.SecurityPermissions;
-import appeng.block.AEBaseItemBlock;
 import appeng.util.Platform;
 import com.glodblock.github.client.render.RenderBlockLevelMaintainer;
+import com.glodblock.github.common.item.FCBaseItemBlock;
 import com.glodblock.github.common.tabs.FluidCraftingTabs;
 import com.glodblock.github.common.tile.TileLevelMaintainer;
 import com.glodblock.github.inventory.InventoryHandler;
@@ -14,6 +17,7 @@ import com.glodblock.github.util.Util;
 import cpw.mods.fml.common.registry.GameRegistry;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import java.util.List;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
@@ -31,7 +35,7 @@ public class BlockLevelMaintainer extends FCBaseBlock {
     }
 
     public BlockLevelMaintainer register() {
-        GameRegistry.registerBlock(this, AEBaseItemBlock.class, NameConst.BLOCK_LEVEL_MAINTAINER);
+        GameRegistry.registerBlock(this, FCBaseItemBlock.class, NameConst.BLOCK_LEVEL_MAINTAINER);
         GameRegistry.registerTileEntity(TileLevelMaintainer.class, NameConst.BLOCK_LEVEL_MAINTAINER);
         setCreativeTab(FluidCraftingTabs.INSTANCE);
         return this;
@@ -74,5 +78,22 @@ public class BlockLevelMaintainer extends FCBaseBlock {
 
     public ItemStack stack() {
         return new ItemStack(this, 1);
+    }
+
+    @Override
+    @SideOnly(Side.CLIENT)
+    @SuppressWarnings("unchecked")
+    public void addInformation(
+            final ItemStack itemStack,
+            final EntityPlayer player,
+            final List<String> toolTip,
+            final boolean advancedToolTips) {
+        if (isShiftKeyDown() && isCtrlKeyDown()) {
+            toolTip.add(NameConst.i18n(NameConst.TT_LEVEL_MAINTAINER_WHO_AM_I));
+        } else if (isShiftKeyDown()) {
+            toolTip.addAll(this.listFormattedStringToWidth(NameConst.i18n(NameConst.TT_LEVEL_MAINTAINER_DESC)));
+        } else {
+            toolTip.add(NameConst.i18n(NameConst.TT_SHIFT_FOR_MORE));
+        }
     }
 }
