@@ -448,9 +448,13 @@ public class FCBaseFluidMonitorContain extends AEBaseContainer
                     }
                     if (slotIndex == -1) out.stackSize = fluidContainer.stackSize - out.stackSize;
                 } else {
-                    out.stackSize = (int) (fluidContainer.stackSize - (aeFluidStack.getStackSize() / drainStack.left));
+                    if (slotIndex == -1) {
+                        out.stackSize = fluidContainer.stackSize;
+                    } else {
+                        out.stackSize =
+                                (int) (fluidContainer.stackSize - (aeFluidStack.getStackSize() / drainStack.left));
+                    }
                     this.dropItem(drainStack.right, fluidContainer.stackSize); // drop empty item
-                    if (slotIndex == -1) out.stackSize++;
                 }
             } else {
                 continue;
