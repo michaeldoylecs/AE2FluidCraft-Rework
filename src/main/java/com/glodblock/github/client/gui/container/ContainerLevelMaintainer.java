@@ -18,11 +18,11 @@ public class ContainerLevelMaintainer extends AEBaseContainer {
         this.tile = tile;
         AeItemStackHandler request = new AeItemStackHandler(tile.getRequestSlots());
         for (int y = 0; y < TileLevelMaintainer.REQ_COUNT; y++) {
-            FakeSlot slot = new FakeSlot(request, y, 17, 19 + y * 20);
+            FakeSlot slot = new FakeSlot(request, y, 27, 20 + y * 19);
             addSlotToContainer(slot);
             requestSlots[y] = slot;
         }
-        bindPlayerInventory(ipl, 0, 132);
+        bindPlayerInventory(ipl, 0, 130);
     }
 
     public TileLevelMaintainer getTile() {

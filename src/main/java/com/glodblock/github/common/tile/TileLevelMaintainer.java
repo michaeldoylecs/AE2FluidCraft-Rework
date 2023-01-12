@@ -69,6 +69,15 @@ public class TileLevelMaintainer extends AENetworkTile
         return ImmutableSet.copyOf(new NonNullArrayIterator<ICraftingLink>(this.requests.getLinks()));
     }
 
+    private IAEItemStack setState(ICraftingLink link, IAEItemStack items) {
+        if (items != null) {
+            requests.setState(link, State.Exporting);
+        } else {
+            requests.setState(link, State.Crafting);
+        }
+        return items;
+    }
+
     @Override
     public IAEItemStack injectCraftedItems(ICraftingLink link, IAEItemStack items, Actionable mode) {
         try {
@@ -84,19 +93,21 @@ public class TileLevelMaintainer extends AENetworkTile
                                 .injectItems(ItemFluidDrop.getAeFluidStack(items), mode, this.source);
                         if (notInserted != null) {
                             items.setStackSize(notInserted.getStackSize());
-                            return items;
+                            return setState(link, items);
                         } else {
                             return null;
                         }
                     } else {
-                        return this.getProxy().getStorage().getItemInventory().injectItems(items, mode, this.source);
+                        return setState(
+                                link,
+                                this.getProxy().getStorage().getItemInventory().injectItems(items, mode, this.source));
                     }
                 }
             }
         } catch (GridAccessException e) {
             AELog.debug(e);
         }
-        return items;
+        return setState(link, items);
     }
 
     @Override
@@ -135,6 +146,7 @@ public class TileLevelMaintainer extends AENetworkTile
                 IAEItemStack is = requests.getRequestQtyStack(i);
                 if (is != null && requests.getBatchSize(i) > 0) {
                     IAEItemStack craftItem = requests.getCraftItem(i);
+                    if (this.requests.isDone(i)) this.requests.setState(i, State.Idling);
                     if (cg.canEmitFor(craftItem)
                             || cg.isRequesting(craftItem)
                             || (inv.findPrecise(is) != null
@@ -145,13 +157,15 @@ public class TileLevelMaintainer extends AENetworkTile
                     if (jobTask == null) {
                         requests.getJobs()[i] = cg.beginCraftingJob(getWorldObj(), grid, this.source, craftItem, null);
                     } else if (jobTask.isDone()) {
+                        requests.setState(i, State.Idling);
                         try {
                             ICraftingJob job = jobTask.get();
                             if (job != null) {
                                 ICraftingLink link = cg.submitJob(job, this, null, false, this.source);
-                                didSomething = true;
                                 requests.jobs[i] = null;
                                 if (link != null) {
+                                    didSomething = true;
+                                    requests.setState(i, State.Crafting);
                                     requests.getLinks()[i] = link;
                                 }
                             }
@@ -227,6 +241,7 @@ public class TileLevelMaintainer extends AENetworkTile
                     this.requests.getLinks()[i] = null;
                 } else {
                     this.requests.getLinks()[i] = AEApi.instance().storage().loadCraftingLink(link, this);
+                    if (!this.requests.isDone(i)) this.requests.setState(i, State.Crafting);
                 }
             }
         } catch (Exception e) {
@@ -294,11 +309,17 @@ public class TileLevelMaintainer extends AENetworkTile
         } catch (final GridAccessException ignored) {
 
         }
-
         if (newState != this.isPowered) {
             this.isPowered = newState;
             this.markForUpdate();
         }
+    }
+
+    public enum State {
+        Nothing,
+        Idling,
+        Crafting,
+        Exporting
     }
 
     public static class InventoryRequest {
@@ -307,6 +328,7 @@ public class TileLevelMaintainer extends AENetworkTile
         private final AeStackInventoryImpl<IAEItemStack> requestQtys;
         private final Future<ICraftingJob>[] jobs;
         private final ICraftingLink[] links;
+        private final State[] state = new State[REQ_COUNT];
 
         public InventoryRequest(TileLevelMaintainer tile) {
             this.requestStacks = new AeStackInventoryImpl<>(StorageChannel.ITEMS, REQ_COUNT, tile);
@@ -328,6 +350,30 @@ public class TileLevelMaintainer extends AENetworkTile
                 i.setStackSize(ias1.getStackSize());
                 this.getRequestBatches().setStack(idx, i);
             }
+        }
+
+        public State getState(int idx) {
+            IAEItemStack ias = this.getRequestStacks().getStack(idx);
+            if (ias == null) {
+                return State.Nothing;
+            } else {
+                return this.state[idx] == null ? State.Idling : this.state[idx];
+            }
+        }
+
+        public void setState(ICraftingLink link, State state) {
+            int i = 0;
+            for (ICraftingLink link1 : this.getLinks()) {
+                if (link == link1) {
+                    this.setState(i, state);
+                    break;
+                }
+                i++;
+            }
+        }
+
+        public void setState(int idx, State state) {
+            this.state[idx] = state;
         }
 
         public boolean isEnable(int idx) {

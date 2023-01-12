@@ -1,6 +1,9 @@
 package com.glodblock.github.util;
 
 import com.glodblock.github.FluidCraft;
+import java.util.ArrayList;
+import net.minecraft.client.resources.I18n;
+import net.minecraft.util.StatCollector;
 
 public class NameConst {
 
@@ -33,8 +36,27 @@ public class NameConst {
     public static final String TT_ENCODE_PATTERN = TT_KEY + "encode_pattern";
     public static final String TT_EMPTY = TT_KEY + "empty";
     public static final String TT_DUMP_TANK = TT_KEY + "dump_tank";
-    public static final String TT_REQUEST_SIZE = TT_KEY + "request_size";
-    public static final String TT_BATCH_SIZE = TT_KEY + "batch_size";
+    public static final String TT_SHIFT_FOR_MORE = TT_KEY + "shift_for_more";
+    public static final String TT_FLUID_BUFFER = TT_KEY + "fluid_buffer.";
+    public static final String TT_FLUID_PACKET_DECODER = TT_KEY + "fluid_packet_decoder.";
+    public static final String TT_FLUID_PACKET_DECODER_DESC = TT_FLUID_PACKET_DECODER + "desc";
+    public static final String TT_FLUID_BUFFER_DESC = TT_FLUID_BUFFER + "desc";
+    public static final String TT_FLUID_DISCRETIZER = TT_KEY + "discretizer.";
+    public static final String TT_FLUID_DISCRETIZER_DESC = TT_FLUID_DISCRETIZER + "desc";
+    public static final String TT_LEVEL_MAINTAINER = TT_KEY + "level_maintainer.";
+    public static final String TT_LEVEL_MAINTAINER_DESC = TT_LEVEL_MAINTAINER + "desc";
+    public static final String TT_LEVEL_MAINTAINER_WHO_AM_I = TT_LEVEL_MAINTAINER + "Who_Am_I";
+    public static final String TT_LEVEL_MAINTAINER_TITLE = TT_LEVEL_MAINTAINER + "title";
+    public static final String TT_LEVEL_MAINTAINER_CURRENT = TT_LEVEL_MAINTAINER + "current";
+    public static final String TT_LEVEL_MAINTAINER_NONE = TT_LEVEL_MAINTAINER + "none";
+    public static final String TT_LEVEL_MAINTAINER_REQUEST_SIZE = TT_LEVEL_MAINTAINER + "request_size";
+    public static final String TT_LEVEL_MAINTAINER_BATCH_SIZE = TT_LEVEL_MAINTAINER + "batch_size";
+    public static final String TT_LEVEL_MAINTAINER_IDLE = TT_LEVEL_MAINTAINER + "idle";
+    public static final String TT_LEVEL_MAINTAINER_IDLE_DESC = TT_LEVEL_MAINTAINER + "idle_desc";
+    public static final String TT_LEVEL_MAINTAINER_LINK = TT_LEVEL_MAINTAINER + "link";
+    public static final String TT_LEVEL_MAINTAINER_LINK_DESC = TT_LEVEL_MAINTAINER + "link_desc";
+    public static final String TT_LEVEL_MAINTAINER_EXPORT = TT_LEVEL_MAINTAINER + "export";
+    public static final String TT_LEVEL_MAINTAINER_EXPORT_DESC = TT_LEVEL_MAINTAINER + "export_desc";
     public static final String TT_CELL_CONTENTS = TT_KEY + "cell_contents";
 
     public static final String WAILA_KEY = FluidCraft.MODID + ".waila.";
@@ -56,4 +78,28 @@ public class NameConst {
     public static final String GUI_OC_PATTERN_EDITOR = GUI_KEY + BLOCK_OC_PATTERN_EDITOR;
     public static final String GUI_FLUID_IMPORT = GUI_KEY + ITEM_PART_FLUID_IMPORT;
     public static final String GUI_FLUID_EXPORT = GUI_KEY + ITEM_PART_FLUID_EXPORT;
+
+    public static String i18n(String t, String delimiter, boolean hint) {
+        if (!hint) {
+            return I18n.format(t);
+        }
+        ArrayList<String> arr = new ArrayList<>();
+        arr.add(I18n.format(t));
+        if (!StatCollector.translateToLocal(t + ".hint").equals(t + ".hint")) {
+            arr.add(I18n.format(t + ".hint"));
+        }
+        return String.join(delimiter, arr);
+    }
+
+    public static String i18n(String t) {
+        return i18n(t, "\n", true);
+    }
+
+    public static String i18n(String t, boolean warp) {
+        if (warp) {
+            return i18n(t);
+        } else {
+            return i18n(t, "", true);
+        }
+    }
 }

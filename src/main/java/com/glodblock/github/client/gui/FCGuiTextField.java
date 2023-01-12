@@ -46,11 +46,11 @@ public class FCGuiTextField extends GuiTextField {
     public void drawTextBox() {
         super.drawTextBox();
         if (this.getBorder() > 0 && this.getVisible()) {
-            GuiTextField.drawRect(
-                    this._xPos - this.getBorder(),
-                    this._yPos - this.getBorder(),
-                    this._width - 2 * PADDING - this._fontRender.getCharWidth('_') + this.getBorder(),
-                    this._height - 2 * PADDING + this.getBorder(),
+            drawRect(
+                    this._xPos - getBorder(),
+                    this._yPos - getBorder(),
+                    this.xPosition + this.width + getBorder(),
+                    this.yPosition + this.height + getBorder(),
                     this.getColor());
         }
     }
@@ -107,6 +107,10 @@ public class FCGuiTextField extends GuiTextField {
 
     public void setMessage(String t) {
         tooltip = t;
+    }
+
+    public String getMessage() {
+        return tooltip;
     }
 
     public class TooltipProvider implements ITooltip {
