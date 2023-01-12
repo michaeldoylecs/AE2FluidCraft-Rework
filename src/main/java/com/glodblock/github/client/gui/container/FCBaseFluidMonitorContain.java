@@ -376,7 +376,7 @@ public class FCBaseFluidMonitorContain extends AEBaseContainer
             ItemStack out = fluidContainer.copy();
             out.stackSize = 1;
             if (Util.FluidUtil.isEmpty(fluidContainer) && fluid != null) {
-                //              add fluid to tanks
+                // add fluid to tanks
                 if (nfluid.getStackSize() <= 0) continue;
                 final IAEFluidStack toExtract = nfluid.copy();
                 MutablePair<Integer, ItemStack> fillStack = Util.FluidUtil.fillStack(out, toExtract.getFluidStack());
@@ -390,22 +390,26 @@ public class FCBaseFluidMonitorContain extends AEBaseContainer
                 this.dropItem(fillStack.right);
                 out.stackSize = fillStack.right.stackSize;
                 if (fillStack.right.getItem() instanceof IFluidContainerItem) {
-                    this.host.getFluidInventory().extractItems(toExtract, Actionable.MODULATE, this.getActionSource());
-                    if ((int) (tmp.getStackSize() % fillStack.left) > 0) {
-                        ((IFluidContainerItem) fillStack.right.getItem())
+                    if (fillStack.right.stackSize == 0) {
+                        if ((int) (tmp.getStackSize() % fillStack.left) > 0) {
+                            ((IFluidContainerItem) fillStack.right.getItem())
                                 .drain(
-                                        fillStack.right,
-                                        fillStack.left - (int) (tmp.getStackSize() % fillStack.left),
-                                        true);
-                        this.dropItem(fillStack.right, 1);
-                        out.stackSize++;
+                                    fillStack.right,
+                                    fillStack.left - (int) (tmp.getStackSize() % fillStack.left),
+                                    true);
+                            this.dropItem(fillStack.right, 1);
+                            out.stackSize++;
+                        }
+                    } else {
+                        toExtract.setStackSize((long) fillStack.right.stackSize * fillStack.left);
                     }
+                    this.host.getFluidInventory().extractItems(toExtract, Actionable.MODULATE, this.getActionSource());
                 } else if (FluidContainerRegistry.isContainer(fillStack.right)) {
                     toExtract.setStackSize((long) fillStack.right.stackSize * fillStack.left);
                     this.host.getFluidInventory().extractItems(toExtract, Actionable.MODULATE, this.getActionSource());
                 }
             } else if (!Util.FluidUtil.isEmpty(fluidContainer)) {
-                //              add fluid to ae network
+                // add fluid to ae network
                 AEFluidStack fluidStack = Util.getAEFluidFromItem(fluidContainer);
                 final IAEFluidStack aeFluidStack = fluidStack.copy();
                 // simulate result is incorrect. so I'm using other solution and ec2 both mod have same issues

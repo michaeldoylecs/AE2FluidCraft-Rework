@@ -312,7 +312,7 @@ public final class Util {
                 // get the filled fluidstack.
                 FluidStack filled = FluidContainerRegistry.getFluidForFilledItem(filledContainer);
                 // Return filled container and fill amount.
-                return new MutablePair<Integer, ItemStack>(filled != null ? filled.amount : 0, filledContainer);
+                return new MutablePair<>(filled != null ? filled.amount : 0, filledContainer);
             }
             return null;
         }
