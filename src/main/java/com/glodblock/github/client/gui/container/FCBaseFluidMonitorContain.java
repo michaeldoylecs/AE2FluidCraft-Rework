@@ -393,10 +393,10 @@ public class FCBaseFluidMonitorContain extends AEBaseContainer
                     if (fillStack.right.stackSize == 0) {
                         if ((int) (tmp.getStackSize() % fillStack.left) > 0) {
                             ((IFluidContainerItem) fillStack.right.getItem())
-                                .drain(
-                                    fillStack.right,
-                                    fillStack.left - (int) (tmp.getStackSize() % fillStack.left),
-                                    true);
+                                    .drain(
+                                            fillStack.right,
+                                            fillStack.left - (int) (tmp.getStackSize() % fillStack.left),
+                                            true);
                             this.dropItem(fillStack.right, 1);
                             out.stackSize++;
                         }
