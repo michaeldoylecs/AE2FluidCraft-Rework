@@ -342,7 +342,7 @@ public class FCBaseFluidMonitorContain extends AEBaseContainer
     }
 
     private void dropItem(ItemStack is) {
-        if (is.stackSize <= 0) return;
+        if (is == null || is.stackSize <= 0) return;
         ItemStack itemStack = is.copy();
         int i = itemStack.getMaxStackSize();
         while (itemStack.stackSize > 0) {
@@ -363,7 +363,7 @@ public class FCBaseFluidMonitorContain extends AEBaseContainer
     }
 
     private void dropItem(ItemStack itemStack, int stackSize) {
-        if (itemStack.stackSize <= 0) return;
+        if (itemStack == null || itemStack.stackSize <= 0) return;
         ItemStack is = itemStack.copy();
         is.stackSize = stackSize;
         this.dropItem(is);
@@ -392,12 +392,10 @@ public class FCBaseFluidMonitorContain extends AEBaseContainer
                 if (fillStack.right.getItem() instanceof IFluidContainerItem) {
                     this.host.getFluidInventory().extractItems(toExtract, Actionable.MODULATE, this.getActionSource());
                     if ((int) (tmp.getStackSize() % fillStack.left) > 0) {
-                        ((IFluidContainerItem) fillStack.right.getItem())
-                                .drain(
-                                        fillStack.right,
-                                        fillStack.left - (int) (tmp.getStackSize() % fillStack.left),
-                                        true);
-                        this.dropItem(fillStack.right, 1);
+                        this.dropItem(
+                                Util.FluidUtil.setFluidContainerAmount(
+                                        fillStack.right, (int) (tmp.getStackSize() % fillStack.left)),
+                                1);
                         out.stackSize++;
                     }
                 } else if (FluidContainerRegistry.isContainer(fillStack.right)) {

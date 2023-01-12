@@ -1,5 +1,6 @@
 package com.glodblock.github.client.gui;
 
+import appeng.client.gui.AEBaseGui;
 import appeng.client.gui.widgets.ITooltip;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.GuiTextField;
@@ -52,6 +53,27 @@ public class FCGuiTextField extends GuiTextField {
                     this.xPosition + this.width + getBorder(),
                     this.yPosition + this.height + getBorder(),
                     this.getColor());
+        }
+    }
+
+    public void handleTooltip(int mouseX, int mouseY, AEBaseGui gui) {
+        this.handleTooltip(mouseX, mouseY, gui, 0);
+    }
+
+    public void handleTooltip(int mouseX, int mouseY, AEBaseGui gui, int offsetY) {
+        if (isMouseIn(mouseX, mouseY) && this.tooltip != null && !"".equals(this.tooltip)) {
+            int length = 0;
+            for (String s : this.getMessage().split("\n")) {
+                length = Math.max(this._fontRender.getStringWidth(s), length);
+            }
+            if (mouseY < 15) {
+                mouseY = 15;
+            }
+            if (mouseX + length + 20 >= gui.width) {
+                gui.drawTooltip(mouseX - length - 20, mouseY + 4 + offsetY, 0, this.getMessage());
+            } else {
+                gui.drawTooltip(mouseX, mouseY + 4 + offsetY, 0, this.getMessage());
+            }
         }
     }
 
