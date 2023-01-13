@@ -106,9 +106,9 @@ public class GuiLevelMaintainer extends AEBaseGui implements INEIGuiHandler {
     public void drawScreen(final int mouseX, final int mouseY, final float btn) {
         super.drawScreen(mouseX, mouseY, btn);
         for (Component com : this.component) {
-            handleTooltip(mouseX, mouseY, com.getQty().textField.new TooltipProvider());
-            handleTooltip(mouseX, mouseY, com.getBatch().textField.new TooltipProvider());
-            handleTooltip(mouseX, mouseY, com.getLine().new TooltipProvider());
+            com.getQty().textField.handleTooltip(mouseX, mouseY, this);
+            com.getBatch().textField.handleTooltip(mouseX, mouseY, this);
+            com.getLine().handleTooltip(mouseX, mouseY, this);
         }
     }
 
@@ -398,7 +398,7 @@ public class GuiLevelMaintainer extends AEBaseGui implements INEIGuiHandler {
                 message.add(NameConst.i18n(NameConst.TT_LEVEL_MAINTAINER_LINK));
                 message.add(NameConst.i18n(NameConst.TT_LEVEL_MAINTAINER_LINK_DESC) + "\n");
                 message.add(NameConst.i18n(NameConst.TT_LEVEL_MAINTAINER_EXPORT));
-                message.add(NameConst.i18n(NameConst.TT_LEVEL_MAINTAINER_EXPORT_DESC) + "\n");
+                message.add(NameConst.i18n(NameConst.TT_LEVEL_MAINTAINER_EXPORT_DESC));
             } else {
                 message.add(NameConst.i18n(NameConst.TT_SHIFT_FOR_MORE));
             }

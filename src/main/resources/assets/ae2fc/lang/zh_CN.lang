@@ -51,9 +51,9 @@ ae2fc.tooltip.level_maintainer.link=§e合成中§r
 ae2fc.tooltip.level_maintainer.link_desc=系统当前正在制作请求的物品或流体。
 ae2fc.tooltip.level_maintainer.export=§5输出中§r
 ae2fc.tooltip.level_maintainer.export_desc=请求器正在尝试将制作结果导出到ME系统。如果请求器长期处于此状态，则说明没有可用的存储空间。
-ae2fc.tooltip.level_maintainer.batch_size=§6请求次数§r
-ae2fc.tooltip.level_maintainer.batch_size.hint=当发出合成请求时，请求器发送合成请求次数的多少。更多的请求次数将提高储存物品的速度，但需要更多的合成存储空间。
-ae2fc.tooltip.level_maintainer.request_size=§6请求数量§r
+ae2fc.tooltip.level_maintainer.batch_size=§6单次合成数量§r
+ae2fc.tooltip.level_maintainer.batch_size.hint=当发出合成请求时，请求器发送单次合成数量的多少。更多的单次合成数量将提高储存物品的速度，但需要更多的合成存储空间。
+ae2fc.tooltip.level_maintainer.request_size=§6缓存量§r
 ae2fc.tooltip.level_maintainer.request_size.hint=数量定义了在请求器开始请求新合成之前应该保留多少物品。
 
 ae2fc.tooltip.cell_contents=内含流体:

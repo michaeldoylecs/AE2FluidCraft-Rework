@@ -279,6 +279,22 @@ public final class Util {
             return null;
         }
 
+        public static ItemStack setFluidContainerAmount(ItemStack itemStack, int amount) {
+            FluidStack fs = getFluidFromContainer(itemStack);
+            if (fs == null) return null;
+            fs.amount = amount;
+            ItemStack is = itemStack.copy();
+            is.stackSize = 1;
+            ItemStack emptyContainer = clearFluid(is);
+            if (emptyContainer == null) return null;
+            MutablePair<Integer, ItemStack> result = fillStack(emptyContainer, fs);
+            if (result != null) {
+                result.right.stackSize = itemStack.stackSize;
+                return result.right;
+            }
+            return null;
+        }
+
         public static MutablePair<Integer, ItemStack> drainStack(ItemStack itemStack, FluidStack fluid) {
             if (itemStack == null) return null;
             Item item = itemStack.getItem();
