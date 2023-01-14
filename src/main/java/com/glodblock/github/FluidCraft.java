@@ -7,6 +7,7 @@ import com.glodblock.github.common.storage.FluidCellHandler;
 import com.glodblock.github.crossmod.opencomputers.OCDriverInit;
 import com.glodblock.github.crossmod.waila.WailaInit;
 import com.glodblock.github.inventory.InventoryHandler;
+import com.glodblock.github.loader.CalculatorV2PluginLoader;
 import com.glodblock.github.loader.ChannelLoader;
 import com.glodblock.github.loader.ItemAndBlockHolder;
 import com.glodblock.github.loader.RecipeLoader;
@@ -88,6 +89,16 @@ public class FluidCraft {
             Upgrades.SUPERSPEED.registerItem(new ItemStack(ItemAndBlockHolder.FLUID_EXPORT_BUS), 4);
             Upgrades.SUPERSPEED.registerItem(new ItemStack(ItemAndBlockHolder.FLUID_IMPORT_BUS), 4);
             Upgrades.CRAFTING.registerItem(new ItemStack(ItemAndBlockHolder.FLUID_EXPORT_BUS), 1);
+        }
+
+        try {
+            Class<?> calculatorV2 = Class.forName("appeng.crafting.v2.CraftingCalculations");
+            if (calculatorV2 != null) {
+                // Only run this if GTNH AE2 is installed
+                CalculatorV2PluginLoader.installCalculatorV2Plugins();
+            }
+        } catch (ClassNotFoundException e) {
+            // no-op
         }
 
         proxy.postInit(event);
