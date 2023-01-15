@@ -149,8 +149,9 @@ public class TileLevelMaintainer extends AENetworkTile
                     if (this.requests.isDone(i)) this.requests.setState(i, State.Idling);
                     if (cg.canEmitFor(craftItem)
                             || cg.isRequesting(craftItem)
-                            || (inv.findPrecise(is) != null
-                                    && inv.findPrecise(is).getStackSize() >= is.getStackSize())
+                            || inv.findPrecise(is) == null
+                            || !inv.findPrecise(is).isCraftable()
+                            || inv.findPrecise(is).getStackSize() >= is.getStackSize()
                             || !this.requests.isDone(i)) continue;
                     // do crafting
                     Future<ICraftingJob> jobTask = requests.getJobs()[i];
