@@ -18,6 +18,7 @@ public enum FCPartsTexture {
     PartTerminalBroad("terminal_broad"),
     PartFluidImportBus("fluid_import_face"),
     PartFluidExportBus("fluid_export_face"),
+    PartFluidStorageBus("fluid_storage_bus"),
     BlockFluidInterfaceAlternate_Arrow("fluid_interface_arrow"),
     BlockInterfaceAlternate("fluid_interface_a"),
     BlockInterface_Face("fluid_interface"),

@@ -6,6 +6,7 @@ item.part_fluid_pattern_terminal_ex.name=ME Fluid Processing Pattern Terminal
 item.part_fluid_interface.name=ME Dual Interface
 item.part_fluid_import.name=ME Fluid Import Bus
 item.part_fluid_export.name=ME Fluid Export Bus
+item.part_fluid_storage_bus.name=ME Fluid Storage Bus
 item.fluid_packet.name=Fluid Packet
 item.fluid_storage.1.name=1k ME Fluid Storage Cell
 item.fluid_storage.4.name=4k ME Fluid Storage Cell
@@ -95,7 +96,8 @@ ae2fc.gui.oc_pattern_editor=OC Pattern Editor
 ae2fc.gui.button.set=Set
 ae2fc.gui.part_fluid_import=ME Fluid Import Bus
 ae2fc.gui.part_fluid_export=ME Fluid Export Bus
-ae2fc.gui.part_fluid_terminal=Fluid Terminal
+ae2fc.gui.part_fluid_terminal=ME Fluid Terminal
+ae2fc.gui.part_fluid_storage_bus=ME Fluid Storage Bus
 
 error.unknown=Unknown
 

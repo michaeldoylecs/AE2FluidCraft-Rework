@@ -1,5 +1,6 @@
 package com.glodblock.github.common.item;
 
+import appeng.api.storage.data.IAEFluidStack;
 import appeng.api.storage.data.IAEItemStack;
 import appeng.util.item.AEItemStack;
 import com.glodblock.github.FluidCraft;
@@ -89,6 +90,13 @@ public class ItemFluidPacket extends Item {
         tag.setTag("FluidStack", fluidTag);
         stack.setTagCompound(tag);
         return stack;
+    }
+
+    public static ItemStack newStack(@Nullable IAEFluidStack fluid) {
+        if (fluid == null || fluid.getStackSize() == 0) {
+            return null;
+        }
+        return newStack(fluid.getFluidStack());
     }
 
     public static ItemStack newDisplayStack(@Nullable FluidStack fluid) {

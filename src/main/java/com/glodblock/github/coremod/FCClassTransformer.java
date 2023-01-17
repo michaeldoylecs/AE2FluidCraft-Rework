@@ -35,6 +35,9 @@ public class FCClassTransformer implements IClassTransformer {
             case "appeng.tile.storage.TileIOPort":
                 tform = TitleIOPortTransformer.INSTANCE;
                 break;
+            case "appeng.core.features.registries.ExternalStorageRegistry":
+                tform = ExternalStorageRegistryTransformer.INSTANCE;
+                break;
             default:
                 return code;
         }
@@ -53,7 +56,7 @@ public class FCClassTransformer implements IClassTransformer {
         public byte[] transformClass(byte[] code) {
             ClassReader reader = new ClassReader(code);
             ClassWriter writer = new ClassWriter(reader, getWriteFlags());
-            reader.accept(getClassMapper(writer), 0);
+            reader.accept(getClassMapper(writer), ClassReader.EXPAND_FRAMES);
             return writer.toByteArray();
         }
 
