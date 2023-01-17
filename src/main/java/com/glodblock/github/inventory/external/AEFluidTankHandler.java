@@ -28,5 +28,4 @@ public class AEFluidTankHandler implements IExternalStorageHandler {
         }
         return null;
     }
-
 }

@@ -14,16 +14,17 @@ import com.glodblock.github.common.item.ItemFluidPacket;
 import com.glodblock.github.common.parts.PartFluidStorageBus;
 import com.glodblock.github.inventory.slot.OptionalFluidSlotFakeTypeOnly;
 import com.glodblock.github.util.Ae2Reflect;
+import java.util.Iterator;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.IInventory;
-
-import java.util.Iterator;
 
 public class ContainerFluidStorageBus extends ContainerFluidConfigurable {
 
     public final PartFluidStorageBus bus;
+
     @GuiSync(3)
     public AccessRestriction rwMode = AccessRestriction.READ_WRITE;
+
     @GuiSync(4)
     public StorageFilter storageFilter = StorageFilter.EXTRACTABLE_ONLY;
 
@@ -45,22 +46,44 @@ public class ContainerFluidStorageBus extends ContainerFluidConfigurable {
         final IInventory config = Ae2Reflect.getUpgradeList(this).getInventoryByName("config");
         for (int y = 0; y < 7; y++) {
             for (int x = 0; x < 9; x++) {
-                this.addSlotToContainer(new OptionalFluidSlotFakeTypeOnly(config, null, this, y * 9 + x, xo, yo, x, y, y));
+                this.addSlotToContainer(
+                        new OptionalFluidSlotFakeTypeOnly(config, null, this, y * 9 + x, xo, yo, x, y, y));
             }
         }
-        this.addSlotToContainer((new SlotRestrictedInput(SlotRestrictedInput.PlacableItemType.UPGRADES, upgrades, 0, 187, 8, this.getInventoryPlayer()))
-            .setNotDraggable());
-        this.addSlotToContainer(
-            (new SlotRestrictedInput(SlotRestrictedInput.PlacableItemType.UPGRADES, upgrades, 1, 187, 8 + 18, this.getInventoryPlayer()))
+        this.addSlotToContainer((new SlotRestrictedInput(
+                        SlotRestrictedInput.PlacableItemType.UPGRADES, upgrades, 0, 187, 8, this.getInventoryPlayer()))
                 .setNotDraggable());
-        this.addSlotToContainer(
-            (new SlotRestrictedInput(SlotRestrictedInput.PlacableItemType.UPGRADES, upgrades, 2, 187, 8 + 18 * 2, this.getInventoryPlayer()))
+        this.addSlotToContainer((new SlotRestrictedInput(
+                        SlotRestrictedInput.PlacableItemType.UPGRADES,
+                        upgrades,
+                        1,
+                        187,
+                        8 + 18,
+                        this.getInventoryPlayer()))
                 .setNotDraggable());
-        this.addSlotToContainer(
-            (new SlotRestrictedInput(SlotRestrictedInput.PlacableItemType.UPGRADES, upgrades, 3, 187, 8 + 18 * 3, this.getInventoryPlayer()))
+        this.addSlotToContainer((new SlotRestrictedInput(
+                        SlotRestrictedInput.PlacableItemType.UPGRADES,
+                        upgrades,
+                        2,
+                        187,
+                        8 + 18 * 2,
+                        this.getInventoryPlayer()))
                 .setNotDraggable());
-        this.addSlotToContainer(
-            (new SlotRestrictedInput(SlotRestrictedInput.PlacableItemType.UPGRADES, upgrades, 4, 187, 8 + 18 * 4, this.getInventoryPlayer()))
+        this.addSlotToContainer((new SlotRestrictedInput(
+                        SlotRestrictedInput.PlacableItemType.UPGRADES,
+                        upgrades,
+                        3,
+                        187,
+                        8 + 18 * 3,
+                        this.getInventoryPlayer()))
+                .setNotDraggable());
+        this.addSlotToContainer((new SlotRestrictedInput(
+                        SlotRestrictedInput.PlacableItemType.UPGRADES,
+                        upgrades,
+                        4,
+                        187,
+                        8 + 18 * 4,
+                        this.getInventoryPlayer()))
                 .setNotDraggable());
     }
 
@@ -89,8 +112,10 @@ public class ContainerFluidStorageBus extends ContainerFluidConfigurable {
         this.verifyPermissions(SecurityPermissions.BUILD, false);
 
         if (Platform.isServer()) {
-            this.setReadWriteMode((AccessRestriction) Ae2Reflect.getUpgradeList(this).getConfigManager().getSetting(Settings.ACCESS));
-            this.setStorageFilter((StorageFilter) Ae2Reflect.getUpgradeList(this).getConfigManager().getSetting(Settings.STORAGE_FILTER));
+            this.setReadWriteMode((AccessRestriction)
+                    Ae2Reflect.getUpgradeList(this).getConfigManager().getSetting(Settings.ACCESS));
+            this.setStorageFilter((StorageFilter)
+                    Ae2Reflect.getUpgradeList(this).getConfigManager().getSetting(Settings.STORAGE_FILTER));
         }
 
         this.standardDetectAndSendChanges();
@@ -116,8 +141,8 @@ public class ContainerFluidStorageBus extends ContainerFluidConfigurable {
         final IMEInventory<IAEFluidStack> cellInv = this.bus.getInternalHandler();
         Iterator<IAEFluidStack> i = new NullIterator<>();
         if (cellInv != null) {
-            final IItemList<IAEFluidStack> list = cellInv
-                .getAvailableItems(AEApi.instance().storage().createFluidList());
+            final IItemList<IAEFluidStack> list =
+                    cellInv.getAvailableItems(AEApi.instance().storage().createFluidList());
             i = list.iterator();
         }
 
@@ -151,5 +176,4 @@ public class ContainerFluidStorageBus extends ContainerFluidConfigurable {
     private void setStorageFilter(final StorageFilter storageFilter) {
         this.storageFilter = storageFilter;
     }
-
 }

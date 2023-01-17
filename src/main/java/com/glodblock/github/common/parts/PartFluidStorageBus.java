@@ -36,7 +36,6 @@ import appeng.tile.networking.TileCableBus;
 import appeng.util.ConfigManager;
 import appeng.util.Platform;
 import appeng.util.item.AEFluidStack;
-import appeng.util.prioitylist.FuzzyPriorityList;
 import appeng.util.prioitylist.PrecisePriorityList;
 import com.glodblock.github.client.textures.FCPartsTexture;
 import com.glodblock.github.common.item.ItemFluidPacket;
@@ -49,6 +48,9 @@ import com.glodblock.github.util.Util;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import extracells.tileentity.TileEntityFluidInterface;
+import java.util.Collections;
+import java.util.List;
+import java.util.Objects;
 import net.minecraft.client.renderer.RenderBlocks;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
@@ -56,13 +58,9 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Vec3;
-import net.minecraftforge.fluids.IFluidHandler;
 
-import java.util.Collections;
-import java.util.List;
-import java.util.Objects;
-
-public class PartFluidStorageBus extends PartUpgradeable implements IGridTickable, ICellContainer, IMEMonitorHandlerReceiver<IAEFluidStack>, IPriorityHost {
+public class PartFluidStorageBus extends PartUpgradeable
+        implements IGridTickable, ICellContainer, IMEMonitorHandlerReceiver<IAEFluidStack>, IPriorityHost {
 
     private final BaseActionSource source;
     private final AppEngInternalAEInventory config = new AppEngInternalAEInventory(this, 63);
@@ -154,11 +152,11 @@ public class PartFluidStorageBus extends PartUpgradeable implements IGridTickabl
 
     @Override
     public void onChangeInventory(
-        final IInventory inv,
-        final int slot,
-        final InvOperation mc,
-        final ItemStack removedStack,
-        final ItemStack newStack) {
+            final IInventory inv,
+            final int slot,
+            final InvOperation mc,
+            final ItemStack removedStack,
+            final ItemStack newStack) {
         super.onChangeInventory(inv, slot, mc, removedStack, newStack);
 
         if (inv == this.config) {
@@ -167,7 +165,10 @@ public class PartFluidStorageBus extends PartUpgradeable implements IGridTickabl
     }
 
     protected void resetCache(final boolean fullReset) {
-        if (this.getHost() == null || this.getHost().getTile() == null || this.getHost().getTile().getWorldObj() == null || this.getHost().getTile().getWorldObj().isRemote) {
+        if (this.getHost() == null
+                || this.getHost().getTile() == null
+                || this.getHost().getTile().getWorldObj() == null
+                || this.getHost().getTile().getWorldObj().isRemote) {
             return;
         }
 
@@ -191,7 +192,8 @@ public class PartFluidStorageBus extends PartUpgradeable implements IGridTickabl
         IItemList<IAEFluidStack> before = AEApi.instance().storage().createFluidList();
         if (in != null) {
             if (accessChanged) {
-                AccessRestriction currentAccess = (AccessRestriction) this.getConfigManager().getSetting(Settings.ACCESS);
+                AccessRestriction currentAccess =
+                        (AccessRestriction) this.getConfigManager().getSetting(Settings.ACCESS);
                 if (!currentAccess.hasPermission(AccessRestriction.READ)) {
                     readOncePass = true;
                 }
@@ -225,13 +227,19 @@ public class PartFluidStorageBus extends PartUpgradeable implements IGridTickabl
     }
 
     @Override
-    public void postChange(final IBaseMonitor<IAEFluidStack> monitor, final Iterable<IAEFluidStack> change, final BaseActionSource source) {
+    public void postChange(
+            final IBaseMonitor<IAEFluidStack> monitor,
+            final Iterable<IAEFluidStack> change,
+            final BaseActionSource source) {
         if (this.getProxy().isActive()) {
-            AccessRestriction currentAccess = (AccessRestriction) ((ConfigManager) this.getConfigManager()).getSetting(Settings.ACCESS);
+            AccessRestriction currentAccess =
+                    (AccessRestriction) ((ConfigManager) this.getConfigManager()).getSetting(Settings.ACCESS);
             if (readOncePass) {
                 readOncePass = false;
                 try {
-                    this.getProxy().getStorage().postAlterationOfStoredItems(StorageChannel.FLUIDS, change, this.source);
+                    this.getProxy()
+                            .getStorage()
+                            .postAlterationOfStoredItems(StorageChannel.FLUIDS, change, this.source);
                 } catch (final GridAccessException ignore) {
                 }
                 return;
@@ -268,7 +276,8 @@ public class PartFluidStorageBus extends PartUpgradeable implements IGridTickabl
             if (iPart == null || iPart instanceof PartFluidInterface) {
                 this.resetCache(true);
                 this.resetCache();
-            } if (ModAndClassUtil.EC2) {
+            }
+            if (ModAndClassUtil.EC2) {
                 if (iPart == null || iPart instanceof extracells.part.PartFluidInterface) {
                     this.resetCache(true);
                     this.resetCache();
@@ -294,11 +303,11 @@ public class PartFluidStorageBus extends PartUpgradeable implements IGridTickabl
         }
         if (Platform.isServer()) {
             InventoryHandler.openGui(
-                player,
-                this.getHost().getTile().getWorldObj(),
-                new BlockPos(this.getHost().getTile()),
-                Objects.requireNonNull(Util.from(this.getSide())),
-                GuiType.FLUID_STORAGE_BUS);
+                    player,
+                    this.getHost().getTile().getWorldObj(),
+                    new BlockPos(this.getHost().getTile()),
+                    Objects.requireNonNull(Util.from(this.getSide())),
+                    GuiType.FLUID_STORAGE_BUS);
         }
         return true;
     }
@@ -339,12 +348,12 @@ public class PartFluidStorageBus extends PartUpgradeable implements IGridTickabl
         this.monitor = null;
         if (target != null) {
             final IExternalStorageHandler esh = AEApi.instance()
-                .registries()
-                .externalStorage()
-                .getHandler(target, this.getSide().getOpposite(), StorageChannel.FLUIDS, this.source);
+                    .registries()
+                    .externalStorage()
+                    .getHandler(target, this.getSide().getOpposite(), StorageChannel.FLUIDS, this.source);
             if (esh != null) {
                 final IMEInventory<?> inv =
-                    esh.getInventory(target, this.getSide().getOpposite(), StorageChannel.FLUIDS, this.source);
+                        esh.getInventory(target, this.getSide().getOpposite(), StorageChannel.FLUIDS, this.source);
                 if (inv instanceof MEMonitorIFluidHandler) {
                     final MEMonitorIFluidHandler h = (MEMonitorIFluidHandler) inv;
                     h.setMode((StorageFilter) this.getConfigManager().getSetting(Settings.STORAGE_FILTER));
@@ -354,17 +363,17 @@ public class PartFluidStorageBus extends PartUpgradeable implements IGridTickabl
                 if (inv != null) {
                     this.handler = new MEInventoryHandler(inv, StorageChannel.FLUIDS);
                     this.handler.setBaseAccess(
-                        (AccessRestriction) this.getConfigManager().getSetting(Settings.ACCESS));
+                            (AccessRestriction) this.getConfigManager().getSetting(Settings.ACCESS));
                     this.handler.setWhitelist(
-                        this.getInstalledUpgrades(Upgrades.INVERTER) > 0
-                            ? IncludeExclude.BLACKLIST
-                            : IncludeExclude.WHITELIST);
+                            this.getInstalledUpgrades(Upgrades.INVERTER) > 0
+                                    ? IncludeExclude.BLACKLIST
+                                    : IncludeExclude.WHITELIST);
                     this.handler.setPriority(this.priority);
                     if (inv instanceof IMEMonitor) {
                         ((IBaseMonitor) inv).addListener(this, this.handler);
                     }
                     final IItemList<IAEFluidStack> priorityList =
-                        AEApi.instance().storage().createFluidList();
+                            AEApi.instance().storage().createFluidList();
 
                     final int slotsToUse = 18 + this.getInstalledUpgrades(Upgrades.CAPACITY) * 9;
                     for (int x = 0; x < this.config.getSizeInventory() && x < slotsToUse; x++) {
@@ -445,12 +454,12 @@ public class PartFluidStorageBus extends PartUpgradeable implements IGridTickabl
     @SideOnly(Side.CLIENT)
     public void renderInventory(final IPartRenderHelper rh, final RenderBlocks renderer) {
         rh.setTexture(
-            CableBusTextures.PartStorageSides.getIcon(),
-            CableBusTextures.PartStorageSides.getIcon(),
-            CableBusTextures.PartStorageBack.getIcon(),
-            FCPartsTexture.PartFluidStorageBus.getIcon(),
-            CableBusTextures.PartStorageSides.getIcon(),
-            CableBusTextures.PartStorageSides.getIcon());
+                CableBusTextures.PartStorageSides.getIcon(),
+                CableBusTextures.PartStorageSides.getIcon(),
+                CableBusTextures.PartStorageBack.getIcon(),
+                FCPartsTexture.PartFluidStorageBus.getIcon(),
+                CableBusTextures.PartStorageSides.getIcon(),
+                CableBusTextures.PartStorageSides.getIcon());
 
         rh.setBounds(3, 3, 15, 13, 13, 16);
         rh.renderInventoryBox(renderer);
@@ -465,15 +474,15 @@ public class PartFluidStorageBus extends PartUpgradeable implements IGridTickabl
     @Override
     @SideOnly(Side.CLIENT)
     public void renderStatic(
-        final int x, final int y, final int z, final IPartRenderHelper rh, final RenderBlocks renderer) {
+            final int x, final int y, final int z, final IPartRenderHelper rh, final RenderBlocks renderer) {
         this.setRenderCache(rh.useSimplifiedRendering(x, y, z, this, this.getRenderCache()));
         rh.setTexture(
-            CableBusTextures.PartStorageSides.getIcon(),
-            CableBusTextures.PartStorageSides.getIcon(),
-            CableBusTextures.PartStorageBack.getIcon(),
-            FCPartsTexture.PartFluidStorageBus.getIcon(),
-            CableBusTextures.PartStorageSides.getIcon(),
-            CableBusTextures.PartStorageSides.getIcon());
+                CableBusTextures.PartStorageSides.getIcon(),
+                CableBusTextures.PartStorageSides.getIcon(),
+                CableBusTextures.PartStorageBack.getIcon(),
+                FCPartsTexture.PartFluidStorageBus.getIcon(),
+                CableBusTextures.PartStorageSides.getIcon(),
+                CableBusTextures.PartStorageSides.getIcon());
 
         rh.setBounds(3, 3, 15, 13, 13, 16);
         rh.renderBlock(x, y, z, renderer);
@@ -482,28 +491,27 @@ public class PartFluidStorageBus extends PartUpgradeable implements IGridTickabl
         rh.renderBlock(x, y, z, renderer);
 
         rh.setTexture(
-            CableBusTextures.PartStorageSides.getIcon(),
-            CableBusTextures.PartStorageSides.getIcon(),
-            CableBusTextures.PartStorageBack.getIcon(),
-            FCPartsTexture.PartFluidStorageBus.getIcon(),
-            CableBusTextures.PartStorageSides.getIcon(),
-            CableBusTextures.PartStorageSides.getIcon());
+                CableBusTextures.PartStorageSides.getIcon(),
+                CableBusTextures.PartStorageSides.getIcon(),
+                CableBusTextures.PartStorageBack.getIcon(),
+                FCPartsTexture.PartFluidStorageBus.getIcon(),
+                CableBusTextures.PartStorageSides.getIcon(),
+                CableBusTextures.PartStorageSides.getIcon());
 
         rh.setBounds(5, 5, 12, 11, 11, 13);
         rh.renderBlock(x, y, z, renderer);
 
         rh.setTexture(
-            CableBusTextures.PartMonitorSidesStatus.getIcon(),
-            CableBusTextures.PartMonitorSidesStatus.getIcon(),
-            CableBusTextures.PartMonitorBack.getIcon(),
-            FCPartsTexture.PartFluidStorageBus.getIcon(),
-            CableBusTextures.PartMonitorSidesStatus.getIcon(),
-            CableBusTextures.PartMonitorSidesStatus.getIcon());
+                CableBusTextures.PartMonitorSidesStatus.getIcon(),
+                CableBusTextures.PartMonitorSidesStatus.getIcon(),
+                CableBusTextures.PartMonitorBack.getIcon(),
+                FCPartsTexture.PartFluidStorageBus.getIcon(),
+                CableBusTextures.PartMonitorSidesStatus.getIcon(),
+                CableBusTextures.PartMonitorSidesStatus.getIcon());
 
         rh.setBounds(5, 5, 13, 11, 11, 14);
         rh.renderBlock(x, y, z, renderer);
 
         this.renderLights(x, y, z, rh, renderer);
     }
-
 }

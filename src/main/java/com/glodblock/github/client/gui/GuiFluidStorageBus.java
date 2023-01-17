@@ -3,7 +3,6 @@ package com.glodblock.github.client.gui;
 import appeng.api.config.AccessRestriction;
 import appeng.api.config.ActionItems;
 import appeng.api.config.Settings;
-import appeng.api.config.StorageFilter;
 import appeng.api.storage.data.IAEFluidStack;
 import appeng.client.gui.implementations.GuiUpgradeable;
 import appeng.client.gui.widgets.GuiImgButton;
@@ -42,9 +41,9 @@ public class GuiFluidStorageBus extends GuiUpgradeable {
         this.clear = new GuiImgButton(this.guiLeft - 18, this.guiTop + 8, Settings.ACTIONS, ActionItems.CLOSE);
         this.partition = new GuiImgButton(this.guiLeft - 18, this.guiTop + 28, Settings.ACTIONS, ActionItems.WRENCH);
         this.rwMode =
-            new GuiImgButton(this.guiLeft - 18, this.guiTop + 48, Settings.ACCESS, AccessRestriction.READ_WRITE);
-        this.priority = new GuiTabButton(
-            this.guiLeft + 154, this.guiTop, 2 + 4 * 16, GuiText.Priority.getLocal(), itemRender);
+                new GuiImgButton(this.guiLeft - 18, this.guiTop + 48, Settings.ACCESS, AccessRestriction.READ_WRITE);
+        this.priority =
+                new GuiTabButton(this.guiLeft + 154, this.guiTop, 2 + 4 * 16, GuiText.Priority.getLocal(), itemRender);
 
         this.buttonList.add(this.priority);
         this.buttonList.add(this.rwMode);
@@ -55,9 +54,12 @@ public class GuiFluidStorageBus extends GuiUpgradeable {
     @Override
     public void drawFG(final int offsetX, final int offsetY, final int mouseX, final int mouseY) {
         this.fontRendererObj.drawString(
-            this.getGuiDisplayName(I18n.format(NameConst.GUI_FLUID_STORAGE_BUS)), 8, 6, GuiColors.StorageBusTitle.getColor());
+                this.getGuiDisplayName(I18n.format(NameConst.GUI_FLUID_STORAGE_BUS)),
+                8,
+                6,
+                GuiColors.StorageBusTitle.getColor());
         this.fontRendererObj.drawString(
-            GuiText.inventory.getLocal(), 8, this.ySize - 96 + 3, GuiColors.StorageBusInventory.getColor());
+                GuiText.inventory.getLocal(), 8, this.ySize - 96 + 3, GuiColors.StorageBusInventory.getColor());
 
         if (this.rwMode != null) {
             this.rwMode.set(((ContainerFluidStorageBus) this.cvb).getReadWriteMode());
@@ -87,5 +89,4 @@ public class GuiFluidStorageBus extends GuiUpgradeable {
     public void update(int id, IAEFluidStack stack) {
         ((ContainerFluidStorageBus) this.cvb).bus.setFluidInSlot(id, stack);
     }
-
 }
