@@ -25,6 +25,7 @@ public class NameConst {
     public static final String ITEM_PART_FLUID_INTERFACE = "part_fluid_interface";
     public static final String ITEM_PART_FLUID_IMPORT = "part_fluid_import";
     public static final String ITEM_PART_FLUID_EXPORT = "part_fluid_export";
+    public static final String ITEM_PART_FLUID_STORAGE_BUS = "part_fluid_storage_bus";
     public static final String ITEM_FLUID_PACKET = "fluid_packet";
     public static final String ITEM_FLUID_STORAGE = "fluid_storage";
     public static final String ITEM_FLUID_PART = "fluid_part";
@@ -78,6 +79,7 @@ public class NameConst {
     public static final String GUI_OC_PATTERN_EDITOR = GUI_KEY + BLOCK_OC_PATTERN_EDITOR;
     public static final String GUI_FLUID_IMPORT = GUI_KEY + ITEM_PART_FLUID_IMPORT;
     public static final String GUI_FLUID_EXPORT = GUI_KEY + ITEM_PART_FLUID_EXPORT;
+    public static final String GUI_FLUID_STORAGE_BUS = GUI_KEY + ITEM_PART_FLUID_STORAGE_BUS;
 
     public static String i18n(String t, String delimiter, boolean hint) {
         if (!hint) {

@@ -13,14 +13,16 @@ import appeng.core.sync.packets.PacketValueConfig;
 import appeng.helpers.IPriorityHost;
 import com.glodblock.github.FluidCraft;
 import com.glodblock.github.common.parts.PartFluidInterface;
+import com.glodblock.github.common.parts.PartFluidStorageBus;
 import com.glodblock.github.common.tile.TileFluidInterface;
 import com.glodblock.github.inventory.gui.GuiType;
 import com.glodblock.github.loader.ItemAndBlockHolder;
 import com.glodblock.github.network.CPacketSwitchGuis;
-import java.io.IOException;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.item.ItemStack;
+
+import java.io.IOException;
 
 public class GuiFCPriority extends AEBaseGui {
 
@@ -71,6 +73,9 @@ public class GuiFCPriority extends AEBaseGui {
         } else if (target instanceof PartFluidInterface) {
             myIcon = ItemAndBlockHolder.FLUID_INTERFACE.stack();
             this.OriginalGui = GuiType.DUAL_INTERFACE_FLUID_PART;
+        } else if (target instanceof PartFluidStorageBus) {
+            myIcon = ItemAndBlockHolder.FLUID_STORAGE_BUS.stack();
+            this.OriginalGui = GuiType.FLUID_STORAGE_BUS;
         }
 
         if (this.OriginalGui != null && myIcon != null) {
