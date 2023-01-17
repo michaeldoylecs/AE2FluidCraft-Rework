@@ -66,8 +66,7 @@ public class MEMonitorIFluidHandler implements IMEMonitor<IAEFluidStack> {
     }
 
     public IAEFluidStack extractItems(IAEFluidStack request, Actionable type, BaseActionSource src) {
-        FluidStack removed =
-                this.handler.drain(this.side, request.getFluidStack(), type == Actionable.MODULATE);
+        FluidStack removed = this.handler.drain(this.side, request.getFluidStack(), type == Actionable.MODULATE);
         if (removed != null && removed.amount != 0) {
             IAEFluidStack o = request.copy();
             o.setStackSize(removed.amount);
@@ -99,8 +98,7 @@ public class MEMonitorIFluidHandler implements IMEMonitor<IAEFluidStack> {
 
         if (tankProperties != null) {
             for (FluidTankInfo tankProperty : tankProperties) {
-                if (this.mode != StorageFilter.EXTRACTABLE_ONLY
-                    || this.handler.drain(this.side, 1, false) != null) {
+                if (this.mode != StorageFilter.EXTRACTABLE_ONLY || this.handler.drain(this.side, 1, false) != null) {
                     currentlyOnStorage.add(AEFluidStack.create(tankProperty.fluid));
                 }
             }

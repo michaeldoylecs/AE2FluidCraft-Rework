@@ -35,7 +35,6 @@ public class ExternalStorageRegistryTransformer extends FCClassTransformer.Class
                 return super.visitMethod(access, name, desc, signature, exceptions);
             }
         }
-
     }
 
     private static class TransformGetHandler extends MethodVisitor {
@@ -52,11 +51,11 @@ public class ExternalStorageRegistryTransformer extends FCClassTransformer.Class
         @Override
         public void visitJumpInsn(int opcode, Label label) {
             if (opcode == Opcodes.IFEQ) {
-                cnt_if ++;
+                cnt_if++;
             }
             if (cnt_if == 3) {
                 L6 = label;
-                cnt_if ++;
+                cnt_if++;
                 super.visitJumpInsn(opcode, L9);
                 return;
             }
@@ -66,28 +65,35 @@ public class ExternalStorageRegistryTransformer extends FCClassTransformer.Class
         @Override
         public void visitInsn(int opcode) {
             if (opcode == Opcodes.ARETURN) {
-                cnt_return ++;
+                cnt_return++;
             }
             super.visitInsn(opcode);
             if (cnt_return == 2) {
                 super.visitLabel(L9);
-                super.visitFieldInsn(Opcodes.GETSTATIC, "com/glodblock/github/inventory/external/AEFluidTankHandler",
-                    "INSTANCE", "Lcom/glodblock/github/inventory/external/AEFluidTankHandler;");
+                super.visitFieldInsn(
+                        Opcodes.GETSTATIC,
+                        "com/glodblock/github/inventory/external/AEFluidTankHandler",
+                        "INSTANCE",
+                        "Lcom/glodblock/github/inventory/external/AEFluidTankHandler;");
                 super.visitVarInsn(Opcodes.ALOAD, 1);
                 super.visitVarInsn(Opcodes.ALOAD, 2);
                 super.visitVarInsn(Opcodes.ALOAD, 3);
                 super.visitVarInsn(Opcodes.ALOAD, 4);
-                super.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "com/glodblock/github/inventory/external/AEFluidTankHandler",
-                    "canHandle",
-                    "(Lnet/minecraft/tileentity/TileEntity;Lnet/minecraftforge/common/util/ForgeDirection;Lappeng/api/storage/StorageChannel;Lappeng/api/networking/security/BaseActionSource;)Z",
-                    false);
+                super.visitMethodInsn(
+                        Opcodes.INVOKEVIRTUAL,
+                        "com/glodblock/github/inventory/external/AEFluidTankHandler",
+                        "canHandle",
+                        "(Lnet/minecraft/tileentity/TileEntity;Lnet/minecraftforge/common/util/ForgeDirection;Lappeng/api/storage/StorageChannel;Lappeng/api/networking/security/BaseActionSource;)Z",
+                        false);
                 super.visitJumpInsn(Opcodes.IFEQ, L6);
-                super.visitFieldInsn(Opcodes.GETSTATIC, "com/glodblock/github/inventory/external/AEFluidTankHandler",
-                    "INSTANCE", "Lcom/glodblock/github/inventory/external/AEFluidTankHandler;");
+                super.visitFieldInsn(
+                        Opcodes.GETSTATIC,
+                        "com/glodblock/github/inventory/external/AEFluidTankHandler",
+                        "INSTANCE",
+                        "Lcom/glodblock/github/inventory/external/AEFluidTankHandler;");
                 super.visitInsn(Opcodes.ARETURN);
-                cnt_return ++;
+                cnt_return++;
             }
         }
-
     }
 }
