@@ -187,12 +187,6 @@ public class CoreModHooks {
         return true;
     }
 
-    public static void updateFluidTag(ItemStack whatToSend, ItemStack Result) {
-        if (Result != null && Result.getItem() instanceof ItemFluidPacket) {
-            whatToSend.setTagCompound(Result.getTagCompound());
-        }
-    }
-
     public static long IOPortMinSpeed(long possible, long itemsToMove, final StorageChannel chan) {
         return chan == StorageChannel.FLUIDS
                 ? Math.min(possible, itemsToMove * FluidCellInventory.singleByteAmount)
