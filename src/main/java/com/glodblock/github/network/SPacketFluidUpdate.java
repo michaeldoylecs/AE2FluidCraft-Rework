@@ -111,6 +111,10 @@ public class SPacketFluidUpdate implements IMessage {
                 } else {
                     ((GuiFluidTerminal) gs).update(null);
                 }
+            } else if (gs instanceof GuiFluidLevelEmitter) {
+                for (Map.Entry<Integer, IAEFluidStack> e : message.list.entrySet()) {
+                    ((GuiFluidLevelEmitter) gs).update(e.getKey(), e.getValue());
+                }
             }
             return null;
         }

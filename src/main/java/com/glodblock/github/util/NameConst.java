@@ -25,6 +25,7 @@ public class NameConst {
     public static final String ITEM_PART_FLUID_INTERFACE = "part_fluid_interface";
     public static final String ITEM_PART_FLUID_IMPORT = "part_fluid_import";
     public static final String ITEM_PART_FLUID_EXPORT = "part_fluid_export";
+    public static final String ITEM_PART_FLUID_LEVEL_EMITTER = "part_fluid_level_emitter";
     public static final String ITEM_FLUID_PACKET = "fluid_packet";
     public static final String ITEM_FLUID_STORAGE = "fluid_storage";
     public static final String ITEM_FLUID_PART = "fluid_part";
@@ -66,6 +67,7 @@ public class NameConst {
     public static final String RES_KEY = FluidCraft.MODID + ":";
 
     public static final String GUI_KEY = FluidCraft.MODID + ".gui.";
+    public static final String GUI_FLUID_LEVEL_EMITTER = GUI_KEY + ITEM_PART_FLUID_LEVEL_EMITTER;
     public static final String GUI_FLUID_TERMINAL = GUI_KEY + ITEM_PART_FLUID_TERMINAL;
     public static final String GUI_FLUID_PATTERN_TERMINAL = GUI_KEY + ITEM_PART_FLUID_PATTERN_TERMINAL;
     public static final String GUI_FLUID_PATTERN_TERMINAL_EX = GUI_KEY + ITEM_PART_FLUID_PATTERN_TERMINAL_EX;
