@@ -51,6 +51,7 @@ public class RecipeLoader implements Runnable {
     public static final ItemStack AE2_CORE_FOM =
             new ItemStack(GameRegistry.findItem("appliedenergistics2", "item.ItemMultiMaterial"), 1, 43);
     public static final ItemStack PISTON = new ItemStack(Blocks.piston, 1);
+    public static final ItemStack STICKY_PISTON = new ItemStack(Blocks.sticky_piston, 1);
     public static final ItemStack AE2_BLANK_PATTERN =
             new ItemStack(GameRegistry.findItem("appliedenergistics2", "item.ItemMultiMaterial"), 1, 52);
     public static final ItemStack AE2_TERMINAL =
@@ -120,6 +121,8 @@ public class RecipeLoader implements Runnable {
                 AE2_PROCESS_ENG,
                 'W',
                 AE2_WORK_BENCH));
+        GameRegistry.addShapelessRecipe(FLUID_STORAGE_BUS.stack(), FLUID_INTERFACE, STICKY_PISTON, PISTON);
+        GameRegistry.addShapelessRecipe(FLUID_STORAGE_BUS.stack(), INTERFACE, STICKY_PISTON, PISTON);
         GameRegistry.addShapelessRecipe(FLUID_TERMINAL.stack(), AE2_PATTERN_TERM, ENCODER);
         GameRegistry.addShapelessRecipe(
                 FLUID_TERMINAL_EX.stack(), FLUID_TERMINAL.stack(), AE2_PROCESS_CAL, AE2_PROCESS_ENG, AE2_PROCESS_LOG);
