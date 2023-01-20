@@ -1,7 +1,7 @@
 package com.glodblock.github.client.gui.container;
 
 import appeng.api.AEApi;
-import appeng.api.config.*;
+import appeng.api.config.Actionable;
 import appeng.api.implementations.guiobjects.IPortableCell;
 import appeng.api.implementations.tiles.IMEChest;
 import appeng.api.implementations.tiles.IViewCellStorage;
@@ -12,95 +12,53 @@ import appeng.api.networking.energy.IEnergyGrid;
 import appeng.api.networking.energy.IEnergySource;
 import appeng.api.networking.security.BaseActionSource;
 import appeng.api.networking.storage.IBaseMonitor;
-import appeng.api.parts.IPart;
-import appeng.api.storage.IMEMonitor;
-import appeng.api.storage.IMEMonitorHandlerReceiver;
 import appeng.api.storage.ITerminalHost;
 import appeng.api.storage.data.IAEFluidStack;
 import appeng.api.storage.data.IItemList;
-import appeng.api.util.IConfigManager;
-import appeng.api.util.IConfigurableObject;
-import appeng.container.AEBaseContainer;
-import appeng.container.guisync.GuiSync;
 import appeng.container.slot.SlotPlayerHotBar;
 import appeng.container.slot.SlotPlayerInv;
 import appeng.container.slot.SlotRestrictedInput;
-import appeng.core.AELog;
-import appeng.core.sync.network.NetworkHandler;
-import appeng.core.sync.packets.PacketValueConfig;
-import appeng.helpers.WirelessTerminalGuiObject;
 import appeng.me.helpers.ChannelPowerSrc;
-import appeng.util.ConfigManager;
-import appeng.util.IConfigManagerHost;
 import appeng.util.Platform;
 import appeng.util.item.AEFluidStack;
 import appeng.util.item.AEItemStack;
 import com.glodblock.github.FluidCraft;
+import com.glodblock.github.client.gui.container.base.FCContainerMonitor;
 import com.glodblock.github.common.item.ItemFluidDrop;
 import com.glodblock.github.network.CPacketFluidUpdate;
 import com.glodblock.github.network.SPacketFluidUpdate;
 import com.glodblock.github.network.SPacketMEInventoryUpdate;
 import com.glodblock.github.util.Util;
-import java.io.IOException;
-import java.nio.BufferOverflowException;
-import java.util.HashMap;
-import java.util.Map;
-import javax.annotation.Nonnull;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.ICrafting;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.fluids.FluidContainerRegistry;
 import net.minecraftforge.fluids.IFluidContainerItem;
 import org.apache.commons.lang3.tuple.MutablePair;
 
-public class FCBaseFluidMonitorContain extends AEBaseContainer
-        implements IConfigManagerHost, IConfigurableObject, IMEMonitorHandlerReceiver<IAEFluidStack> {
-    private final SlotRestrictedInput[] cellView = new SlotRestrictedInput[5];
-    private final IMEMonitor<IAEFluidStack> monitor;
+import java.nio.BufferOverflowException;
+import java.util.HashMap;
+import java.util.Map;
+
+public class ContainerFluidMonitor extends FCContainerMonitor<IAEFluidStack> {
     private final IItemList<IAEFluidStack> items = AEApi.instance().storage().createFluidList();
-    private final IConfigManager clientCM;
-    private final ITerminalHost host;
 
-    @GuiSync(99)
-    public boolean canAccessViewCells = false;
-
-    @GuiSync(98)
-    public boolean hasPower = false;
-
-    private IConfigManagerHost gui;
-    private IConfigManager serverCM;
-    private IGridNode networkNode;
-
-    public FCBaseFluidMonitorContain(final InventoryPlayer ip, final ITerminalHost monitorable) {
+    public ContainerFluidMonitor(final InventoryPlayer ip, final ITerminalHost monitorable) {
         this(ip, monitorable, true);
     }
 
-    protected FCBaseFluidMonitorContain(
+    protected ContainerFluidMonitor(
             final InventoryPlayer ip, final ITerminalHost monitorable, final boolean bindInventory) {
-        super(
-                ip,
-                monitorable instanceof TileEntity ? (TileEntity) monitorable : null,
-                monitorable instanceof IPart ? (IPart) monitorable : null);
-        this.host = monitorable;
-        this.clientCM = new ConfigManager(this);
-
-        this.clientCM.registerSetting(Settings.SORT_BY, SortOrder.NAME);
-        this.clientCM.registerSetting(Settings.VIEW_MODE, ViewItems.ALL);
-        this.clientCM.registerSetting(Settings.SORT_DIRECTION, SortDir.ASCENDING);
+        super(ip, monitorable, bindInventory);
         if (Platform.isServer()) {
             this.serverCM = monitorable.getConfigManager();
-
             this.monitor = monitorable.getFluidInventory();
             if (this.monitor != null) {
                 this.monitor.addListener(this, null);
-
-                //                this.setCellInventory( this.monitor );
-
                 if (monitorable instanceof IPortableCell) {
                     this.setPowerSource((IEnergySource) monitorable);
                 } else if (monitorable instanceof IMEChest) {
@@ -142,10 +100,6 @@ public class FCBaseFluidMonitorContain extends AEBaseContainer
         }
     }
 
-    public IGridNode getNetworkNode() {
-        return this.networkNode;
-    }
-
     @Override
     public ItemStack transferStackInSlot(final EntityPlayer p, final int idx) {
         if (Platform.isClient()) {
@@ -164,106 +118,40 @@ public class FCBaseFluidMonitorContain extends AEBaseContainer
     }
 
     @Override
-    public void detectAndSendChanges() {
-        if (Platform.isServer()) {
-            if (this.monitor != this.host.getFluidInventory()) {
-                this.setValidContainer(false);
-            }
+    protected void processItemList() {
+        if (!this.items.isEmpty()) {
+            final IItemList<IAEFluidStack> monitorCache = this.monitor.getStorageList();
+            final SPacketMEInventoryUpdate piu = new SPacketMEInventoryUpdate(true);
 
-            for (final Settings set : this.serverCM.getSettings()) {
-                final Enum<?> sideLocal = this.serverCM.getSetting(set);
-                final Enum<?> sideRemote = this.clientCM.getSetting(set);
-
-                if (sideLocal != sideRemote) {
-                    this.clientCM.putSetting(set, sideLocal);
-                    for (final Object crafter : this.crafters) {
-                        try {
-                            NetworkHandler.instance.sendTo(
-                                    new PacketValueConfig(set.name(), sideLocal.name()), (EntityPlayerMP) crafter);
-                        } catch (final IOException e) {
-                            AELog.debug(e);
-                        }
-                    }
+            for (final IAEFluidStack is : this.items) {
+                final IAEFluidStack send = monitorCache.findPrecise(is);
+                if (send == null) {
+                    is.setStackSize(0);
+                    piu.appendFluid(is);
+                } else {
+                    piu.appendFluid(send);
                 }
             }
 
-            if (!this.items.isEmpty()) {
-                final IItemList<IAEFluidStack> monitorCache = this.monitor.getStorageList();
+            if (!piu.isEmpty()) {
+                this.items.resetStatus();
 
-                final SPacketMEInventoryUpdate piu = new SPacketMEInventoryUpdate(true);
-
-                for (final IAEFluidStack is : this.items) {
-                    final IAEFluidStack send = monitorCache.findPrecise(is);
-                    if (send == null) {
-                        is.setStackSize(0);
-                        piu.appendFluid(is);
-                    } else {
-                        piu.appendFluid(send);
-                    }
-                }
-
-                if (!piu.isEmpty()) {
-                    this.items.resetStatus();
-
-                    for (final Object c : this.crafters) {
-                        if (c instanceof EntityPlayer) {
-                            FluidCraft.proxy.netHandler.sendTo(piu, (EntityPlayerMP) c);
-                        }
+                for (final Object c : this.crafters) {
+                    if (c instanceof EntityPlayer) {
+                        FluidCraft.proxy.netHandler.sendTo(piu, (EntityPlayerMP) c);
                     }
                 }
             }
-
-            this.updatePowerStatus();
-
-            final boolean oldAccessible = this.canAccessViewCells;
-            this.canAccessViewCells =
-                    this.host instanceof WirelessTerminalGuiObject || this.hasAccess(SecurityPermissions.BUILD, false);
-            if (this.canAccessViewCells != oldAccessible) {
-                for (int y = 0; y < 5; y++) {
-                    if (this.cellView[y] != null) {
-                        this.cellView[y].setAllowEdit(this.canAccessViewCells);
-                    }
-                }
-            }
-            super.detectAndSendChanges();
-        }
-    }
-
-    protected void updatePowerStatus() {
-        try {
-            if (this.networkNode != null) {
-                this.setPowered(this.networkNode.isActive());
-            } else if (this.getPowerSource() instanceof IEnergyGrid) {
-                this.setPowered(((IEnergyGrid) this.getPowerSource()).isNetworkPowered());
-            } else {
-                this.setPowered(
-                        this.getPowerSource().extractAEPower(1, Actionable.SIMULATE, PowerMultiplier.CONFIG) > 0.8);
-            }
-        } catch (final Throwable t) {
-            // :P
         }
     }
 
     @Override
-    public void onUpdate(final String field, final Object oldValue, final Object newValue) {
-        if (field.equals("canAccessViewCells")) {
-            for (int y = 0; y < 5; y++) {
-                if (this.cellView[y] != null) {
-                    this.cellView[y].setAllowEdit(this.canAccessViewCells);
-                }
-            }
-        }
-
-        super.onUpdate(field, oldValue, newValue);
+    protected boolean isInvalid() {
+        return this.monitor != this.host.getFluidInventory();
     }
 
     @Override
-    public void addCraftingToCrafters(final ICrafting c) {
-        super.addCraftingToCrafters(c);
-        this.queueInventory(c);
-    }
-
-    private void queueInventory(final ICrafting c) {
+    protected void queueInventory(final ICrafting c) {
         if (Platform.isServer() && c instanceof EntityPlayer && this.monitor != null) {
             SPacketMEInventoryUpdate piu = new SPacketMEInventoryUpdate(true);
             final IItemList<IAEFluidStack> monitorCache = this.monitor.getStorageList();
@@ -273,64 +161,12 @@ public class FCBaseFluidMonitorContain extends AEBaseContainer
                     piu.appendFluid(send);
                 } catch (final BufferOverflowException boe) {
                     FluidCraft.proxy.netHandler.sendTo(piu, (EntityPlayerMP) c);
-
                     piu = new SPacketMEInventoryUpdate(true);
                     piu.appendFluid(send);
                 }
             }
             FluidCraft.proxy.netHandler.sendTo(piu, (EntityPlayerMP) c);
         }
-    }
-
-    @Override
-    public void onContainerClosed(final EntityPlayer player) {
-        super.onContainerClosed(player);
-        if (this.monitor != null) {
-            this.monitor.removeListener(this);
-        }
-    }
-
-    @Override
-    public IConfigManager getConfigManager() {
-        if (Platform.isServer()) {
-            return this.serverCM;
-        }
-        return this.clientCM;
-    }
-
-    public ItemStack[] getViewCells() {
-        final ItemStack[] list = new ItemStack[this.cellView.length];
-
-        for (int x = 0; x < this.cellView.length; x++) {
-            list[x] = this.cellView[x].getStack();
-        }
-
-        return list;
-    }
-
-    public SlotRestrictedInput getCellViewSlot(final int index) {
-        return this.cellView[index];
-    }
-
-    public boolean isPowered() {
-        return this.hasPower;
-    }
-
-    private void setPowered(final boolean isPowered) {
-        this.hasPower = isPowered;
-    }
-
-    private IConfigManagerHost getGui() {
-        return this.gui;
-    }
-
-    public void setGui(@Nonnull final IConfigManagerHost gui) {
-        this.gui = gui;
-    }
-
-    @Override
-    public boolean isValid(Object verificationToken) {
-        return true;
     }
 
     @Override
@@ -376,7 +212,7 @@ public class FCBaseFluidMonitorContain extends AEBaseContainer
             ItemStack out = fluidContainer.copy();
             out.stackSize = 1;
             if (Util.FluidUtil.isEmpty(fluidContainer) && fluid != null) {
-                //              add fluid to tanks
+                // add fluid to tanks
                 if (nfluid.getStackSize() <= 0) continue;
                 final IAEFluidStack toExtract = nfluid.copy();
                 MutablePair<Integer, ItemStack> fillStack = Util.FluidUtil.fillStack(out, toExtract.getFluidStack());
@@ -403,7 +239,7 @@ public class FCBaseFluidMonitorContain extends AEBaseContainer
                     this.host.getFluidInventory().extractItems(toExtract, Actionable.MODULATE, this.getActionSource());
                 }
             } else if (!Util.FluidUtil.isEmpty(fluidContainer)) {
-                //              add fluid to ae network
+                // add fluid to ae network
                 AEFluidStack fluidStack = Util.getAEFluidFromItem(fluidContainer);
                 final IAEFluidStack aeFluidStack = fluidStack.copy();
                 // simulate result is incorrect. so I'm using other solution and ec2 both mod have same issues
@@ -475,20 +311,4 @@ public class FCBaseFluidMonitorContain extends AEBaseContainer
         this.detectAndSendChanges();
     }
 
-    @Override
-    public void onListUpdate() {
-        for (final Object c : this.crafters) {
-            if (c instanceof ICrafting) {
-                final ICrafting cr = (ICrafting) c;
-                this.queueInventory(cr);
-            }
-        }
-    }
-
-    @Override
-    public void updateSetting(final IConfigManager manager, final Enum settingName, final Enum newValue) {
-        if (this.getGui() != null) {
-            this.getGui().updateSetting(manager, settingName, newValue);
-        }
-    }
 }

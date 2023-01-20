@@ -43,7 +43,7 @@ import net.minecraft.nbt.NBTTagList;
 import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.fluids.FluidStack;
 
-public class FCBasePartContainer extends FCBaseMonitorContain
+public class FCBasePartContainer extends ContainerItemMonitor
         implements IAEAppEngInventory, IOptionalSlotHost, IContainerCraftingPacket {
 
     private final PartFluidPatternTerminal patternTerminal;

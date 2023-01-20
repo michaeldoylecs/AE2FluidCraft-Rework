@@ -2,18 +2,18 @@ package com.glodblock.github.client.gui;
 
 import appeng.api.storage.ITerminalHost;
 import appeng.container.slot.AppEngSlot;
-import com.glodblock.github.client.gui.container.FCBaseFluidMonitorContain;
+import com.glodblock.github.client.gui.container.ContainerFluidMonitor;
 import com.glodblock.github.inventory.InventoryHandler;
 import com.glodblock.github.inventory.gui.GuiType;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 
-public class GuiBaseFluidTerminal extends GuiFCBaseFluidMonitor {
+public class GuiBaseFluidTerminal extends GuiFluidMonitor {
     protected EntityPlayer player;
 
-    public GuiBaseFluidTerminal(InventoryPlayer inventoryPlayer, ITerminalHost te, FCBaseFluidMonitorContain c) {
-        super(inventoryPlayer, te, new FCBaseFluidMonitorContain(inventoryPlayer, te));
+    public GuiBaseFluidTerminal(InventoryPlayer inventoryPlayer, ITerminalHost te, ContainerFluidMonitor c) {
+        super(inventoryPlayer, te, new ContainerFluidMonitor(inventoryPlayer, te));
         player = inventoryPlayer.player;
     }
 

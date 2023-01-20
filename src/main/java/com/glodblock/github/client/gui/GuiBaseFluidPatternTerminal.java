@@ -18,7 +18,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.StatCollector;
 import org.lwjgl.input.Keyboard;
 
-public class GuiBaseFluidPatternTerminal extends GuiFCBaseMonitor {
+public class GuiBaseFluidPatternTerminal extends GuiItemMonitor {
 
     private static final String SUBSITUTION_DISABLE = "0";
     private static final String SUBSITUTION_ENABLE = "1";

@@ -4,9 +4,9 @@ import appeng.api.storage.data.IAEFluidStack;
 import appeng.api.storage.data.IAEItemStack;
 import appeng.util.item.AEFluidStack;
 import appeng.util.item.AEItemStack;
-import com.glodblock.github.client.gui.GuiFCBaseFluidMonitor;
-import com.glodblock.github.client.gui.GuiFCBaseMonitor;
 import com.glodblock.github.client.gui.GuiFluidCraftConfirm;
+import com.glodblock.github.client.gui.GuiFluidMonitor;
+import com.glodblock.github.client.gui.GuiItemMonitor;
 import com.glodblock.github.client.gui.GuiLevelMaintainer;
 import cpw.mods.fml.common.network.simpleimpl.IMessage;
 import cpw.mods.fml.common.network.simpleimpl.IMessageHandler;
@@ -96,10 +96,10 @@ public class SPacketMEInventoryUpdate implements IMessage {
         @Override
         public IMessage onMessage(SPacketMEInventoryUpdate message, MessageContext ctx) {
             final GuiScreen gs = Minecraft.getMinecraft().currentScreen;
-            if (gs instanceof GuiFCBaseFluidMonitor) {
-                ((GuiFCBaseFluidMonitor) gs).postUpdate((List<IAEFluidStack>) (List<?>) message.list);
-            } else if (gs instanceof GuiFCBaseMonitor) {
-                ((GuiFCBaseMonitor) gs).postUpdate((List<IAEItemStack>) (List<?>) message.list);
+            if (gs instanceof GuiFluidMonitor) {
+                ((GuiFluidMonitor) gs).postUpdate((List<IAEFluidStack>) (List<?>) message.list);
+            } else if (gs instanceof GuiItemMonitor) {
+                ((GuiItemMonitor) gs).postUpdate((List<IAEItemStack>) (List<?>) message.list);
             } else if (gs instanceof GuiFluidCraftConfirm) {
                 ((GuiFluidCraftConfirm) gs).postUpdate((List<IAEItemStack>) (List<?>) message.list, message.ref);
             } else if (gs instanceof GuiLevelMaintainer) {

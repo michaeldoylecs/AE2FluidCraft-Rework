@@ -189,7 +189,7 @@ public enum GuiType {
     FLUID_TERMINAL(new PartGuiFactory<ITerminalHost>(ITerminalHost.class) {
         @Override
         protected Object createServerGui(EntityPlayer player, ITerminalHost inv) {
-            return new ContainerFluidTerminal(player.inventory, inv);
+            return new ContainerFluidMonitor(player.inventory, inv);
         }
 
         @Override

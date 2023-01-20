@@ -6,8 +6,7 @@ import appeng.api.storage.data.IAEItemStack;
 import appeng.client.me.SlotME;
 import appeng.client.render.AppEngRenderItem;
 import com.glodblock.github.FluidCraft;
-import com.glodblock.github.client.gui.container.ContainerFluidTerminal;
-import com.glodblock.github.client.gui.container.FCBaseFluidMonitorContain;
+import com.glodblock.github.client.gui.container.ContainerFluidMonitor;
 import com.glodblock.github.common.item.ItemFluidDrop;
 import com.glodblock.github.network.CPacketFluidUpdate;
 import com.glodblock.github.util.Ae2ReflectClient;
@@ -25,11 +24,11 @@ import org.lwjgl.opengl.GL11;
 
 public class GuiFluidTerminal extends GuiBaseFluidTerminal {
     private final AppEngRenderItem stackSizeRenderer = Ae2ReflectClient.getStackSizeRenderer(this);
-    public ContainerFluidTerminal container;
+    public ContainerFluidMonitor container;
 
     public GuiFluidTerminal(InventoryPlayer inventoryPlayer, ITerminalHost te) {
-        super(inventoryPlayer, te, new FCBaseFluidMonitorContain(inventoryPlayer, te));
-        this.container = new ContainerFluidTerminal(inventoryPlayer, te);
+        super(inventoryPlayer, te, new ContainerFluidMonitor(inventoryPlayer, te));
+        this.container = new ContainerFluidMonitor(inventoryPlayer, te);
     }
 
     @Override

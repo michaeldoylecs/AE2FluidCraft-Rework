@@ -3,7 +3,7 @@ package com.glodblock.github.network;
 import appeng.api.storage.data.IAEFluidStack;
 import appeng.util.item.AEFluidStack;
 import appeng.util.item.AEItemStack;
-import com.glodblock.github.client.gui.container.FCBaseFluidMonitorContain;
+import com.glodblock.github.client.gui.container.ContainerFluidMonitor;
 import cpw.mods.fml.common.network.simpleimpl.IMessage;
 import cpw.mods.fml.common.network.simpleimpl.IMessageHandler;
 import cpw.mods.fml.common.network.simpleimpl.MessageContext;
@@ -94,11 +94,11 @@ public class CPacketFluidUpdate implements IMessage {
         public IMessage onMessage(CPacketFluidUpdate message, MessageContext ctx) {
             Container container = ctx.getServerHandler().playerEntity.openContainer;
             EntityPlayer player = ctx.getServerHandler().playerEntity;
-            if (container instanceof FCBaseFluidMonitorContain) {
+            if (container instanceof ContainerFluidMonitor) {
                 ItemStack item = player.inventory.getItemStack();
-                ((FCBaseFluidMonitorContain) container)
+                ((ContainerFluidMonitor) container)
                         .postChange(
-                                new ArrayList<IAEFluidStack>(message.list.values()),
+                                new ArrayList<>(message.list.values()),
                                 message.itemStack == null ? item : message.itemStack,
                                 player,
                                 message.slotIndex);

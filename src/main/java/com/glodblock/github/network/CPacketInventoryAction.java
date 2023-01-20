@@ -109,7 +109,7 @@ public class CPacketInventoryAction implements IMessage {
                             cca.detectAndSendChanges();
                         }
                     }
-                } else if (message.action == InventoryAction.valueOf("SET_PATTERN_VALUE")) {
+                } else if (message.action == InventoryAction.SET_PATTERN_VALUE) {
                     final ContainerOpenContext context = baseContainer.getOpenContext();
                     if (context != null) {
                         final TileEntity te = context.getTile();

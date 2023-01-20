@@ -32,7 +32,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraftforge.fluids.FluidStack;
 
-public class FCBasePartContainerEx extends FCBaseMonitorContain
+public class FCBasePartContainerEx extends ContainerItemMonitor
         implements IAEAppEngInventory, IOptionalSlotHost, IContainerCraftingPacket {
 
     private static final int CRAFTING_GRID_PAGES = 2;
