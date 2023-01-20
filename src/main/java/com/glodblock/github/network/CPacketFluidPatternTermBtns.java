@@ -3,6 +3,7 @@ package com.glodblock.github.network;
 import com.glodblock.github.client.gui.container.ContainerFluidCraftConfirm;
 import com.glodblock.github.client.gui.container.ContainerFluidPatternTerminal;
 import com.glodblock.github.client.gui.container.ContainerFluidPatternTerminalEx;
+import com.glodblock.github.client.gui.container.ContainerFluidStorageBus;
 import cpw.mods.fml.common.network.simpleimpl.IMessage;
 import cpw.mods.fml.common.network.simpleimpl.IMessageHandler;
 import cpw.mods.fml.common.network.simpleimpl.MessageContext;
@@ -145,6 +146,15 @@ public class CPacketFluidPatternTermBtns implements IMessage {
             } else if (Name.equals("Terminal.Start") && c instanceof ContainerFluidCraftConfirm) {
                 final ContainerFluidCraftConfirm qk = (ContainerFluidCraftConfirm) c;
                 qk.startJob();
+            } else if (Name.startsWith("StorageBus.") && c instanceof ContainerFluidStorageBus) {
+                final ContainerFluidStorageBus ccw = (ContainerFluidStorageBus) c;
+                if (Name.equals("StorageBus.Action")) {
+                    if (Value.equals("Partition")) {
+                        ccw.partition();
+                    } else if (Value.equals("Clear")) {
+                        ccw.clear();
+                    }
+                }
             }
             return null;
         }

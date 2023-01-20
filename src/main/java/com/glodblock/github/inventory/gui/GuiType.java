@@ -11,6 +11,7 @@ import com.glodblock.github.client.gui.container.*;
 import com.glodblock.github.common.parts.FCBasePart;
 import com.glodblock.github.common.parts.PartFluidInterface;
 import com.glodblock.github.common.parts.PartFluidLevelEmitter;
+import com.glodblock.github.common.parts.PartFluidStorageBus;
 import com.glodblock.github.common.parts.PartSharedFluidBus;
 import com.glodblock.github.common.tile.*;
 import com.google.common.collect.ImmutableList;
@@ -125,6 +126,18 @@ public enum GuiType {
         }
     }),
 
+    FLUID_STORAGE_BUS_PRIORITY(new PartGuiFactory<IPriorityHost>(IPriorityHost.class) {
+        @Override
+        protected Object createServerGui(EntityPlayer player, IPriorityHost inv) {
+            return new ContainerPriority(player.inventory, inv);
+        }
+
+        @Override
+        protected Object createClientGui(EntityPlayer player, IPriorityHost inv) {
+            return new GuiFCPriority(player.inventory, inv);
+        }
+    }),
+
     FLUID_BUS_IO(new PartGuiFactory<PartSharedFluidBus>(PartSharedFluidBus.class) {
         @Override
         protected Object createServerGui(EntityPlayer player, PartSharedFluidBus inv) {
@@ -134,6 +147,18 @@ public enum GuiType {
         @Override
         protected Object createClientGui(EntityPlayer player, PartSharedFluidBus inv) {
             return new GuiFluidIO(player.inventory, inv);
+        }
+    }),
+
+    FLUID_STORAGE_BUS(new PartGuiFactory<PartFluidStorageBus>(PartFluidStorageBus.class) {
+        @Override
+        protected Object createServerGui(EntityPlayer player, PartFluidStorageBus inv) {
+            return new ContainerFluidStorageBus(player.inventory, inv);
+        }
+
+        @Override
+        protected Object createClientGui(EntityPlayer player, PartFluidStorageBus inv) {
+            return new GuiFluidStorageBus(player.inventory, inv);
         }
     }),
 

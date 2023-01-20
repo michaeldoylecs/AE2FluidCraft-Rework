@@ -20,14 +20,22 @@ import net.minecraftforge.fluids.IFluidHandler;
 
 public class MEMonitorIFluidHandler implements IMEMonitor<IAEFluidStack> {
     private final IFluidHandler handler;
+    private final ForgeDirection side;
     private IItemList<IAEFluidStack> cache = AEApi.instance().storage().createFluidList();
     private final HashMap<IMEMonitorHandlerReceiver<IAEFluidStack>, Object> listeners = new HashMap<>();
     private BaseActionSource mySource;
     private StorageFilter mode;
 
+    public MEMonitorIFluidHandler(IFluidHandler handler, ForgeDirection side) {
+        this.mode = StorageFilter.EXTRACTABLE_ONLY;
+        this.handler = handler;
+        this.side = side;
+    }
+
     public MEMonitorIFluidHandler(IFluidHandler handler) {
         this.mode = StorageFilter.EXTRACTABLE_ONLY;
         this.handler = handler;
+        this.side = ForgeDirection.UNKNOWN;
     }
 
     public void addListener(IMEMonitorHandlerReceiver<IAEFluidStack> l, Object verificationToken) {
@@ -39,7 +47,7 @@ public class MEMonitorIFluidHandler implements IMEMonitor<IAEFluidStack> {
     }
 
     public IAEFluidStack injectItems(IAEFluidStack input, Actionable type, BaseActionSource src) {
-        int filled = this.handler.fill(ForgeDirection.UNKNOWN, input.getFluidStack(), type == Actionable.MODULATE);
+        int filled = this.handler.fill(this.side, input.getFluidStack(), type == Actionable.MODULATE);
         if (filled == 0) {
             return input.copy();
         } else if ((long) filled == input.getStackSize()) {
@@ -58,8 +66,7 @@ public class MEMonitorIFluidHandler implements IMEMonitor<IAEFluidStack> {
     }
 
     public IAEFluidStack extractItems(IAEFluidStack request, Actionable type, BaseActionSource src) {
-        FluidStack removed =
-                this.handler.drain(ForgeDirection.UNKNOWN, request.getFluidStack(), type == Actionable.MODULATE);
+        FluidStack removed = this.handler.drain(this.side, request.getFluidStack(), type == Actionable.MODULATE);
         if (removed != null && removed.amount != 0) {
             IAEFluidStack o = request.copy();
             o.setStackSize(removed.amount);
@@ -86,13 +93,14 @@ public class MEMonitorIFluidHandler implements IMEMonitor<IAEFluidStack> {
     public TickRateModulation onTick() {
         boolean changed = false;
         List<IAEFluidStack> changes = new ArrayList<>();
-        FluidTankInfo[] tankProperties = this.handler.getTankInfo(ForgeDirection.UNKNOWN);
+        FluidTankInfo[] tankProperties = this.handler.getTankInfo(this.side);
         IItemList<IAEFluidStack> currentlyOnStorage = AEApi.instance().storage().createFluidList();
 
-        for (FluidTankInfo tankProperty : tankProperties) {
-            if (this.mode != StorageFilter.EXTRACTABLE_ONLY
-                    || this.handler.drain(ForgeDirection.UNKNOWN, 1, false) != null) {
-                currentlyOnStorage.add(AEFluidStack.create(tankProperty.fluid));
+        if (tankProperties != null) {
+            for (FluidTankInfo tankProperty : tankProperties) {
+                if (this.mode != StorageFilter.EXTRACTABLE_ONLY || this.handler.drain(this.side, 1, false) != null) {
+                    currentlyOnStorage.add(AEFluidStack.create(tankProperty.fluid));
+                }
             }
         }
 
@@ -131,7 +139,7 @@ public class MEMonitorIFluidHandler implements IMEMonitor<IAEFluidStack> {
 
     private void postDifference(Iterable<IAEFluidStack> a) {
         if (a != null) {
-            Iterator i = this.listeners.entrySet().iterator();
+            Iterator<?> i = this.listeners.entrySet().iterator();
 
             while (i.hasNext()) {
                 Map.Entry<IMEMonitorHandlerReceiver<IAEFluidStack>, Object> l = (Map.Entry) i.next();
@@ -170,7 +178,7 @@ public class MEMonitorIFluidHandler implements IMEMonitor<IAEFluidStack> {
     }
 
     public IItemList<IAEFluidStack> getAvailableItems(IItemList out) {
-        Iterator var2 = this.cache.iterator();
+        Iterator<?> var2 = this.cache.iterator();
 
         while (var2.hasNext()) {
             IAEFluidStack fs = (IAEFluidStack) var2.next();
