@@ -10,6 +10,7 @@ import com.glodblock.github.client.gui.*;
 import com.glodblock.github.client.gui.container.*;
 import com.glodblock.github.common.parts.FCBasePart;
 import com.glodblock.github.common.parts.PartFluidInterface;
+import com.glodblock.github.common.parts.PartFluidLevelEmitter;
 import com.glodblock.github.common.parts.PartSharedFluidBus;
 import com.glodblock.github.common.tile.*;
 import com.google.common.collect.ImmutableList;
@@ -18,6 +19,17 @@ import javax.annotation.Nullable;
 import net.minecraft.entity.player.EntityPlayer;
 
 public enum GuiType {
+    FLUID_LEVEL_EMITTER(new PartGuiFactory<PartFluidLevelEmitter>(PartFluidLevelEmitter.class) {
+        @Override
+        protected Object createServerGui(EntityPlayer player, PartFluidLevelEmitter inv) {
+            return new ContainerFluidLevelEmitter(player.inventory, inv);
+        }
+
+        @Override
+        protected Object createClientGui(EntityPlayer player, PartFluidLevelEmitter inv) {
+            return new GuiFluidLevelEmitter(player.inventory, inv);
+        }
+    }),
     LEVEL_MAINTAINER(new TileGuiFactory<TileLevelMaintainer>(TileLevelMaintainer.class) {
         @Override
         protected Object createServerGui(EntityPlayer player, TileLevelMaintainer inv) {
