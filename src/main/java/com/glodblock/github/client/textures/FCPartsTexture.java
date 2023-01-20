@@ -22,6 +22,7 @@ public enum FCPartsTexture {
     BlockFluidInterfaceAlternate_Arrow("fluid_interface_arrow"),
     BlockInterfaceAlternate("fluid_interface_a"),
     BlockInterface_Face("fluid_interface"),
+    PartFluidLevelEmitter("fluid_level_emitter"),
     BlockLevelMaintainer("level_maintainer"),
     BlockLevelMaintainer_Active("level_maintainer_active");
 
