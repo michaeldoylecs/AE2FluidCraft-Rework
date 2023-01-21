@@ -5,16 +5,21 @@ import appeng.api.storage.data.IAEFluidStack;
 import appeng.api.storage.data.IAEItemStack;
 import appeng.client.me.SlotME;
 import appeng.client.render.AppEngRenderItem;
+import appeng.container.slot.AppEngSlot;
 import com.glodblock.github.FluidCraft;
 import com.glodblock.github.client.gui.container.ContainerFluidMonitor;
 import com.glodblock.github.common.item.ItemFluidDrop;
+import com.glodblock.github.inventory.InventoryHandler;
+import com.glodblock.github.inventory.gui.GuiType;
 import com.glodblock.github.network.CPacketFluidUpdate;
 import com.glodblock.github.util.Ae2ReflectClient;
 import com.glodblock.github.util.Util;
 import java.util.HashMap;
 import java.util.Map;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.renderer.texture.TextureMap;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
@@ -22,18 +27,33 @@ import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidStack;
 import org.lwjgl.opengl.GL11;
 
-public class GuiFluidTerminal extends GuiBaseFluidTerminal {
+public class GuiFluidTerminal extends GuiFluidMonitor {
     private final AppEngRenderItem stackSizeRenderer = Ae2ReflectClient.getStackSizeRenderer(this);
+    protected EntityPlayer player;
     public ContainerFluidMonitor container;
 
     public GuiFluidTerminal(InventoryPlayer inventoryPlayer, ITerminalHost te) {
         super(inventoryPlayer, te, new ContainerFluidMonitor(inventoryPlayer, te));
         this.container = new ContainerFluidMonitor(inventoryPlayer, te);
+        this.player = inventoryPlayer.player;
     }
 
     @Override
-    public void initGui() {
-        super.initGui();
+    protected void repositionSlot(final AppEngSlot s) {
+        if (s.isPlayerSide()) {
+            s.yDisplayPosition = s.getY() + this.ySize - 78 - 5;
+        } else {
+            s.yDisplayPosition = s.getY() + this.ySize - 78 - 3;
+        }
+    }
+
+    @Override
+    protected void actionPerformed(final GuiButton btn) {
+        if (btn == craftingStatusBtn) {
+            InventoryHandler.switchGui(GuiType.CRAFTING_STATUS);
+        } else {
+            super.actionPerformed(btn);
+        }
     }
 
     @Override
@@ -86,6 +106,9 @@ public class GuiFluidTerminal extends GuiBaseFluidTerminal {
                 itemStack.stackSize = 1;
             }
             FluidCraft.proxy.netHandler.sendToServer(new CPacketFluidUpdate(tmp, itemStack));
+        }
+        if (mouseButton == 3 && slot instanceof SlotME) {
+            return;
         }
         super.handleMouseClick(slot, slotIdx, ctrlDown, mouseButton);
     }

@@ -121,7 +121,8 @@ public abstract class FCContainerEncodeTerminal extends ContainerItemMonitor
             super.doAction(player, action, slotId, id);
             return;
         }
-        if (validPatternSlot(slot) && (stack.getItem() instanceof IFluidContainerItem || FluidContainerRegistry.isContainer(stack))) {
+        if (validPatternSlot(slot)
+                && (stack.getItem() instanceof IFluidContainerItem || FluidContainerRegistry.isContainer(stack))) {
             FluidStack fluid = null;
             switch (action) {
                 case PICKUP_OR_SET_DOWN:

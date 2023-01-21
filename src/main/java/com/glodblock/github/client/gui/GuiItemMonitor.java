@@ -10,7 +10,6 @@ import com.glodblock.github.client.gui.container.ContainerItemMonitor;
 import com.glodblock.github.util.ModAndClassUtil;
 import java.util.List;
 import net.minecraft.entity.player.InventoryPlayer;
-import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 
 public class GuiItemMonitor extends FCGuiMonitor<IAEItemStack> {
@@ -32,17 +31,6 @@ public class GuiItemMonitor extends FCGuiMonitor<IAEItemStack> {
     public void drawFG(final int offsetX, final int offsetY, final int mouseX, final int mouseY) {
         this.fontRendererObj.drawString(this.getGuiDisplayName(GuiText.Terminal.getLocal()), 8, 6, 4210752);
         this.fontRendererObj.drawString(GuiText.inventory.getLocal(), 8, this.ySize - 96 + 3, 4210752);
-    }
-
-    @Override
-    protected void handleMouseClick(final Slot slot, final int slotIdx, final int ctrlDown, final int mouseButton) {
-        if (mouseButton == 3) {
-            if (this instanceof GuiBaseFluidPatternTerminal
-                    && ((GuiBaseFluidPatternTerminal) this).container.isCraftingMode()) {
-                return;
-            }
-        }
-        super.handleMouseClick(slot, slotIdx, ctrlDown, mouseButton);
     }
 
     @Override

@@ -74,7 +74,6 @@ public class ContainerFluidPatternTerminalEx extends FCContainerEncodeTerminal {
 
     @Override
     public void detectAndSendChanges() {
-        super.detectAndSendChanges();
         if (Platform.isServer()) {
             if (inverted != patternTerminal.isInverted() || activePage != patternTerminal.getActivePage()) {
                 inverted = patternTerminal.isInverted();
@@ -82,6 +81,7 @@ public class ContainerFluidPatternTerminalEx extends FCContainerEncodeTerminal {
                 offsetSlots();
             }
         }
+        super.detectAndSendChanges();
     }
 
     private void offsetSlots() {
@@ -107,10 +107,10 @@ public class ContainerFluidPatternTerminalEx extends FCContainerEncodeTerminal {
 
     @Override
     public void onSlotChange(final Slot s) {
-        super.onSlotChange(s);
         if (s == this.patternSlotOUT && Platform.isServer()) {
             inverted = patternTerminal.isInverted();
         }
+        super.onSlotChange(s);
     }
 
     @Override

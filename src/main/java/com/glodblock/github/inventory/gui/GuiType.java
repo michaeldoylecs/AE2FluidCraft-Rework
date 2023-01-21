@@ -174,7 +174,7 @@ public enum GuiType {
         }
     }),
 
-    FLUID_PAT_TERM_CRAFTING_STATUS(new PartGuiFactory<FCPart>(FCPart.class) {
+    CRAFTING_STATUS(new PartGuiFactory<FCPart>(FCPart.class) {
         @Override
         protected Object createServerGui(EntityPlayer player, FCPart inv) {
             return new ContainerCraftingStatus(player.inventory, inv);

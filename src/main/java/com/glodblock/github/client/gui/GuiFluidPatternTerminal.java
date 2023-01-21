@@ -1,75 +1,135 @@
 package com.glodblock.github.client.gui;
 
+import appeng.api.config.ActionItems;
+import appeng.api.config.ItemSubstitution;
+import appeng.api.config.PatternBeSubstitution;
+import appeng.api.config.Settings;
 import appeng.api.storage.ITerminalHost;
-import appeng.api.storage.data.IAEItemStack;
+import appeng.client.gui.widgets.GuiImgButton;
 import appeng.client.gui.widgets.GuiTabButton;
-import appeng.client.render.AppEngRenderItem;
-import appeng.container.slot.SlotFake;
-import appeng.util.item.AEItemStack;
+import appeng.container.slot.OptionalSlotFake;
+import appeng.container.slot.SlotFakeCraftingMatrix;
+import appeng.container.slot.SlotPatternTerm;
+import appeng.core.localization.GuiText;
+import com.glodblock.github.client.gui.base.FCGuiEncodeTerminal;
 import com.glodblock.github.client.gui.container.ContainerFluidPatternTerminal;
-import com.glodblock.github.common.item.ItemFluidPacket;
-import com.glodblock.github.inventory.InventoryHandler;
-import com.glodblock.github.inventory.gui.GuiType;
-import com.glodblock.github.inventory.slot.SlotSingleItem;
-import com.glodblock.github.util.Ae2ReflectClient;
-import net.minecraft.client.gui.GuiButton;
+import com.glodblock.github.util.ModAndClassUtil;
+import com.glodblock.github.util.NameConst;
 import net.minecraft.entity.player.InventoryPlayer;
+import net.minecraft.init.Blocks;
 import net.minecraft.inventory.Slot;
+import net.minecraft.item.ItemStack;
+import net.minecraft.util.StatCollector;
 
-public class GuiFluidPatternTerminal extends GuiBaseFluidPatternTerminal {
+public class GuiFluidPatternTerminal extends FCGuiEncodeTerminal {
 
-    private GuiTabButton craftingStatusBtn;
-    private final AppEngRenderItem stackSizeRenderer = Ae2ReflectClient.getStackSizeRenderer(this);
-
-    public GuiFluidPatternTerminal(InventoryPlayer inventoryPlayer, ITerminalHost te) {
-        super(inventoryPlayer, te);
-        ContainerFluidPatternTerminal container = new ContainerFluidPatternTerminal(inventoryPlayer, te);
-        container.setGui(this);
-        this.inventorySlots = container;
-        this.container = container;
-        this.monitorableContainer = container;
-        this.configSrc = container.getConfigManager();
+    public GuiFluidPatternTerminal(final InventoryPlayer inventoryPlayer, final ITerminalHost te) {
+        super(inventoryPlayer, te, new ContainerFluidPatternTerminal(inventoryPlayer, te));
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public void initGui() {
         super.initGui();
-        craftingStatusBtn = super.craftingStatusBtn;
+        this.tabCraftButton = new GuiTabButton(
+                this.guiLeft + 173,
+                this.guiTop + this.ySize - 177,
+                new ItemStack(Blocks.crafting_table),
+                GuiText.CraftingPattern.getLocal(),
+                itemRender);
+        this.buttonList.add(this.tabCraftButton);
+
+        this.tabProcessButton = new GuiTabButton(
+                this.guiLeft + 173,
+                this.guiTop + this.ySize - 177,
+                new ItemStack(Blocks.furnace),
+                GuiText.ProcessingPattern.getLocal(),
+                itemRender);
+        this.buttonList.add(this.tabProcessButton);
+
+        this.substitutionsEnabledBtn = new GuiImgButton(
+                this.guiLeft + 84, this.guiTop + this.ySize - 163, Settings.ACTIONS, ItemSubstitution.ENABLED);
+        this.substitutionsEnabledBtn.setHalfSize(true);
+        this.buttonList.add(this.substitutionsEnabledBtn);
+
+        this.substitutionsDisabledBtn = new GuiImgButton(
+                this.guiLeft + 84, this.guiTop + this.ySize - 163, Settings.ACTIONS, ItemSubstitution.DISABLED);
+        this.substitutionsDisabledBtn.setHalfSize(true);
+        this.buttonList.add(this.substitutionsDisabledBtn);
+
+        this.clearBtn = new GuiImgButton(
+                this.guiLeft + 74, this.guiTop + this.ySize - 163, Settings.ACTIONS, ActionItems.CLOSE);
+        this.clearBtn.setHalfSize(true);
+        this.buttonList.add(this.clearBtn);
+
+        this.encodeBtn = new GuiImgButton(
+                this.guiLeft + 147, this.guiTop + this.ySize - 142, Settings.ACTIONS, ActionItems.ENCODE);
+        this.buttonList.add(this.encodeBtn);
+
+        int combineLeft = 74;
+        int combineTop = 153;
+        if (ModAndClassUtil.isDoubleButton) {
+            this.doubleBtn = new GuiImgButton(
+                    this.guiLeft + 74, this.guiTop + this.ySize - 153, Settings.ACTIONS, ActionItems.DOUBLE);
+            this.doubleBtn.setHalfSize(true);
+            this.buttonList.add(this.doubleBtn);
+            combineLeft = 84;
+        }
+        if (ModAndClassUtil.isBeSubstitutionsButton) {
+            combineLeft = 74;
+            combineTop -= 11;
+            this.beSubstitutionsEnabledBtn = new GuiImgButton(
+                    this.guiLeft + 84, this.guiTop + this.ySize - 153, Settings.ACTIONS, PatternBeSubstitution.ENABLED);
+            this.beSubstitutionsEnabledBtn.setHalfSize(true);
+            this.buttonList.add(this.beSubstitutionsEnabledBtn);
+
+            this.beSubstitutionsDisabledBtn = new GuiImgButton(
+                    this.guiLeft + 84,
+                    this.guiTop + this.ySize - 153,
+                    Settings.ACTIONS,
+                    PatternBeSubstitution.DISABLED);
+            this.beSubstitutionsDisabledBtn.setHalfSize(true);
+            this.buttonList.add(this.beSubstitutionsDisabledBtn);
+        }
+        this.combineEnableBtn = new GuiFCImgButton(
+                this.guiLeft + combineLeft, this.guiTop + this.ySize - combineTop, "FORCE_COMBINE", "DO_COMBINE");
+        this.combineEnableBtn.setHalfSize(true);
+        this.buttonList.add(this.combineEnableBtn);
+
+        this.combineDisableBtn = new GuiFCImgButton(
+                this.guiLeft + combineLeft, this.guiTop + this.ySize - combineTop, "NOT_COMBINE", "DONT_COMBINE");
+        this.combineDisableBtn.setHalfSize(true);
+        this.buttonList.add(this.combineDisableBtn);
     }
 
     @Override
-    public void func_146977_a(final Slot s) {
-        if (drawSlot0(s)) super.func_146977_a(s);
-    }
-
-    public boolean drawSlot0(Slot slot) {
-        if (slot instanceof SlotFake && !this.container.isCraftingMode()) {
-            AEItemStack stack = AEItemStack.create(slot.getStack());
-            super.func_146977_a(new SlotSingleItem(slot));
-            if (stack == null) return true;
-            IAEItemStack fake = stack.copy();
-            if (fake.getItemStack().getItem() instanceof ItemFluidPacket) {
-                if (ItemFluidPacket.getFluidStack(stack) != null && ItemFluidPacket.getFluidStack(stack).amount > 0)
-                    fake.setStackSize(ItemFluidPacket.getFluidStack(stack).amount);
-            } else return true;
-            stackSizeRenderer.setAeStack(fake);
-            stackSizeRenderer.renderItemOverlayIntoGUI(
-                    fontRendererObj,
-                    mc.getTextureManager(),
-                    stack.getItemStack(),
-                    slot.xDisplayPosition,
-                    slot.yDisplayPosition);
-            return false;
-        }
-        return true;
+    public void drawFG(final int offsetX, final int offsetY, final int mouseX, final int mouseY) {
+        super.drawFG(offsetX, offsetY, mouseX, mouseY);
+        this.fontRendererObj.drawString(
+                StatCollector.translateToLocal(NameConst.GUI_FLUID_PATTERN_TERMINAL),
+                8,
+                this.ySize - 96 + 2 - getReservedSpace(),
+                4210752);
     }
 
     @Override
-    protected void actionPerformed(final GuiButton btn) {
-        if (btn == craftingStatusBtn) {
-            InventoryHandler.switchGui(GuiType.FLUID_PAT_TERM_CRAFTING_STATUS);
-        } else {
-            super.actionPerformed(btn);
+    protected void handleMouseClick(final Slot slot, final int slotIdx, final int ctrlDown, final int mouseButton) {
+        if (mouseButton == 3) {
+            if (this.container.isCraftingMode()
+                    && (slot instanceof OptionalSlotFake
+                            || slot instanceof SlotFakeCraftingMatrix
+                            || slot instanceof SlotPatternTerm)) {
+                return;
+            }
         }
+        super.handleMouseClick(slot, slotIdx, ctrlDown, mouseButton);
+    }
+
+    @Override
+    protected String getBackground() {
+        if (this.container.isCraftingMode()) {
+            return "gui/pattern.png";
+        }
+        return "gui/pattern2.png";
     }
 }

@@ -4,7 +4,6 @@ import codechicken.nei.api.IOverlayHandler;
 import codechicken.nei.recipe.IRecipeHandler;
 import codechicken.nei.recipe.TemplateRecipeHandler;
 import com.glodblock.github.FluidCraft;
-import com.glodblock.github.client.gui.GuiBaseFluidPatternTerminalEx;
 import com.glodblock.github.client.gui.GuiFluidPatternTerminal;
 import com.glodblock.github.client.gui.GuiFluidPatternTerminalEx;
 import com.glodblock.github.nei.object.OrderStack;
@@ -32,8 +31,8 @@ public class FluidPatternTerminalRecipeTransferHandler implements IOverlayHandle
     public void overlayRecipe(GuiContainer firstGui, IRecipeHandler recipe, int recipeIndex, boolean shift) {
         if (isCorrectGui(firstGui)) {
             boolean priority = false;
-            if (firstGui instanceof GuiBaseFluidPatternTerminalEx) {
-                priority = ((GuiBaseFluidPatternTerminalEx) firstGui).container.prioritize;
+            if (firstGui instanceof GuiFluidPatternTerminalEx) {
+                priority = ((GuiFluidPatternTerminalEx) firstGui).container.prioritize;
             }
             List<OrderStack<?>> in = FluidRecipe.getPackageInputs(recipe, recipeIndex, priority);
             List<OrderStack<?>> out = FluidRecipe.getPackageOutputs(recipe, recipeIndex, !notUseOther(recipe));
