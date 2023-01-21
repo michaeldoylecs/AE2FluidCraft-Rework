@@ -1,4 +1,4 @@
-package com.glodblock.github.client.gui.container;
+package com.glodblock.github.client.gui.container.base;
 
 import appeng.api.config.Upgrades;
 import appeng.api.implementations.IUpgradeableHost;
@@ -23,9 +23,9 @@ import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fluids.FluidStack;
 
-public abstract class ContainerFluidConfigurable extends ContainerUpgradeable {
+public abstract class FCContainerFluidConfigurable extends ContainerUpgradeable {
 
-    public ContainerFluidConfigurable(InventoryPlayer ip, IUpgradeableHost te) {
+    public FCContainerFluidConfigurable(InventoryPlayer ip, IUpgradeableHost te) {
         super(ip, te);
     }
 

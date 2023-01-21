@@ -27,7 +27,6 @@ public class GuiFCPriority extends AEBaseGui {
 
     private GuiNumberBox priority;
     private GuiTabButton originalGuiBtn;
-
     private GuiButton plus1;
     private GuiButton plus10;
     private GuiButton plus100;
@@ -71,7 +70,7 @@ public class GuiFCPriority extends AEBaseGui {
             this.OriginalGui = GuiType.DUAL_INTERFACE;
         } else if (target instanceof PartFluidInterface) {
             myIcon = ItemAndBlockHolder.FLUID_INTERFACE.stack();
-            this.OriginalGui = GuiType.DUAL_INTERFACE_FLUID_PART;
+            this.OriginalGui = GuiType.DUAL_INTERFACE_PART;
         } else if (target instanceof PartFluidStorageBus) {
             myIcon = ItemAndBlockHolder.FLUID_STORAGE_BUS.stack();
             this.OriginalGui = GuiType.FLUID_STORAGE_BUS;

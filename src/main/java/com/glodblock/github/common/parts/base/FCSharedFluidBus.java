@@ -1,4 +1,4 @@
-package com.glodblock.github.common.parts;
+package com.glodblock.github.common.parts.base;
 
 import appeng.api.config.RedstoneMode;
 import appeng.api.config.Upgrades;
@@ -26,12 +26,12 @@ import net.minecraft.util.IIcon;
 import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
 
-public abstract class PartSharedFluidBus extends PartUpgradeable implements IGridTickable {
+public abstract class FCSharedFluidBus extends PartUpgradeable implements IGridTickable {
 
     private final AppEngInternalAEInventory config = new AppEngInternalAEInventory(this, 9);
     private boolean lastRedstone;
 
-    public PartSharedFluidBus(ItemStack is) {
+    public FCSharedFluidBus(ItemStack is) {
         super(is);
     }
 

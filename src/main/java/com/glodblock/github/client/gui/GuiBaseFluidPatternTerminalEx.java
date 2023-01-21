@@ -6,7 +6,7 @@ import appeng.client.gui.widgets.GuiImgButton;
 import appeng.client.gui.widgets.GuiScrollbar;
 import appeng.container.slot.AppEngSlot;
 import com.glodblock.github.FluidCraft;
-import com.glodblock.github.client.gui.container.FCBasePartContainerEx;
+import com.glodblock.github.client.gui.container.ContainerFluidPatternTerminalEx;
 import com.glodblock.github.network.CPacketFluidPatternTermBtns;
 import com.glodblock.github.util.ModAndClassUtil;
 import com.glodblock.github.util.NameConst;
@@ -23,7 +23,7 @@ public class GuiBaseFluidPatternTerminalEx extends GuiItemMonitor {
     private static final String PRIORITY_DISABLE = "0";
     private static final String PRIORITY_ENABLE = "1";
 
-    public FCBasePartContainerEx container;
+    public ContainerFluidPatternTerminalEx container;
 
     private GuiImgButton substitutionsEnabledBtn;
     private GuiImgButton substitutionsDisabledBtn;
@@ -41,8 +41,8 @@ public class GuiBaseFluidPatternTerminalEx extends GuiItemMonitor {
     private final GuiScrollbar processingScrollBar = new GuiScrollbar();
 
     public GuiBaseFluidPatternTerminalEx(final InventoryPlayer inventoryPlayer, final ITerminalHost te) {
-        super(inventoryPlayer, te, new FCBasePartContainerEx(inventoryPlayer, te));
-        this.container = (FCBasePartContainerEx) this.inventorySlots;
+        super(inventoryPlayer, te, new ContainerFluidPatternTerminalEx(inventoryPlayer, te));
+        this.container = (ContainerFluidPatternTerminalEx) this.inventorySlots;
         setReservedSpace(81);
 
         processingScrollBar.setHeight(70).setWidth(7).setLeft(6).setRange(0, 1, 1);

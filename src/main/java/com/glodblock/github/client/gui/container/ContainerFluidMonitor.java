@@ -29,6 +29,9 @@ import com.glodblock.github.network.CPacketFluidUpdate;
 import com.glodblock.github.network.SPacketFluidUpdate;
 import com.glodblock.github.network.SPacketMEInventoryUpdate;
 import com.glodblock.github.util.Util;
+import java.nio.BufferOverflowException;
+import java.util.HashMap;
+import java.util.Map;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.entity.player.InventoryPlayer;
@@ -40,12 +43,8 @@ import net.minecraftforge.fluids.FluidContainerRegistry;
 import net.minecraftforge.fluids.IFluidContainerItem;
 import org.apache.commons.lang3.tuple.MutablePair;
 
-import java.nio.BufferOverflowException;
-import java.util.HashMap;
-import java.util.Map;
-
 public class ContainerFluidMonitor extends FCContainerMonitor<IAEFluidStack> {
-    private final IItemList<IAEFluidStack> items = AEApi.instance().storage().createFluidList();
+    private final IItemList<IAEFluidStack> fluids = AEApi.instance().storage().createFluidList();
 
     public ContainerFluidMonitor(final InventoryPlayer ip, final ITerminalHost monitorable) {
         this(ip, monitorable, true);
@@ -119,11 +118,11 @@ public class ContainerFluidMonitor extends FCContainerMonitor<IAEFluidStack> {
 
     @Override
     protected void processItemList() {
-        if (!this.items.isEmpty()) {
+        if (!this.fluids.isEmpty()) {
             final IItemList<IAEFluidStack> monitorCache = this.monitor.getStorageList();
             final SPacketMEInventoryUpdate piu = new SPacketMEInventoryUpdate(true);
 
-            for (final IAEFluidStack is : this.items) {
+            for (final IAEFluidStack is : this.fluids) {
                 final IAEFluidStack send = monitorCache.findPrecise(is);
                 if (send == null) {
                     is.setStackSize(0);
@@ -134,7 +133,7 @@ public class ContainerFluidMonitor extends FCContainerMonitor<IAEFluidStack> {
             }
 
             if (!piu.isEmpty()) {
-                this.items.resetStatus();
+                this.fluids.resetStatus();
 
                 for (final Object c : this.crafters) {
                     if (c instanceof EntityPlayer) {
@@ -173,7 +172,7 @@ public class ContainerFluidMonitor extends FCContainerMonitor<IAEFluidStack> {
     public void postChange(
             IBaseMonitor<IAEFluidStack> monitor, Iterable<IAEFluidStack> change, BaseActionSource actionSource) {
         for (final IAEFluidStack is : change) {
-            this.items.add(is);
+            this.fluids.add(is);
         }
     }
 
@@ -310,5 +309,4 @@ public class ContainerFluidMonitor extends FCContainerMonitor<IAEFluidStack> {
         }
         this.detectAndSendChanges();
     }
-
 }

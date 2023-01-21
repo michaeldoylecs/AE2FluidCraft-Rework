@@ -13,7 +13,7 @@ import com.glodblock.github.common.item.ItemFluidPacket;
 import com.glodblock.github.common.tile.TileFluidPatternEncoder;
 import com.glodblock.github.inventory.AeItemStackHandler;
 import com.glodblock.github.inventory.AeStackInventory;
-import com.glodblock.github.inventory.PatternConsumer;
+import com.glodblock.github.inventory.IPatternConsumer;
 import com.glodblock.github.inventory.slot.SlotFluid;
 import com.glodblock.github.loader.ItemAndBlockHolder;
 import com.glodblock.github.util.FluidPatternDetails;
@@ -30,7 +30,7 @@ import net.minecraftforge.fluids.FluidContainerRegistry;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.IFluidContainerItem;
 
-public class ContainerFluidPatternEncoder extends AEBaseContainer implements PatternConsumer {
+public class ContainerFluidPatternEncoder extends AEBaseContainer implements IPatternConsumer {
 
     private final TileFluidPatternEncoder tile;
 

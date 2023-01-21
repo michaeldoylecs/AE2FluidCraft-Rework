@@ -1,12 +1,10 @@
-package com.glodblock.github.common.parts;
+package com.glodblock.github.common.parts.base;
 
-import appeng.api.config.Settings;
-import appeng.api.config.SortDir;
-import appeng.api.config.SortOrder;
-import appeng.api.config.ViewItems;
+import appeng.api.config.*;
 import appeng.api.implementations.IPowerChannelState;
 import appeng.api.implementations.tiles.IViewCellStorage;
 import appeng.api.networking.GridFlags;
+import appeng.api.networking.IGridHost;
 import appeng.api.networking.events.MENetworkBootingStatusChange;
 import appeng.api.networking.events.MENetworkEventSubscribe;
 import appeng.api.networking.events.MENetworkPowerStatusChange;
@@ -18,7 +16,6 @@ import appeng.api.storage.data.IAEFluidStack;
 import appeng.api.storage.data.IAEItemStack;
 import appeng.api.util.IConfigManager;
 import appeng.client.texture.CableBusTextures;
-import appeng.core.sync.GuiBridge;
 import appeng.me.GridAccessException;
 import appeng.parts.AEBasePart;
 import appeng.tile.inventory.AppEngInternalInventory;
@@ -28,11 +25,16 @@ import appeng.util.ConfigManager;
 import appeng.util.IConfigManagerHost;
 import appeng.util.Platform;
 import com.glodblock.github.client.textures.FCPartsTexture;
+import com.glodblock.github.inventory.InventoryHandler;
+import com.glodblock.github.inventory.gui.GuiType;
+import com.glodblock.github.util.BlockPos;
+import com.glodblock.github.util.Util;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import io.netty.buffer.ByteBuf;
 import java.io.IOException;
 import java.util.List;
+import java.util.Objects;
 import net.minecraft.client.renderer.RenderBlocks;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.entity.player.EntityPlayer;
@@ -40,12 +42,13 @@ import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.IIcon;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.Vec3;
 import net.minecraftforge.common.util.ForgeDirection;
 
-public abstract class FCBasePart extends AEBasePart
+public abstract class FCPart extends AEBasePart
         implements IPowerChannelState, ITerminalHost, IConfigManagerHost, IViewCellStorage, IAEAppEngInventory {
 
     protected static final int POWERED_FLAG = 4;
@@ -59,11 +62,11 @@ public abstract class FCBasePart extends AEBasePart
     private final IConfigManager cm = new ConfigManager(this);
     private final AppEngInternalInventory viewCell = new AppEngInternalInventory(this, 5);
 
-    public FCBasePart(final ItemStack is) {
+    public FCPart(final ItemStack is) {
         this(is, false);
     }
 
-    protected FCBasePart(final ItemStack is, final boolean requireChannel) {
+    protected FCPart(final ItemStack is, final boolean requireChannel) {
         super(is);
 
         if (requireChannel) {
@@ -137,9 +140,7 @@ public abstract class FCBasePart extends AEBasePart
         this.viewCell.writeToNBT(data, "viewCell");
     }
 
-    public GuiBridge getGui(final EntityPlayer player) {
-        return GuiBridge.GUI_ME;
-    }
+    public abstract GuiType getGui();
 
     @Override
     public void writeToStream(final ByteBuf data) throws IOException {
@@ -148,15 +149,15 @@ public abstract class FCBasePart extends AEBasePart
 
         try {
             if (this.getProxy().getEnergy().isNetworkPowered()) {
-                this.clientFlags = this.getClientFlags() | FCBasePart.POWERED_FLAG;
+                this.clientFlags = this.getClientFlags() | FCPart.POWERED_FLAG;
             }
 
             if (this.getProxy().getPath().isNetworkBooting()) {
-                this.clientFlags = this.getClientFlags() | FCBasePart.BOOTING_FLAG;
+                this.clientFlags = this.getClientFlags() | FCPart.BOOTING_FLAG;
             }
 
             if (this.getProxy().getNode().meetsChannelRequirements()) {
-                this.clientFlags = this.getClientFlags() | FCBasePart.CHANNEL_FLAG;
+                this.clientFlags = this.getClientFlags() | FCPart.CHANNEL_FLAG;
             }
         } catch (final GridAccessException e) {
             // um.. nothing.
@@ -215,18 +216,21 @@ public abstract class FCBasePart extends AEBasePart
 
     @Override
     public boolean onPartActivate(final EntityPlayer player, final Vec3 pos) {
-        if (!onPartActivate0(player, pos)) {
-            if (!player.isSneaking()) {
-                if (Platform.isClient()) {
-                    return true;
-                }
-
-                Platform.openGUI(player, this.getHost().getTile(), this.getSide(), this.getGui(player));
-
-                return true;
+        TileEntity te = this.getTile();
+        BlockPos tePos = new BlockPos(te);
+        if (Platform.isWrench(player, player.inventory.getCurrentItem(), tePos.getX(), tePos.getY(), tePos.getZ())) {
+            return super.onPartActivate(player, pos);
+        }
+        if (Platform.isServer()) {
+            if (Util.hasPermission(player, SecurityPermissions.INJECT, (IGridHost) this)
+                    || Util.hasPermission(player, SecurityPermissions.EXTRACT, (IGridHost) this)) {
+                InventoryHandler.openGui(
+                        player, te.getWorldObj(), tePos, Objects.requireNonNull(Util.from(getSide())), getGui());
+            } else {
+                player.addChatComponentMessage(new ChatComponentText("You don't have permission to view."));
             }
         }
-        return false;
+        return true;
     }
 
     @Override
@@ -251,7 +255,6 @@ public abstract class FCBasePart extends AEBasePart
                                     te.yCoord + this.getSide().offsetY,
                                     te.zCoord + this.getSide().offsetZ);
         }
-
         return (int) (emit * (this.opacity / 255.0f));
     }
 
@@ -261,7 +264,7 @@ public abstract class FCBasePart extends AEBasePart
             if (Platform.isServer()) {
                 return this.getProxy().getEnergy().isNetworkPowered();
             } else {
-                return ((this.getClientFlags() & FCBasePart.POWERED_FLAG) == FCBasePart.POWERED_FLAG);
+                return ((this.getClientFlags() & FCPart.POWERED_FLAG) == FCPart.POWERED_FLAG);
             }
         } catch (final GridAccessException e) {
             return false;
@@ -309,8 +312,8 @@ public abstract class FCBasePart extends AEBasePart
     @Override
     public final boolean isActive() {
         if (!this.isLightSource()) {
-            return ((this.getClientFlags() & (FCBasePart.CHANNEL_FLAG | FCBasePart.POWERED_FLAG))
-                    == (FCBasePart.CHANNEL_FLAG | FCBasePart.POWERED_FLAG));
+            return ((this.getClientFlags() & (FCPart.CHANNEL_FLAG | FCPart.POWERED_FLAG))
+                    == (FCPart.CHANNEL_FLAG | FCPart.POWERED_FLAG));
         } else {
             return this.isPowered();
         }
@@ -407,9 +410,9 @@ public abstract class FCBasePart extends AEBasePart
         rh.setBounds(4, 4, 13, 12, 12, 14);
         rh.renderBlock(x, y, z, renderer);
 
-        final boolean hasChan = (this.getClientFlags() & (FCBasePart.POWERED_FLAG | FCBasePart.CHANNEL_FLAG))
-                == (FCBasePart.POWERED_FLAG | FCBasePart.CHANNEL_FLAG);
-        final boolean hasPower = (this.getClientFlags() & FCBasePart.POWERED_FLAG) == FCBasePart.POWERED_FLAG;
+        final boolean hasChan = (this.getClientFlags() & (FCPart.POWERED_FLAG | FCPart.CHANNEL_FLAG))
+                == (FCPart.POWERED_FLAG | FCPart.CHANNEL_FLAG);
+        final boolean hasPower = (this.getClientFlags() & FCPart.POWERED_FLAG) == FCPart.POWERED_FLAG;
 
         if (hasChan) {
             final int l = 14;

@@ -5,15 +5,15 @@ import appeng.client.gui.implementations.GuiUpgradeable;
 import appeng.core.localization.GuiText;
 import com.glodblock.github.client.gui.container.ContainerFluidIO;
 import com.glodblock.github.common.parts.PartFluidImportBus;
-import com.glodblock.github.common.parts.PartSharedFluidBus;
+import com.glodblock.github.common.parts.base.FCSharedFluidBus;
 import com.glodblock.github.util.NameConst;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.InventoryPlayer;
 
 public class GuiFluidIO extends GuiUpgradeable {
-    private final PartSharedFluidBus bus;
+    private final FCSharedFluidBus bus;
 
-    public GuiFluidIO(InventoryPlayer inventoryPlayer, PartSharedFluidBus te) {
+    public GuiFluidIO(InventoryPlayer inventoryPlayer, FCSharedFluidBus te) {
         super(new ContainerFluidIO(inventoryPlayer, te));
         this.bus = te;
     }

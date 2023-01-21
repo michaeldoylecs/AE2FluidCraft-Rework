@@ -10,10 +10,9 @@ import com.glodblock.github.client.gui.container.ContainerFluidMonitor;
 import com.glodblock.github.client.me.FluidRepo;
 import com.glodblock.github.common.item.ItemFluidDrop;
 import com.glodblock.github.util.Util;
+import java.util.List;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.item.ItemStack;
-
-import java.util.List;
 
 public class GuiFluidMonitor extends FCGuiMonitor<IAEFluidStack> {
 

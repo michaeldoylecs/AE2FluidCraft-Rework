@@ -8,10 +8,10 @@ import appeng.container.implementations.ContainerPriority;
 import appeng.helpers.IPriorityHost;
 import com.glodblock.github.client.gui.*;
 import com.glodblock.github.client.gui.container.*;
-import com.glodblock.github.common.parts.FCBasePart;
 import com.glodblock.github.common.parts.PartFluidInterface;
 import com.glodblock.github.common.parts.PartFluidStorageBus;
-import com.glodblock.github.common.parts.PartSharedFluidBus;
+import com.glodblock.github.common.parts.base.FCPart;
+import com.glodblock.github.common.parts.base.FCSharedFluidBus;
 import com.glodblock.github.common.tile.*;
 import com.google.common.collect.ImmutableList;
 import java.util.List;
@@ -126,14 +126,14 @@ public enum GuiType {
         }
     }),
 
-    FLUID_BUS_IO(new PartGuiFactory<PartSharedFluidBus>(PartSharedFluidBus.class) {
+    FLUID_BUS_IO(new PartGuiFactory<FCSharedFluidBus>(FCSharedFluidBus.class) {
         @Override
-        protected Object createServerGui(EntityPlayer player, PartSharedFluidBus inv) {
+        protected Object createServerGui(EntityPlayer player, FCSharedFluidBus inv) {
             return new ContainerFluidIO(player.inventory, inv);
         }
 
         @Override
-        protected Object createClientGui(EntityPlayer player, PartSharedFluidBus inv) {
+        protected Object createClientGui(EntityPlayer player, FCSharedFluidBus inv) {
             return new GuiFluidIO(player.inventory, inv);
         }
     }),
@@ -174,14 +174,14 @@ public enum GuiType {
         }
     }),
 
-    FLUID_PAT_TERM_CRAFTING_STATUS(new PartGuiFactory<FCBasePart>(FCBasePart.class) {
+    FLUID_PAT_TERM_CRAFTING_STATUS(new PartGuiFactory<FCPart>(FCPart.class) {
         @Override
-        protected Object createServerGui(EntityPlayer player, FCBasePart inv) {
+        protected Object createServerGui(EntityPlayer player, FCPart inv) {
             return new ContainerCraftingStatus(player.inventory, inv);
         }
 
         @Override
-        protected Object createClientGui(EntityPlayer player, FCBasePart inv) {
+        protected Object createClientGui(EntityPlayer player, FCPart inv) {
             return new GuiFluidPatternTerminalCraftingStatus(player.inventory, inv);
         }
     }),
@@ -234,26 +234,26 @@ public enum GuiType {
         }
     }),
 
-    FLUID_CRAFTING_CONFIRM(new PartGuiFactory<FCBasePart>(FCBasePart.class) {
+    FLUID_CRAFTING_CONFIRM(new PartGuiFactory<FCPart>(FCPart.class) {
         @Override
-        protected Object createServerGui(EntityPlayer player, FCBasePart inv) {
+        protected Object createServerGui(EntityPlayer player, FCPart inv) {
             return new ContainerFluidCraftConfirm(player.inventory, inv);
         }
 
         @Override
-        protected Object createClientGui(EntityPlayer player, FCBasePart inv) {
+        protected Object createClientGui(EntityPlayer player, FCPart inv) {
             return new GuiFluidCraftConfirm(player.inventory, inv);
         }
     }),
 
-    FLUID_CRAFTING_AMOUNT(new PartGuiFactory<FCBasePart>(FCBasePart.class) {
+    FLUID_CRAFTING_AMOUNT(new PartGuiFactory<FCPart>(FCPart.class) {
         @Override
-        protected Object createServerGui(EntityPlayer player, FCBasePart inv) {
+        protected Object createServerGui(EntityPlayer player, FCPart inv) {
             return new ContainerCraftAmount(player.inventory, inv);
         }
 
         @Override
-        protected Object createClientGui(EntityPlayer player, FCBasePart inv) {
+        protected Object createClientGui(EntityPlayer player, FCPart inv) {
             return new GuiFluidCraftAmount(player.inventory, inv);
         }
     }),
@@ -270,14 +270,14 @@ public enum GuiType {
         }
     }),
 
-    PATTERN_VALUE_SET(new PartGuiFactory<FCBasePart>(FCBasePart.class) {
+    PATTERN_VALUE_SET(new PartGuiFactory<FCPart>(FCPart.class) {
         @Override
-        protected Object createServerGui(EntityPlayer player, FCBasePart inv) {
+        protected Object createServerGui(EntityPlayer player, FCPart inv) {
             return new ContainerPatternValueAmount(player.inventory, inv);
         }
 
         @Override
-        protected Object createClientGui(EntityPlayer player, FCBasePart inv) {
+        protected Object createClientGui(EntityPlayer player, FCPart inv) {
             return new GuiPatternValueAmount(player.inventory, inv);
         }
     });

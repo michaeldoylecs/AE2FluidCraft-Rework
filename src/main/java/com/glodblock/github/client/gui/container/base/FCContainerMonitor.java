@@ -35,6 +35,7 @@ public abstract class FCContainerMonitor<T extends IAEStack<T>> extends AEBaseCo
     protected final SlotRestrictedInput[] cellView = new SlotRestrictedInput[5];
     protected final IConfigManager clientCM;
     protected final ITerminalHost host;
+
     @GuiSync(99)
     public boolean canAccessViewCells = false;
 

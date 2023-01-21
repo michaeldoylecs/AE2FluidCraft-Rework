@@ -7,7 +7,7 @@ import appeng.client.gui.widgets.GuiTabButton;
 import appeng.container.slot.AppEngSlot;
 import appeng.core.localization.GuiText;
 import com.glodblock.github.FluidCraft;
-import com.glodblock.github.client.gui.container.FCBasePartContainer;
+import com.glodblock.github.client.gui.container.ContainerFluidPatternTerminal;
 import com.glodblock.github.network.CPacketFluidPatternTermBtns;
 import com.glodblock.github.util.ModAndClassUtil;
 import com.glodblock.github.util.NameConst;
@@ -26,7 +26,7 @@ public class GuiBaseFluidPatternTerminal extends GuiItemMonitor {
     private static final String CRAFTMODE_CRFTING = "1";
     private static final String CRAFTMODE_PROCESSING = "0";
 
-    public FCBasePartContainer container;
+    public ContainerFluidPatternTerminal container;
 
     private GuiTabButton tabCraftButton;
     private GuiTabButton tabProcessButton;
@@ -42,8 +42,8 @@ public class GuiBaseFluidPatternTerminal extends GuiItemMonitor {
     private GuiFCImgButton combineDisableBtn;
 
     public GuiBaseFluidPatternTerminal(final InventoryPlayer inventoryPlayer, final ITerminalHost te) {
-        super(inventoryPlayer, te, new FCBasePartContainer(inventoryPlayer, te));
-        this.container = (FCBasePartContainer) this.inventorySlots;
+        super(inventoryPlayer, te, new ContainerFluidPatternTerminal(inventoryPlayer, te));
+        this.container = (ContainerFluidPatternTerminal) this.inventorySlots;
         setReservedSpace(81);
     }
 
