@@ -6,7 +6,9 @@ import appeng.container.ContainerOpenContext;
 import appeng.container.implementations.ContainerCraftAmount;
 import appeng.helpers.InventoryAction;
 import appeng.util.item.AEItemStack;
+import com.glodblock.github.FluidCraft;
 import com.glodblock.github.client.gui.container.ContainerPatternValueAmount;
+import com.glodblock.github.common.item.ItemFluidPacket;
 import com.glodblock.github.inventory.InventoryHandler;
 import com.glodblock.github.inventory.gui.GuiType;
 import com.glodblock.github.util.BlockPos;
@@ -20,6 +22,7 @@ import java.util.Objects;
 import javax.annotation.Nullable;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraftforge.fluids.FluidStack;
 
 public class CPacketInventoryAction implements IMessage {
 
@@ -96,22 +99,19 @@ public class CPacketInventoryAction implements IMessage {
                                 Objects.requireNonNull(
                                         Util.from(baseContainer.getOpenContext().getSide())),
                                 GuiType.FLUID_CRAFTING_AMOUNT);
-
                         if (sender.openContainer instanceof ContainerCraftAmount) {
                             final ContainerCraftAmount cca = (ContainerCraftAmount) sender.openContainer;
-
                             if (baseContainer.getTargetStack() != null) {
                                 cca.getCraftingItem()
                                         .putStack(baseContainer.getTargetStack().getItemStack());
                                 cca.setItemToCraft(baseContainer.getTargetStack());
                             }
-
                             cca.detectAndSendChanges();
                         }
                     }
                 } else if (message.action == InventoryAction.SET_PATTERN_VALUE) {
                     final ContainerOpenContext context = baseContainer.getOpenContext();
-                    if (context != null) {
+                    if (context != null && message.stack != null) {
                         final TileEntity te = context.getTile();
                         InventoryHandler.openGui(
                                 sender,
@@ -120,6 +120,12 @@ public class CPacketInventoryAction implements IMessage {
                                 Objects.requireNonNull(
                                         Util.from(baseContainer.getOpenContext().getSide())),
                                 GuiType.PATTERN_VALUE_SET);
+                        int amt = (int) message.stack.getStackSize();
+                        if (message.stack.getItem() instanceof ItemFluidPacket) {
+                            FluidStack fluid = ItemFluidPacket.getFluidStack(message.stack);
+                            amt = fluid == null ? 1 : fluid.amount;
+                        }
+                        FluidCraft.proxy.netHandler.sendTo(new SPacketSetItemAmount(amt), sender);
                         if (sender.openContainer instanceof ContainerPatternValueAmount) {
                             final ContainerPatternValueAmount cpv = (ContainerPatternValueAmount) sender.openContainer;
                             if (baseContainer.getTargetStack() != null) {

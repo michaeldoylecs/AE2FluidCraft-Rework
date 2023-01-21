@@ -9,7 +9,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.world.World;
 
-public abstract class TileGuiFactory<T> implements GuiFactory {
+public abstract class TileGuiFactory<T> implements IGuiFactory {
 
     protected final Class<T> invClass;
 

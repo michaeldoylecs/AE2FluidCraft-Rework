@@ -80,7 +80,7 @@ public class GuiFluidStorageBus extends GuiUpgradeable {
         } else if (btn == this.clear) {
             FluidCraft.proxy.netHandler.sendToServer(new CPacketFluidPatternTermBtns("StorageBus.Action", "Clear"));
         } else if (btn == this.priority) {
-            FluidCraft.proxy.netHandler.sendToServer(new CPacketSwitchGuis(GuiType.FLUID_STORAGE_BUS_PRIORITY));
+            FluidCraft.proxy.netHandler.sendToServer(new CPacketSwitchGuis(GuiType.PRIORITY_PART));
         } else if (btn == this.rwMode) {
             NetworkHandler.instance.sendToServer(new PacketConfigButton(this.rwMode.getSetting(), backwards));
         }

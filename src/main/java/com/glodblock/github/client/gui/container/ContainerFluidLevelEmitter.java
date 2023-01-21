@@ -5,6 +5,7 @@ import appeng.api.implementations.IUpgradeableHost;
 import appeng.container.guisync.GuiSync;
 import appeng.tile.inventory.AppEngInternalAEInventory;
 import appeng.util.Platform;
+import com.glodblock.github.client.gui.container.base.FCContainerFluidConfigurable;
 import com.glodblock.github.common.parts.PartFluidLevelEmitter;
 import com.glodblock.github.inventory.slot.OptionalFluidSlotFakeTypeOnly;
 import com.glodblock.github.util.Ae2Reflect;
@@ -15,7 +16,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.IInventory;
 
-public class ContainerFluidLevelEmitter extends ContainerFluidConfigurable {
+public class ContainerFluidLevelEmitter extends FCContainerFluidConfigurable {
     private final PartFluidLevelEmitter lvlEmitter;
 
     @SideOnly(Side.CLIENT)

@@ -30,7 +30,6 @@ import org.lwjgl.opengl.GL11;
 public class GuiFluidCraftConfirm extends AEBaseGui {
 
     private final ContainerFluidCraftConfirm ccc;
-
     private final int rows = 5;
 
     private final IItemList<IAEItemStack> storage = AEApi.instance().storage().createItemList();

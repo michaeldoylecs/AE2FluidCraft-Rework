@@ -102,7 +102,7 @@ public enum GuiType {
         }
     }),
 
-    DUAL_INTERFACE_PRIORITY_PART(new PartGuiFactory<IPriorityHost>(IPriorityHost.class) {
+    PRIORITY_PART(new PartGuiFactory<IPriorityHost>(IPriorityHost.class) {
         @Override
         protected Object createServerGui(EntityPlayer player, IPriorityHost inv) {
             return new ContainerPriority(player.inventory, inv);
@@ -114,19 +114,7 @@ public enum GuiType {
         }
     }),
 
-    DUAL_INTERFACE_PRIORITY(new TileGuiFactory<IPriorityHost>(IPriorityHost.class) {
-        @Override
-        protected Object createServerGui(EntityPlayer player, IPriorityHost inv) {
-            return new ContainerPriority(player.inventory, inv);
-        }
-
-        @Override
-        protected Object createClientGui(EntityPlayer player, IPriorityHost inv) {
-            return new GuiFCPriority(player.inventory, inv);
-        }
-    }),
-
-    FLUID_STORAGE_BUS_PRIORITY(new PartGuiFactory<IPriorityHost>(IPriorityHost.class) {
+    PRIORITY_TILE(new TileGuiFactory<IPriorityHost>(IPriorityHost.class) {
         @Override
         protected Object createServerGui(EntityPlayer player, IPriorityHost inv) {
             return new ContainerPriority(player.inventory, inv);
@@ -301,9 +289,9 @@ public enum GuiType {
         return ordinal < 0 || ordinal >= VALUES.size() ? null : VALUES.get(ordinal);
     }
 
-    public final GuiFactory guiFactory;
+    public final IGuiFactory guiFactory;
 
-    GuiType(GuiFactory guiFactory) {
+    GuiType(IGuiFactory guiFactory) {
         this.guiFactory = guiFactory;
     }
 }

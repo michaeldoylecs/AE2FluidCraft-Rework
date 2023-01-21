@@ -327,6 +327,7 @@ public abstract class FCGuiMonitor<T extends IAEStack<T>> extends AEBaseMEGui
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     protected void handleMouseClick(final Slot slot, final int slotIdx, final int ctrlDown, final int mouseButton) {
         final EntityPlayer player = Minecraft.getMinecraft().thePlayer;
         if (mouseButton == 3) {
@@ -335,8 +336,11 @@ public abstract class FCGuiMonitor<T extends IAEStack<T>> extends AEBaseMEGui
                     InventoryAction action = InventoryAction.SET_PATTERN_VALUE;
                     IAEItemStack stack = AEItemStack.create(slot.getStack());
                     ((AEBaseContainer) this.inventorySlots).setTargetStack(stack);
-                    FluidCraft.proxy.netHandler.sendToServer(new CPacketInventoryAction(
-                            action, Ae2ReflectClient.getInventorySlots(this).size(), 0, stack));
+                    for (int i = 0; i < this.inventorySlots.inventorySlots.size(); i++) {
+                        if (slot.equals(this.inventorySlots.inventorySlots.get(i))) {
+                            FluidCraft.proxy.netHandler.sendToServer(new CPacketInventoryAction(action, i, 0, stack));
+                        }
+                    }
                     return;
                 }
             }
