@@ -120,9 +120,10 @@ public class GuiDualInterface extends GuiUpgradeable {
     @Override
     protected void actionPerformed(final GuiButton btn) {
         super.actionPerformed(btn);
-
         final boolean backwards = Mouse.isButtonDown(1);
-
+        if (btn == null) {
+            return;
+        }
         if (btn == this.priority) {
             if (isTile()) {
                 FluidCraft.proxy.netHandler.sendToServer(new CPacketSwitchGuis(GuiType.PRIORITY_TILE));
@@ -149,7 +150,7 @@ public class GuiDualInterface extends GuiUpgradeable {
         if (btn == this.insertionMode) {
             NetworkHandler.instance.sendToServer(new PacketConfigButton(this.insertionMode.getSetting(), backwards));
         }
-        if (btn == this.sidelessMode && this.sidelessMode != null) {
+        if (btn == this.sidelessMode) {
             NetworkHandler.instance.sendToServer(new PacketConfigButton(this.sidelessMode.getSetting(), backwards));
         }
     }

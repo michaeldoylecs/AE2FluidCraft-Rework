@@ -1,12 +1,10 @@
 package com.glodblock.github.common.tile;
 
-import appeng.api.storage.data.IAEFluidStack;
 import appeng.tile.AEBaseInvTile;
 import appeng.tile.TileEvent;
 import appeng.tile.events.TileEventType;
 import appeng.tile.inventory.AppEngInternalInventory;
 import appeng.tile.inventory.InvOperation;
-import appeng.util.item.AEFluidStack;
 import com.glodblock.github.inventory.AEFluidInventory;
 import com.glodblock.github.inventory.IAEFluidInventory;
 import com.glodblock.github.inventory.IAEFluidTank;
@@ -25,17 +23,18 @@ import net.minecraftforge.fluids.IFluidHandler;
 
 public class TileIngredientBuffer extends AEBaseInvTile implements IAEFluidInventory, IFluidHandler {
 
-    private final AppEngInternalInventory invItems = new AppEngInternalInventory(this, 9);
-    private final AEFluidInventory invFluids = new AEFluidInventory(this, 4, 64000);
+    protected AppEngInternalInventory invItems;
+    protected AEFluidInventory invFluids;
+
+    public TileIngredientBuffer() {
+        this.invFluids = new AEFluidInventory(this, 4, 64000);
+        this.invItems = new AppEngInternalInventory(this, 9);
+    }
 
     @Nonnull
     @Override
     public IInventory getInternalInventory() {
         return invItems;
-    }
-
-    public IAEFluidTank getFluidInventory() {
-        return invFluids;
     }
 
     @Override
@@ -69,19 +68,7 @@ public class TileIngredientBuffer extends AEBaseInvTile implements IAEFluidInven
         for (int i = 0; i < invItems.getSizeInventory(); i++) {
             ByteBufUtils.writeItemStack(data, invItems.getStackInSlot(i));
         }
-        int fluidMask = 0;
-        for (int i = 0; i < invFluids.getSlots(); i++) {
-            if (invFluids.getFluidInSlot(i) != null) {
-                fluidMask |= 1 << i;
-            }
-        }
-        data.writeByte(fluidMask);
-        for (int i = 0; i < invFluids.getSlots(); i++) {
-            IAEFluidStack fluid = invFluids.getFluidInSlot(i);
-            if (fluid != null) {
-                fluid.writeToPacket(data);
-            }
-        }
+        this.invFluids.writeToBuf(data);
     }
 
     @TileEvent(TileEventType.NETWORK_READ)
@@ -94,22 +81,7 @@ public class TileIngredientBuffer extends AEBaseInvTile implements IAEFluidInven
                 changed = true;
             }
         }
-        int fluidMask = data.readByte();
-        for (int i = 0; i < invFluids.getSlots(); i++) {
-            if ((fluidMask & (1 << i)) != 0) {
-                IAEFluidStack fluid = AEFluidStack.loadFluidStackFromPacket(data);
-                if (fluid != null) { // this shouldn't happen, but better safe than sorry
-                    IAEFluidStack origFluid = invFluids.getFluidInSlot(i);
-                    if (!fluid.equals(origFluid) || fluid.getStackSize() != origFluid.getStackSize()) {
-                        invFluids.setFluidInSlot(i, fluid);
-                        changed = true;
-                    }
-                }
-            } else if (invFluids.getFluidInSlot(i) != null) {
-                invFluids.setFluidInSlot(i, null);
-                changed = true;
-            }
-        }
+        changed |= this.invFluids.readFromBuf(data);
         return changed;
     }
 

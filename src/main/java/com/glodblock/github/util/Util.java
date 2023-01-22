@@ -10,9 +10,11 @@ import appeng.api.parts.IPart;
 import appeng.api.storage.data.IAEFluidStack;
 import appeng.util.item.AEFluidStack;
 import com.glodblock.github.common.item.ItemFluidPacket;
+import com.glodblock.github.inventory.IAEFluidTank;
 import cpw.mods.fml.common.ModContainer;
 import cpw.mods.fml.common.registry.GameData;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.inventory.IInventory;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -190,6 +192,17 @@ public final class Util {
         return fluid1.isFluidEqual(fluid2);
     }
 
+    public static void mirrorFluidToPacket(IInventory packet, IAEFluidTank fluidTank) {
+        for (int i = 0; i < fluidTank.getSlots(); i++) {
+            IAEFluidStack fluid = fluidTank.getFluidInSlot(i);
+            if (fluid == null) {
+                packet.setInventorySlotContents(i, null);
+            } else {
+                packet.setInventorySlotContents(i, ItemFluidPacket.newDisplayStack(fluid.getFluidStack()));
+            }
+        }
+    }
+
     public static class FluidUtil {
         public static IAEFluidStack createAEFluidStack(Fluid fluid) {
             return createAEFluidStack(new FluidStack(fluid, FluidContainerRegistry.BUCKET_VOLUME));
@@ -301,12 +314,11 @@ public final class Util {
             if (item instanceof IFluidContainerItem) {
                 FluidStack drained = ((IFluidContainerItem) item).drain(itemStack, fluid.amount, true);
                 int amountDrained = drained != null && drained.getFluid() == fluid.getFluid() ? drained.amount : 0;
-                return new MutablePair<Integer, ItemStack>(amountDrained, itemStack);
+                return new MutablePair<>(amountDrained, itemStack);
             } else if (FluidContainerRegistry.isContainer(itemStack)) {
                 FluidStack content = FluidContainerRegistry.getFluidForFilledItem(itemStack);
                 int amountDrained = content != null && content.getFluid() == fluid.getFluid() ? content.amount : 0;
-                return new MutablePair<Integer, ItemStack>(
-                        amountDrained, FluidContainerRegistry.drainFluidContainer(itemStack));
+                return new MutablePair<>(amountDrained, FluidContainerRegistry.drainFluidContainer(itemStack));
             }
 
             return null;
@@ -321,14 +333,14 @@ public final class Util {
                 int filled = ((IFluidContainerItem) item).fill(itemStack, fluid, true);
 
                 // Return the filled itemstack.
-                return new MutablePair<Integer, ItemStack>(filled, itemStack);
+                return new MutablePair<>(filled, itemStack);
             } else if (FluidContainerRegistry.isContainer(itemStack)) {
                 // Fill it through the fluidcontainer registry.
                 ItemStack filledContainer = FluidContainerRegistry.fillFluidContainer(fluid, itemStack);
                 // get the filled fluidstack.
                 FluidStack filled = FluidContainerRegistry.getFluidForFilledItem(filledContainer);
                 // Return filled container and fill amount.
-                return new MutablePair<Integer, ItemStack>(filled != null ? filled.amount : 0, filledContainer);
+                return new MutablePair<>(filled != null ? filled.amount : 0, filledContainer);
             }
             return null;
         }
