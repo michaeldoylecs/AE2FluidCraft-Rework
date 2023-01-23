@@ -33,7 +33,6 @@ import appeng.parts.automation.PartUpgradeable;
 import appeng.tile.inventory.AppEngInternalAEInventory;
 import appeng.tile.inventory.InvOperation;
 import appeng.tile.networking.TileCableBus;
-import appeng.util.ConfigManager;
 import appeng.util.Platform;
 import appeng.util.item.AEFluidStack;
 import appeng.util.prioitylist.PrecisePriorityList;
@@ -44,7 +43,6 @@ import com.glodblock.github.inventory.*;
 import com.glodblock.github.inventory.gui.GuiType;
 import com.glodblock.github.util.BlockPos;
 import com.glodblock.github.util.ModAndClassUtil;
-import com.glodblock.github.util.Util;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import extracells.tileentity.TileEntityFluidInterface;
@@ -233,7 +231,7 @@ public class PartFluidStorageBus extends PartUpgradeable
             final BaseActionSource source) {
         if (this.getProxy().isActive()) {
             AccessRestriction currentAccess =
-                    (AccessRestriction) ((ConfigManager) this.getConfigManager()).getSetting(Settings.ACCESS);
+                    (AccessRestriction) this.getConfigManager().getSetting(Settings.ACCESS);
             if (readOncePass) {
                 readOncePass = false;
                 try {
@@ -306,7 +304,7 @@ public class PartFluidStorageBus extends PartUpgradeable
                     player,
                     this.getHost().getTile().getWorldObj(),
                     new BlockPos(this.getHost().getTile()),
-                    Objects.requireNonNull(Util.from(this.getSide())),
+                    Objects.requireNonNull(this.getSide()),
                     GuiType.FLUID_STORAGE_BUS);
         }
         return true;

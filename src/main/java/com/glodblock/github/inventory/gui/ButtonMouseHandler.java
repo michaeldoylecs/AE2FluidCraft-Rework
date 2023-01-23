@@ -1,7 +1,7 @@
 package com.glodblock.github.inventory.gui;
 
 import com.glodblock.github.FluidCraft;
-import com.glodblock.github.client.gui.TankDumpable;
+import com.glodblock.github.client.gui.ITankDump;
 import com.glodblock.github.network.CPacketDumpTank;
 import com.glodblock.github.util.NameConst;
 import java.util.Collections;
@@ -36,7 +36,7 @@ public class ButtonMouseHandler implements MouseRegionManager.Handler {
         return false;
     }
 
-    public static ButtonMouseHandler dumpTank(TankDumpable host, int index) {
+    public static ButtonMouseHandler dumpTank(ITankDump host, int index) {
         return new ButtonMouseHandler(NameConst.TT_DUMP_TANK, () -> {
             if (host.canDumpTank(index)) {
                 FluidCraft.proxy.netHandler.sendToServer(new CPacketDumpTank(index));

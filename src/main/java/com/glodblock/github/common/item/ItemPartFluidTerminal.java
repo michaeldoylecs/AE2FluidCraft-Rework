@@ -15,12 +15,11 @@ import java.util.List;
 import javax.annotation.Nullable;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.StatCollector;
 import net.minecraft.world.World;
 
-public class ItemPartFluidTerminal extends Item implements IPartItem {
+public class ItemPartFluidTerminal extends FCBaseItem implements IPartItem {
     public ItemPartFluidTerminal() {
         this.setMaxStackSize(64);
         this.setUnlocalizedName(NameConst.ITEM_PART_FLUID_TERMINAL);
@@ -55,6 +54,7 @@ public class ItemPartFluidTerminal extends Item implements IPartItem {
         if (isShiftKeyDown()) tooltip.add(StatCollector.translateToLocalFormatted(NameConst.TT_FLUID_TERMINAL));
     }
 
+    @Override
     public ItemPartFluidTerminal register() {
         GameRegistry.registerItem(this, NameConst.ITEM_PART_FLUID_TERMINAL, FluidCraft.MODID);
         setCreativeTab(FluidCraftingTabs.INSTANCE);
@@ -68,13 +68,5 @@ public class ItemPartFluidTerminal extends Item implements IPartItem {
     @SideOnly(Side.CLIENT)
     public int getSpriteNumber() {
         return 0;
-    }
-
-    public ItemStack stack(int size) {
-        return new ItemStack(this, size);
-    }
-
-    public ItemStack stack() {
-        return new ItemStack(this, 1);
     }
 }

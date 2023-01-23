@@ -27,7 +27,6 @@ import com.glodblock.github.inventory.FluidConvertingInventoryCrafting;
 import com.glodblock.github.loader.ItemAndBlockHolder;
 import com.glodblock.github.util.Ae2Reflect;
 import com.glodblock.github.util.SetBackedMachineSet;
-import com.glodblock.github.util.Util;
 import com.google.common.collect.Sets;
 import java.util.HashSet;
 import java.util.Set;
@@ -68,7 +67,7 @@ public class CoreModHooks {
 
     @Nullable
     public static InventoryAdaptor wrapInventory(@Nullable TileEntity tile, ForgeDirection face) {
-        return tile != null ? FluidConvertingInventoryAdaptor.wrap(tile, Util.from(face)) : null;
+        return tile != null ? FluidConvertingInventoryAdaptor.wrap(tile, face) : null;
     }
 
     public static long getCraftingByteCost(IAEItemStack stack) {

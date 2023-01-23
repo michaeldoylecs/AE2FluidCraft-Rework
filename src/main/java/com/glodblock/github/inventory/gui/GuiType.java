@@ -8,11 +8,11 @@ import appeng.container.implementations.ContainerPriority;
 import appeng.helpers.IPriorityHost;
 import com.glodblock.github.client.gui.*;
 import com.glodblock.github.client.gui.container.*;
-import com.glodblock.github.common.parts.FCBasePart;
 import com.glodblock.github.common.parts.PartFluidInterface;
 import com.glodblock.github.common.parts.PartFluidLevelEmitter;
 import com.glodblock.github.common.parts.PartFluidStorageBus;
-import com.glodblock.github.common.parts.PartSharedFluidBus;
+import com.glodblock.github.common.parts.base.FCPart;
+import com.glodblock.github.common.parts.base.FCSharedFluidBus;
 import com.glodblock.github.common.tile.*;
 import com.google.common.collect.ImmutableList;
 import java.util.List;
@@ -102,7 +102,7 @@ public enum GuiType {
         }
     }),
 
-    DUAL_INTERFACE_PRIORITY_PART(new PartGuiFactory<IPriorityHost>(IPriorityHost.class) {
+    PRIORITY_PART(new PartGuiFactory<IPriorityHost>(IPriorityHost.class) {
         @Override
         protected Object createServerGui(EntityPlayer player, IPriorityHost inv) {
             return new ContainerPriority(player.inventory, inv);
@@ -114,7 +114,7 @@ public enum GuiType {
         }
     }),
 
-    DUAL_INTERFACE_PRIORITY(new TileGuiFactory<IPriorityHost>(IPriorityHost.class) {
+    PRIORITY_TILE(new TileGuiFactory<IPriorityHost>(IPriorityHost.class) {
         @Override
         protected Object createServerGui(EntityPlayer player, IPriorityHost inv) {
             return new ContainerPriority(player.inventory, inv);
@@ -126,26 +126,14 @@ public enum GuiType {
         }
     }),
 
-    FLUID_STORAGE_BUS_PRIORITY(new PartGuiFactory<IPriorityHost>(IPriorityHost.class) {
+    FLUID_BUS_IO(new PartGuiFactory<FCSharedFluidBus>(FCSharedFluidBus.class) {
         @Override
-        protected Object createServerGui(EntityPlayer player, IPriorityHost inv) {
-            return new ContainerPriority(player.inventory, inv);
-        }
-
-        @Override
-        protected Object createClientGui(EntityPlayer player, IPriorityHost inv) {
-            return new GuiFCPriority(player.inventory, inv);
-        }
-    }),
-
-    FLUID_BUS_IO(new PartGuiFactory<PartSharedFluidBus>(PartSharedFluidBus.class) {
-        @Override
-        protected Object createServerGui(EntityPlayer player, PartSharedFluidBus inv) {
+        protected Object createServerGui(EntityPlayer player, FCSharedFluidBus inv) {
             return new ContainerFluidIO(player.inventory, inv);
         }
 
         @Override
-        protected Object createClientGui(EntityPlayer player, PartSharedFluidBus inv) {
+        protected Object createClientGui(EntityPlayer player, FCSharedFluidBus inv) {
             return new GuiFluidIO(player.inventory, inv);
         }
     }),
@@ -186,14 +174,14 @@ public enum GuiType {
         }
     }),
 
-    FLUID_PAT_TERM_CRAFTING_STATUS(new PartGuiFactory<FCBasePart>(FCBasePart.class) {
+    CRAFTING_STATUS(new PartGuiFactory<FCPart>(FCPart.class) {
         @Override
-        protected Object createServerGui(EntityPlayer player, FCBasePart inv) {
+        protected Object createServerGui(EntityPlayer player, FCPart inv) {
             return new ContainerCraftingStatus(player.inventory, inv);
         }
 
         @Override
-        protected Object createClientGui(EntityPlayer player, FCBasePart inv) {
+        protected Object createClientGui(EntityPlayer player, FCPart inv) {
             return new GuiFluidPatternTerminalCraftingStatus(player.inventory, inv);
         }
     }),
@@ -201,7 +189,7 @@ public enum GuiType {
     FLUID_TERMINAL(new PartGuiFactory<ITerminalHost>(ITerminalHost.class) {
         @Override
         protected Object createServerGui(EntityPlayer player, ITerminalHost inv) {
-            return new ContainerFluidTerminal(player.inventory, inv);
+            return new ContainerFluidMonitor(player.inventory, inv);
         }
 
         @Override
@@ -246,26 +234,26 @@ public enum GuiType {
         }
     }),
 
-    FLUID_CRAFTING_CONFIRM(new PartGuiFactory<FCBasePart>(FCBasePart.class) {
+    FLUID_CRAFTING_CONFIRM(new PartGuiFactory<FCPart>(FCPart.class) {
         @Override
-        protected Object createServerGui(EntityPlayer player, FCBasePart inv) {
+        protected Object createServerGui(EntityPlayer player, FCPart inv) {
             return new ContainerFluidCraftConfirm(player.inventory, inv);
         }
 
         @Override
-        protected Object createClientGui(EntityPlayer player, FCBasePart inv) {
+        protected Object createClientGui(EntityPlayer player, FCPart inv) {
             return new GuiFluidCraftConfirm(player.inventory, inv);
         }
     }),
 
-    FLUID_CRAFTING_AMOUNT(new PartGuiFactory<FCBasePart>(FCBasePart.class) {
+    FLUID_CRAFTING_AMOUNT(new PartGuiFactory<FCPart>(FCPart.class) {
         @Override
-        protected Object createServerGui(EntityPlayer player, FCBasePart inv) {
+        protected Object createServerGui(EntityPlayer player, FCPart inv) {
             return new ContainerCraftAmount(player.inventory, inv);
         }
 
         @Override
-        protected Object createClientGui(EntityPlayer player, FCBasePart inv) {
+        protected Object createClientGui(EntityPlayer player, FCPart inv) {
             return new GuiFluidCraftAmount(player.inventory, inv);
         }
     }),
@@ -282,14 +270,14 @@ public enum GuiType {
         }
     }),
 
-    PATTERN_VALUE_SET(new PartGuiFactory<FCBasePart>(FCBasePart.class) {
+    PATTERN_VALUE_SET(new PartGuiFactory<FCPart>(FCPart.class) {
         @Override
-        protected Object createServerGui(EntityPlayer player, FCBasePart inv) {
+        protected Object createServerGui(EntityPlayer player, FCPart inv) {
             return new ContainerPatternValueAmount(player.inventory, inv);
         }
 
         @Override
-        protected Object createClientGui(EntityPlayer player, FCBasePart inv) {
+        protected Object createClientGui(EntityPlayer player, FCPart inv) {
             return new GuiPatternValueAmount(player.inventory, inv);
         }
     });
@@ -301,9 +289,9 @@ public enum GuiType {
         return ordinal < 0 || ordinal >= VALUES.size() ? null : VALUES.get(ordinal);
     }
 
-    public final GuiFactory guiFactory;
+    public final IGuiFactory guiFactory;
 
-    GuiType(GuiFactory guiFactory) {
+    GuiType(IGuiFactory guiFactory) {
         this.guiFactory = guiFactory;
     }
 }

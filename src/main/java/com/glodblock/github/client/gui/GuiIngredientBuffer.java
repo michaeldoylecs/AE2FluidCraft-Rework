@@ -11,12 +11,10 @@ import com.glodblock.github.inventory.gui.ButtonMouseHandler;
 import com.glodblock.github.inventory.gui.MouseRegionManager;
 import com.glodblock.github.inventory.gui.TankMouseHandler;
 import com.glodblock.github.util.NameConst;
-import javax.annotation.Nullable;
-import net.minecraft.client.Minecraft;
+import com.glodblock.github.util.RenderUtil;
 import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.InventoryPlayer;
-import net.minecraft.util.IIcon;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.util.ForgeDirection;
 import org.lwjgl.opengl.GL11;
@@ -40,7 +38,7 @@ public class GuiIngredientBuffer extends AEBaseGui {
                     TANK_Y,
                     TANK_WIDTH,
                     TANK_HEIGHT,
-                    new TankMouseHandler(cont.getTile().getFluidInventory(), i));
+                    new TankMouseHandler(cont.getTile().getInternalFluid(), i));
             mouseRegions.addRegion(
                     TANK_X + 10 + 22 * i, TANK_Y + TANK_HEIGHT + 2, 7, 7, ButtonMouseHandler.dumpTank(cont, i));
         }
@@ -65,10 +63,11 @@ public class GuiIngredientBuffer extends AEBaseGui {
         fontRendererObj.drawString(GuiText.inventory.getLocal(), 8, ySize - 94, 0x404040);
         GL11.glColor4f(1F, 1F, 1F, 1F);
 
-        IAEFluidTank fluidInv = cont.getTile().getFluidInventory();
+        IAEFluidTank fluidInv = cont.getTile().getInternalFluid();
         mc.getTextureManager().bindTexture(TextureMap.locationBlocksTexture);
         for (int i = 0; i < 4; i++) {
-            renderFluidIntoGui(
+            RenderUtil.renderFluidIntoGui(
+                    this,
                     TANK_X + i * TANK_X_OFF,
                     TANK_Y,
                     TANK_WIDTH,
@@ -77,34 +76,10 @@ public class GuiIngredientBuffer extends AEBaseGui {
                     fluidInv.getTankInfo(ForgeDirection.UNKNOWN)[i].capacity);
         }
         GL11.glColor4f(1F, 1F, 1F, 1F);
-
         mouseRegions.render(mouseX, mouseY);
     }
 
-    public void renderFluidIntoGui(
-            int x, int y, int width, int height, @Nullable IAEFluidStack aeFluidStack, int capacity) {
-        if (aeFluidStack != null) {
-            GL11.glDisable(2896);
-            GL11.glColor3f(1.0F, 1.0F, 1.0F);
-            int hi = (int) (height * ((double) aeFluidStack.getStackSize() / capacity));
-            if (aeFluidStack.getStackSize() > 0 && hi > 0) {
-                Minecraft.getMinecraft().renderEngine.bindTexture(TextureMap.locationBlocksTexture);
-                IIcon fluidIcon = aeFluidStack.getFluid().getStillIcon();
-                GL11.glColor3f(
-                        (float) (aeFluidStack.getFluid().getColor() >> 16 & 255) / 255.0F,
-                        (float) (aeFluidStack.getFluid().getColor() >> 8 & 255) / 255.0F,
-                        (float) (aeFluidStack.getFluid().getColor() & 255) / 255.0F);
-                for (int th = 0; th <= hi; th += 16) {
-                    if (hi - th <= 0) break;
-                    this.drawTexturedModelRectFromIcon(
-                            x, y + height - Math.min(16, hi - th) - th, fluidIcon, width, Math.min(16, hi - th));
-                }
-                GL11.glColor3f(1.0F, 1.0F, 1.0F);
-            }
-        }
-    }
-
     public void update(int slot, IAEFluidStack aeFluidStack) {
-        cont.getTile().getFluidInventory().setFluidInSlot(slot, aeFluidStack);
+        cont.getTile().getInternalFluid().setFluidInSlot(slot, aeFluidStack);
     }
 }

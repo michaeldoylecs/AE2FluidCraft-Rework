@@ -9,7 +9,7 @@ import com.glodblock.github.client.gui.container.ContainerFluidPatternEncoder;
 import com.glodblock.github.common.item.ItemFluidPacket;
 import com.glodblock.github.common.tile.TileFluidPatternEncoder;
 import com.glodblock.github.inventory.gui.MouseRegionManager;
-import com.glodblock.github.inventory.slot.SlotFluid;
+import com.glodblock.github.inventory.slot.ISlotFluid;
 import com.glodblock.github.inventory.slot.SlotSingleItem;
 import com.glodblock.github.network.CPacketEncodePattern;
 import com.glodblock.github.util.Ae2ReflectClient;
@@ -82,8 +82,8 @@ public class GuiFluidPatternEncoder extends AEBaseGui {
     }
 
     public void drawSlot0(Slot slot) {
-        if (slot instanceof SlotFluid) {
-            IAEItemStack stack = ((SlotFluid) slot).getAeStack();
+        if (slot instanceof ISlotFluid) {
+            IAEItemStack stack = ((ISlotFluid) slot).getAeStack();
             super.func_146977_a(new SlotSingleItem(slot));
             if (stack == null) return;
             IAEItemStack fake = stack.copy();

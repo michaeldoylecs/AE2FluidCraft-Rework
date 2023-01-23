@@ -4,6 +4,7 @@ import appeng.container.AEBaseContainer;
 import appeng.util.item.AEItemStack;
 import com.glodblock.github.common.tile.TileLevelMaintainer;
 import com.glodblock.github.inventory.AeItemStackHandler;
+import com.glodblock.github.inventory.slot.SlotFluidConvertingFake;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.Slot;
@@ -11,14 +12,14 @@ import net.minecraft.item.ItemStack;
 
 public class ContainerLevelMaintainer extends AEBaseContainer {
     private final TileLevelMaintainer tile;
-    private final FakeSlot[] requestSlots = new FakeSlot[TileLevelMaintainer.REQ_COUNT];
+    private final SlotFluidConvertingFake[] requestSlots = new SlotFluidConvertingFake[TileLevelMaintainer.REQ_COUNT];
 
     public ContainerLevelMaintainer(InventoryPlayer ipl, TileLevelMaintainer tile) {
         super(ipl, tile);
         this.tile = tile;
         AeItemStackHandler request = new AeItemStackHandler(tile.getRequestSlots());
         for (int y = 0; y < TileLevelMaintainer.REQ_COUNT; y++) {
-            FakeSlot slot = new FakeSlot(request, y, 27, 20 + y * 19);
+            SlotFluidConvertingFake slot = new SlotFluidConvertingFake(request, y, 27, 20 + y * 19);
             addSlotToContainer(slot);
             requestSlots[y] = slot;
         }
@@ -29,13 +30,13 @@ public class ContainerLevelMaintainer extends AEBaseContainer {
         return tile;
     }
 
-    public FakeSlot[] getRequestSlots() {
+    public SlotFluidConvertingFake[] getRequestSlots() {
         return this.requestSlots;
     }
 
     @Override
     public ItemStack transferStackInSlot(EntityPlayer player, int idx) {
-        for (FakeSlot slot : this.getRequestSlots()) {
+        for (SlotFluidConvertingFake slot : this.getRequestSlots()) {
             if (!slot.getHasStack()) {
                 slot.setAeStack(AEItemStack.create(((Slot) this.inventorySlots.get(idx)).getStack()), true);
                 break;
@@ -43,12 +44,5 @@ public class ContainerLevelMaintainer extends AEBaseContainer {
         }
         this.detectAndSendChanges();
         return null;
-    }
-
-    public static class FakeSlot extends ContainerFluidPatternEncoder.SlotFluidConvertingFake {
-
-        public FakeSlot(AeItemStackHandler inv, int idx, int x, int y) {
-            super(inv, idx, x, y);
-        }
     }
 }

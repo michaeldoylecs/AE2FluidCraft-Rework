@@ -1,75 +1,179 @@
 package com.glodblock.github.client.gui;
 
+import appeng.api.config.*;
 import appeng.api.storage.ITerminalHost;
-import appeng.api.storage.data.IAEItemStack;
-import appeng.client.gui.widgets.GuiTabButton;
-import appeng.client.render.AppEngRenderItem;
-import appeng.container.slot.SlotFake;
-import appeng.util.item.AEItemStack;
+import appeng.client.gui.widgets.GuiImgButton;
+import com.glodblock.github.FluidCraft;
+import com.glodblock.github.client.gui.base.FCGuiEncodeTerminal;
 import com.glodblock.github.client.gui.container.ContainerFluidPatternTerminalEx;
-import com.glodblock.github.common.item.ItemFluidPacket;
-import com.glodblock.github.inventory.InventoryHandler;
-import com.glodblock.github.inventory.gui.GuiType;
-import com.glodblock.github.inventory.slot.SlotSingleItem;
-import com.glodblock.github.util.Ae2ReflectClient;
-import net.minecraft.client.gui.GuiButton;
+import com.glodblock.github.network.CPacketFluidPatternTermBtns;
+import com.glodblock.github.util.ModAndClassUtil;
+import com.glodblock.github.util.NameConst;
 import net.minecraft.entity.player.InventoryPlayer;
-import net.minecraft.inventory.Slot;
+import net.minecraft.util.StatCollector;
+import org.lwjgl.input.Mouse;
 
-public class GuiFluidPatternTerminalEx extends GuiBaseFluidPatternTerminalEx {
+public class GuiFluidPatternTerminalEx extends FCGuiEncodeTerminal {
 
-    private GuiTabButton craftingStatusBtn;
-    private final AppEngRenderItem stackSizeRenderer = Ae2ReflectClient.getStackSizeRenderer(this);
-
-    public GuiFluidPatternTerminalEx(InventoryPlayer inventoryPlayer, ITerminalHost te) {
-        super(inventoryPlayer, te);
-        ContainerFluidPatternTerminalEx container = new ContainerFluidPatternTerminalEx(inventoryPlayer, te);
-        container.setGui(this);
-        this.inventorySlots = container;
-        this.container = container;
-        this.monitorableContainer = container;
-        this.configSrc = container.getConfigManager();
+    public GuiFluidPatternTerminalEx(final InventoryPlayer inventoryPlayer, final ITerminalHost te) {
+        super(inventoryPlayer, te, new ContainerFluidPatternTerminalEx(inventoryPlayer, te));
+        processingScrollBar.setHeight(70).setWidth(7).setLeft(6).setRange(0, 1, 1);
+        processingScrollBar.setTexture(FluidCraft.MODID, "gui/pattern3.png", 242, 0);
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public void initGui() {
         super.initGui();
-        craftingStatusBtn = super.craftingStatusBtn;
+
+        this.substitutionsEnabledBtn = new GuiImgButton(
+                this.guiLeft + 97, this.guiTop + this.ySize - 163, Settings.ACTIONS, ItemSubstitution.ENABLED);
+        this.substitutionsEnabledBtn.setHalfSize(true);
+        this.buttonList.add(this.substitutionsEnabledBtn);
+
+        this.substitutionsDisabledBtn = new GuiImgButton(
+                this.guiLeft + 97, this.guiTop + this.ySize - 163, Settings.ACTIONS, ItemSubstitution.DISABLED);
+        this.substitutionsDisabledBtn.setHalfSize(true);
+        this.buttonList.add(this.substitutionsDisabledBtn);
+
+        this.fluidPrioritizedEnabledBtn =
+                new GuiFCImgButton(this.guiLeft + 97, this.guiTop + this.ySize - 114, "FORCE_PRIO", "DO_PRIO");
+        this.fluidPrioritizedEnabledBtn.setHalfSize(true);
+        this.buttonList.add(this.fluidPrioritizedEnabledBtn);
+
+        this.fluidPrioritizedDisabledBtn =
+                new GuiFCImgButton(this.guiLeft + 97, this.guiTop + this.ySize - 114, "NOT_PRIO", "DONT_PRIO");
+        this.fluidPrioritizedDisabledBtn.setHalfSize(true);
+        this.buttonList.add(this.fluidPrioritizedDisabledBtn);
+
+        invertBtn = new GuiImgButton(
+                this.guiLeft + 87,
+                this.guiTop + this.ySize - 153,
+                Settings.ACTIONS,
+                container.inverted ? PatternSlotConfig.C_4_16 : PatternSlotConfig.C_16_4);
+        invertBtn.setHalfSize(true);
+        this.buttonList.add(this.invertBtn);
+
+        this.clearBtn = new GuiImgButton(
+                this.guiLeft + 87, this.guiTop + this.ySize - 163, Settings.ACTIONS, ActionItems.CLOSE);
+        this.clearBtn.setHalfSize(true);
+        this.buttonList.add(this.clearBtn);
+
+        this.encodeBtn = new GuiImgButton(
+                this.guiLeft + 147, this.guiTop + this.ySize - 142, Settings.ACTIONS, ActionItems.ENCODE);
+        this.buttonList.add(this.encodeBtn);
+
+        if (ModAndClassUtil.isDoubleButton) {
+            this.doubleBtn = new GuiImgButton(
+                    this.guiLeft + 97, this.guiTop + this.ySize - 153, Settings.ACTIONS, ActionItems.DOUBLE);
+            this.doubleBtn.setHalfSize(true);
+            this.buttonList.add(this.doubleBtn);
+        }
+
+        this.combineEnableBtn =
+                new GuiFCImgButton(this.guiLeft + 87, this.guiTop + this.ySize - 114, "FORCE_COMBINE", "DO_COMBINE");
+        this.combineEnableBtn.setHalfSize(true);
+        this.buttonList.add(this.combineEnableBtn);
+
+        this.combineDisableBtn =
+                new GuiFCImgButton(this.guiLeft + 87, this.guiTop + this.ySize - 114, "NOT_COMBINE", "DONT_COMBINE");
+        this.combineDisableBtn.setHalfSize(true);
+        this.buttonList.add(this.combineDisableBtn);
+        if (ModAndClassUtil.isBeSubstitutionsButton) {
+            this.beSubstitutionsEnabledBtn = new GuiImgButton(
+                    this.guiLeft + 87, this.guiTop + this.ySize - 103, Settings.ACTIONS, PatternBeSubstitution.ENABLED);
+            this.beSubstitutionsEnabledBtn.setHalfSize(true);
+            this.buttonList.add(this.beSubstitutionsEnabledBtn);
+
+            this.beSubstitutionsDisabledBtn = new GuiImgButton(
+                    this.guiLeft + 87,
+                    this.guiTop + this.ySize - 103,
+                    Settings.ACTIONS,
+                    PatternBeSubstitution.DISABLED);
+            this.beSubstitutionsDisabledBtn.setHalfSize(true);
+            this.buttonList.add(this.beSubstitutionsDisabledBtn);
+        }
+        processingScrollBar.setTop(this.ySize - 164);
     }
 
     @Override
-    public void func_146977_a(final Slot s) {
-        if (drawSlot0(s)) super.func_146977_a(s);
-    }
-
-    public boolean drawSlot0(Slot slot) {
-        if (slot instanceof SlotFake) {
-            AEItemStack stack = AEItemStack.create(slot.getStack());
-            super.func_146977_a(new SlotSingleItem(slot));
-            if (stack == null) return true;
-            IAEItemStack fake = stack.copy();
-            if (fake.getItemStack().getItem() instanceof ItemFluidPacket) {
-                if (ItemFluidPacket.getFluidStack(stack) != null && ItemFluidPacket.getFluidStack(stack).amount > 0)
-                    fake.setStackSize(ItemFluidPacket.getFluidStack(stack).amount);
-            } else return true;
-            stackSizeRenderer.setAeStack(fake);
-            stackSizeRenderer.renderItemOverlayIntoGUI(
-                    fontRendererObj,
-                    mc.getTextureManager(),
-                    stack.getItemStack(),
-                    slot.xDisplayPosition,
-                    slot.yDisplayPosition);
-            return false;
-        }
-        return true;
+    public void drawFG(final int offsetX, final int offsetY, final int mouseX, final int mouseY) {
+        super.drawFG(offsetX, offsetY, mouseX, mouseY);
+        this.fontRendererObj.drawString(
+                StatCollector.translateToLocal(NameConst.GUI_FLUID_PATTERN_TERMINAL_EX),
+                8,
+                this.ySize - 96 + 2 - getReservedSpace(),
+                4210752);
+        this.processingScrollBar.draw(this);
     }
 
     @Override
-    protected void actionPerformed(final GuiButton btn) {
-        if (btn == craftingStatusBtn) {
-            InventoryHandler.switchGui(GuiType.FLUID_PAT_TERM_CRAFTING_STATUS);
-        } else {
-            super.actionPerformed(btn);
+    protected String getBackground() {
+        return container.inverted ? "gui/pattern4.png" : "gui/pattern3.png";
+    }
+
+    @Override
+    public void drawScreen(final int mouseX, final int mouseY, final float btn) {
+        final int offset = container.inverted ? 18 * -3 : 0;
+        substitutionsEnabledBtn.xPosition = this.guiLeft + 97 + offset;
+        substitutionsDisabledBtn.xPosition = this.guiLeft + 97 + offset;
+        beSubstitutionsEnabledBtn.xPosition = this.guiLeft + 97 + offset;
+        beSubstitutionsDisabledBtn.xPosition = this.guiLeft + 97 + offset;
+        fluidPrioritizedEnabledBtn.xPosition = this.guiLeft + 97 + offset;
+        fluidPrioritizedDisabledBtn.xPosition = this.guiLeft + 97 + offset;
+        doubleBtn.xPosition = this.guiLeft + 97 + offset;
+        clearBtn.xPosition = this.guiLeft + 87 + offset;
+        invertBtn.xPosition = this.guiLeft + 87 + offset;
+        combineEnableBtn.xPosition = this.guiLeft + 87 + offset;
+        combineDisableBtn.xPosition = this.guiLeft + 87 + offset;
+        processingScrollBar.setCurrentScroll(container.activePage);
+        super.drawScreen(mouseX, mouseY, btn);
+    }
+
+    @Override
+    protected void mouseClicked(final int xCoord, final int yCoord, final int btn) {
+        final int currentScroll = this.processingScrollBar.getCurrentScroll();
+        this.processingScrollBar.click(this, xCoord - this.guiLeft, yCoord - this.guiTop);
+        super.mouseClicked(xCoord, yCoord, btn);
+
+        if (currentScroll != this.processingScrollBar.getCurrentScroll()) {
+            changeActivePage();
         }
+    }
+
+    @Override
+    protected void mouseClickMove(final int x, final int y, final int c, final long d) {
+        final int currentScroll = this.processingScrollBar.getCurrentScroll();
+        this.processingScrollBar.click(this, x - this.guiLeft, y - this.guiTop);
+        super.mouseClickMove(x, y, c, d);
+
+        if (currentScroll != this.processingScrollBar.getCurrentScroll()) {
+            changeActivePage();
+        }
+    }
+
+    @Override
+    public void handleMouseInput() {
+        super.handleMouseInput();
+        final int wheel = Mouse.getEventDWheel();
+
+        if (wheel != 0) {
+            final int x = Mouse.getEventX() * this.width / this.mc.displayWidth;
+            final int y = this.height - Mouse.getEventY() * this.height / this.mc.displayHeight;
+
+            if (this.processingScrollBar.contains(x - this.guiLeft, y - this.guiTop)) {
+                final int currentScroll = this.processingScrollBar.getCurrentScroll();
+                this.processingScrollBar.wheel(wheel);
+
+                if (currentScroll != this.processingScrollBar.getCurrentScroll()) {
+                    changeActivePage();
+                }
+            }
+        }
+    }
+
+    private void changeActivePage() {
+        FluidCraft.proxy.netHandler.sendToServer(new CPacketFluidPatternTermBtns(
+                "PatternTerminal.ActivePage", String.valueOf(this.processingScrollBar.getCurrentScroll())));
     }
 }

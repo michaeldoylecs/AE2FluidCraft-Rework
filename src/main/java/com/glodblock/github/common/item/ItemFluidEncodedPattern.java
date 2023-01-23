@@ -3,13 +3,14 @@ package com.glodblock.github.common.item;
 import appeng.api.networking.crafting.ICraftingPatternDetails;
 import appeng.items.misc.ItemEncodedPattern;
 import com.glodblock.github.FluidCraft;
+import com.glodblock.github.loader.IRegister;
 import com.glodblock.github.util.FluidPatternDetails;
 import com.glodblock.github.util.NameConst;
 import cpw.mods.fml.common.registry.GameRegistry;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
 
-public class ItemFluidEncodedPattern extends ItemEncodedPattern {
+public class ItemFluidEncodedPattern extends ItemEncodedPattern implements IRegister<ItemFluidEncodedPattern> {
 
     public ItemFluidEncodedPattern() {
         super();
@@ -23,6 +24,7 @@ public class ItemFluidEncodedPattern extends ItemEncodedPattern {
         return pattern.readFromStack() ? pattern : null;
     }
 
+    @Override
     public ItemFluidEncodedPattern register() {
         GameRegistry.registerItem(this, NameConst.ITEM_FLUID_ENCODED_PATTERN, FluidCraft.MODID);
         return this;

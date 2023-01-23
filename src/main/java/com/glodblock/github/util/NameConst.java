@@ -39,6 +39,7 @@ public class NameConst {
     public static final String TT_EMPTY = TT_KEY + "empty";
     public static final String TT_DUMP_TANK = TT_KEY + "dump_tank";
     public static final String TT_SHIFT_FOR_MORE = TT_KEY + "shift_for_more";
+    public static final String TT_CTRL_FOR_MORE = TT_KEY + "ctrl_for_more";
     public static final String TT_FLUID_BUFFER = TT_KEY + "fluid_buffer.";
     public static final String TT_FLUID_PACKET_DECODER = TT_KEY + "fluid_packet_decoder.";
     public static final String TT_FLUID_PACKET_DECODER_DESC = TT_FLUID_PACKET_DECODER + "desc";
@@ -60,6 +61,7 @@ public class NameConst {
     public static final String TT_LEVEL_MAINTAINER_EXPORT = TT_LEVEL_MAINTAINER + "export";
     public static final String TT_LEVEL_MAINTAINER_EXPORT_DESC = TT_LEVEL_MAINTAINER + "export_desc";
     public static final String TT_CELL_CONTENTS = TT_KEY + "cell_contents";
+    public static final String TT_CELL_EMPTY = TT_KEY + "cell_empty";
 
     public static final String WAILA_KEY = FluidCraft.MODID + ".waila.";
     public static final String WAILA_ENABLE = WAILA_KEY + "enable";

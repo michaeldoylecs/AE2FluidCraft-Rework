@@ -30,6 +30,7 @@ import appeng.util.ConfigManager;
 import appeng.util.IConfigManagerHost;
 import appeng.util.Platform;
 import appeng.util.item.AEFluidStack;
+import com.glodblock.github.common.item.ItemFluidPacket;
 import com.glodblock.github.inventory.AEFluidInventory;
 import com.glodblock.github.inventory.IAEFluidInventory;
 import com.glodblock.github.inventory.IAEFluidTank;
@@ -64,7 +65,7 @@ public class DualityFluidInterface
     private final IAEFluidStack[] requireWork;
     private int isWorking = -1;
     private final MEMonitorPassThrough<IAEItemStack> items =
-            new MEMonitorPassThrough<IAEItemStack>(new NullInventory<IAEItemStack>(), StorageChannel.ITEMS);
+            new MEMonitorPassThrough<IAEItemStack>(new NullInventory<>(), StorageChannel.ITEMS);
     private final MEMonitorPassThrough<IAEFluidStack> fluids =
             new MEMonitorPassThrough<IAEFluidStack>(new NullInventory<>(), StorageChannel.FLUIDS);
     private boolean resetConfigCache = true;
@@ -131,6 +132,13 @@ public class DualityFluidInterface
 
     public AEFluidInventory getConfig() {
         return this.config;
+    }
+
+    public void loadConfigFromPacket(IInventory packet) {
+        for (int i = 0; i < packet.getSizeInventory(); i++) {
+            FluidStack fluid = ItemFluidPacket.getFluidStack(packet.getStackInSlot(i));
+            config.setFluidInSlot(i, this.getStandardFluid(fluid));
+        }
     }
 
     public AEFluidInventory getTanks() {

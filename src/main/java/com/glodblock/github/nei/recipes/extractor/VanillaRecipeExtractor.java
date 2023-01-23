@@ -30,15 +30,6 @@ public class VanillaRecipeExtractor implements IRecipeExtractor {
 
     @Override
     public List<OrderStack<?>> getOutputIngredients(List<PositionedStack> rawOutputs) {
-        List<OrderStack<?>> tmp = new LinkedList<>();
-        for (int i = 0; i < rawOutputs.size(); i++) {
-            if (rawOutputs.get(i) == null) continue;
-            final int col = (rawOutputs.get(i).relx - 25) / 18;
-            final int row = (rawOutputs.get(i).rely - 6) / 18;
-            int index = col + row * 3;
-            OrderStack<?> stack = OrderStack.pack(rawOutputs.get(i), c ? index : i);
-            if (stack != null) tmp.add(stack);
-        }
-        return tmp;
+        return getInputIngredients(rawOutputs);
     }
 }

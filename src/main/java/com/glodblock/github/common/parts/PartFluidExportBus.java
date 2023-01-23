@@ -25,8 +25,8 @@ import appeng.util.item.AEItemStack;
 import com.glodblock.github.client.textures.FCPartsTexture;
 import com.glodblock.github.common.item.ItemFluidDrop;
 import com.glodblock.github.common.item.ItemFluidPacket;
+import com.glodblock.github.common.parts.base.FCSharedFluidBus;
 import com.glodblock.github.inventory.FluidConvertingInventoryAdaptor;
-import com.glodblock.github.util.Util;
 import com.google.common.collect.ImmutableSet;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -36,7 +36,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.IIcon;
 import net.minecraftforge.fluids.IFluidHandler;
 
-public class PartFluidExportBus extends PartSharedFluidBus implements ICraftingRequester {
+public class PartFluidExportBus extends FCSharedFluidBus implements ICraftingRequester {
 
     private final BaseActionSource source;
     private final MultiCraftingTracker craftingTracker = new MultiCraftingTracker(this, 9);
@@ -229,8 +229,7 @@ public class PartFluidExportBus extends PartSharedFluidBus implements ICraftingR
 
     protected InventoryAdaptor getHandler(TileEntity target) {
         return target != null
-                ? FluidConvertingInventoryAdaptor.wrap(
-                        target, Util.from(this.getSide().getOpposite()))
+                ? FluidConvertingInventoryAdaptor.wrap(target, this.getSide().getOpposite())
                 : null;
     }
 

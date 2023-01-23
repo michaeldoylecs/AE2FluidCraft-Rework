@@ -5,6 +5,8 @@ import appeng.core.AELog;
 import appeng.util.Platform;
 import appeng.util.item.AEFluidStack;
 import com.glodblock.github.util.Util;
+import io.netty.buffer.ByteBuf;
+import java.io.IOException;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.fluids.Fluid;
@@ -249,6 +251,42 @@ public class AEFluidInventory implements IAEFluidTank {
         final NBTTagCompound c = new NBTTagCompound();
         this.writeToNBT(c);
         data.setTag(name, c);
+    }
+
+    public void writeToBuf(final ByteBuf data) throws IOException {
+        int fluidMask = 0;
+        for (int i = 0; i < this.fluids.length; i++) {
+            if (this.fluids[i] != null) {
+                fluidMask |= 1 << i;
+            }
+        }
+        data.writeByte(fluidMask);
+        for (IAEFluidStack fluid : this.fluids) {
+            if (fluid != null) {
+                fluid.writeToPacket(data);
+            }
+        }
+    }
+
+    public boolean readFromBuf(final ByteBuf data) throws IOException {
+        boolean changed = false;
+        int fluidMask = data.readByte();
+        for (int i = 0; i < this.fluids.length; i++) {
+            if ((fluidMask & (1 << i)) != 0) {
+                IAEFluidStack fluid = AEFluidStack.loadFluidStackFromPacket(data);
+                if (fluid != null) { // this shouldn't happen, but better safe than sorry
+                    IAEFluidStack origFluid = this.fluids[i];
+                    if (!fluid.equals(origFluid) || fluid.getStackSize() != origFluid.getStackSize()) {
+                        this.fluids[i] = fluid;
+                        changed = true;
+                    }
+                }
+            } else if (this.fluids[i] != null) {
+                this.fluids[i] = null;
+                changed = true;
+            }
+        }
+        return changed;
     }
 
     private void writeToNBT(final NBTTagCompound target) {

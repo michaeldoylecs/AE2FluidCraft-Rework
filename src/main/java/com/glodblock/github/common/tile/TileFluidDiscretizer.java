@@ -1,5 +1,6 @@
 package com.glodblock.github.common.tile;
 
+import appeng.api.AEApi;
 import appeng.api.config.Actionable;
 import appeng.api.networking.GridFlags;
 import appeng.api.networking.crafting.ICraftingGrid;
@@ -134,7 +135,7 @@ public class TileFluidDiscretizer extends AENetworkTile implements IPriorityHost
             implements IMEInventory<IAEItemStack>, IMEMonitorHandlerReceiver<IAEFluidStack> {
 
         private final MEInventoryHandler<IAEItemStack> invHandler = new MEInventoryHandler<>(this, getChannel());
-        private List<IAEItemStack> itemCache = null;
+        private IItemList<IAEItemStack> itemCache = null;
 
         FluidDiscretizingInventory() {
             invHandler.setPriority(Integer.MAX_VALUE);
@@ -185,7 +186,7 @@ public class TileFluidDiscretizer extends AENetworkTile implements IPriorityHost
         @Override
         public IItemList<IAEItemStack> getAvailableItems(IItemList<IAEItemStack> out) {
             if (itemCache == null) {
-                itemCache = new ArrayList<>();
+                itemCache = AEApi.instance().storage().createItemList();
                 IMEMonitor<IAEFluidStack> fluidGrid = getFluidGrid();
                 if (fluidGrid != null) {
                     for (IAEFluidStack fluid : fluidGrid.getStorageList()) {

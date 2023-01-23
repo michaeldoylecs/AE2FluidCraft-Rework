@@ -2,14 +2,13 @@ package com.glodblock.github.inventory.gui;
 
 import appeng.container.AEBaseContainer;
 import appeng.container.ContainerOpenContext;
-import com.glodblock.github.util.Util;
 import javax.annotation.Nullable;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.EnumFacing;
 import net.minecraft.world.World;
+import net.minecraftforge.common.util.ForgeDirection;
 
-public abstract class TileGuiFactory<T> implements GuiFactory {
+public abstract class TileGuiFactory<T> implements IGuiFactory {
 
     protected final Class<T> invClass;
 
@@ -18,13 +17,13 @@ public abstract class TileGuiFactory<T> implements GuiFactory {
     }
 
     @Nullable
-    protected T getInventory(TileEntity tile, EnumFacing face) {
+    protected T getInventory(TileEntity tile, ForgeDirection face) {
         return invClass.isInstance(tile) ? invClass.cast(tile) : null;
     }
 
     @Nullable
     @Override
-    public Object createServerGui(EntityPlayer player, World world, int x, int y, int z, EnumFacing face) {
+    public Object createServerGui(EntityPlayer player, World world, int x, int y, int z, ForgeDirection face) {
         TileEntity tile = world.getTileEntity(x, y, z);
         if (tile == null) {
             return null;
@@ -40,7 +39,7 @@ public abstract class TileGuiFactory<T> implements GuiFactory {
             ctx.setX(x);
             ctx.setY(y);
             ctx.setZ(z);
-            ctx.setSide(Util.from(face));
+            ctx.setSide(face);
             ((AEBaseContainer) gui).setOpenContext(ctx);
         }
         return gui;
@@ -51,7 +50,7 @@ public abstract class TileGuiFactory<T> implements GuiFactory {
 
     @Nullable
     @Override
-    public Object createClientGui(EntityPlayer player, World world, int x, int y, int z, EnumFacing face) {
+    public Object createClientGui(EntityPlayer player, World world, int x, int y, int z, ForgeDirection face) {
         TileEntity tile = world.getTileEntity(x, y, z);
         if (tile == null) {
             return null;

@@ -8,49 +8,26 @@ import appeng.api.networking.IGridNode;
 import appeng.api.networking.security.ISecurityGrid;
 import appeng.api.parts.IPart;
 import appeng.api.storage.data.IAEFluidStack;
+import appeng.tile.networking.TileCableBus;
 import appeng.util.item.AEFluidStack;
+import com.glodblock.github.common.item.ItemFluidDrop;
 import com.glodblock.github.common.item.ItemFluidPacket;
+import com.glodblock.github.inventory.IAEFluidTank;
 import cpw.mods.fml.common.ModContainer;
 import cpw.mods.fml.common.registry.GameData;
+import io.netty.buffer.ByteBuf;
+import java.io.IOException;
+import java.util.Map;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.inventory.IInventory;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.EnumFacing;
 import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.fluids.*;
 import org.apache.commons.lang3.tuple.MutablePair;
 
 public final class Util {
-
-    public static EnumFacing from(ForgeDirection direction) {
-        switch (direction) {
-            case WEST:
-                return EnumFacing.EAST;
-            case EAST:
-                return EnumFacing.WEST;
-            case UNKNOWN:
-                return null;
-            default: {
-                int o = direction.ordinal();
-                return EnumFacing.values()[o];
-            }
-        }
-    }
-
-    public static ForgeDirection from(EnumFacing direction) {
-        switch (direction) {
-            case WEST:
-                return ForgeDirection.EAST;
-            case EAST:
-                return ForgeDirection.WEST;
-            default: {
-                int o = direction.ordinal();
-                return ForgeDirection.values()[o];
-            }
-        }
-    }
-
     public static int findItemInPlayerInvSlot(EntityPlayer player, ItemStack itemStack) {
         for (int i = 0; i < player.inventory.mainInventory.length; i++) {
             if (player.inventory.mainInventory[i] != null && player.inventory.mainInventory[i] == itemStack) return i;
@@ -144,11 +121,6 @@ public final class Util {
         return stack != null && stack.getItem() instanceof ItemFluidPacket;
     }
 
-    public static FluidStack cloneFluidStack(FluidStack fluidStack) {
-        if (fluidStack != null) return fluidStack.copy();
-        return null;
-    }
-
     public static String getFluidModID(Fluid fluid) {
         String name = FluidRegistry.getDefaultFluidName(fluid);
         try {
@@ -185,9 +157,59 @@ public final class Util {
         return fluid;
     }
 
-    public static boolean areFluidsEqual(FluidStack fluid1, FluidStack fluid2) {
-        if (fluid1 == null || fluid2 == null) return false;
-        return fluid1.isFluidEqual(fluid2);
+    public static void mirrorFluidToPacket(IInventory packet, IAEFluidTank fluidTank) {
+        for (int i = 0; i < fluidTank.getSlots(); i++) {
+            IAEFluidStack fluid = fluidTank.getFluidInSlot(i);
+            if (fluid == null) {
+                packet.setInventorySlotContents(i, null);
+            } else {
+                packet.setInventorySlotContents(i, ItemFluidPacket.newDisplayStack(fluid.getFluidStack()));
+            }
+        }
+    }
+
+    public static FluidStack getFluidFromVirtual(ItemStack virtual) {
+        if (virtual == null) {
+            return null;
+        }
+        if (virtual.getItem() instanceof ItemFluidPacket) {
+            return ItemFluidPacket.getFluidStack(virtual);
+        } else if (virtual.getItem() instanceof ItemFluidDrop) {
+            return ItemFluidDrop.getFluidStack(virtual);
+        }
+        return null;
+    }
+
+    public static IPart getPart(Object te, ForgeDirection face) {
+        if (te instanceof TileCableBus) {
+            return ((TileCableBus) te).getPart(face);
+        }
+        return null;
+    }
+
+    public static void writeFluidMapToBuf(Map<Integer, IAEFluidStack> list, ByteBuf buf) throws IOException {
+        buf.writeInt(list.size());
+        for (Map.Entry<Integer, IAEFluidStack> fs : list.entrySet()) {
+            buf.writeInt(fs.getKey());
+            if (fs.getValue() == null) buf.writeBoolean(false);
+            else {
+                buf.writeBoolean(true);
+                fs.getValue().writeToPacket(buf);
+            }
+        }
+    }
+
+    public static void readFluidMapFromBuf(Map<Integer, IAEFluidStack> list, ByteBuf buf) throws IOException {
+        int size = buf.readInt();
+        for (int i = 0; i < size; i++) {
+            int id = buf.readInt();
+            boolean isNull = buf.readBoolean();
+            if (!isNull) list.put(id, null);
+            else {
+                IAEFluidStack fluid = AEFluidStack.loadFluidStackFromPacket(buf);
+                list.put(id, fluid);
+            }
+        }
     }
 
     public static class FluidUtil {
@@ -301,12 +323,11 @@ public final class Util {
             if (item instanceof IFluidContainerItem) {
                 FluidStack drained = ((IFluidContainerItem) item).drain(itemStack, fluid.amount, true);
                 int amountDrained = drained != null && drained.getFluid() == fluid.getFluid() ? drained.amount : 0;
-                return new MutablePair<Integer, ItemStack>(amountDrained, itemStack);
+                return new MutablePair<>(amountDrained, itemStack);
             } else if (FluidContainerRegistry.isContainer(itemStack)) {
                 FluidStack content = FluidContainerRegistry.getFluidForFilledItem(itemStack);
                 int amountDrained = content != null && content.getFluid() == fluid.getFluid() ? content.amount : 0;
-                return new MutablePair<Integer, ItemStack>(
-                        amountDrained, FluidContainerRegistry.drainFluidContainer(itemStack));
+                return new MutablePair<>(amountDrained, FluidContainerRegistry.drainFluidContainer(itemStack));
             }
 
             return null;
@@ -321,14 +342,14 @@ public final class Util {
                 int filled = ((IFluidContainerItem) item).fill(itemStack, fluid, true);
 
                 // Return the filled itemstack.
-                return new MutablePair<Integer, ItemStack>(filled, itemStack);
+                return new MutablePair<>(filled, itemStack);
             } else if (FluidContainerRegistry.isContainer(itemStack)) {
                 // Fill it through the fluidcontainer registry.
                 ItemStack filledContainer = FluidContainerRegistry.fillFluidContainer(fluid, itemStack);
                 // get the filled fluidstack.
                 FluidStack filled = FluidContainerRegistry.getFluidForFilledItem(filledContainer);
                 // Return filled container and fill amount.
-                return new MutablePair<Integer, ItemStack>(filled != null ? filled.amount : 0, filledContainer);
+                return new MutablePair<>(filled != null ? filled.amount : 0, filledContainer);
             }
             return null;
         }

@@ -1,18 +1,18 @@
 package com.glodblock.github.nei;
 
 import codechicken.nei.api.INEIGuiAdapter;
-import com.glodblock.github.client.gui.GuiFCBaseFluidMonitor;
-import com.glodblock.github.client.gui.GuiFCBaseMonitor;
+import com.glodblock.github.client.gui.GuiFluidMonitor;
+import com.glodblock.github.client.gui.GuiItemMonitor;
 import net.minecraft.client.gui.inventory.GuiContainer;
 
 public class NEIGuiHandler extends INEIGuiAdapter {
 
     @Override
     public boolean hideItemPanelSlot(GuiContainer gui, int x, int y, int w, int h) {
-        if (gui instanceof GuiFCBaseMonitor) {
-            return ((GuiFCBaseMonitor) gui).hideItemPanelSlot(x, y, w, h);
-        } else if (gui instanceof GuiFCBaseFluidMonitor) {
-            return ((GuiFCBaseFluidMonitor) gui).hideItemPanelSlot(x, y, w, h);
+        if (gui instanceof GuiItemMonitor) {
+            return ((GuiItemMonitor) gui).hideItemPanelSlot(x, y, w, h);
+        } else if (gui instanceof GuiFluidMonitor) {
+            return ((GuiFluidMonitor) gui).hideItemPanelSlot(x, y, w, h);
         }
         return false;
     }

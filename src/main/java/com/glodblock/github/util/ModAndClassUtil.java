@@ -24,6 +24,7 @@ public final class ModAndClassUtil {
     public static boolean COFH = false;
     public static boolean GTPP = false;
     public static boolean WAILA = false;
+    public static boolean isV2;
     public static boolean isDoubleButton;
     public static boolean isSaveText;
     public static boolean isSearchStringTooltip;
@@ -99,6 +100,14 @@ public final class ModAndClassUtil {
             isCraftStatus = true;
         } catch (NoSuchFieldException e) {
             isCraftStatus = false;
+        }
+
+        try {
+            Class<?> calculatorV2 = Class.forName("appeng.crafting.v2.CraftingCalculations");
+            if (calculatorV2 == null) isV2 = false;
+            isV2 = true;
+        } catch (ClassNotFoundException e) {
+            isV2 = false;
         }
 
         try {

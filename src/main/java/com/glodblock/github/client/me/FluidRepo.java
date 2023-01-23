@@ -35,7 +35,6 @@ import cpw.mods.fml.relauncher.ReflectionHelper;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.regex.Pattern;
 import javax.annotation.Nonnull;
 import net.minecraft.item.ItemStack;
@@ -53,7 +52,6 @@ public class FluidRepo extends ItemRepo {
 
     private String searchString = "";
     private IPartitionList<IAEItemStack> myPartitionList;
-    private String innerSearch = "";
     private String NEIWord = null;
     private boolean hasPower;
 
@@ -107,35 +105,31 @@ public class FluidRepo extends ItemRepo {
         this.view.ensureCapacity(this.list.size());
         this.dsp.ensureCapacity(this.list.size());
 
-        final Enum viewMode = this.sortSrc.getSortDisplay();
-        final Enum searchMode = AEConfig.instance.settings.getSetting(Settings.SEARCH_MODE);
+        final Enum<?> viewMode = this.sortSrc.getSortDisplay();
+        final Enum<?> searchMode = AEConfig.instance.settings.getSetting(Settings.SEARCH_MODE);
         if (searchMode == SearchBoxMode.NEI_AUTOSEARCH || searchMode == SearchBoxMode.NEI_MANUAL_SEARCH) {
             this.updateNEI(this.searchString);
         }
 
-        this.innerSearch = this.searchString;
-        final boolean terminalSearchToolTips =
-                AEConfig.instance.settings.getSetting(Settings.SEARCH_TOOLTIPS) != YesNo.NO;
-        // boolean terminalSearchMods = Configuration.INSTANCE.settings.getSetting( Settings.SEARCH_MODS ) != YesNo.NO;
+        String innerSearch = this.searchString;
 
         boolean searchMod = false;
-        if (this.innerSearch.startsWith("@")) {
+        if (innerSearch.startsWith("@")) {
             searchMod = true;
-            this.innerSearch = this.innerSearch.substring(1);
+            innerSearch = innerSearch.substring(1);
         }
 
-        Pattern m = null;
+        Pattern m;
         try {
-            m = Pattern.compile(this.innerSearch.toLowerCase(), Pattern.CASE_INSENSITIVE);
+            m = Pattern.compile(innerSearch.toLowerCase(), Pattern.CASE_INSENSITIVE);
         } catch (final Throwable ignore) {
             try {
-                m = Pattern.compile(Pattern.quote(this.innerSearch.toLowerCase()), Pattern.CASE_INSENSITIVE);
+                m = Pattern.compile(Pattern.quote(innerSearch.toLowerCase()), Pattern.CASE_INSENSITIVE);
             } catch (final Throwable __) {
                 return;
             }
         }
 
-        boolean notDone = false;
         for (IAEItemStack is : this.list) {
             if (this.myPartitionList != null) {
                 if (!this.myPartitionList.isListed(is)) {
@@ -166,27 +160,22 @@ public class FluidRepo extends ItemRepo {
                     this.view.add(is);
                 }
             }
-
-            /*
-             * if ( terminalSearchMods && notDone ) { if ( m.matcher( Platform.getMod( is.getItemStack() ) ).find() ) {
-             * view.add( is ); notDone = false; } }
-             */
         }
 
-        final Enum SortBy = this.sortSrc.getSortBy();
-        final Enum SortDir = this.sortSrc.getSortDir();
+        final Enum<?> SortBy = this.sortSrc.getSortBy();
+        final Enum<?> SortDir = this.sortSrc.getSortDir();
 
         FluidSorters.setDirection((appeng.api.config.SortDir) SortDir);
         FluidSorters.init();
 
         if (SortBy == SortOrder.MOD) {
-            Collections.sort(this.view, FluidSorters.CONFIG_BASED_SORT_BY_MOD);
+            this.view.sort(FluidSorters.CONFIG_BASED_SORT_BY_MOD);
         } else if (SortBy == SortOrder.AMOUNT) {
-            Collections.sort(this.view, FluidSorters.CONFIG_BASED_SORT_BY_SIZE);
+            this.view.sort(FluidSorters.CONFIG_BASED_SORT_BY_SIZE);
         } else if (SortBy == SortOrder.INVTWEAKS) {
-            Collections.sort(this.view, FluidSorters.CONFIG_BASED_SORT_BY_INV_TWEAKS);
+            this.view.sort(FluidSorters.CONFIG_BASED_SORT_BY_INV_TWEAKS);
         } else {
-            Collections.sort(this.view, FluidSorters.CONFIG_BASED_SORT_BY_NAME);
+            this.view.sort(FluidSorters.CONFIG_BASED_SORT_BY_NAME);
         }
 
         for (final IAEItemStack is : this.view) {

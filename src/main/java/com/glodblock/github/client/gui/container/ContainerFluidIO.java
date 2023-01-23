@@ -4,20 +4,21 @@ import appeng.api.config.Settings;
 import appeng.api.config.YesNo;
 import appeng.api.util.IConfigManager;
 import appeng.tile.inventory.AppEngInternalAEInventory;
+import com.glodblock.github.client.gui.container.base.FCContainerFluidConfigurable;
 import com.glodblock.github.common.parts.PartFluidExportBus;
-import com.glodblock.github.common.parts.PartSharedFluidBus;
+import com.glodblock.github.common.parts.base.FCSharedFluidBus;
 import com.glodblock.github.util.Ae2Reflect;
 import net.minecraft.entity.player.InventoryPlayer;
 
-public class ContainerFluidIO extends ContainerFluidConfigurable {
-    private final PartSharedFluidBus bus;
+public class ContainerFluidIO extends FCContainerFluidConfigurable {
+    private final FCSharedFluidBus bus;
 
-    public ContainerFluidIO(InventoryPlayer ip, PartSharedFluidBus te) {
+    public ContainerFluidIO(InventoryPlayer ip, FCSharedFluidBus te) {
         super(ip, te);
         this.bus = te;
     }
 
-    public PartSharedFluidBus getBus() {
+    public FCSharedFluidBus getBus() {
         return this.bus;
     }
 

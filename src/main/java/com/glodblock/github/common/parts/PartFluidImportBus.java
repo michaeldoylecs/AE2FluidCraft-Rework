@@ -15,6 +15,7 @@ import appeng.me.GridAccessException;
 import appeng.util.item.AEFluidStack;
 import com.glodblock.github.client.textures.FCPartsTexture;
 import com.glodblock.github.common.item.ItemFluidPacket;
+import com.glodblock.github.common.parts.base.FCSharedFluidBus;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.client.renderer.RenderBlocks;
@@ -25,7 +26,7 @@ import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTankInfo;
 import net.minecraftforge.fluids.IFluidHandler;
 
-public class PartFluidImportBus extends PartSharedFluidBus {
+public class PartFluidImportBus extends FCSharedFluidBus {
 
     private final BaseActionSource source;
 

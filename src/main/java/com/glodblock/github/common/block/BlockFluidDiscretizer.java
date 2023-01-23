@@ -23,6 +23,7 @@ public class BlockFluidDiscretizer extends FCBaseBlock {
         setTileEntity(TileFluidDiscretizer.class);
     }
 
+    @Override
     public BlockFluidDiscretizer register() {
         GameRegistry.registerBlock(this, FCBaseItemBlock.class, NameConst.BLOCK_FLUID_DISCRETIZER);
         GameRegistry.registerTileEntity(TileFluidDiscretizer.class, NameConst.BLOCK_FLUID_DISCRETIZER);
@@ -30,17 +31,8 @@ public class BlockFluidDiscretizer extends FCBaseBlock {
         return this;
     }
 
-    public ItemStack stack(int size) {
-        return new ItemStack(this, size);
-    }
-
-    public ItemStack stack() {
-        return new ItemStack(this, 1);
-    }
-
     @Override
     @SideOnly(Side.CLIENT)
-    @SuppressWarnings("unchecked")
     public void addInformation(
             final ItemStack itemStack,
             final EntityPlayer player,

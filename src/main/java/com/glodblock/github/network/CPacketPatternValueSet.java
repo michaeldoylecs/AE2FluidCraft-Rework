@@ -2,9 +2,9 @@ package com.glodblock.github.network;
 
 import appeng.api.networking.IGridHost;
 import appeng.container.ContainerOpenContext;
-import com.glodblock.github.client.gui.container.ContainerFluidPatternTerminal;
-import com.glodblock.github.client.gui.container.ContainerFluidPatternTerminalEx;
+import appeng.container.slot.SlotFake;
 import com.glodblock.github.client.gui.container.ContainerPatternValueAmount;
+import com.glodblock.github.client.gui.container.base.FCContainerEncodeTerminal;
 import com.glodblock.github.common.item.ItemFluidPacket;
 import com.glodblock.github.inventory.InventoryHandler;
 import com.glodblock.github.inventory.gui.GuiType;
@@ -27,7 +27,9 @@ public class CPacketPatternValueSet implements IMessage {
     private int amount;
     private int valueIndex;
 
-    public CPacketPatternValueSet() {}
+    public CPacketPatternValueSet() {
+        // NO-OP
+    }
 
     public CPacketPatternValueSet(int originalGui, int amount, int valueIndex) {
         this.originGui = GuiType.getByOrdinal(originalGui);
@@ -54,7 +56,7 @@ public class CPacketPatternValueSet implements IMessage {
         @Override
         public IMessage onMessage(CPacketPatternValueSet message, MessageContext ctx) {
             EntityPlayer player = ctx.getServerHandler().playerEntity;
-            if (player.openContainer instanceof ContainerPatternValueAmount && message.valueIndex != -1) {
+            if (player.openContainer instanceof ContainerPatternValueAmount) {
                 ContainerPatternValueAmount cpv = (ContainerPatternValueAmount) player.openContainer;
                 final Object target = cpv.getTarget();
                 if (target instanceof IGridHost) {
@@ -65,12 +67,11 @@ public class CPacketPatternValueSet implements IMessage {
                                 player,
                                 player.worldObj,
                                 new BlockPos(te),
-                                Objects.requireNonNull(Util.from(context.getSide())),
+                                Objects.requireNonNull(context.getSide()),
                                 message.originGui);
-                        if (player.openContainer instanceof ContainerFluidPatternTerminal
-                                || player.openContainer instanceof ContainerFluidPatternTerminalEx) {
+                        if (player.openContainer instanceof FCContainerEncodeTerminal) {
                             Slot slot = player.openContainer.getSlot(message.valueIndex);
-                            if (slot != null && slot.getHasStack()) {
+                            if (slot instanceof SlotFake) {
                                 ItemStack stack = slot.getStack().copy();
                                 if (Util.isFluidPacket(stack)) {
                                     FluidStack fluidStack = ItemFluidPacket.getFluidStack(stack);

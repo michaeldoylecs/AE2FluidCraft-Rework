@@ -38,12 +38,12 @@ public final class FluidRecipe {
             byte numFluids = 0;
             for (OrderStack<?> orderStack : out) {
                 if (orderStack != null && orderStack.getStack() instanceof FluidStack) {
-                    reordered.add(new OrderStack(orderStack.getStack(), numFluids++));
+                    reordered.add(new OrderStack<>(orderStack.getStack(), numFluids++));
                 }
             }
             for (OrderStack<?> orderStack : out) {
                 if (orderStack != null && orderStack.getStack() instanceof ItemStack) {
-                    reordered.add(new OrderStack(orderStack.getStack(), numFluids++));
+                    reordered.add(new OrderStack<>(orderStack.getStack(), numFluids++));
                 }
             }
             return reordered;

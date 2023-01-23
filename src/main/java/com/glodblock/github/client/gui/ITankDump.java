@@ -1,6 +1,6 @@
 package com.glodblock.github.client.gui;
 
-public interface TankDumpable {
+public interface ITankDump {
 
     boolean canDumpTank(int index);
 

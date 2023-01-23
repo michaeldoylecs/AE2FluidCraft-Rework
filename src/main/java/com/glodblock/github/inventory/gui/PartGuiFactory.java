@@ -2,10 +2,9 @@ package com.glodblock.github.inventory.gui;
 
 import appeng.api.parts.IPart;
 import appeng.api.parts.IPartHost;
-import com.glodblock.github.util.Util;
 import javax.annotation.Nullable;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.EnumFacing;
+import net.minecraftforge.common.util.ForgeDirection;
 
 public abstract class PartGuiFactory<T> extends TileGuiFactory<T> {
 
@@ -15,9 +14,9 @@ public abstract class PartGuiFactory<T> extends TileGuiFactory<T> {
 
     @Nullable
     @Override
-    protected T getInventory(TileEntity tile, EnumFacing face) {
+    protected T getInventory(TileEntity tile, ForgeDirection face) {
         if (tile instanceof IPartHost) {
-            IPart part = ((IPartHost) tile).getPart(Util.from(face));
+            IPart part = ((IPartHost) tile).getPart(face);
             if (invClass.isInstance(part)) {
                 return invClass.cast(part);
             }

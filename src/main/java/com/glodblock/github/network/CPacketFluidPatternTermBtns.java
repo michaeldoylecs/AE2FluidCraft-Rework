@@ -1,9 +1,8 @@
 package com.glodblock.github.network;
 
 import com.glodblock.github.client.gui.container.ContainerFluidCraftConfirm;
-import com.glodblock.github.client.gui.container.ContainerFluidPatternTerminal;
-import com.glodblock.github.client.gui.container.ContainerFluidPatternTerminalEx;
 import com.glodblock.github.client.gui.container.ContainerFluidStorageBus;
+import com.glodblock.github.client.gui.container.base.FCContainerEncodeTerminal;
 import cpw.mods.fml.common.network.simpleimpl.IMessage;
 import cpw.mods.fml.common.network.simpleimpl.IMessageHandler;
 import cpw.mods.fml.common.network.simpleimpl.MessageContext;
@@ -64,8 +63,8 @@ public class CPacketFluidPatternTermBtns implements IMessage {
             String Name = message.Name;
             String Value = message.Value;
             final Container c = ctx.getServerHandler().playerEntity.openContainer;
-            if (Name.startsWith("PatternTerminal.") && (c instanceof ContainerFluidPatternTerminal)) {
-                final ContainerFluidPatternTerminal cpt = (ContainerFluidPatternTerminal) c;
+            if (Name.startsWith("PatternTerminal.") && (c instanceof FCContainerEncodeTerminal)) {
+                final FCContainerEncodeTerminal cpt = (FCContainerEncodeTerminal) c;
                 switch (Name) {
                     case "PatternTerminal.CraftMode":
                         cpt.getPatternTerminal().setCraftingRecipe(Value.equals("1"));
@@ -89,6 +88,9 @@ public class CPacketFluidPatternTermBtns implements IMessage {
                     case "PatternTerminal.Substitute":
                         cpt.getPatternTerminal().setSubstitution(Value.equals("1"));
                         break;
+                    case "PatternTerminal.Invert":
+                        cpt.getPatternTerminal().setInverted(Value.equals("1"));
+                        break;
                     case "PatternTerminal.Double":
                         cpt.doubleStacks(Value.equals("1"));
                         break;
@@ -98,46 +100,11 @@ public class CPacketFluidPatternTermBtns implements IMessage {
                     case "PatternTerminal.beSubstitute":
                         cpt.getPatternTerminal().setBeSubstitute(Value.equals("1"));
                         break;
-                }
-            } else if (Name.startsWith("PatternTerminalEx.") && (c instanceof ContainerFluidPatternTerminalEx)) {
-                final ContainerFluidPatternTerminalEx cpt = (ContainerFluidPatternTerminalEx) c;
-                switch (Name) {
-                    case "PatternTerminalEx.Encode":
-                        switch (Value) {
-                            case "0":
-                                cpt.encode();
-                                break;
-                            case "1":
-                                cpt.encodeAndMoveToInventory();
-                                break;
-                            case "3":
-                                cpt.encodeAllItemAndMoveToInventory();
-                                break;
-                        }
-                        break;
-                    case "PatternTerminalEx.Clear":
-                        cpt.clear();
-                        break;
-                    case "PatternTerminalEx.Substitute":
-                        cpt.getPatternTerminal().setSubstitution(Value.equals("1"));
-                        break;
-                    case "PatternTerminalEx.Invert":
-                        cpt.getPatternTerminal().setInverted(Value.equals("1"));
-                        break;
-                    case "PatternTerminalEx.Double":
-                        cpt.doubleStacks(Value.equals("1"));
-                        break;
-                    case "PatternTerminalEx.Combine":
-                        cpt.getPatternTerminal().setCombineMode(Value.equals("1"));
-                        break;
-                    case "PatternTerminalEx.ActivePage":
+                    case "PatternTerminal.ActivePage":
                         cpt.getPatternTerminal().setActivePage(Integer.parseInt(Value));
                         break;
-                    case "PatternTerminalEx.Prioritize":
+                    case "PatternTerminal.Prioritize":
                         cpt.getPatternTerminal().setPrioritization(Value.equals("1"));
-                        break;
-                    case "PatternTerminalEx.beSubstitute":
-                        cpt.getPatternTerminal().setBeSubstitute(Value.equals("1"));
                         break;
                 }
             } else if (Name.equals("Terminal.Cpu") && c instanceof ContainerFluidCraftConfirm) {

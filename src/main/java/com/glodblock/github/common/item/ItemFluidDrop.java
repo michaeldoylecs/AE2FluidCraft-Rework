@@ -27,7 +27,7 @@ import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
 
-public class ItemFluidDrop extends Item {
+public class ItemFluidDrop extends FCBaseItem {
 
     @SideOnly(Side.CLIENT)
     public IIcon shape;
@@ -96,22 +96,14 @@ public class ItemFluidDrop extends Item {
     }
 
     public static boolean isFluidStack(ItemStack stack) {
-        if (getFluidStack(stack) != null) {
-            return true;
-        } else {
-            return false;
-        }
+        return getFluidStack(stack) != null;
     }
 
     public static boolean isFluidStack(@Nullable IAEItemStack stack) {
         if (stack == null) {
             return false;
         }
-        if (getFluidStack(stack.getItemStack()) != null) {
-            return true;
-        } else {
-            return false;
-        }
+        return getFluidStack(stack.getItemStack()) != null;
     }
 
     public static FluidStack getFluidStack(ItemStack stack) {
@@ -169,6 +161,7 @@ public class ItemFluidDrop extends Item {
         return stack;
     }
 
+    @Override
     public ItemFluidDrop register() {
         GameRegistry.registerItem(this, NameConst.ITEM_FLUID_DROP, FluidCraft.MODID);
         return this;

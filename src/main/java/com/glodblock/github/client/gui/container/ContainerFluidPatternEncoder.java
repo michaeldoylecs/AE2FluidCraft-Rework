@@ -3,34 +3,28 @@ package com.glodblock.github.client.gui.container;
 import appeng.api.AEApi;
 import appeng.api.storage.data.IAEItemStack;
 import appeng.container.AEBaseContainer;
-import appeng.container.slot.SlotFake;
 import appeng.container.slot.SlotRestrictedInput;
 import appeng.helpers.InventoryAction;
-import appeng.util.item.AEItemStack;
 import com.glodblock.github.common.item.ItemFluidDrop;
 import com.glodblock.github.common.item.ItemFluidEncodedPattern;
 import com.glodblock.github.common.item.ItemFluidPacket;
 import com.glodblock.github.common.tile.TileFluidPatternEncoder;
 import com.glodblock.github.inventory.AeItemStackHandler;
 import com.glodblock.github.inventory.AeStackInventory;
-import com.glodblock.github.inventory.PatternConsumer;
-import com.glodblock.github.inventory.slot.SlotFluid;
+import com.glodblock.github.inventory.IPatternConsumer;
+import com.glodblock.github.inventory.slot.SlotFluidConvertingFake;
 import com.glodblock.github.loader.ItemAndBlockHolder;
 import com.glodblock.github.util.FluidPatternDetails;
 import com.glodblock.github.util.Util;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-import javax.annotation.Nullable;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
-import net.minecraftforge.fluids.FluidContainerRegistry;
-import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.IFluidContainerItem;
 
-public class ContainerFluidPatternEncoder extends AEBaseContainer implements PatternConsumer {
+public class ContainerFluidPatternEncoder extends AEBaseContainer implements IPatternConsumer {
 
     private final TileFluidPatternEncoder tile;
 
@@ -169,60 +163,6 @@ public class ContainerFluidPatternEncoder extends AEBaseContainer implements Pat
         int bound = Math.min(src.length, dest.getSlotCount());
         for (int i = 0; i < bound; i++) {
             dest.setStack(i, src[i]);
-        }
-    }
-
-    public static class SlotFluidConvertingFake extends SlotFake implements SlotFluid {
-
-        private final AeStackInventory<IAEItemStack> inv;
-
-        public SlotFluidConvertingFake(AeItemStackHandler inv, int idx, int x, int y) {
-            super(inv, idx, x, y);
-            this.inv = inv.getAeInventory();
-        }
-
-        @Override
-        public void putStack(ItemStack stack) {
-            inv.setStack(getSlotIndex(), AEItemStack.create(stack));
-        }
-
-        @Override
-        public void setAeStack(@Nullable IAEItemStack stack, boolean sync) {
-            inv.setStack(getSlotIndex(), stack);
-        }
-
-        public void putConvertedStack(ItemStack stack) {
-            if (stack == null) {
-                setAeStack(null, false);
-                return;
-            } else if (stack.getItem() instanceof IFluidContainerItem) {
-                FluidStack fluid = ((IFluidContainerItem) stack.getItem()).getFluid(stack);
-                if (fluid != null) {
-                    fluid.amount *= stack.stackSize;
-                    IAEItemStack aeStack = ItemFluidPacket.newAeStack(fluid);
-                    if (aeStack != null) {
-                        setAeStack(aeStack, false);
-                        return;
-                    }
-                }
-            } else if (FluidContainerRegistry.isContainer(stack)) {
-                FluidStack fluid = FluidContainerRegistry.getFluidForFilledItem(stack);
-                if (fluid != null) {
-                    fluid.amount *= stack.stackSize;
-                    IAEItemStack aeStack = ItemFluidPacket.newAeStack(fluid);
-                    if (aeStack != null) {
-                        setAeStack(aeStack, false);
-                        return;
-                    }
-                }
-            }
-            putStack(stack);
-        }
-
-        @Nullable
-        @Override
-        public IAEItemStack getAeStack() {
-            return inv.getStack(getSlotIndex());
         }
     }
 }

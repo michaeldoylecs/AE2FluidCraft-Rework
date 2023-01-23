@@ -66,7 +66,7 @@ public class TileLevelMaintainer extends AENetworkTile
 
     @Override
     public ImmutableSet<ICraftingLink> getRequestedJobs() {
-        return ImmutableSet.copyOf(new NonNullArrayIterator<ICraftingLink>(this.requests.getLinks()));
+        return ImmutableSet.copyOf(new NonNullArrayIterator<>(this.requests.getLinks()));
     }
 
     private IAEItemStack setState(ICraftingLink link, IAEItemStack items) {
@@ -176,8 +176,7 @@ public class TileLevelMaintainer extends AENetworkTile
                     }
                 }
             }
-        } catch (final GridAccessException e) {
-            // :P
+        } catch (final GridAccessException ignore) {
         }
         return didSomething ? TickRateModulation.FASTER : TickRateModulation.SLOWER;
     }
@@ -245,8 +244,7 @@ public class TileLevelMaintainer extends AENetworkTile
                     if (!this.requests.isDone(i)) this.requests.setState(i, State.Crafting);
                 }
             }
-        } catch (Exception e) {
-            // :P You don't have job to do XD
+        } catch (Exception ignore) {
         }
     }
 
@@ -331,6 +329,7 @@ public class TileLevelMaintainer extends AENetworkTile
         private final ICraftingLink[] links;
         private final State[] state = new State[REQ_COUNT];
 
+        @SuppressWarnings("unchecked")
         public InventoryRequest(TileLevelMaintainer tile) {
             this.requestStacks = new AeStackInventoryImpl<>(StorageChannel.ITEMS, REQ_COUNT, tile);
             this.requestBatches = new AeStackInventoryImpl<>(StorageChannel.ITEMS, REQ_COUNT, tile);

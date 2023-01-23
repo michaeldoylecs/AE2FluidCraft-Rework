@@ -29,7 +29,7 @@ public interface IFluidCellInventory extends IMEInventory<IAEFluidStack> {
     int getBytesPerType();
 
     /**
-     * @return true if a new item type can be added.
+     * @return true if a new fluid type can be added.
      */
     boolean canHoldNewFluid();
 
@@ -49,17 +49,22 @@ public interface IFluidCellInventory extends IMEInventory<IAEFluidStack> {
     long getUsedBytes();
 
     /**
-     * @return how many items are stored.
+     * @return how many fluids are stored.
      */
     long getStoredFluidCount();
 
     /**
-     * @return how many more items can be stored.
+     * @return how many more fluids can be stored.
      */
     long getRemainingFluidCount();
 
     /**
-     * @return how many items can be added without consuming another byte.
+     * @return how many fluid types remain.
+     */
+    long getRemainingFluidTypes();
+
+    /**
+     * @return how many fluids can be added without consuming another byte.
      */
     int getUnusedFluidCount();
 
@@ -68,8 +73,14 @@ public interface IFluidCellInventory extends IMEInventory<IAEFluidStack> {
      */
     int getStatusForCell();
 
+    /**
+     * @return how many items types are currently stored.
+     */
     long getStoredFluidTypes();
 
+    /**
+     * @return max number of types.
+     */
     long getTotalFluidTypes();
 
     List<IAEFluidStack> getContents();

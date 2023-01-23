@@ -25,6 +25,7 @@ import com.glodblock.github.common.storage.IFluidCellInventory;
 import com.glodblock.github.common.storage.IFluidCellInventoryHandler;
 import com.glodblock.github.common.storage.IStorageFluidCell;
 import com.glodblock.github.common.tabs.FluidCraftingTabs;
+import com.glodblock.github.loader.IRegister;
 import com.glodblock.github.util.ModAndClassUtil;
 import com.glodblock.github.util.NameConst;
 import com.google.common.base.Optional;
@@ -46,7 +47,8 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.event.ForgeEventFactory;
 
-public class ItemBasicFluidStorageCell extends AEBaseItem implements IStorageFluidCell {
+public class ItemBasicFluidStorageCell extends AEBaseItem
+        implements IStorageFluidCell, IRegister<ItemBasicFluidStorageCell> {
     private final CellType component;
     private final int totalBytes;
     private final int perType;
@@ -151,7 +153,11 @@ public class ItemBasicFluidStorageCell extends AEBaseItem implements IStorageFlu
                                         format.toWideReadableForm(fluid.getStackSize())));
                             }
                         }
+                    } else {
+                        lines.add(StatCollector.translateToLocal(NameConst.TT_CELL_EMPTY));
                     }
+                } else {
+                    lines.add(StatCollector.translateToLocal(NameConst.TT_CTRL_FOR_MORE));
                 }
 
                 if (handler.isPreformatted()) {
@@ -167,6 +173,8 @@ public class ItemBasicFluidStorageCell extends AEBaseItem implements IStorageFlu
                             if (aeFluidStack != null)
                                 lines.add("  " + aeFluidStack.getFluidStack().getLocalizedName());
                         }
+                    } else {
+                        lines.add(StatCollector.translateToLocal(NameConst.TT_SHIFT_FOR_MORE));
                     }
                 }
             }
@@ -255,6 +263,7 @@ public class ItemBasicFluidStorageCell extends AEBaseItem implements IStorageFlu
         return stack;
     }
 
+    @SuppressWarnings("unchecked")
     private boolean disassembleDrive(final ItemStack stack, final World world, final EntityPlayer player) {
         if (player.isSneaking()) {
             if (Platform.isClient()) {
@@ -297,11 +306,9 @@ public class ItemBasicFluidStorageCell extends AEBaseItem implements IStorageFlu
                             player.dropPlayerItemWithRandomChoice(extraA, false);
                         }
                     }
-
                     if (player.inventoryContainer != null) {
                         player.inventoryContainer.detectAndSendChanges();
                     }
-
                     return true;
                 }
             }
@@ -322,7 +329,6 @@ public class ItemBasicFluidStorageCell extends AEBaseItem implements IStorageFlu
             final float hitY,
             final float hitZ) {
         if (ForgeEventFactory.onItemUseStart(player, stack, 1) <= 0) return true;
-
         return this.disassembleDrive(stack, world, player);
     }
 
@@ -336,7 +342,6 @@ public class ItemBasicFluidStorageCell extends AEBaseItem implements IStorageFlu
                 .asSet()) {
             return stack;
         }
-
         throw new MissingDefinition("Tried to use empty storage cells while basic storage cells are defined.");
     }
 
@@ -345,6 +350,7 @@ public class ItemBasicFluidStorageCell extends AEBaseItem implements IStorageFlu
         return AEConfig.instance.isFeatureEnabled(AEFeature.EnableDisassemblyCrafting);
     }
 
+    @Override
     public ItemBasicFluidStorageCell register() {
         if (!Config.fluidCells) return null;
         GameRegistry.registerItem(this, NameConst.ITEM_FLUID_STORAGE + this.totalBytes / 1024, FluidCraft.MODID);

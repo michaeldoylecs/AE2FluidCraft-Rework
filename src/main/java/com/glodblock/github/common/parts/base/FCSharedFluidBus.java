@@ -1,4 +1,4 @@
-package com.glodblock.github.common.parts;
+package com.glodblock.github.common.parts.base;
 
 import appeng.api.config.RedstoneMode;
 import appeng.api.config.Upgrades;
@@ -15,7 +15,6 @@ import com.glodblock.github.common.item.ItemFluidPacket;
 import com.glodblock.github.inventory.InventoryHandler;
 import com.glodblock.github.inventory.gui.GuiType;
 import com.glodblock.github.util.BlockPos;
-import com.glodblock.github.util.Util;
 import java.util.Objects;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
@@ -26,12 +25,12 @@ import net.minecraft.util.IIcon;
 import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
 
-public abstract class PartSharedFluidBus extends PartUpgradeable implements IGridTickable {
+public abstract class FCSharedFluidBus extends PartUpgradeable implements IGridTickable {
 
     private final AppEngInternalAEInventory config = new AppEngInternalAEInventory(this, 9);
     private boolean lastRedstone;
 
-    public PartSharedFluidBus(ItemStack is) {
+    public FCSharedFluidBus(ItemStack is) {
         super(is);
     }
 
@@ -75,7 +74,7 @@ public abstract class PartSharedFluidBus extends PartUpgradeable implements IGri
                     player,
                     this.getHost().getTile().getWorldObj(),
                     new BlockPos(this.getHost().getTile()),
-                    Objects.requireNonNull(Util.from(this.getSide())),
+                    Objects.requireNonNull(this.getSide()),
                     GuiType.FLUID_BUS_IO);
         }
 

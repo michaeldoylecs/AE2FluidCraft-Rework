@@ -10,7 +10,6 @@ import forestry.core.recipes.nei.RecipeHandlerBase;
 import forestry.factory.recipes.nei.NEIHandlerFabricator;
 import forestry.factory.recipes.nei.NEIHandlerSqueezer;
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
 import net.minecraftforge.fluids.FluidStack;
 
@@ -29,24 +28,12 @@ public class ForestryRecipeExtractor implements IRecipeExtractorLegacy {
 
     @Override
     public List<OrderStack<?>> getInputIngredients(List<PositionedStack> rawInputs) {
-        List<OrderStack<?>> tmp = new LinkedList<>();
-        for (int i = 0; i < rawInputs.size(); i++) {
-            if (rawInputs.get(i) == null) continue;
-            OrderStack<?> stack = OrderStack.pack(rawInputs.get(i), i);
-            if (stack != null) tmp.add(stack);
-        }
-        return tmp;
+        return ExtractorUtil.packItemStack(rawInputs);
     }
 
     @Override
     public List<OrderStack<?>> getOutputIngredients(List<PositionedStack> rawOutputs) {
-        List<OrderStack<?>> tmp = new LinkedList<>();
-        for (int i = 0; i < rawOutputs.size(); i++) {
-            if (rawOutputs.get(i) == null) continue;
-            OrderStack<?> stack = OrderStack.pack(rawOutputs.get(i), i);
-            if (stack != null) tmp.add(stack);
-        }
-        return tmp;
+        return ExtractorUtil.packItemStack(rawOutputs);
     }
 
     @Override

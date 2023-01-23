@@ -12,13 +12,12 @@ import cpw.mods.fml.common.registry.GameRegistry;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.IIcon;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 
-public class ItemFluidLevelEmitter extends Item implements IPartItem {
+public class ItemFluidLevelEmitter extends FCBaseItem implements IPartItem {
 
     public ItemFluidLevelEmitter() {
         this.setMaxStackSize(64);
@@ -47,6 +46,7 @@ public class ItemFluidLevelEmitter extends Item implements IPartItem {
         return AEApi.instance().partHelper().placeBus(player.getHeldItem(), x, y, z, side, player, world);
     }
 
+    @Override
     public ItemFluidLevelEmitter register() {
         GameRegistry.registerItem(this, NameConst.ITEM_PART_FLUID_LEVEL_EMITTER, FluidCraft.MODID);
         setCreativeTab(FluidCraftingTabs.INSTANCE);
@@ -62,13 +62,5 @@ public class ItemFluidLevelEmitter extends Item implements IPartItem {
     @SideOnly(Side.CLIENT)
     public int getSpriteNumber() {
         return 0;
-    }
-
-    public ItemStack stack(int size) {
-        return new ItemStack(this, size);
-    }
-
-    public ItemStack stack() {
-        return new ItemStack(this, 1);
     }
 }

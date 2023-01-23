@@ -1,6 +1,6 @@
 package com.glodblock.github.network;
 
-import com.glodblock.github.client.gui.TankDumpable;
+import com.glodblock.github.client.gui.ITankDump;
 import cpw.mods.fml.common.network.simpleimpl.IMessage;
 import cpw.mods.fml.common.network.simpleimpl.IMessageHandler;
 import cpw.mods.fml.common.network.simpleimpl.MessageContext;
@@ -36,8 +36,8 @@ public class CPacketDumpTank implements IMessage {
         @Override
         public IMessage onMessage(CPacketDumpTank message, MessageContext ctx) {
             EntityPlayerMP player = ctx.getServerHandler().playerEntity;
-            if (player.openContainer instanceof TankDumpable) {
-                ((TankDumpable) player.openContainer).dumpTank(message.index);
+            if (player.openContainer instanceof ITankDump) {
+                ((ITankDump) player.openContainer).dumpTank(message.index);
             }
             return null;
         }
