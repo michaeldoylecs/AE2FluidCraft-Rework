@@ -62,11 +62,7 @@ public class SPacketMEInventoryUpdate implements IMessage {
 
     @Override
     public void toBytes(ByteBuf buf) {
-        if (isFluid) {
-            buf.writeBoolean(true);
-        } else {
-            buf.writeBoolean(false);
-        }
+        buf.writeBoolean(isFluid);
         buf.writeLong(list.size());
         buf.writeByte(ref);
         try {
@@ -94,16 +90,17 @@ public class SPacketMEInventoryUpdate implements IMessage {
     public static class Handler implements IMessageHandler<SPacketMEInventoryUpdate, IMessage> {
 
         @Override
+        @SuppressWarnings({"unchecked", "rawtypes"})
         public IMessage onMessage(SPacketMEInventoryUpdate message, MessageContext ctx) {
             final GuiScreen gs = Minecraft.getMinecraft().currentScreen;
             if (gs instanceof GuiFluidMonitor) {
-                ((GuiFluidMonitor) gs).postUpdate((List<IAEFluidStack>) (List<?>) message.list);
+                ((GuiFluidMonitor) gs).postUpdate((List) message.list);
             } else if (gs instanceof GuiItemMonitor) {
-                ((GuiItemMonitor) gs).postUpdate((List<IAEItemStack>) (List<?>) message.list);
+                ((GuiItemMonitor) gs).postUpdate((List) message.list);
             } else if (gs instanceof GuiFluidCraftConfirm) {
-                ((GuiFluidCraftConfirm) gs).postUpdate((List<IAEItemStack>) (List<?>) message.list, message.ref);
+                ((GuiFluidCraftConfirm) gs).postUpdate((List) message.list, message.ref);
             } else if (gs instanceof GuiLevelMaintainer) {
-                ((GuiLevelMaintainer) gs).postUpdate((List<IAEItemStack>) (List<?>) message.list);
+                ((GuiLevelMaintainer) gs).postUpdate((List) message.list);
             }
             return null;
         }

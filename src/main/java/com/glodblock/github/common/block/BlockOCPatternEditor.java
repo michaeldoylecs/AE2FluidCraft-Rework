@@ -11,9 +11,8 @@ import com.glodblock.github.util.NameConst;
 import cpw.mods.fml.common.registry.GameRegistry;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.EnumFacing;
 import net.minecraft.world.World;
+import net.minecraftforge.common.util.ForgeDirection;
 
 public class BlockOCPatternEditor extends FCBaseBlock {
 
@@ -34,13 +33,18 @@ public class BlockOCPatternEditor extends FCBaseBlock {
         if (tile != null) {
             if (!world.isRemote) {
                 InventoryHandler.openGui(
-                        player, world, new BlockPos(x, y, z), EnumFacing.getFront(facing), GuiType.OC_PATTERN_EDITOR);
+                        player,
+                        world,
+                        new BlockPos(x, y, z),
+                        ForgeDirection.getOrientation(facing),
+                        GuiType.OC_PATTERN_EDITOR);
             }
             return true;
         }
         return false;
     }
 
+    @Override
     public BlockOCPatternEditor register() {
         if (ModAndClassUtil.OC) {
             GameRegistry.registerBlock(this, AEBaseItemBlock.class, NameConst.BLOCK_OC_PATTERN_EDITOR);
@@ -49,13 +53,5 @@ public class BlockOCPatternEditor extends FCBaseBlock {
             return this;
         }
         return null;
-    }
-
-    public ItemStack stack(int size) {
-        return new ItemStack(this, size);
-    }
-
-    public ItemStack stack() {
-        return new ItemStack(this, 1);
     }
 }

@@ -5,7 +5,7 @@ import appeng.api.networking.security.BaseActionSource;
 import appeng.api.storage.IExternalStorageHandler;
 import appeng.api.storage.IMEInventory;
 import appeng.api.storage.StorageChannel;
-import appeng.tile.networking.TileCableBus;
+import com.glodblock.github.util.Util;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.util.ForgeDirection;
 
@@ -16,9 +16,7 @@ public class AEFluidInterfaceHandler implements IExternalStorageHandler {
         if (channel == StorageChannel.FLUIDS) {
             if (te instanceof ITileStorageMonitorable) {
                 return true;
-            } else
-                return te instanceof TileCableBus
-                        && ((TileCableBus) te).getPart(d.getOpposite()) instanceof ITileStorageMonitorable;
+            } else return Util.getPart(te, d.getOpposite()) instanceof ITileStorageMonitorable;
         }
         return false;
     }
@@ -29,9 +27,8 @@ public class AEFluidInterfaceHandler implements IExternalStorageHandler {
         if (channel == StorageChannel.FLUIDS) {
             if (te instanceof ITileStorageMonitorable) {
                 return ((ITileStorageMonitorable) te).getMonitorable(d, src).getFluidInventory();
-            } else if (te instanceof TileCableBus
-                    && ((TileCableBus) te).getPart(d.getOpposite()) instanceof ITileStorageMonitorable) {
-                ITileStorageMonitorable part = (ITileStorageMonitorable) ((TileCableBus) te).getPart(d.getOpposite());
+            } else if (Util.getPart(te, d.getOpposite()) instanceof ITileStorageMonitorable) {
+                ITileStorageMonitorable part = (ITileStorageMonitorable) Util.getPart(te, d.getOpposite());
                 return part.getMonitorable(d, src).getFluidInventory();
             }
         }

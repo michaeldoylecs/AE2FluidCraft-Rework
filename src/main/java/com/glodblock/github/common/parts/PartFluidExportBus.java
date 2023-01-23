@@ -27,7 +27,6 @@ import com.glodblock.github.common.item.ItemFluidDrop;
 import com.glodblock.github.common.item.ItemFluidPacket;
 import com.glodblock.github.common.parts.base.FCSharedFluidBus;
 import com.glodblock.github.inventory.FluidConvertingInventoryAdaptor;
-import com.glodblock.github.util.Util;
 import com.google.common.collect.ImmutableSet;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -230,8 +229,7 @@ public class PartFluidExportBus extends FCSharedFluidBus implements ICraftingReq
 
     protected InventoryAdaptor getHandler(TileEntity target) {
         return target != null
-                ? FluidConvertingInventoryAdaptor.wrap(
-                        target, Util.from(this.getSide().getOpposite()))
+                ? FluidConvertingInventoryAdaptor.wrap(target, this.getSide().getOpposite())
                 : null;
     }
 

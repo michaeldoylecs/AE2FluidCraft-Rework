@@ -29,7 +29,6 @@ import com.glodblock.github.inventory.gui.GuiType;
 import com.glodblock.github.network.SPacketMEInventoryUpdate;
 import com.glodblock.github.util.Ae2Reflect;
 import com.glodblock.github.util.BlockPos;
-import com.glodblock.github.util.Util;
 import com.google.common.collect.ImmutableSet;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -281,7 +280,7 @@ public class ContainerFluidCraftConfirm extends AEBaseContainer {
                         this.getInventoryPlayer().player,
                         getWorld(),
                         new BlockPos(this.getOpenContext().getTile()),
-                        Objects.requireNonNull(Util.from(this.getOpenContext().getSide())),
+                        Objects.requireNonNull(this.getOpenContext().getSide()),
                         originalGui);
             }
         }

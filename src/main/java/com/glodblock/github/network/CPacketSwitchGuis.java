@@ -5,7 +5,6 @@ import appeng.container.ContainerOpenContext;
 import com.glodblock.github.inventory.InventoryHandler;
 import com.glodblock.github.inventory.gui.GuiType;
 import com.glodblock.github.util.BlockPos;
-import com.glodblock.github.util.Util;
 import cpw.mods.fml.common.network.simpleimpl.IMessage;
 import cpw.mods.fml.common.network.simpleimpl.IMessageHandler;
 import cpw.mods.fml.common.network.simpleimpl.MessageContext;
@@ -62,7 +61,7 @@ public class CPacketSwitchGuis implements IMessage {
                     player,
                     player.worldObj,
                     new BlockPos(te),
-                    Objects.requireNonNull(Util.from(context.getSide())),
+                    Objects.requireNonNull(context.getSide()),
                     message.guiType);
             return null;
         }

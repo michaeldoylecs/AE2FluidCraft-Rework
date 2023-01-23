@@ -9,8 +9,8 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import javax.annotation.Nullable;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.util.EnumFacing;
 import net.minecraft.world.World;
+import net.minecraftforge.common.util.ForgeDirection;
 
 public class InventoryHandler implements IGuiHandler {
 
@@ -18,7 +18,7 @@ public class InventoryHandler implements IGuiHandler {
         FluidCraft.proxy.netHandler.sendToServer(new CPacketSwitchGuis(guiType));
     }
 
-    public static void openGui(EntityPlayer player, World world, BlockPos pos, EnumFacing face, GuiType guiType) {
+    public static void openGui(EntityPlayer player, World world, BlockPos pos, ForgeDirection face, GuiType guiType) {
         player.openGui(
                 FluidCraft.INSTANCE,
                 (guiType.ordinal() << 3) | face.ordinal(),
@@ -32,10 +32,10 @@ public class InventoryHandler implements IGuiHandler {
     @Override
     public Object getServerGuiElement(int id, EntityPlayer player, World world, int x, int y, int z) {
         int faceOrd = id & 0x7;
-        if (faceOrd > EnumFacing.values().length) {
+        if (faceOrd > ForgeDirection.values().length) {
             return null;
         }
-        EnumFacing face = EnumFacing.getFront(faceOrd);
+        ForgeDirection face = ForgeDirection.getOrientation(faceOrd);
         GuiType type = GuiType.getByOrdinal(id >>> 3);
         return type != null ? type.guiFactory.createServerGui(player, world, x, y, z, face) : null;
     }
@@ -45,10 +45,10 @@ public class InventoryHandler implements IGuiHandler {
     @Override
     public Object getClientGuiElement(int id, EntityPlayer player, World world, int x, int y, int z) {
         int faceOrd = id & 0x7;
-        if (faceOrd > EnumFacing.values().length) {
+        if (faceOrd > ForgeDirection.values().length) {
             return null;
         }
-        EnumFacing face = EnumFacing.getFront(faceOrd);
+        ForgeDirection face = ForgeDirection.getOrientation(faceOrd);
         GuiType type = GuiType.getByOrdinal(id >>> 3);
         return type != null ? type.guiFactory.createClientGui(player, world, x, y, z, face) : null;
     }

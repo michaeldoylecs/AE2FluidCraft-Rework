@@ -12,11 +12,10 @@ import cpw.mods.fml.relauncher.SideOnly;
 import javax.annotation.Nullable;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
 
-public class ItemPartFluidInterface extends Item implements IPartItem {
+public class ItemPartFluidInterface extends FCBaseItem implements IPartItem {
 
     public ItemPartFluidInterface() {
         this.setMaxStackSize(64);
@@ -45,6 +44,7 @@ public class ItemPartFluidInterface extends Item implements IPartItem {
         return AEApi.instance().partHelper().placeBus(player.getHeldItem(), x, y, z, side, player, world);
     }
 
+    @Override
     public ItemPartFluidInterface register() {
         GameRegistry.registerItem(this, NameConst.ITEM_PART_FLUID_INTERFACE, FluidCraft.MODID);
         setCreativeTab(FluidCraftingTabs.INSTANCE);
@@ -58,13 +58,5 @@ public class ItemPartFluidInterface extends Item implements IPartItem {
     @SideOnly(Side.CLIENT)
     public int getSpriteNumber() {
         return 0;
-    }
-
-    public ItemStack stack(int size) {
-        return new ItemStack(this, size);
-    }
-
-    public ItemStack stack() {
-        return new ItemStack(this, 1);
     }
 }

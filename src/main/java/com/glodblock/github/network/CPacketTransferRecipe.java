@@ -1,7 +1,6 @@
 package com.glodblock.github.network;
 
-import com.glodblock.github.client.gui.container.ContainerFluidPatternTerminal;
-import com.glodblock.github.client.gui.container.ContainerFluidPatternTerminalEx;
+import com.glodblock.github.client.gui.container.base.FCContainerEncodeTerminal;
 import com.glodblock.github.common.item.ItemFluidPacket;
 import com.glodblock.github.nei.NEIUtils;
 import com.glodblock.github.nei.object.OrderStack;
@@ -77,8 +76,8 @@ public class CPacketTransferRecipe implements IMessage {
         @Override
         public IMessage onMessage(CPacketTransferRecipe message, MessageContext ctx) {
             Container c = ctx.getServerHandler().playerEntity.openContainer;
-            if (c instanceof ContainerFluidPatternTerminal) {
-                ContainerFluidPatternTerminal cf = (ContainerFluidPatternTerminal) c;
+            if (c instanceof FCContainerEncodeTerminal) {
+                FCContainerEncodeTerminal cf = (FCContainerEncodeTerminal) c;
                 boolean combine = cf.combine;
                 cf.getPatternTerminal().setCraftingRecipe(message.isCraft);
                 IInventory inputSlot = cf.getInventoryByName("crafting");
@@ -98,80 +97,27 @@ public class CPacketTransferRecipe implements IMessage {
                     message.inputs = NEIUtils.clearNull(message.inputs);
                     message.outputs = NEIUtils.clearNull(message.outputs);
                 }
-
-                for (OrderStack<?> stack : message.inputs) {
-                    if (stack != null) {
-                        int index = stack.getIndex();
-                        ItemStack stack1;
-                        if (stack.getStack() instanceof ItemStack) {
-                            stack1 = ((ItemStack) stack.getStack()).copy();
-                        } else if (stack.getStack() instanceof FluidStack) {
-                            stack1 = ItemFluidPacket.newStack((FluidStack) stack.getStack());
-                        } else throw new UnsupportedOperationException("Trying to get an unsupported item!");
-                        if (index < inputSlot.getSizeInventory()) inputSlot.setInventorySlotContents(index, stack1);
-                    }
-                }
-                for (OrderStack<?> stack : message.outputs) {
-                    if (stack != null) {
-                        int index = stack.getIndex();
-                        ItemStack stack1;
-                        if (stack.getStack() instanceof ItemStack) {
-                            stack1 = ((ItemStack) stack.getStack()).copy();
-                        } else if (stack.getStack() instanceof FluidStack) {
-                            stack1 = ItemFluidPacket.newStack((FluidStack) stack.getStack());
-                        } else throw new UnsupportedOperationException("Trying to get an unsupported item!");
-                        if (index < outputSlot.getSizeInventory()) outputSlot.setInventorySlotContents(index, stack1);
-                    }
-                }
-                c.onCraftMatrixChanged(inputSlot);
-                c.onCraftMatrixChanged(outputSlot);
-            } else if (c instanceof ContainerFluidPatternTerminalEx) {
-                ContainerFluidPatternTerminalEx cf = (ContainerFluidPatternTerminalEx) c;
-                boolean combine = cf.combine;
-                IInventory inputSlot = cf.getInventoryByName("crafting");
-                IInventory outputSlot = cf.getInventoryByName("output");
-                for (int i = 0; i < inputSlot.getSizeInventory(); i++) {
-                    inputSlot.setInventorySlotContents(i, null);
-                }
-                for (int i = 0; i < outputSlot.getSizeInventory(); i++) {
-                    outputSlot.setInventorySlotContents(i, null);
-                }
-
-                if (combine) {
-                    message.inputs = NEIUtils.compress(message.inputs);
-                    message.outputs = NEIUtils.compress(message.outputs);
-                }
-                message.inputs = NEIUtils.clearNull(message.inputs);
-                message.outputs = NEIUtils.clearNull(message.outputs);
-
-                for (OrderStack<?> stack : message.inputs) {
-                    if (stack != null) {
-                        int index = stack.getIndex();
-                        ItemStack stack1;
-                        if (stack.getStack() instanceof ItemStack) {
-                            stack1 = ((ItemStack) stack.getStack()).copy();
-                        } else if (stack.getStack() instanceof FluidStack) {
-                            stack1 = ItemFluidPacket.newStack((FluidStack) stack.getStack());
-                        } else throw new UnsupportedOperationException("Trying to get an unsupported item!");
-                        if (index < inputSlot.getSizeInventory()) inputSlot.setInventorySlotContents(index, stack1);
-                    }
-                }
-                for (OrderStack<?> stack : message.outputs) {
-                    if (stack != null) {
-                        int index = stack.getIndex();
-                        ItemStack stack1;
-                        if (stack.getStack() instanceof ItemStack) {
-                            stack1 = ((ItemStack) stack.getStack()).copy();
-                        } else if (stack.getStack() instanceof FluidStack) {
-                            stack1 = ItemFluidPacket.newStack((FluidStack) stack.getStack());
-                        } else throw new UnsupportedOperationException("Trying to get an unsupported item!");
-                        if (index < outputSlot.getSizeInventory()) outputSlot.setInventorySlotContents(index, stack1);
-                    }
-                }
+                transferPack(message.inputs, inputSlot);
+                transferPack(message.outputs, outputSlot);
                 c.onCraftMatrixChanged(inputSlot);
                 c.onCraftMatrixChanged(outputSlot);
             }
             return null;
+        }
+
+        private void transferPack(List<OrderStack<?>> packs, IInventory inv) {
+            for (OrderStack<?> stack : packs) {
+                if (stack != null) {
+                    int index = stack.getIndex();
+                    ItemStack stack1;
+                    if (stack.getStack() instanceof ItemStack) {
+                        stack1 = ((ItemStack) stack.getStack()).copy();
+                    } else if (stack.getStack() instanceof FluidStack) {
+                        stack1 = ItemFluidPacket.newStack((FluidStack) stack.getStack());
+                    } else throw new UnsupportedOperationException("Trying to get an unsupported item!");
+                    if (index < inv.getSizeInventory()) inv.setInventorySlotContents(index, stack1);
+                }
+            }
         }
     }
 }

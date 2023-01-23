@@ -570,7 +570,7 @@ public class PartFluidLevelEmitter extends PartUpgradeable
                     player,
                     this.getHost().getTile().getWorldObj(),
                     new BlockPos(this.getHost().getTile()),
-                    Objects.requireNonNull(Util.from(getSide())),
+                    Objects.requireNonNull(getSide()),
                     GuiType.FLUID_LEVEL_EMITTER);
             return true;
         }

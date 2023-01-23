@@ -5,7 +5,6 @@ import com.glodblock.github.nei.object.IRecipeExtractor;
 import com.glodblock.github.nei.object.OrderStack;
 import gregapi.item.ItemFluidDisplay;
 import gregapi.recipes.Recipe;
-import java.util.LinkedList;
 import java.util.List;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fluids.FluidStack;
@@ -21,42 +20,12 @@ public class GregTech6RecipeExtractor implements IRecipeExtractor {
     @Override
     public List<OrderStack<?>> getInputIngredients(List<PositionedStack> rawInputs) {
         this.removeMachine(rawInputs);
-        List<OrderStack<?>> tmp = new LinkedList<>();
-        for (int i = 0; i < rawInputs.size(); i++) {
-            if (rawInputs.get(i) == null) continue;
-            ItemStack item = rawInputs.get(i).items[0].copy();
-            OrderStack<?> stack;
-            if (item.getItem() instanceof ItemFluidDisplay) {
-                FluidStack fluid = ((ItemFluidDisplay) item.getItem()).getFluid(item);
-                if (fluid == null || fluid.amount <= 0) continue;
-                stack = new OrderStack<>(fluid, i);
-                tmp.add(stack);
-            } else {
-                stack = OrderStack.pack(rawInputs.get(i), i);
-                if (stack != null) tmp.add(stack);
-            }
-        }
-        return tmp;
+        return ExtractorUtil.packItemStack(rawInputs, GregTech6RecipeExtractor::getFluidFromDisplay);
     }
 
     @Override
     public List<OrderStack<?>> getOutputIngredients(List<PositionedStack> rawOutputs) {
-        List<OrderStack<?>> tmp = new LinkedList<>();
-        for (int i = 0; i < rawOutputs.size(); i++) {
-            if (rawOutputs.get(i) == null) continue;
-            ItemStack item = rawOutputs.get(i).items[0].copy();
-            OrderStack<?> stack;
-            if (item.getItem() instanceof ItemFluidDisplay) {
-                FluidStack fluid = ((ItemFluidDisplay) item.getItem()).getFluid(item);
-                if (fluid == null || fluid.amount <= 0) continue;
-                stack = new OrderStack<>(fluid, i);
-                tmp.add(stack);
-            } else {
-                stack = OrderStack.pack(rawOutputs.get(i), i);
-                if (stack != null) tmp.add(stack);
-            }
-        }
-        return tmp;
+        return ExtractorUtil.packItemStack(rawOutputs, GregTech6RecipeExtractor::getFluidFromDisplay);
     }
 
     private void removeMachine(List<PositionedStack> list) {
@@ -71,5 +40,20 @@ public class GregTech6RecipeExtractor implements IRecipeExtractor {
                 }
             }
         }
+    }
+
+    public static Object getFluidFromDisplay(PositionedStack stack) {
+        if (stack != null) {
+            ItemStack item = stack.items[0].copy();
+            if (item.getItem() instanceof ItemFluidDisplay) {
+                if (item.getTagCompound() != null) {
+                    FluidStack fluid = ((ItemFluidDisplay) item.getItem()).getFluid(item);
+                    return fluid != null && fluid.amount > 0 ? fluid : null;
+                }
+            } else {
+                return item;
+            }
+        }
+        return null;
     }
 }

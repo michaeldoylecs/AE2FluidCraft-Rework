@@ -69,14 +69,9 @@ public class FluidCraft {
         if (!Config.removeRecipe) {
             (new RecipeLoader()).run();
         }
-        try {
-            Class<?> calculatorV2 = Class.forName("appeng.crafting.v2.CraftingCalculations");
-            if (calculatorV2 != null) {
-                // Only run this if GTNH AE2 is installed
-                CalculatorV2PluginLoader.installCalculatorV2Plugins();
-            }
-        } catch (ClassNotFoundException e) {
-            // no-op
+
+        if (ModAndClassUtil.isV2) {
+            CalculatorV2PluginLoader.installCalculatorV2Plugins();
         }
 
         proxy.postInit(event);

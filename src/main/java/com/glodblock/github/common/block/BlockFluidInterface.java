@@ -18,8 +18,6 @@ import cpw.mods.fml.relauncher.SideOnly;
 import java.util.EnumSet;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.EnumFacing;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 
@@ -57,7 +55,11 @@ public class BlockFluidInterface extends FCBaseBlock {
         if (tg != null) {
             if (Platform.isServer()) {
                 InventoryHandler.openGui(
-                        player, world, new BlockPos(x, y, z), EnumFacing.getFront(facing), GuiType.DUAL_INTERFACE);
+                        player,
+                        world,
+                        new BlockPos(x, y, z),
+                        ForgeDirection.getOrientation(facing),
+                        GuiType.DUAL_INTERFACE);
             }
             return true;
         }
@@ -76,18 +78,11 @@ public class BlockFluidInterface extends FCBaseBlock {
         }
     }
 
+    @Override
     public BlockFluidInterface register() {
         GameRegistry.registerBlock(this, AEBaseItemBlock.class, NameConst.BLOCK_FLUID_INTERFACE);
         GameRegistry.registerTileEntity(TileFluidInterface.class, NameConst.BLOCK_FLUID_INTERFACE);
         setCreativeTab(FluidCraftingTabs.INSTANCE);
         return this;
-    }
-
-    public ItemStack stack(int size) {
-        return new ItemStack(this, size);
-    }
-
-    public ItemStack stack() {
-        return new ItemStack(this, 1);
     }
 }

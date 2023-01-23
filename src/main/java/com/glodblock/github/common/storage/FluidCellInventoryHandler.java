@@ -29,7 +29,7 @@ public class FluidCellInventoryHandler extends MEInventoryHandler<IAEFluidStack>
                     AEApi.instance().storage().createFluidList();
             for (int x = 0; x < config.getSizeInventory(); x++) {
                 final ItemStack is = config.getStackInSlot(x);
-                if (is != null && Util.getFluidFromItem(is) != null) {
+                if (Util.getFluidFromItem(is) != null) {
                     priorityList.add(AEFluidStack.create(Util.getFluidFromItem(is)));
                     break;
                 }
@@ -43,15 +43,14 @@ public class FluidCellInventoryHandler extends MEInventoryHandler<IAEFluidStack>
     @Override
     public IFluidCellInventory getCellInv() {
         Object o = this.getInternal();
-
         if (o instanceof MEPassThrough) {
-            o = Ae2Reflect.getInternal((MEPassThrough) o);
+            o = Ae2Reflect.getInternal((MEPassThrough<?>) o);
         }
-
         return (IFluidCellInventory) (o instanceof IFluidCellInventory ? o : null);
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public Iterable<IAEFluidStack> getPartitionInv() {
         return (Iterable<IAEFluidStack>) Ae2Reflect.getPartitionList(this).getItems();
     }

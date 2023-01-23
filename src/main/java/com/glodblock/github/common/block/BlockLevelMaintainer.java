@@ -22,8 +22,8 @@ import net.minecraft.block.material.Material;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ChatComponentText;
-import net.minecraft.util.EnumFacing;
 import net.minecraft.world.World;
+import net.minecraftforge.common.util.ForgeDirection;
 
 public class BlockLevelMaintainer extends FCBaseBlock {
 
@@ -34,6 +34,7 @@ public class BlockLevelMaintainer extends FCBaseBlock {
         setTileEntity(TileLevelMaintainer.class);
     }
 
+    @Override
     public BlockLevelMaintainer register() {
         GameRegistry.registerBlock(this, FCBaseItemBlock.class, NameConst.BLOCK_LEVEL_MAINTAINER);
         GameRegistry.registerTileEntity(TileLevelMaintainer.class, NameConst.BLOCK_LEVEL_MAINTAINER);
@@ -61,7 +62,7 @@ public class BlockLevelMaintainer extends FCBaseBlock {
                             player,
                             world,
                             new BlockPos(x, y, z),
-                            EnumFacing.getFront(facing),
+                            ForgeDirection.getOrientation(facing),
                             GuiType.LEVEL_MAINTAINER);
                 } else {
                     player.addChatComponentMessage(new ChatComponentText("You don't have permission to view."));
@@ -72,17 +73,8 @@ public class BlockLevelMaintainer extends FCBaseBlock {
         return false;
     }
 
-    public ItemStack stack(int size) {
-        return new ItemStack(this, size);
-    }
-
-    public ItemStack stack() {
-        return new ItemStack(this, 1);
-    }
-
     @Override
     @SideOnly(Side.CLIENT)
-    @SuppressWarnings("unchecked")
     public void addInformation(
             final ItemStack itemStack,
             final EntityPlayer player,

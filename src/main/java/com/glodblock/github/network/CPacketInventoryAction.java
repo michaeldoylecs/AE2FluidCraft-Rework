@@ -12,7 +12,6 @@ import com.glodblock.github.common.item.ItemFluidPacket;
 import com.glodblock.github.inventory.InventoryHandler;
 import com.glodblock.github.inventory.gui.GuiType;
 import com.glodblock.github.util.BlockPos;
-import com.glodblock.github.util.Util;
 import cpw.mods.fml.common.network.simpleimpl.IMessage;
 import cpw.mods.fml.common.network.simpleimpl.IMessageHandler;
 import cpw.mods.fml.common.network.simpleimpl.MessageContext;
@@ -97,7 +96,7 @@ public class CPacketInventoryAction implements IMessage {
                                 te.getWorldObj(),
                                 new BlockPos(te),
                                 Objects.requireNonNull(
-                                        Util.from(baseContainer.getOpenContext().getSide())),
+                                        baseContainer.getOpenContext().getSide()),
                                 GuiType.FLUID_CRAFTING_AMOUNT);
                         if (sender.openContainer instanceof ContainerCraftAmount) {
                             final ContainerCraftAmount cca = (ContainerCraftAmount) sender.openContainer;
@@ -118,7 +117,7 @@ public class CPacketInventoryAction implements IMessage {
                                 te.getWorldObj(),
                                 new BlockPos(te),
                                 Objects.requireNonNull(
-                                        Util.from(baseContainer.getOpenContext().getSide())),
+                                        baseContainer.getOpenContext().getSide()),
                                 GuiType.PATTERN_VALUE_SET);
                         int amt = (int) message.stack.getStackSize();
                         if (message.stack.getItem() instanceof ItemFluidPacket) {

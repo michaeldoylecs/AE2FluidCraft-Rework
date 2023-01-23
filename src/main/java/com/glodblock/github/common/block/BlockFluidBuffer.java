@@ -54,6 +54,7 @@ public class BlockFluidBuffer extends FCBaseBlock {
         return fs != null || (player.isSneaking() && itemStack == null);
     }
 
+    @Override
     public BlockFluidBuffer register() {
         GameRegistry.registerBlock(this, FCBaseItemBlock.class, NameConst.BLOCK_FLUID_BUFFER);
         GameRegistry.registerTileEntity(TileFluidBuffer.class, NameConst.BLOCK_FLUID_BUFFER);
@@ -67,17 +68,8 @@ public class BlockFluidBuffer extends FCBaseBlock {
         return new RenderBlockFluidBuffer();
     }
 
-    public ItemStack stack(int size) {
-        return new ItemStack(this, size);
-    }
-
-    public ItemStack stack() {
-        return new ItemStack(this, 1);
-    }
-
     @Override
     @SideOnly(Side.CLIENT)
-    @SuppressWarnings("unchecked")
     public void addInformation(
             final ItemStack itemStack,
             final EntityPlayer player,

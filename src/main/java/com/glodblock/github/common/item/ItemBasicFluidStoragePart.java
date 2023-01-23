@@ -16,7 +16,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.IIcon;
 import net.minecraft.util.StatCollector;
 
-public class ItemBasicFluidStoragePart extends Item {
+public class ItemBasicFluidStoragePart extends FCBaseItem {
 
     public static final int types = 7;
     private static final HashMap<Integer, IIcon> icon = new HashMap<>();
@@ -56,6 +56,7 @@ public class ItemBasicFluidStoragePart extends Item {
         return icon.get(meta);
     }
 
+    @Override
     public ItemBasicFluidStoragePart register() {
         if (!Config.fluidCells) return null;
         GameRegistry.registerItem(this, NameConst.ITEM_FLUID_PART, FluidCraft.MODID);

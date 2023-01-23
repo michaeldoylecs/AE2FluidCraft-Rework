@@ -13,11 +13,10 @@ import cpw.mods.fml.relauncher.SideOnly;
 import javax.annotation.Nullable;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
 
-public class ItemFluidImportBus extends Item implements IPartItem {
+public class ItemFluidImportBus extends FCBaseItem implements IPartItem {
 
     public ItemFluidImportBus() {
         this.setMaxStackSize(64);
@@ -46,6 +45,7 @@ public class ItemFluidImportBus extends Item implements IPartItem {
         return AEApi.instance().partHelper().placeBus(player.getHeldItem(), x, y, z, side, player, world);
     }
 
+    @Override
     public ItemFluidImportBus register() {
         if (!Config.fluidIOBus) return null;
         GameRegistry.registerItem(this, NameConst.ITEM_PART_FLUID_IMPORT, FluidCraft.MODID);
@@ -60,13 +60,5 @@ public class ItemFluidImportBus extends Item implements IPartItem {
     @SideOnly(Side.CLIENT)
     public int getSpriteNumber() {
         return 0;
-    }
-
-    public ItemStack stack(int size) {
-        return new ItemStack(this, size);
-    }
-
-    public ItemStack stack() {
-        return new ItemStack(this, 1);
     }
 }

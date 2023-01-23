@@ -5,10 +5,9 @@ import com.glodblock.github.nei.object.IRecipeExtractor;
 import com.glodblock.github.nei.object.OrderStack;
 import gregtech.api.enums.ItemList;
 import gregtech.common.items.GT_FluidDisplayItem;
-import java.util.LinkedList;
 import java.util.List;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
 
@@ -23,44 +22,12 @@ public class GregTech5RecipeExtractor implements IRecipeExtractor {
     @Override
     public List<OrderStack<?>> getInputIngredients(List<PositionedStack> rawInputs) {
         if (removeSpecial) removeSpecial(rawInputs);
-        List<OrderStack<?>> tmp = new LinkedList<>();
-        for (int i = 0; i < rawInputs.size(); i++) {
-            if (rawInputs.get(i) == null) continue;
-            ItemStack item = rawInputs.get(i).items[0].copy();
-            OrderStack<?> stack;
-            if (item.getItem() instanceof GT_FluidDisplayItem) {
-                NBTTagCompound aNBT = item.getTagCompound();
-                int amt = (int) aNBT.getLong("mFluidDisplayAmount");
-                if (amt <= 0) continue;
-                stack = new OrderStack<>(new FluidStack(FluidRegistry.getFluid(item.getItemDamage()), amt), i);
-                tmp.add(stack);
-            } else {
-                stack = OrderStack.pack(rawInputs.get(i), i);
-                if (stack != null) tmp.add(stack);
-            }
-        }
-        return tmp;
+        return ExtractorUtil.packItemStack(rawInputs, GregTech5RecipeExtractor::getFluidFromDisplay);
     }
 
     @Override
     public List<OrderStack<?>> getOutputIngredients(List<PositionedStack> rawOutputs) {
-        List<OrderStack<?>> tmp = new LinkedList<>();
-        for (int i = 0; i < rawOutputs.size(); i++) {
-            if (rawOutputs.get(i) == null) continue;
-            ItemStack item = rawOutputs.get(i).items[0].copy();
-            OrderStack<?> stack;
-            if (item.getItem() instanceof GT_FluidDisplayItem) {
-                NBTTagCompound aNBT = item.getTagCompound();
-                int amt = (int) aNBT.getLong("mFluidDisplayAmount");
-                if (amt <= 0) continue;
-                stack = new OrderStack<>(new FluidStack(FluidRegistry.getFluid(item.getItemDamage()), amt), i);
-                tmp.add(stack);
-            } else {
-                stack = OrderStack.pack(rawOutputs.get(i), i);
-                if (stack != null) tmp.add(stack);
-            }
-        }
-        return tmp;
+        return ExtractorUtil.packItemStack(rawOutputs, GregTech5RecipeExtractor::getFluidFromDisplay);
     }
 
     private void removeSpecial(List<PositionedStack> list) {
@@ -73,5 +40,21 @@ public class GregTech5RecipeExtractor implements IRecipeExtractor {
                 break;
             }
         }
+    }
+
+    public static Object getFluidFromDisplay(PositionedStack stack) {
+        if (stack != null) {
+            ItemStack item = stack.items[0].copy();
+            if (item.getItem() instanceof GT_FluidDisplayItem) {
+                if (item.getTagCompound() != null) {
+                    Fluid fluid = FluidRegistry.getFluid(item.getItemDamage());
+                    int amt = (int) item.getTagCompound().getLong("mFluidDisplayAmount");
+                    return amt > 0 && fluid != null ? new FluidStack(fluid, amt) : null;
+                }
+            } else {
+                return item;
+            }
+        }
+        return null;
     }
 }

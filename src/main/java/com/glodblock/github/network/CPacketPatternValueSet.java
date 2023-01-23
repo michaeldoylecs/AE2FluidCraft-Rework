@@ -67,7 +67,7 @@ public class CPacketPatternValueSet implements IMessage {
                                 player,
                                 player.worldObj,
                                 new BlockPos(te),
-                                Objects.requireNonNull(Util.from(context.getSide())),
+                                Objects.requireNonNull(context.getSide()),
                                 message.originGui);
                         if (player.openContainer instanceof FCContainerEncodeTerminal) {
                             Slot slot = player.openContainer.getSlot(message.valueIndex);

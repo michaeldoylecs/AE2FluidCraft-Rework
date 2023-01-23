@@ -18,7 +18,6 @@ public class FCBaseItemBlock extends AEBaseItemBlock {
     }
 
     @SideOnly(Side.CLIENT)
-    @SuppressWarnings("unchecked")
     public void addCheckedInformation(
             final ItemStack itemStack,
             final EntityPlayer player,

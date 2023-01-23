@@ -16,8 +16,8 @@ import java.util.List;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.EnumFacing;
 import net.minecraft.world.World;
+import net.minecraftforge.common.util.ForgeDirection;
 
 public class BlockFluidPacketDecoder extends FCBaseBlock {
 
@@ -41,7 +41,7 @@ public class BlockFluidPacketDecoder extends FCBaseBlock {
                         player,
                         world,
                         new BlockPos(x, y, z),
-                        EnumFacing.getFront(facing),
+                        ForgeDirection.getOrientation(facing),
                         GuiType.FLUID_PACKET_DECODER);
             }
             return true;
@@ -49,6 +49,7 @@ public class BlockFluidPacketDecoder extends FCBaseBlock {
         return false;
     }
 
+    @Override
     public BlockFluidPacketDecoder register() {
         GameRegistry.registerBlock(this, FCBaseItemBlock.class, NameConst.BLOCK_FLUID_PACKET_DECODER);
         GameRegistry.registerTileEntity(TileFluidPacketDecoder.class, NameConst.BLOCK_FLUID_PACKET_DECODER);
@@ -56,17 +57,8 @@ public class BlockFluidPacketDecoder extends FCBaseBlock {
         return this;
     }
 
-    public ItemStack stack(int size) {
-        return new ItemStack(this, size);
-    }
-
-    public ItemStack stack() {
-        return new ItemStack(this, 1);
-    }
-
     @Override
     @SideOnly(Side.CLIENT)
-    @SuppressWarnings("unchecked")
     public void addInformation(
             final ItemStack itemStack,
             final EntityPlayer player,

@@ -14,13 +14,15 @@ import com.glodblock.github.FluidCraft;
 import com.glodblock.github.client.gui.container.ContainerLevelMaintainer;
 import com.glodblock.github.common.tile.TileLevelMaintainer;
 import com.glodblock.github.inventory.gui.MouseRegionManager;
+import com.glodblock.github.inventory.slot.SlotFluidConvertingFake;
 import com.glodblock.github.inventory.slot.SlotSingleItem;
 import com.glodblock.github.network.CPacketLevelMaintainer;
 import com.glodblock.github.util.Ae2ReflectClient;
 import com.glodblock.github.util.NameConst;
 import cpw.mods.fml.common.Optional;
 import java.awt.*;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
@@ -29,7 +31,6 @@ import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.ResourceLocation;
 import org.lwjgl.input.Keyboard;
 
@@ -41,10 +42,9 @@ public class GuiLevelMaintainer extends AEBaseGui implements INEIGuiHandler {
     private final Component[] component = new Component[TileLevelMaintainer.REQ_COUNT];
     private final MouseRegionManager mouseRegions = new MouseRegionManager(this);
     private final AppEngRenderItem stackSizeRenderer = Ae2ReflectClient.getStackSizeRenderer(this);
-    private TileLevelMaintainer tile;
     private FCGuiTextField input;
     private int lastWorkingTick;
-    private final int interval = 20;
+    private int refreshTick;
     private final CoFHFontRenderer render;
 
     public GuiLevelMaintainer(InventoryPlayer ipl, TileLevelMaintainer tile) {
@@ -52,12 +52,12 @@ public class GuiLevelMaintainer extends AEBaseGui implements INEIGuiHandler {
         this.cont = (ContainerLevelMaintainer) inventorySlots;
         this.xSize = 195;
         this.ySize = 214;
-        this.tile = tile;
         this.render = new CoFHFontRenderer(
                 Minecraft.getMinecraft().gameSettings,
                 TEX_BG,
                 Minecraft.getMinecraft().getTextureManager(),
                 true);
+        this.refreshTick = 0;
     }
 
     public void postUpdate(List<IAEItemStack> list) {
@@ -81,7 +81,7 @@ public class GuiLevelMaintainer extends AEBaseGui implements INEIGuiHandler {
 
     public void initGui() {
         super.initGui();
-        lastWorkingTick = MinecraftServer.getServer().getTickCounter();
+        this.lastWorkingTick = this.refreshTick;
         for (int i = 0; i < TileLevelMaintainer.REQ_COUNT; i++) {
             component[i] = new Component(
                     new Widget(
@@ -104,6 +104,7 @@ public class GuiLevelMaintainer extends AEBaseGui implements INEIGuiHandler {
     }
 
     public void drawScreen(final int mouseX, final int mouseY, final float btn) {
+        this.refreshTick++;
         super.drawScreen(mouseX, mouseY, btn);
         for (Component com : this.component) {
             com.getQty().textField.handleTooltip(mouseX, mouseY, this);
@@ -116,10 +117,11 @@ public class GuiLevelMaintainer extends AEBaseGui implements INEIGuiHandler {
     public void drawBG(int offsetX, int offsetY, int mouseX, int mouseY) {
         mc.getTextureManager().bindTexture(TEX_BG);
         drawTexturedModalRect(offsetX, offsetY, 0, 0, 176, ySize);
-        int tick = MinecraftServer.getServer().getTickCounter();
+        int tick = this.refreshTick;
+        int interval = 20;
         if (tick > lastWorkingTick + interval && this.input == null) {
             FluidCraft.proxy.netHandler.sendToServer(new CPacketLevelMaintainer("TileLevelMaintainer.refresh"));
-            lastWorkingTick = MinecraftServer.getServer().getTickCounter();
+            lastWorkingTick = this.refreshTick;
         }
         for (int i = 0; i < TileLevelMaintainer.REQ_COUNT; i++) {
             this.component[i].draw();
@@ -139,7 +141,7 @@ public class GuiLevelMaintainer extends AEBaseGui implements INEIGuiHandler {
 
     public boolean drawSlot0(Slot slot) {
         if (slot instanceof SlotFake) {
-            IAEItemStack stack = ((ContainerLevelMaintainer.FakeSlot) slot).getAeStack();
+            IAEItemStack stack = ((SlotFluidConvertingFake) slot).getAeStack();
             super.func_146977_a(new SlotSingleItem(slot));
             if (stack == null) return true;
             IAEItemStack fake = stack.copy();
@@ -206,8 +208,7 @@ public class GuiLevelMaintainer extends AEBaseGui implements INEIGuiHandler {
 
     @Override
     protected void handleMouseClick(final Slot slot, final int slotIdx, final int ctrlDown, final int mouseButton) {
-        if (slot instanceof ContainerLevelMaintainer.FakeSlot
-                && this.cont.getPlayerInv().getItemStack() != null) {
+        if (slot instanceof SlotFluidConvertingFake && this.cont.getPlayerInv().getItemStack() != null) {
             this.component[slot.getSlotIndex()]
                     .getQty()
                     .textField
@@ -252,7 +253,7 @@ public class GuiLevelMaintainer extends AEBaseGui implements INEIGuiHandler {
 
     @Override
     public boolean handleDragNDrop(GuiContainer gui, int mouseX, int mouseY, ItemStack draggedStack, int button) {
-        for (ContainerLevelMaintainer.FakeSlot slot : this.cont.getRequestSlots()) {
+        for (SlotFluidConvertingFake slot : this.cont.getRequestSlots()) {
             if (getSlotArea(slot).contains(mouseX, mouseY)) {
                 slot.putStack(draggedStack);
                 NetworkHandler.instance.sendToServer(new PacketNEIDragClick(draggedStack, slot.getSlotIndex()));
@@ -313,7 +314,7 @@ public class GuiLevelMaintainer extends AEBaseGui implements INEIGuiHandler {
         }
 
         private boolean send(Widget widget) {
-            if (((ContainerLevelMaintainer.FakeSlot) cont.inventorySlots.get(widget.idx)).getHasStack()) {
+            if (((SlotFluidConvertingFake) cont.inventorySlots.get(widget.idx)).getHasStack()) {
                 if (!widget.textField.getText().isEmpty()
                         && widget.textField.getText().matches("^[0-9]+")) {
                     String str = widget.textField.getText().replaceAll("^(0+)", "");

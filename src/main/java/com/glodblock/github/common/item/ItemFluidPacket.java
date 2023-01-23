@@ -14,7 +14,6 @@ import java.util.Objects;
 import javax.annotation.Nullable;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumChatFormatting;
@@ -24,7 +23,7 @@ import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
 
-public class ItemFluidPacket extends Item {
+public class ItemFluidPacket extends FCBaseItem {
 
     public ItemFluidPacket() {
         setUnlocalizedName(NameConst.ITEM_FLUID_PACKET);
@@ -141,12 +140,9 @@ public class ItemFluidPacket extends Item {
         return tFluid == null ? 16777215 : tFluid.getColor();
     }
 
+    @Override
     public ItemFluidPacket register() {
         GameRegistry.registerItem(this, NameConst.ITEM_FLUID_PACKET, FluidCraft.MODID);
         return this;
-    }
-
-    public ItemStack stack() {
-        return new ItemStack(this, 1);
     }
 }

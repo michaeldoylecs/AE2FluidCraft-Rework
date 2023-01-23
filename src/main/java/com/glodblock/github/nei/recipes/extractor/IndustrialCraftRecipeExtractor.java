@@ -20,22 +20,12 @@ public class IndustrialCraftRecipeExtractor implements IRecipeExtractor {
 
     @Override
     public List<OrderStack<?>> getInputIngredients(List<PositionedStack> rawInputs) {
-        List<OrderStack<?>> tmp = new LinkedList<>();
-        for (int i = 0; i < rawInputs.size(); i++) {
-            if (rawInputs.get(i) == null) continue;
-            tmp.add(OrderStack.pack(rawInputs.get(i), i));
-        }
-        return tmp;
+        return ExtractorUtil.packItemStack(rawInputs);
     }
 
     @Override
     public List<OrderStack<?>> getOutputIngredients(List<PositionedStack> rawOutputs) {
-        List<OrderStack<?>> tmp = new LinkedList<>();
-        for (int i = 0; i < rawOutputs.size(); i++) {
-            if (rawOutputs.get(i) == null) continue;
-            tmp.add(OrderStack.pack(rawOutputs.get(i), i));
-        }
-        return tmp;
+        return ExtractorUtil.packItemStack(rawOutputs);
     }
 
     @Override

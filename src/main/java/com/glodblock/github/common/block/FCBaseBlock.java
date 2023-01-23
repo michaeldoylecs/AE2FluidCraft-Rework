@@ -3,6 +3,7 @@ package com.glodblock.github.common.block;
 import appeng.block.AEBaseTileBlock;
 import appeng.core.features.AEFeature;
 import com.glodblock.github.FluidCraft;
+import com.glodblock.github.loader.IRegister;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import java.util.EnumSet;
@@ -13,7 +14,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 
-public class FCBaseBlock extends AEBaseTileBlock {
+public abstract class FCBaseBlock extends AEBaseTileBlock implements IRegister<FCBaseBlock> {
 
     public FCBaseBlock(Material mat, String name) {
         super(mat);
@@ -39,7 +40,6 @@ public class FCBaseBlock extends AEBaseTileBlock {
         super.setFeature(f);
     }
 
-    @SuppressWarnings("unchecked")
     @SideOnly(Side.CLIENT)
     public void addInformation(
             final ItemStack itemStack,
@@ -47,12 +47,21 @@ public class FCBaseBlock extends AEBaseTileBlock {
             final List<String> toolTip,
             final boolean advancedToolTips) {}
 
-    protected final List listFormattedStringToWidth(String str) {
+    @SuppressWarnings("unchecked")
+    protected final List<String> listFormattedStringToWidth(String str) {
         return Minecraft.getMinecraft().fontRenderer.listFormattedStringToWidth(str, 150);
     }
 
     public void addCheckedInformation(
             ItemStack itemStack, EntityPlayer player, List<String> toolTip, boolean advancedToolTips) {
         this.addInformation(itemStack, player, toolTip, advancedToolTips);
+    }
+
+    public ItemStack stack(int size) {
+        return new ItemStack(this, size);
+    }
+
+    public ItemStack stack() {
+        return new ItemStack(this, 1);
     }
 }

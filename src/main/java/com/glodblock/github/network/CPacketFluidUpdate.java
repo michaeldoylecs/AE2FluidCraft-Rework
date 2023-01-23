@@ -1,9 +1,9 @@
 package com.glodblock.github.network;
 
 import appeng.api.storage.data.IAEFluidStack;
-import appeng.util.item.AEFluidStack;
 import appeng.util.item.AEItemStack;
 import com.glodblock.github.client.gui.container.ContainerFluidMonitor;
+import com.glodblock.github.util.Util;
 import cpw.mods.fml.common.network.simpleimpl.IMessage;
 import cpw.mods.fml.common.network.simpleimpl.IMessageHandler;
 import cpw.mods.fml.common.network.simpleimpl.MessageContext;
@@ -42,23 +42,13 @@ public class CPacketFluidUpdate implements IMessage {
 
     @Override
     public void fromBytes(ByteBuf buf) {
-        int size = buf.readInt();
         this.list = new HashMap<>();
         try {
-            for (int i = 0; i < size; i++) {
-                int id = buf.readInt();
-                boolean isNull = buf.readBoolean();
-                if (!isNull) list.put(id, null);
-                else {
-                    IAEFluidStack fluid = AEFluidStack.loadFluidStackFromPacket(buf);
-                    list.put(id, fluid);
-                }
-            }
+            Util.readFluidMapFromBuf(this.list, buf);
             if (buf.readBoolean()) {
                 this.itemStack = AEItemStack.loadItemStackFromPacket(buf).getItemStack();
                 this.slotIndex = buf.readInt();
             }
-
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -66,16 +56,8 @@ public class CPacketFluidUpdate implements IMessage {
 
     @Override
     public void toBytes(ByteBuf buf) {
-        buf.writeInt(list.size());
         try {
-            for (Map.Entry<Integer, IAEFluidStack> fs : list.entrySet()) {
-                buf.writeInt(fs.getKey());
-                if (fs.getValue() == null) buf.writeBoolean(false);
-                else {
-                    buf.writeBoolean(true);
-                    fs.getValue().writeToPacket(buf);
-                }
-            }
+            Util.writeFluidMapToBuf(this.list, buf);
             if (this.itemStack != null) {
                 buf.writeBoolean(true);
                 AEItemStack.create(itemStack).writeToPacket(buf);

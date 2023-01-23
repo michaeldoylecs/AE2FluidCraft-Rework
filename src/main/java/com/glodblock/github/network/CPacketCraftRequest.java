@@ -12,7 +12,6 @@ import com.glodblock.github.client.gui.container.ContainerFluidCraftConfirm;
 import com.glodblock.github.inventory.InventoryHandler;
 import com.glodblock.github.inventory.gui.GuiType;
 import com.glodblock.github.util.BlockPos;
-import com.glodblock.github.util.Util;
 import cpw.mods.fml.common.network.simpleimpl.IMessage;
 import cpw.mods.fml.common.network.simpleimpl.IMessageHandler;
 import cpw.mods.fml.common.network.simpleimpl.MessageContext;
@@ -87,7 +86,7 @@ public class CPacketCraftRequest implements IMessage {
                                     player,
                                     player.worldObj,
                                     new BlockPos(te),
-                                    Objects.requireNonNull(Util.from(context.getSide())),
+                                    Objects.requireNonNull(context.getSide()),
                                     GuiType.FLUID_CRAFTING_CONFIRM);
 
                             if (player.openContainer instanceof ContainerFluidCraftConfirm) {

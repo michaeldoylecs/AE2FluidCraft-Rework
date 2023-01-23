@@ -20,38 +20,22 @@ public class EnderIORecipeExtractor implements IRecipeExtractor {
 
     @Override
     public List<OrderStack<?>> getInputIngredients(List<PositionedStack> rawInputs) {
-        List<OrderStack<?>> tmp = new LinkedList<>();
-        for (int i = 0; i < rawInputs.size(); i++) {
-            if (rawInputs.get(i) == null) continue;
-            OrderStack<?> stack = OrderStack.pack(rawInputs.get(i), i);
-            if (stack != null) tmp.add(stack);
-        }
-        return tmp;
+        return ExtractorUtil.packItemStack(rawInputs);
     }
 
     @Override
     public List<OrderStack<?>> getOutputIngredients(List<PositionedStack> rawOutputs) {
-        List<OrderStack<?>> tmp = new LinkedList<>();
-        for (int i = 0; i < rawOutputs.size(); i++) {
-            if (rawOutputs.get(i) == null) continue;
-            OrderStack<?> stack = OrderStack.pack(rawOutputs.get(i), i);
-            if (stack != null) tmp.add(stack);
-        }
-        return tmp;
+        return ExtractorUtil.packItemStack(rawOutputs);
     }
 
     @Override
     public List<OrderStack<?>> getInputIngredients(List<PositionedStack> rawInputs, IRecipeHandler recipe, int index) {
         TemplateRecipeHandler tRecipe = (TemplateRecipeHandler) recipe;
-        List<OrderStack<?>> tmp = new LinkedList<>();
+        List<OrderStack<?>> tmp;
         if (tRecipe.arecipes.get(index) instanceof VatRecipeHandler.InnerVatRecipe) {
             VatRecipeHandler.InnerVatRecipe vatRecipe = (VatRecipeHandler.InnerVatRecipe) tRecipe.arecipes.get(index);
             ArrayList<PositionedStack> inputs = ReflectEIO.getInputs(vatRecipe);
-            for (int i = 0; i < inputs.size(); i++) {
-                if (inputs.get(i) == null) continue;
-                OrderStack<?> stack = OrderStack.pack(rawInputs.get(i), i);
-                if (stack != null) tmp.add(stack);
-            }
+            tmp = ExtractorUtil.packItemStack(inputs);
             FluidStack in = ReflectEIO.getInputFluid(vatRecipe);
             if (in != null) {
                 tmp.add(new OrderStack<>(in, inputs.size()));

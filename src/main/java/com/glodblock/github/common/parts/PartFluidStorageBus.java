@@ -43,7 +43,6 @@ import com.glodblock.github.inventory.*;
 import com.glodblock.github.inventory.gui.GuiType;
 import com.glodblock.github.util.BlockPos;
 import com.glodblock.github.util.ModAndClassUtil;
-import com.glodblock.github.util.Util;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import extracells.tileentity.TileEntityFluidInterface;
@@ -305,7 +304,7 @@ public class PartFluidStorageBus extends PartUpgradeable
                     player,
                     this.getHost().getTile().getWorldObj(),
                     new BlockPos(this.getHost().getTile()),
-                    Objects.requireNonNull(Util.from(this.getSide())),
+                    Objects.requireNonNull(this.getSide()),
                     GuiType.FLUID_STORAGE_BUS);
         }
         return true;
