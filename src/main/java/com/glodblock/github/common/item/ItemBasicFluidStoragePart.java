@@ -2,6 +2,7 @@ package com.glodblock.github.common.item;
 
 import com.glodblock.github.FluidCraft;
 import com.glodblock.github.common.Config;
+import com.glodblock.github.common.storage.CellType;
 import com.glodblock.github.common.tabs.FluidCraftingTabs;
 import com.glodblock.github.util.NameConst;
 import cpw.mods.fml.common.registry.GameRegistry;
@@ -13,12 +14,13 @@ import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.IIcon;
 import net.minecraft.util.StatCollector;
 
 public class ItemBasicFluidStoragePart extends FCBaseItem {
 
-    public static final int types = 7;
+    public static final int types = 8;
     private static final HashMap<Integer, IIcon> icon = new HashMap<>();
 
     public ItemBasicFluidStoragePart() {
@@ -39,7 +41,8 @@ public class ItemBasicFluidStoragePart extends FCBaseItem {
     @Override
     public String getItemStackDisplayName(ItemStack stack) {
         int meta = stack.getItemDamage();
-        return StatCollector.translateToLocalFormatted("item.fluid_part." + meta + ".name");
+        return StatCollector.translateToLocalFormatted(
+                "item.fluid_part." + meta + ".name", CellType.getTypeColor(meta), EnumChatFormatting.RESET);
     }
 
     @Override

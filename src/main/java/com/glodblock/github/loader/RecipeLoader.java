@@ -177,7 +177,7 @@ public class RecipeLoader implements Runnable {
                     "CEC",
                     "DCD",
                     'D',
-                    "dyeBlue",
+                    "dyeRed",
                     'C',
                     "anyCertusCrystal",
                     'E',
@@ -188,7 +188,7 @@ public class RecipeLoader implements Runnable {
                     "CGC",
                     "DCD",
                     'D',
-                    "dyeBlue",
+                    "dyeRed",
                     'C',
                     CellType.Cell1kPart.stack(1),
                     'P',
@@ -201,7 +201,7 @@ public class RecipeLoader implements Runnable {
                     "CGC",
                     "DCD",
                     'D',
-                    "dyeBlue",
+                    "dyeRed",
                     'C',
                     CellType.Cell4kPart.stack(1),
                     'P',
@@ -214,7 +214,7 @@ public class RecipeLoader implements Runnable {
                     "CGC",
                     "DCD",
                     'D',
-                    "dyeBlue",
+                    "dyeRed",
                     'C',
                     CellType.Cell16kPart.stack(1),
                     'P',
@@ -227,7 +227,7 @@ public class RecipeLoader implements Runnable {
                     "CGC",
                     "DCD",
                     'D',
-                    "dyeBlue",
+                    "dyeRed",
                     'C',
                     CellType.Cell64kPart.stack(1),
                     'P',
@@ -240,7 +240,7 @@ public class RecipeLoader implements Runnable {
                     "CGC",
                     "DCD",
                     'D',
-                    "dyeBlue",
+                    "dyeRed",
                     'C',
                     CellType.Cell256kPart.stack(1),
                     'P',
@@ -253,16 +253,30 @@ public class RecipeLoader implements Runnable {
                     "CGC",
                     "DCD",
                     'D',
-                    "dyeBlue",
+                    "dyeRed",
                     'C',
                     CellType.Cell1024kPart.stack(1),
+                    'P',
+                    AE2_PROCESS_CAL,
+                    'G',
+                    AE2_LAMP_GLASS));
+            GameRegistry.addRecipe(new ShapedOreRecipe(
+                    CellType.Cell16384kPart.stack(1),
+                    "DPD",
+                    "CGC",
+                    "DCD",
+                    'D',
+                    "dyeRed",
+                    'C',
+                    CellType.Cell4096kPart.stack(1),
                     'P',
                     AE2_PROCESS_ENG,
                     'G',
                     AE2_LAMP_GLASS));
 
-            ItemBasicFluidStorageCell[] cells =
-                    new ItemBasicFluidStorageCell[] {CELL1K, CELL4K, CELL16K, CELL64K, CELL256K, CELL1024K, CELL4096K};
+            ItemBasicFluidStorageCell[] cells = new ItemBasicFluidStorageCell[] {
+                CELL1K, CELL4K, CELL16K, CELL64K, CELL256K, CELL1024K, CELL4096K, CELL16384K
+            };
 
             for (ItemBasicFluidStorageCell cell : cells) {
                 GameRegistry.addRecipe(new ShapedOreRecipe(

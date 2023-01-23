@@ -39,6 +39,22 @@ public class FluidCellInventory implements IFluidCellInventory {
     public static final int singleByteAmount = 256 * 8;
 
     public FluidCellInventory(final ItemStack o, final ISaveProvider container) throws AppEngException {
+        if (o == null) {
+            throw new AppEngException("ItemStack was used as a cell, but was not a cell!");
+        }
+        this.cellType = null;
+        this.cellItem = o;
+        final Item type = this.cellItem.getItem();
+        if (type instanceof IStorageFluidCell) {
+            this.cellType = (IStorageFluidCell) this.cellItem.getItem();
+        }
+        if (this.cellType == null) {
+            throw new AppEngException("ItemStack was used as a cell, but was not a cell!");
+        }
+        if (!this.cellType.isStorageCell(this.cellItem)) {
+            throw new AppEngException("ItemStack was used as a cell, but was not a cell!");
+        }
+
         if (fluidSlots == null) {
             fluidSlots = new String[MAX_TYPE];
             fluidSlotCount = new String[MAX_TYPE];
@@ -47,27 +63,6 @@ public class FluidCellInventory implements IFluidCellInventory {
                 fluidSlots[x] = FLUID_SLOT + x;
                 fluidSlotCount[x] = FLUID_SLOT_COUNT + x;
             }
-        }
-
-        if (o == null) {
-            throw new AppEngException("ItemStack was used as a cell, but was not a cell!");
-        }
-
-        this.cellType = null;
-        this.cellItem = o;
-
-        final Item type = this.cellItem.getItem();
-
-        if (type instanceof IStorageFluidCell) {
-            this.cellType = (IStorageFluidCell) this.cellItem.getItem();
-        }
-
-        if (this.cellType == null) {
-            throw new AppEngException("ItemStack was used as a cell, but was not a cell!");
-        }
-
-        if (!this.cellType.isStorageCell(this.cellItem)) {
-            throw new AppEngException("ItemStack was used as a cell, but was not a cell!");
         }
 
         this.container = container;

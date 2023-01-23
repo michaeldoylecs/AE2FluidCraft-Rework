@@ -41,6 +41,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.IIcon;
 import net.minecraft.util.StatCollector;
 import net.minecraft.world.World;
@@ -94,6 +95,10 @@ public class ItemBasicFluidStorageCell extends AEBaseItem
                 this.idleDrain = 3.5;
                 this.perType = 8;
                 break;
+            case Cell16384kPart:
+                this.idleDrain = 4.0;
+                this.perType = 8;
+                break;
             default:
                 this.idleDrain = 0.0;
                 this.perType = 8;
@@ -106,7 +111,10 @@ public class ItemBasicFluidStorageCell extends AEBaseItem
 
     @Override
     public String getItemStackDisplayName(ItemStack stack) {
-        return StatCollector.translateToLocalFormatted("item.fluid_storage." + this.totalBytes / 1024 + ".name");
+        return StatCollector.translateToLocalFormatted(
+                "item.fluid_storage." + this.totalBytes / 1024 + ".name",
+                CellType.getTypeColor(this.component),
+                EnumChatFormatting.RESET);
     }
 
     @Override
@@ -136,11 +144,14 @@ public class ItemBasicFluidStorageCell extends AEBaseItem
             final IFluidCellInventory cellInventory = handler.getCellInv();
 
             if (cellInventory != null) {
-                lines.add(cellInventory.getUsedBytes() + " " + GuiText.Of.getLocal() + ' '
-                        + cellInventory.getTotalBytes() + ' ' + GuiText.BytesUsed.getLocal());
-
-                lines.add(cellInventory.getStoredFluidTypes() + " " + GuiText.Of.getLocal() + ' '
-                        + cellInventory.getTotalFluidTypes() + ' ' + GuiText.Types.getLocal());
+                lines.add(EnumChatFormatting.WHITE + String.valueOf(cellInventory.getUsedBytes())
+                        + EnumChatFormatting.GRAY + " " + GuiText.Of.getLocal() + " "
+                        + EnumChatFormatting.DARK_GREEN + cellInventory.getTotalBytes() + " "
+                        + EnumChatFormatting.GRAY + GuiText.BytesUsed.getLocal());
+                lines.add(EnumChatFormatting.WHITE + String.valueOf(cellInventory.getStoredFluidTypes())
+                        + EnumChatFormatting.GRAY + " " + GuiText.Of.getLocal() + " "
+                        + EnumChatFormatting.DARK_GREEN + cellInventory.getTotalFluidTypes() + " "
+                        + EnumChatFormatting.GRAY + GuiText.Types.getLocal());
 
                 if (GuiScreen.isCtrlKeyDown()) {
                     if (cellInventory.getStoredFluidTypes() > 0) {
@@ -148,7 +159,7 @@ public class ItemBasicFluidStorageCell extends AEBaseItem
                         for (IAEFluidStack fluid : cellInventory.getContents()) {
                             if (fluid != null) {
                                 lines.add(String.format(
-                                        "  %s x%smB",
+                                        "  %s x%s mB",
                                         fluid.getFluidStack().getLocalizedName(),
                                         format.toWideReadableForm(fluid.getStackSize())));
                             }

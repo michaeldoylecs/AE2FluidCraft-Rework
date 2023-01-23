@@ -20,6 +20,7 @@ public class FluidCellHandler implements ICellHandler {
     }
 
     @Override
+    @SuppressWarnings("rawtypes")
     public IMEInventoryHandler getCellInventory(
             final ItemStack is, final ISaveProvider container, final StorageChannel channel) {
         if (channel == StorageChannel.FLUIDS) {
