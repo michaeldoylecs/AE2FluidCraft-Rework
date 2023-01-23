@@ -40,6 +40,8 @@ public class ItemAndBlockHolder {
             new ItemBasicFluidStorageCell(CellType.Cell1024kPart, 1024).register();
     public static ItemBasicFluidStorageCell CELL4096K =
             new ItemBasicFluidStorageCell(CellType.Cell4096kPart, 4096).register();
+    public static ItemBasicFluidStorageCell CELL16384K =
+            new ItemBasicFluidStorageCell(CellType.Cell16384kPart, 16384).register();
     public static ItemBasicFluidStoragePart CELL_PART = new ItemBasicFluidStoragePart().register();
 
     public static void loadSetting() {
@@ -51,5 +53,6 @@ public class ItemAndBlockHolder {
         CellType.Cell256kPart.setItemInstance(CELL_PART);
         CellType.Cell1024kPart.setItemInstance(CELL_PART);
         CellType.Cell4096kPart.setItemInstance(CELL_PART);
+        CellType.Cell16384kPart.setItemInstance(CELL_PART);
     }
 }
