@@ -8,6 +8,7 @@ import appeng.client.gui.AEBaseGui;
 import appeng.client.gui.widgets.GuiScrollbar;
 import appeng.core.AELog;
 import appeng.core.localization.GuiText;
+import appeng.integration.modules.NEI;
 import appeng.util.Platform;
 import com.glodblock.github.FluidCraft;
 import com.glodblock.github.client.gui.container.ContainerFluidCraftConfirm;
@@ -483,6 +484,7 @@ public class GuiFluidCraftConfirm extends AEBaseGui {
         }
 
         if (btn == this.cancel) {
+            this.addMissingItemsToBookMark();
             FluidCraft.proxy.netHandler.sendToServer(new CPacketSwitchGuis(this.OriginalGui));
         }
 
@@ -508,5 +510,25 @@ public class GuiFluidCraftConfirm extends AEBaseGui {
 
     public ItemStack getHoveredStack() {
         return hoveredStack;
+    }
+
+    protected void addMissingItemsToBookMark() {
+        if (!this.missing.isEmpty() && isShiftKeyDown()) {
+            for (IAEItemStack iaeItemStack : this.missing) {
+                NEI.instance.addItemToBookMark(iaeItemStack.getItemStack());
+            }
+        }
+    }
+
+    public IItemList<IAEItemStack> getStorage() {
+        return this.storage;
+    }
+
+    public IItemList<IAEItemStack> getPending() {
+        return this.pending;
+    }
+
+    public IItemList<IAEItemStack> getMissing() {
+        return this.missing;
     }
 }
