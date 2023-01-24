@@ -150,6 +150,7 @@ public final class Util {
     public static IAEFluidStack loadFluidStackFromNBT(final NBTTagCompound i) {
         // Fuck ae2
         final FluidStack t = FluidRegistry.getFluidStack(i.getString("FluidName"), 1);
+        if (t == null) return null;
         final AEFluidStack fluid = AEFluidStack.create(t);
         fluid.setStackSize(i.getLong("Cnt"));
         fluid.setCountRequestable(i.getLong("Req"));

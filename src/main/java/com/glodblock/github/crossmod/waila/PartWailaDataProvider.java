@@ -5,6 +5,7 @@ import appeng.integration.modules.waila.part.IPartWailaDataProvider;
 import appeng.integration.modules.waila.part.PartAccessor;
 import appeng.integration.modules.waila.part.Tracer;
 import com.glodblock.github.crossmod.waila.part.FluidInvWailaDataProvider;
+import com.glodblock.github.crossmod.waila.part.FluidMonitorWailaDataProvider;
 import com.glodblock.github.crossmod.waila.part.SpeedWailaDataProvider;
 import com.google.common.base.Optional;
 import com.google.common.collect.Lists;
@@ -27,7 +28,8 @@ public class PartWailaDataProvider implements IWailaDataProvider {
     public PartWailaDataProvider() {
         final IPartWailaDataProvider speed = new SpeedWailaDataProvider();
         final IPartWailaDataProvider fluidInv = new FluidInvWailaDataProvider();
-        this.providers = Lists.newArrayList(speed, fluidInv);
+        final IPartWailaDataProvider fluidMonitor = new FluidMonitorWailaDataProvider();
+        this.providers = Lists.newArrayList(speed, fluidInv, fluidMonitor);
     }
 
     @Override

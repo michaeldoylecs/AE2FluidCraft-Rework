@@ -123,6 +123,25 @@ public class RecipeLoader implements Runnable {
                 AE2_WORK_BENCH));
         GameRegistry.addShapelessRecipe(FLUID_STORAGE_BUS.stack(), FLUID_INTERFACE, STICKY_PISTON, PISTON);
         GameRegistry.addShapelessRecipe(FLUID_STORAGE_BUS.stack(), INTERFACE, STICKY_PISTON, PISTON);
+        GameRegistry.addRecipe(new ShapedOreRecipe(
+                FLUID_STORAGE_MONITOR.stack(),
+                "EIP",
+                "P  ",
+                'I',
+                "itemIlluminatedPanel",
+                'E',
+                FLUID_LEVEL_EMITTER,
+                'P',
+                "dyeBlue"));
+        GameRegistry.addRecipe(new ShapedOreRecipe(
+                FLUID_CONVERSION_MONITOR.stack(),
+                "ASF",
+                'A',
+                AE2_CORE_ANN,
+                'S',
+                FLUID_STORAGE_MONITOR,
+                'F',
+                AE2_CORE_FOM));
         GameRegistry.addShapelessRecipe(FLUID_TERMINAL.stack(), AE2_PATTERN_TERM, ENCODER);
         GameRegistry.addShapelessRecipe(
                 FLUID_TERMINAL_EX.stack(), FLUID_TERMINAL.stack(), AE2_PROCESS_CAL, AE2_PROCESS_ENG, AE2_PROCESS_LOG);
