@@ -3,7 +3,6 @@ package com.glodblock.github.crossmod.waila.part;
 import appeng.api.parts.IPart;
 import appeng.api.storage.data.IAEFluidStack;
 import appeng.integration.modules.waila.part.BasePartWailaDataProvider;
-import com.glodblock.github.common.parts.PartFluidLevelEmitter;
 import com.glodblock.github.common.parts.base.FCPartMonitor;
 import com.glodblock.github.crossmod.waila.Tooltip;
 import com.glodblock.github.util.Util;

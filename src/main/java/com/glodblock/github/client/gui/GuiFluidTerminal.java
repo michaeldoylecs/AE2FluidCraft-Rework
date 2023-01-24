@@ -36,6 +36,7 @@ public class GuiFluidTerminal extends GuiFluidMonitor {
         super(inventoryPlayer, te, new ContainerFluidMonitor(inventoryPlayer, te));
         this.container = new ContainerFluidMonitor(inventoryPlayer, te);
         this.player = inventoryPlayer.player;
+        this.showViewBtn = false;
     }
 
     @Override
