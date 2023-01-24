@@ -32,9 +32,6 @@ public class FCClassTransformer implements IClassTransformer {
             case "appeng.integration.modules.NEI":
                 tform = NEITransfermer.INSTANCE;
                 break;
-            case "appeng.tile.storage.TileIOPort":
-                tform = TitleIOPortTransformer.INSTANCE;
-                break;
             case "appeng.core.features.registries.ExternalStorageRegistry":
                 tform = ExternalStorageRegistryTransformer.INSTANCE;
                 break;
