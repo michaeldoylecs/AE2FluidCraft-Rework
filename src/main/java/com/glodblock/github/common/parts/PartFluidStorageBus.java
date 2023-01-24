@@ -56,6 +56,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Vec3;
+import net.minecraftforge.fluids.IFluidHandler;
 
 public class PartFluidStorageBus extends PartUpgradeable
         implements IGridTickable, ICellContainer, IMEMonitorHandlerReceiver<IAEFluidStack>, IPriorityHost {
@@ -289,6 +290,9 @@ public class PartFluidStorageBus extends PartUpgradeable
                 this.resetCache(true);
                 this.resetCache();
             }
+        } else if (te instanceof IFluidHandler) {
+            this.resetCache(true);
+            this.resetCache();
         } else {
             this.resetCache(false);
         }
