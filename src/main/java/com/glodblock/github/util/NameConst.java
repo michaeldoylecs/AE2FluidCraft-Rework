@@ -16,7 +16,7 @@ public class NameConst {
     public static final String BLOCK_LARGE_INGREDIENT_BUFFER = "large_ingredient_buffer";
     public static final String BLOCK_OC_PATTERN_EDITOR = "oc_pattern_editor";
     public static final String BLOCK_LEVEL_MAINTAINER = "level_maintainer";
-
+    public static final String BLOCK_WALRUS = "walrus";
     public static final String ITEM_FLUID_DROP = "fluid_drop";
     public static final String ITEM_FLUID_ENCODED_PATTERN = "fluid_encoded_pattern";
     public static final String ITEM_PART_FLUID_STORAGE_MONITOR = "part_fluid_storage_monitor";
@@ -42,6 +42,8 @@ public class NameConst {
     public static final String TT_DUMP_TANK = TT_KEY + "dump_tank";
     public static final String TT_SHIFT_FOR_MORE = TT_KEY + "shift_for_more";
     public static final String TT_CTRL_FOR_MORE = TT_KEY + "ctrl_for_more";
+    public static final String TT_WALRUS = TT_KEY + "walrus.";
+    public static final String TT_WALRUS_DESC = TT_WALRUS + "desc";
     public static final String TT_FLUID_BUFFER = TT_KEY + "fluid_buffer.";
     public static final String TT_FLUID_PACKET_DECODER = TT_KEY + "fluid_packet_decoder.";
     public static final String TT_FLUID_PACKET_DECODER_DESC = TT_FLUID_PACKET_DECODER + "desc";

@@ -16,7 +16,7 @@ public class ItemAndBlockHolder {
     public static BlockFluidBuffer FLUID_BUFFER = new BlockFluidBuffer().register();
     public static BlockLargeIngredientBuffer LARGE_BUFFER = new BlockLargeIngredientBuffer().register();
     public static BlockOCPatternEditor OC_EDITOR = new BlockOCPatternEditor().register();
-
+    public static BlockWalrus WALRUS = new BlockWalrus().register();
     public static ItemFluidDrop DROP = new ItemFluidDrop().register();
     public static ItemFluidEncodedPattern PATTERN = new ItemFluidEncodedPattern().register();
     public static ItemPartFluidTerminal FLUID_TERM = new ItemPartFluidTerminal().register();

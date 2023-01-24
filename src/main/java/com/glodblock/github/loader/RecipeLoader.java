@@ -2,6 +2,7 @@ package com.glodblock.github.loader;
 
 import static com.glodblock.github.loader.ItemAndBlockHolder.*;
 import static net.minecraft.init.Blocks.redstone_torch;
+import static net.minecraft.init.Items.fish;
 
 import com.glodblock.github.common.Config;
 import com.glodblock.github.common.item.ItemBasicFluidStorageCell;
@@ -162,6 +163,7 @@ public class RecipeLoader implements Runnable {
                 AE2_CORE_FOM,
                 'B',
                 BUCKET));
+        GameRegistry.addRecipe(new ShapedOreRecipe(WALRUS, "FFF", "F F", "FFF", 'F', fish));
         GameRegistry.addRecipe(new ShapedOreRecipe(
                 FLUID_LEVEL_EMITTER.stack(), "RPD", 'R', redstone_torch, 'P', AE2_PROCESS_CAL, 'D', "dyeBlue"));
         GameRegistry.addRecipe(new ShapedOreRecipe(

@@ -35,15 +35,18 @@ tile.large_ingredient_buffer.name=大型原材料缓存仓
 tile.oc_pattern_editor.name=OC样板编辑器
 tile.level_maintainer.name=ME库存维持器
 tile.fluid_buffer.name=ME流体缓存器
+tile.walrus.name=海象
 
 ae2fc.waila.speed=速度
 ae2fc.waila.enable=启用
 ae2fc.waila.disable=禁用
 
-ae2fc.tooltip.shift_for_more=> 按 §3Shift§r 显示更多信息
+ae2fc.tooltip.shift_for_more=§r> 按 §3Shift§r 显示更多信息
+ae2fc.tooltip.ctrl_for_more=§r> 按 §3Ctrl§r 显示更多信息
 ae2fc.tooltip.fluid_packet_decoder.desc=流体解码器可以解码液体数据包。它必须与ME系统连接，并且网络内可以储存流体，否则它就无法工作。
 ae2fc.tooltip.discretizer.desc=当ME流体离散器连接到您的ME系统时，它将把存储在的ME流体存储单元（或存储总线）中的流体表现为物品液滴。它们将是流体的等价物。它只是显示流体的另一种方式，它不会真正把你的流体转换成物品。
 ae2fc.tooltip.fluid_buffer.desc=这就是一个高速的流体IO接口
+ae2fc.tooltip.walrus.desc=GTNH is like a job
 ae2fc.tooltip.level_maintainer.Who_Am_I=Who Am I?
 ae2fc.tooltip.level_maintainer.title=§6请求状态§r
 ae2fc.tooltip.level_maintainer.desc=通过在需要时请求合成，自动保持物品和流体的库存。必须连接到ME网络。
@@ -61,6 +64,7 @@ ae2fc.tooltip.level_maintainer.request_size=§6缓存量§r
 ae2fc.tooltip.level_maintainer.request_size.hint=数量定义了在请求器开始请求新合成之前应该保留多少物品。
 
 ae2fc.tooltip.cell_contents=内含流体:
+ae2fc.tooltip.cell_empty=Cell is empty
 ae2fc.tooltip.fluid_terminal=我们不再需要EC2了吗?
 ae2fc.tooltip.invalid_fluid=流体无效！
 ae2fc.tooltip.encode_pattern=编写样板
@@ -101,6 +105,7 @@ ae2fc.gui.part_fluid_level_emitter=ME流体发信器
 ae2fc.gui.part_fluid_import=ME流体输入总线
 ae2fc.gui.part_fluid_export=ME流体输出总线
 ae2fc.gui.part_fluid_terminal=流体终端
+ae2fc.gui.part_fluid_storage_bus=ME流体存储总线
 
 error.unknown=未知流体
 
