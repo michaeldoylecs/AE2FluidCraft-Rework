@@ -122,11 +122,13 @@ public class PartFluidInterface extends PartInterface implements IDualHost {
     @MENetworkEventSubscribe
     public void stateChange(final MENetworkChannelsChanged c) {
         fluidDuality.onChannelStateChange(c);
+        super.stateChange(c);
     }
 
     @MENetworkEventSubscribe
     public void stateChange(final MENetworkPowerStatusChange c) {
         fluidDuality.onPowerStateChange(c);
+        super.stateChange(c);
     }
 
     @Override
