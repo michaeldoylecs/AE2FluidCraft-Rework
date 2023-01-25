@@ -16,7 +16,7 @@ public class ItemAndBlockHolder {
     public static BlockFluidBuffer FLUID_BUFFER = new BlockFluidBuffer().register();
     public static BlockLargeIngredientBuffer LARGE_BUFFER = new BlockLargeIngredientBuffer().register();
     public static BlockOCPatternEditor OC_EDITOR = new BlockOCPatternEditor().register();
-
+    public static BlockWalrus WALRUS = new BlockWalrus().register();
     public static ItemFluidDrop DROP = new ItemFluidDrop().register();
     public static ItemFluidEncodedPattern PATTERN = new ItemFluidEncodedPattern().register();
     public static ItemPartFluidTerminal FLUID_TERM = new ItemPartFluidTerminal().register();
@@ -27,6 +27,8 @@ public class ItemAndBlockHolder {
     public static ItemFluidExportBus FLUID_EXPORT_BUS = new ItemFluidExportBus().register();
     public static ItemPartFluidStorageBus FLUID_STORAGE_BUS = new ItemPartFluidStorageBus().register();
     public static ItemFluidLevelEmitter FLUID_LEVEL_EMITTER = new ItemFluidLevelEmitter().register();
+    public static ItemFluidStorageMonitor FLUID_STORAGE_MONITOR = new ItemFluidStorageMonitor().register();
+    public static ItemFluidConversionMonitor FLUID_CONVERSION_MONITOR = new ItemFluidConversionMonitor().register();
     public static ItemFluidPacket PACKET = new ItemFluidPacket().register();
     public static ItemBasicFluidStorageCell CELL1K = new ItemBasicFluidStorageCell(CellType.Cell1kPart, 1).register();
     public static ItemBasicFluidStorageCell CELL4K = new ItemBasicFluidStorageCell(CellType.Cell4kPart, 4).register();

@@ -70,6 +70,7 @@ public abstract class FCGuiMonitor<T extends IAEStack<T>> extends AEBaseMEGui
     protected int perRow = 9;
     protected int reservedSpace = 0;
     protected boolean customSortOrder = true;
+    protected boolean showViewBtn = true;
     protected int rows = 0;
     protected int maxRows = Integer.MAX_VALUE;
     protected int standardSize;
@@ -204,6 +205,49 @@ public abstract class FCGuiMonitor<T extends IAEStack<T>> extends AEBaseMEGui
                             this.guiLeft - 18, offset, Settings.SORT_BY, this.configSrc.getSetting(Settings.SORT_BY)));
             offset += 20;
         }
+        if (this.showViewBtn) {
+            this.buttonList.add(
+                    this.ViewBox = new GuiImgButton(
+                            this.guiLeft - 18,
+                            offset,
+                            Settings.VIEW_MODE,
+                            this.configSrc.getSetting(Settings.VIEW_MODE)));
+            offset += 20;
+        }
+
+        this.buttonList.add(
+                this.SortDirBox = new GuiImgButton(
+                        this.guiLeft - 18,
+                        offset,
+                        Settings.SORT_DIRECTION,
+                        this.configSrc.getSetting(Settings.SORT_DIRECTION)));
+        offset += 20;
+
+        this.buttonList.add(
+                this.searchBoxSettings = new GuiImgButton(
+                        this.guiLeft - 18,
+                        offset,
+                        Settings.SEARCH_MODE,
+                        AEConfig.instance.settings.getSetting(Settings.SEARCH_MODE)));
+        offset += 20;
+
+        if (ModAndClassUtil.isSaveText) {
+            this.buttonList.add(
+                    this.searchStringSave = new GuiImgButton(
+                            this.guiLeft - 18,
+                            offset,
+                            Settings.SAVE_SEARCH,
+                            AEConfig.instance.preserveSearchBar ? YesNo.YES : YesNo.NO));
+            offset += 20;
+        }
+
+        this.buttonList.add(
+                this.terminalStyleBox = new GuiImgButton(
+                        this.guiLeft - 18,
+                        offset,
+                        Settings.TERMINAL_STYLE,
+                        AEConfig.instance.settings.getSetting(Settings.TERMINAL_STYLE)));
+        offset += 20;
 
         this.searchField = new FCGuiTextField(
                 this.fontRendererObj, this.guiLeft + Math.max(80, this.offsetX), this.guiTop + 4, 90, 12);

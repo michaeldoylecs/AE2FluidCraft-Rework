@@ -1,9 +1,11 @@
 package com.glodblock.github.proxy;
 
 import appeng.api.AEApi;
+import appeng.api.IAppEngApi;
 import appeng.api.config.Upgrades;
 import com.glodblock.github.FluidCraft;
 import com.glodblock.github.common.Config;
+import com.glodblock.github.common.tile.TileWalrus;
 import com.glodblock.github.inventory.external.AEFluidInterfaceHandler;
 import com.glodblock.github.loader.ItemAndBlockHolder;
 import com.glodblock.github.util.ModAndClassUtil;
@@ -20,7 +22,9 @@ public class CommonProxy {
 
     public void preInit(FMLPreInitializationEvent event) {}
 
-    public void init(FMLInitializationEvent event) {}
+    public void init(FMLInitializationEvent event) {
+        this.registerMovables();
+    }
 
     public void postInit(FMLPostInitializationEvent event) {
         if (ModAndClassUtil.isBigInterface) {
@@ -44,5 +48,12 @@ public class CommonProxy {
             Upgrades.CRAFTING.registerItem(new ItemStack(ItemAndBlockHolder.FLUID_EXPORT_BUS), 1);
         }
         AEApi.instance().registries().externalStorage().addExternalStorageInterface(new AEFluidInterfaceHandler());
+    }
+
+    public void registerRenderers() {}
+
+    public void registerMovables() {
+        IAppEngApi api = AEApi.instance();
+        api.registries().movable().whiteListTileEntity(TileWalrus.class);
     }
 }
