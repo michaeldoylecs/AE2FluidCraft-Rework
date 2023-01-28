@@ -13,6 +13,7 @@ public class NameConst {
     public static final String BLOCK_FLUID_INTERFACE = "fluid_interface";
     public static final String BLOCK_INGREDIENT_BUFFER = "ingredient_buffer";
     public static final String BLOCK_FLUID_BUFFER = "fluid_buffer";
+    public static final String BLOCK_FLUID_AUTO_FILLER = "fluid_auto_filler";
     public static final String BLOCK_LARGE_INGREDIENT_BUFFER = "large_ingredient_buffer";
     public static final String BLOCK_OC_PATTERN_EDITOR = "oc_pattern_editor";
     public static final String BLOCK_LEVEL_MAINTAINER = "level_maintainer";
@@ -81,6 +82,7 @@ public class NameConst {
     public static final String GUI_LEVEL_MAINTAINER = GUI_KEY + BLOCK_LEVEL_MAINTAINER;
     public static final String GUI_FLUID_PATTERN_ENCODER = GUI_KEY + BLOCK_FLUID_PATTERN_ENCODER;
     public static final String GUI_FLUID_PACKET_DECODER = GUI_KEY + BLOCK_FLUID_PACKET_DECODER;
+    public static final String GUI_FLUID_AUTO_FILLER = GUI_KEY + BLOCK_FLUID_AUTO_FILLER;
     public static final String GUI_INGREDIENT_BUFFER = GUI_KEY + BLOCK_INGREDIENT_BUFFER;
     public static final String GUI_LARGE_INGREDIENT_BUFFER = GUI_KEY + BLOCK_LARGE_INGREDIENT_BUFFER;
     public static final String GUI_FLUID_INTERFACE = GUI_KEY + BLOCK_FLUID_INTERFACE;

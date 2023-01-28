@@ -16,7 +16,6 @@ import javax.annotation.Nullable;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.StatCollector;
 import net.minecraft.world.World;
 
 public class ItemPartFluidTerminal extends FCBaseItem implements IPartItem {
@@ -50,8 +49,12 @@ public class ItemPartFluidTerminal extends FCBaseItem implements IPartItem {
     @Override
     @SuppressWarnings("unchecked")
     @SideOnly(Side.CLIENT)
-    public void addInformation(ItemStack stack, EntityPlayer player, List tooltip, boolean flag) {
-        if (isShiftKeyDown()) tooltip.add(StatCollector.translateToLocalFormatted(NameConst.TT_FLUID_TERMINAL));
+    public void addInformation(ItemStack stack, EntityPlayer player, List toolTip, boolean flag) {
+        if (isShiftKeyDown()) {
+            toolTip.add(NameConst.i18n(NameConst.TT_FLUID_TERMINAL));
+        } else {
+            toolTip.add(NameConst.i18n(NameConst.TT_SHIFT_FOR_MORE));
+        }
     }
 
     @Override

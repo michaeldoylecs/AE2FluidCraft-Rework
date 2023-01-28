@@ -36,6 +36,7 @@ tile.oc_pattern_editor.name=OC样板编辑器
 tile.level_maintainer.name=ME库存维持器
 tile.fluid_buffer.name=ME流体缓存器
 tile.walrus.name=海象
+tile.fluid_auto_filler.name=ME流体自动装填器
 
 ae2fc.waila.speed=速度
 ae2fc.waila.enable=启用
@@ -106,6 +107,7 @@ ae2fc.gui.part_fluid_import=ME流体输入总线
 ae2fc.gui.part_fluid_export=ME流体输出总线
 ae2fc.gui.part_fluid_terminal=流体终端
 ae2fc.gui.part_fluid_storage_bus=ME流体存储总线
+ae2fc.gui.fluid_auto_filler=ME流体自动装填器
 
 error.unknown=未知流体
 

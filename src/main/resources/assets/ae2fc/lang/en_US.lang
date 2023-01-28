@@ -36,6 +36,7 @@ tile.oc_pattern_editor.name=OC Pattern Editor
 tile.level_maintainer.name=ME Level Maintainer
 tile.fluid_buffer.name=ME Fluid Buffer
 tile.walrus.name=Walrus
+tile.fluid_auto_filler.name=ME Fluid Auto Filler
 
 ae2fc.waila.speed=Speed
 ae2fc.waila.enable=Enable
@@ -106,6 +107,7 @@ ae2fc.gui.part_fluid_import=ME Fluid Import Bus
 ae2fc.gui.part_fluid_export=ME Fluid Export Bus
 ae2fc.gui.part_fluid_terminal=ME Fluid Terminal
 ae2fc.gui.part_fluid_storage_bus=ME Fluid Storage Bus
+ae2fc.gui.fluid_auto_filler=ME Fluid Auto Filler
 
 error.unknown=Unknown
 
