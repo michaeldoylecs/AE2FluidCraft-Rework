@@ -61,11 +61,24 @@ public class RecipeLoader implements Runnable {
             new ItemStack(GameRegistry.findItem("appliedenergistics2", "tile.BlockCraftingUnit"), 1, 1);
     public static final ItemStack AE2_PATTERN_CAPACITY_CARD =
             new ItemStack(GameRegistry.findItem("appliedenergistics2", "item.ItemMultiMaterial"), 1, 54);
+    public static final ItemStack AE2_ME_CHEST =
+            GameRegistry.findItemStack("appliedenergistics2", "tile.BlockChest", 1);
+    public static final ItemStack AE2_ENERGY_CELL =
+            GameRegistry.findItemStack("appliedenergistics2", "tile.BlockEnergyCell", 1);
     public static final ItemStack BUCKET = new ItemStack(Items.bucket, 1);
     public static final ItemStack IRON_BAR = new ItemStack(Blocks.iron_bars, 1);
 
     @Override
     public void run() {
+        GameRegistry.addRecipe(new ShapedOreRecipe(
+                PORTABLE_FLUID_CELL.stack(),
+                "ABC",
+                'A',
+                AE2_ME_CHEST,
+                'B',
+                CellType.Cell1kPart.stack(1),
+                'C',
+                AE2_ENERGY_CELL));
         GameRegistry.addRecipe(new ShapedOreRecipe(
                 INTERFACE.stack(),
                 "IPI",

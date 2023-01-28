@@ -4,6 +4,7 @@ import appeng.api.storage.ITerminalHost;
 import appeng.container.implementations.ContainerCraftAmount;
 import appeng.container.implementations.ContainerCraftingStatus;
 import appeng.container.implementations.ContainerPriority;
+import appeng.helpers.IInterfaceHost;
 import appeng.helpers.IPriorityHost;
 import com.glodblock.github.client.gui.*;
 import com.glodblock.github.client.gui.container.*;
@@ -12,6 +13,7 @@ import com.glodblock.github.common.parts.PartFluidStorageBus;
 import com.glodblock.github.common.parts.base.FCPart;
 import com.glodblock.github.common.parts.base.FCSharedFluidBus;
 import com.glodblock.github.common.tile.*;
+import com.glodblock.github.inventory.IDualHost;
 import com.glodblock.github.inventory.item.IFluidPortableCell;
 import com.google.common.collect.ImmutableList;
 import java.util.List;
@@ -55,26 +57,26 @@ public enum GuiType {
         }
     }),
 
-    DUAL_INTERFACE(new TileOrPartGuiFactory<TileFluidInterface>(TileFluidInterface.class) {
+    DUAL_INTERFACE(new TileOrPartGuiFactory<IInterfaceHost>(IInterfaceHost.class) {
         @Override
-        protected Object createServerGui(EntityPlayer player, TileFluidInterface inv) {
+        protected Object createServerGui(EntityPlayer player, IInterfaceHost inv) {
             return new ContainerDualInterface(player.inventory, inv);
         }
 
         @Override
-        protected Object createClientGui(EntityPlayer player, TileFluidInterface inv) {
+        protected Object createClientGui(EntityPlayer player, IInterfaceHost inv) {
             return new GuiDualInterface(player.inventory, inv);
         }
     }),
 
-    DUAL_INTERFACE_FLUID(new TileOrPartGuiFactory<TileFluidInterface>(TileFluidInterface.class) {
+    DUAL_INTERFACE_FLUID(new TileOrPartGuiFactory<IDualHost>(IDualHost.class) {
         @Override
-        protected Object createServerGui(EntityPlayer player, TileFluidInterface inv) {
+        protected Object createServerGui(EntityPlayer player, IDualHost inv) {
             return new ContainerFluidInterface(player.inventory, inv);
         }
 
         @Override
-        protected Object createClientGui(EntityPlayer player, TileFluidInterface inv) {
+        protected Object createClientGui(EntityPlayer player, IDualHost inv) {
             return new GuiFluidInterface(player.inventory, inv);
         }
     }),

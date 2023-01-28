@@ -6,6 +6,7 @@ import appeng.api.util.IConfigManager;
 import appeng.container.guisync.GuiSync;
 import appeng.container.implementations.ContainerInterface;
 import appeng.helpers.IInterfaceHost;
+import com.glodblock.github.common.tile.TileFluidInterface;
 import net.minecraft.entity.player.InventoryPlayer;
 
 public class ContainerDualInterface extends ContainerInterface {
@@ -13,9 +14,12 @@ public class ContainerDualInterface extends ContainerInterface {
     @GuiSync(10)
     public SidelessMode sidelessMode;
 
+    private final boolean isTile;
+
     public ContainerDualInterface(InventoryPlayer ip, IInterfaceHost te) {
         super(ip, te);
         this.sidelessMode = SidelessMode.SIDELESS;
+        this.isTile = te instanceof TileFluidInterface;
     }
 
     public SidelessMode getSidelessMode() {
@@ -25,6 +29,6 @@ public class ContainerDualInterface extends ContainerInterface {
     @Override
     protected void loadSettingsFromHost(IConfigManager cm) {
         super.loadSettingsFromHost(cm);
-        this.sidelessMode = (SidelessMode) cm.getSetting(Settings.SIDELESS_MODE);
+        this.sidelessMode = this.isTile ? (SidelessMode) cm.getSetting(Settings.SIDELESS_MODE) : SidelessMode.SIDELESS;
     }
 }
