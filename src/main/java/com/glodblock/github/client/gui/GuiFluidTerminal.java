@@ -39,6 +39,14 @@ public class GuiFluidTerminal extends GuiFluidMonitor {
         this.showViewBtn = false;
     }
 
+    public GuiFluidTerminal(
+            final InventoryPlayer inventoryPlayer, final ITerminalHost te, final ContainerFluidMonitor c) {
+        super(inventoryPlayer, te, c);
+        this.container = c;
+        this.player = inventoryPlayer.player;
+        this.showViewBtn = false;
+    }
+
     @Override
     protected void repositionSlot(final AppEngSlot s) {
         if (s.isPlayerSide()) {

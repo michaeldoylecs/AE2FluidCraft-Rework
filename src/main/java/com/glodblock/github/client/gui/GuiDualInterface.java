@@ -125,19 +125,11 @@ public class GuiDualInterface extends GuiUpgradeable {
             return;
         }
         if (btn == this.priority) {
-            if (isTile()) {
-                FluidCraft.proxy.netHandler.sendToServer(new CPacketSwitchGuis(GuiType.PRIORITY_TILE));
-            } else if (isPart()) {
-                FluidCraft.proxy.netHandler.sendToServer(new CPacketSwitchGuis(GuiType.PRIORITY_PART));
-            }
+            FluidCraft.proxy.netHandler.sendToServer(new CPacketSwitchGuis(GuiType.PRIORITY));
         }
 
         if (btn == this.switcher) {
-            if (isTile()) {
-                FluidCraft.proxy.netHandler.sendToServer(new CPacketSwitchGuis(GuiType.DUAL_INTERFACE_FLUID));
-            } else if (isPart()) {
-                FluidCraft.proxy.netHandler.sendToServer(new CPacketSwitchGuis(GuiType.DUAL_INTERFACE_FLUID_PART));
-            }
+            FluidCraft.proxy.netHandler.sendToServer(new CPacketSwitchGuis(GuiType.DUAL_INTERFACE_FLUID));
         }
 
         if (btn == this.interfaceMode) {

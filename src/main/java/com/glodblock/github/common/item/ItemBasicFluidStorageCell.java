@@ -260,14 +260,6 @@ public class ItemBasicFluidStorageCell extends AEBaseItem
         Platform.openNbtData(is).setString("FuzzyMode", fzMode.name());
     }
 
-    public String getOreFilter(ItemStack is) {
-        return Platform.openNbtData(is).getString("OreFilter");
-    }
-
-    public void setOreFilter(ItemStack is, String filter) {
-        Platform.openNbtData(is).setString("OreFilter", filter);
-    }
-
     @Override
     public ItemStack onItemRightClick(final ItemStack stack, final World world, final EntityPlayer player) {
         this.disassembleDrive(stack, world, player);

@@ -1,16 +1,15 @@
 package com.glodblock.github.common.storage;
 
 import appeng.api.implementations.tiles.IChestOrDrive;
-import appeng.api.implementations.tiles.IMEChest;
-import appeng.api.networking.security.PlayerSource;
 import appeng.api.storage.*;
 import appeng.client.texture.ExtraBlockTextures;
-import com.glodblock.github.util.ModAndClassUtil;
-import extracells.network.GuiHandler;
+import com.glodblock.github.inventory.InventoryHandler;
+import com.glodblock.github.inventory.gui.GuiType;
+import com.glodblock.github.util.BlockPos;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.IIcon;
-import net.minecraftforge.common.util.ForgeDirection;
 
 public class FluidCellHandler implements ICellHandler {
 
@@ -52,17 +51,11 @@ public class FluidCellHandler implements ICellHandler {
             final IMEInventoryHandler inv,
             final ItemStack is,
             final StorageChannel chan) {
-        if (ModAndClassUtil.EC2) {
-            if (chan == StorageChannel.FLUIDS) {
-                IStorageMonitorable monitorable = null;
-                if (chest != null) {
-                    monitorable =
-                            ((IMEChest) chest).getMonitorable(ForgeDirection.UNKNOWN, new PlayerSource(player, chest));
-                }
-                if (monitorable != null) {
-                    GuiHandler.launchGui(
-                            GuiHandler.getGuiId(0), player, new Object[] {monitorable.getFluidInventory()});
-                }
+        if (chan == StorageChannel.FLUIDS) {
+            if (chest instanceof TileEntity) {
+                TileEntity te = (TileEntity) chest;
+                InventoryHandler.openGui(
+                        player, te.getWorldObj(), new BlockPos(te), chest.getUp(), GuiType.FLUID_TERMINAL);
             }
         }
     }

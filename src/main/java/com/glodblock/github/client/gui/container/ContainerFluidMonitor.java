@@ -25,6 +25,7 @@ import appeng.util.item.AEItemStack;
 import com.glodblock.github.FluidCraft;
 import com.glodblock.github.client.gui.container.base.FCContainerMonitor;
 import com.glodblock.github.common.item.ItemFluidDrop;
+import com.glodblock.github.inventory.item.IFluidPortableCell;
 import com.glodblock.github.network.CPacketFluidUpdate;
 import com.glodblock.github.network.SPacketFluidUpdate;
 import com.glodblock.github.network.SPacketMEInventoryUpdate;
@@ -58,7 +59,9 @@ public class ContainerFluidMonitor extends FCContainerMonitor<IAEFluidStack> {
             this.monitor = monitorable.getFluidInventory();
             if (this.monitor != null) {
                 this.monitor.addListener(this, null);
-                if (monitorable instanceof IPortableCell) {
+                if (monitorable instanceof IFluidPortableCell) {
+                    this.setPowerSource((IEnergySource) monitorable);
+                } else if (monitorable instanceof IPortableCell) {
                     this.setPowerSource((IEnergySource) monitorable);
                 } else if (monitorable instanceof IMEChest) {
                     this.setPowerSource((IEnergySource) monitorable);

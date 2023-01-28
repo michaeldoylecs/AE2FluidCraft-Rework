@@ -9,6 +9,7 @@ import com.glodblock.github.inventory.InventoryHandler;
 import com.glodblock.github.inventory.gui.GuiType;
 import com.glodblock.github.util.BlockPos;
 import com.glodblock.github.util.NameConst;
+import com.glodblock.github.util.RenderUtil;
 import cpw.mods.fml.common.registry.GameRegistry;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -65,7 +66,8 @@ public class BlockFluidPacketDecoder extends FCBaseBlock {
             final List<String> toolTip,
             final boolean advancedToolTips) {
         if (isShiftKeyDown()) {
-            toolTip.addAll(this.listFormattedStringToWidth(NameConst.i18n(NameConst.TT_FLUID_PACKET_DECODER_DESC)));
+            toolTip.addAll(
+                    RenderUtil.listFormattedStringToWidth(NameConst.i18n(NameConst.TT_FLUID_PACKET_DECODER_DESC)));
         } else {
             toolTip.add(NameConst.i18n(NameConst.TT_SHIFT_FOR_MORE));
         }

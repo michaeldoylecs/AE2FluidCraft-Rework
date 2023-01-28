@@ -268,7 +268,7 @@ public class PartFluidInterface extends PartInterface implements IDualHost {
                     this.getHost().getTile().getWorldObj(),
                     new BlockPos(this.getHost().getTile()),
                     Objects.requireNonNull(this.getSide()),
-                    GuiType.DUAL_INTERFACE_PART);
+                    GuiType.DUAL_INTERFACE);
         }
         return true;
     }

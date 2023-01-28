@@ -117,8 +117,7 @@ public class GuiFluidInterface extends AEBaseGui {
     protected void actionPerformed(final GuiButton btn) {
         super.actionPerformed(btn);
         if (btn == this.switcher) {
-            FluidCraft.proxy.netHandler.sendToServer(
-                    new CPacketSwitchGuis(isPart() ? GuiType.DUAL_INTERFACE_PART : GuiType.DUAL_INTERFACE));
+            FluidCraft.proxy.netHandler.sendToServer(new CPacketSwitchGuis(GuiType.DUAL_INTERFACE));
         }
     }
 

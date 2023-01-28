@@ -31,7 +31,7 @@ public class FluidCellInventory implements IFluidCellInventory {
     private static String[] fluidSlotCount;
     private final ItemStack cellItem;
     private final ISaveProvider container;
-    private final int MAX_TYPE = 1;
+    private final int MAX_TYPE = 63;
     private long storedFluidCount;
     private short storedFluids;
     private IItemList<IAEFluidStack> cellFluids;
@@ -137,7 +137,7 @@ public class FluidCellInventory implements IFluidCellInventory {
 
     @Override
     public long getTotalFluidTypes() {
-        return MAX_TYPE;
+        return this.cellType.getTotalTypes(this.cellItem);
     }
 
     @Override

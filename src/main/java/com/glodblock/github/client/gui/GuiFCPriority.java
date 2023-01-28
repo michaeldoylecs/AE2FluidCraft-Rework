@@ -9,9 +9,8 @@ import appeng.helpers.IPriorityHost;
 import appeng.util.calculators.ArithHelper;
 import appeng.util.calculators.Calculator;
 import com.glodblock.github.client.gui.base.FCGuiAmount;
-import com.glodblock.github.common.parts.PartFluidInterface;
 import com.glodblock.github.common.parts.PartFluidStorageBus;
-import com.glodblock.github.common.tile.TileFluidInterface;
+import com.glodblock.github.inventory.IDualHost;
 import com.glodblock.github.inventory.gui.GuiType;
 import com.glodblock.github.loader.ItemAndBlockHolder;
 import java.io.IOException;
@@ -59,12 +58,9 @@ public class GuiFCPriority extends FCGuiAmount {
 
     @Override
     protected void setOriginGUI(Object target) {
-        if (target instanceof TileFluidInterface) {
+        if (target instanceof IDualHost) {
             this.myIcon = ItemAndBlockHolder.INTERFACE.stack();
             this.originalGui = GuiType.DUAL_INTERFACE;
-        } else if (target instanceof PartFluidInterface) {
-            this.myIcon = ItemAndBlockHolder.FLUID_INTERFACE.stack();
-            this.originalGui = GuiType.DUAL_INTERFACE_PART;
         } else if (target instanceof PartFluidStorageBus) {
             this.myIcon = ItemAndBlockHolder.FLUID_STORAGE_BUS.stack();
             this.originalGui = GuiType.FLUID_STORAGE_BUS;

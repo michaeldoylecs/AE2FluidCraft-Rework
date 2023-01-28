@@ -9,7 +9,6 @@ import cpw.mods.fml.relauncher.SideOnly;
 import java.util.EnumSet;
 import java.util.List;
 import net.minecraft.block.material.Material;
-import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
@@ -46,11 +45,6 @@ public abstract class FCBaseBlock extends AEBaseTileBlock implements IRegister<F
             final EntityPlayer player,
             final List<String> toolTip,
             final boolean advancedToolTips) {}
-
-    @SuppressWarnings("unchecked")
-    protected final List<String> listFormattedStringToWidth(String str) {
-        return Minecraft.getMinecraft().fontRenderer.listFormattedStringToWidth(str, 150);
-    }
 
     public void addCheckedInformation(
             ItemStack itemStack, EntityPlayer player, List<String> toolTip, boolean advancedToolTips) {

@@ -6,6 +6,7 @@ import com.glodblock.github.common.item.FCBaseItemBlock;
 import com.glodblock.github.common.tabs.FluidCraftingTabs;
 import com.glodblock.github.common.tile.TileFluidDiscretizer;
 import com.glodblock.github.util.NameConst;
+import com.glodblock.github.util.RenderUtil;
 import cpw.mods.fml.common.registry.GameRegistry;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -40,7 +41,7 @@ public class BlockFluidDiscretizer extends FCBaseBlock {
             final boolean advancedToolTips) {
 
         if (isShiftKeyDown()) {
-            toolTip.addAll(this.listFormattedStringToWidth(NameConst.i18n(NameConst.TT_FLUID_DISCRETIZER_DESC)));
+            toolTip.addAll(RenderUtil.listFormattedStringToWidth(NameConst.i18n(NameConst.TT_FLUID_DISCRETIZER_DESC)));
         } else {
             toolTip.add(NameConst.i18n(NameConst.TT_SHIFT_FOR_MORE));
         }

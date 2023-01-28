@@ -13,6 +13,7 @@ import com.glodblock.github.inventory.InventoryHandler;
 import com.glodblock.github.inventory.gui.GuiType;
 import com.glodblock.github.util.BlockPos;
 import com.glodblock.github.util.NameConst;
+import com.glodblock.github.util.RenderUtil;
 import com.glodblock.github.util.Util;
 import cpw.mods.fml.common.registry.GameRegistry;
 import cpw.mods.fml.relauncher.Side;
@@ -83,7 +84,7 @@ public class BlockLevelMaintainer extends FCBaseBlock {
         if (isShiftKeyDown() && isCtrlKeyDown()) {
             toolTip.add(NameConst.i18n(NameConst.TT_LEVEL_MAINTAINER_WHO_AM_I));
         } else if (isShiftKeyDown()) {
-            toolTip.addAll(this.listFormattedStringToWidth(NameConst.i18n(NameConst.TT_LEVEL_MAINTAINER_DESC)));
+            toolTip.addAll(RenderUtil.listFormattedStringToWidth(NameConst.i18n(NameConst.TT_LEVEL_MAINTAINER_DESC)));
         } else {
             toolTip.add(NameConst.i18n(NameConst.TT_SHIFT_FOR_MORE));
         }

@@ -14,6 +14,7 @@ public class Config {
     public static boolean fluidIOBus;
     public static boolean removeRecipe;
     public static boolean blacklistEssentiaGas;
+    public static double portableCellBattery;
 
     public static void run() {
         loadCategory();
@@ -43,6 +44,8 @@ public class Config {
                 "Fluid Craft for AE2",
                 true,
                 "Blacklist Essentia Gas from Thaumic Energistics, so they won't be stored in Fluid Storage Cells.");
+        portableCellBattery = Config.get("Fluid Craft for AE2", "Portable Fluid Cell Battery Capacity", 20000D)
+                .getDouble();
 
         if (Config.hasChanged()) Config.save();
     }

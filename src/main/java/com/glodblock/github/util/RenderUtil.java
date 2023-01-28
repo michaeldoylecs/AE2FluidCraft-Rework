@@ -1,6 +1,7 @@
 package com.glodblock.github.util;
 
 import appeng.api.storage.data.IAEFluidStack;
+import java.util.List;
 import javax.annotation.Nullable;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
@@ -65,5 +66,10 @@ public final class RenderUtil {
                 GL11.glColor3f(1.0F, 1.0F, 1.0F);
             }
         }
+    }
+
+    @SuppressWarnings("unchecked")
+    public static List<String> listFormattedStringToWidth(String str) {
+        return Minecraft.getMinecraft().fontRenderer.listFormattedStringToWidth(str, 150);
     }
 }

@@ -31,6 +31,7 @@ public class NameConst {
     public static final String ITEM_PART_FLUID_LEVEL_EMITTER = "part_fluid_level_emitter";
     public static final String ITEM_FLUID_PACKET = "fluid_packet";
     public static final String ITEM_FLUID_STORAGE = "fluid_storage";
+    public static final String ITEM_FLUID_PORTABLE_CELL = "portable_fluid_cell";
     public static final String ITEM_FLUID_PART = "fluid_part";
 
     public static final String TT_KEY = FluidCraft.MODID + ".tooltip.";
@@ -66,6 +67,7 @@ public class NameConst {
     public static final String TT_LEVEL_MAINTAINER_EXPORT_DESC = TT_LEVEL_MAINTAINER + "export_desc";
     public static final String TT_CELL_CONTENTS = TT_KEY + "cell_contents";
     public static final String TT_CELL_EMPTY = TT_KEY + "cell_empty";
+    public static final String TT_CELL_PORTABLE = TT_KEY + "cell_portable";
 
     public static final String WAILA_KEY = FluidCraft.MODID + ".waila.";
     public static final String WAILA_ENABLE = WAILA_KEY + "enable";
