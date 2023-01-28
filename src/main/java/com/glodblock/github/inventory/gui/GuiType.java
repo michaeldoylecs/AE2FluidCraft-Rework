@@ -20,6 +20,17 @@ import javax.annotation.Nullable;
 import net.minecraft.entity.player.EntityPlayer;
 
 public enum GuiType {
+    FLUID_AUTO_FILLER(new TileGuiFactory<TileFluidAutoFiller>(TileFluidAutoFiller.class) {
+        @Override
+        protected Object createServerGui(EntityPlayer player, TileFluidAutoFiller inv) {
+            return new ContainerFluidAutoFiller(player.inventory, inv);
+        }
+
+        @Override
+        protected Object createClientGui(EntityPlayer player, TileFluidAutoFiller inv) {
+            return new GuiFluidAutoFiller(player.inventory, inv);
+        }
+    }),
     FLUID_LEVEL_EMITTER(new PartGuiFactory<PartFluidLevelEmitter>(PartFluidLevelEmitter.class) {
         @Override
         protected Object createServerGui(EntityPlayer player, PartFluidLevelEmitter inv) {

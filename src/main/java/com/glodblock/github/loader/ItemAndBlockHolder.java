@@ -7,6 +7,7 @@ import com.glodblock.github.common.storage.CellType;
 
 public class ItemAndBlockHolder {
 
+    public static BlockFluidAutoFiller FLUID_AUTO_FILLER = new BlockFluidAutoFiller().register();
     public static BlockFluidDiscretizer DISCRETIZER = new BlockFluidDiscretizer().register();
     public static BlockLevelMaintainer LEVEL_MAINTAINER = new BlockLevelMaintainer().register();
     public static BlockFluidPatternEncoder ENCODER = new BlockFluidPatternEncoder().register();
