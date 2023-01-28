@@ -25,9 +25,11 @@ public class AEFluidInterfaceHandler implements IExternalStorageHandler {
     @SuppressWarnings("rawtypes")
     public IMEInventory getInventory(TileEntity te, ForgeDirection d, StorageChannel channel, BaseActionSource src) {
         if (channel == StorageChannel.FLUIDS) {
-            if (te instanceof ITileStorageMonitorable) {
+            if (te instanceof ITileStorageMonitorable
+                    && ((ITileStorageMonitorable) te).getMonitorable(d, src) != null) {
                 return ((ITileStorageMonitorable) te).getMonitorable(d, src).getFluidInventory();
-            } else if (Util.getPart(te, d.getOpposite()) instanceof ITileStorageMonitorable) {
+            } else if (Util.getPart(te, d.getOpposite()) instanceof ITileStorageMonitorable
+                    && ((ITileStorageMonitorable) Util.getPart(te, d.getOpposite())).getMonitorable(d, src) != null) {
                 ITileStorageMonitorable part = (ITileStorageMonitorable) Util.getPart(te, d.getOpposite());
                 return part.getMonitorable(d, src).getFluidInventory();
             }
