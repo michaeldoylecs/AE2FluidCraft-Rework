@@ -2,11 +2,8 @@ package com.glodblock.github.common.item;
 
 import static com.glodblock.github.common.tile.TileCertusQuartzTank.CAPACITY;
 
-import com.glodblock.github.common.tile.TileCertusQuartzTank;
-import com.glodblock.github.crossmod.waila.Tooltip;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 import java.util.List;
+
 import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemBlock;
@@ -16,7 +13,14 @@ import net.minecraft.world.World;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.IFluidContainerItem;
 
+import com.glodblock.github.common.tile.TileCertusQuartzTank;
+import com.glodblock.github.crossmod.waila.Tooltip;
+
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
+
 public class ItemCertusQuartzTank extends ItemBlock implements IFluidContainerItem {
+
     private final String tagKey = "tank";
 
     private final int capacity = CAPACITY;
@@ -25,14 +29,13 @@ public class ItemCertusQuartzTank extends ItemBlock implements IFluidContainerIt
         super(block);
     }
 
-    @SuppressWarnings({"rawtypes", "unchecked"})
+    @SuppressWarnings({ "rawtypes", "unchecked" })
     @Override
     @SideOnly(Side.CLIENT)
     public void addInformation(ItemStack stack, EntityPlayer player, List list, boolean par4) {
         if (stack != null && stack.hasTagCompound()) {
             if (FluidStack.loadFluidStackFromNBT(stack.getTagCompound().getCompoundTag(tagKey)) != null) {
-                FluidStack fs =
-                        FluidStack.loadFluidStackFromNBT(stack.getTagCompound().getCompoundTag(tagKey));
+                FluidStack fs = FluidStack.loadFluidStackFromNBT(stack.getTagCompound().getCompoundTag(tagKey));
                 list.add(Tooltip.fluidFormat(fs.getFluid().getLocalizedName(fs), fs.amount));
             }
         }
@@ -40,8 +43,7 @@ public class ItemCertusQuartzTank extends ItemBlock implements IFluidContainerIt
 
     @Override
     public FluidStack drain(ItemStack container, int maxDrain, boolean doDrain) {
-        if (container.stackTagCompound == null
-                || !container.stackTagCompound.hasKey(tagKey)
+        if (container.stackTagCompound == null || !container.stackTagCompound.hasKey(tagKey)
                 || container.stackTagCompound.getCompoundTag(tagKey).hasKey("Empty")) {
             return null;
         }
@@ -145,18 +147,8 @@ public class ItemCertusQuartzTank extends ItemBlock implements IFluidContainerIt
     }
 
     @Override
-    public boolean placeBlockAt(
-            ItemStack stack,
-            EntityPlayer player,
-            World world,
-            int x,
-            int y,
-            int z,
-            int side,
-            float hitX,
-            float hitY,
-            float hitZ,
-            int metadata) {
+    public boolean placeBlockAt(ItemStack stack, EntityPlayer player, World world, int x, int y, int z, int side,
+            float hitX, float hitY, float hitZ, int metadata) {
         if (!world.setBlock(x, y, z, this.field_150939_a, metadata, 3)) {
             return false;
         }

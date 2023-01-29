@@ -1,10 +1,12 @@
 package com.glodblock.github.common.tile;
 
-import buildcraft.factory.TileTank;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.fluids.FluidContainerRegistry;
 
+import buildcraft.factory.TileTank;
+
 public class TileCertusQuartzTank extends TileTank {
+
     public static final int CAPACITY = FluidContainerRegistry.BUCKET_VOLUME * 32;
 
     public TileCertusQuartzTank() {

@@ -1,7 +1,14 @@
 package com.glodblock.github.common.block;
 
+import net.minecraft.block.material.Material;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.util.ChatComponentText;
+import net.minecraft.world.World;
+import net.minecraftforge.common.util.ForgeDirection;
+
 import appeng.api.config.SecurityPermissions;
 import appeng.util.Platform;
+
 import com.glodblock.github.common.item.FCBaseItemBlock;
 import com.glodblock.github.common.tabs.FluidCraftingTabs;
 import com.glodblock.github.common.tile.TileFluidAutoFiller;
@@ -11,11 +18,6 @@ import com.glodblock.github.util.BlockPos;
 import com.glodblock.github.util.NameConst;
 import com.glodblock.github.util.Util;
 import cpw.mods.fml.common.registry.GameRegistry;
-import net.minecraft.block.material.Material;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.util.ChatComponentText;
-import net.minecraft.world.World;
-import net.minecraftforge.common.util.ForgeDirection;
 
 public class BlockFluidAutoFiller extends FCBaseBlock {
 
@@ -36,8 +38,8 @@ public class BlockFluidAutoFiller extends FCBaseBlock {
     }
 
     @Override
-    public boolean onActivated(
-            World world, int x, int y, int z, EntityPlayer player, int facing, float hitX, float hitY, float hitZ) {
+    public boolean onActivated(World world, int x, int y, int z, EntityPlayer player, int facing, float hitX,
+            float hitY, float hitZ) {
         if (player.isSneaking()) {
             return false;
         }

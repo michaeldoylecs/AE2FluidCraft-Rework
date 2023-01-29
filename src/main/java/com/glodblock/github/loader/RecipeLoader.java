@@ -128,50 +128,53 @@ public class RecipeLoader implements Runnable {
                         AE2_INTERFACE));
         GameRegistry.addShapelessRecipe(FLUID_INTERFACE.stack(), INTERFACE.stack());
         GameRegistry.addShapelessRecipe(INTERFACE.stack(), FLUID_INTERFACE.stack());
-        GameRegistry.addRecipe(
-                new ShapedOreRecipe(CERTUS_QUARTZ_TANK.stack(), "GGG", "G G", "GGG", 'G', AE2_QUARTZ_GLASS));
+        GameRegistry
+                .addRecipe(new ShapedOreRecipe(CERTUS_QUARTZ_TANK.stack(), "GGG", "G G", "GGG", 'G', AE2_QUARTZ_GLASS));
         GameRegistry.addShapelessRecipe(FLUID_AUTO_FILLER.stack(), FLUID_TERMINAL, ENCODER);
-        GameRegistry.addRecipe(new ShapedOreRecipe(
-                DISCRETIZER.stack(),
-                "IPI",
-                "TMT",
-                "IPI",
-                'I',
-                "ingotIron",
-                'P',
-                AE2_PROCESS_ENG,
-                'T',
-                AE2_STORAGE_BUS,
-                'M',
-                AE2_CONDENSER));
-        GameRegistry.addRecipe(new ShapedOreRecipe(
-                DECODER.stack(),
-                "IHI",
-                "CFC",
-                "IPI",
-                'I',
-                "ingotIron",
-                'H',
-                Blocks.hopper,
-                'C',
-                AE2_GLASS_CABLE,
-                'F',
-                INTERFACE,
-                'P',
-                AE2_PROCESS_CAL));
-        GameRegistry.addRecipe(new ShapedOreRecipe(
-                ENCODER.stack(),
-                "LPL",
-                "IWI",
-                "III",
-                'I',
-                "ingotIron",
-                'L',
-                "blockLapis",
-                'P',
-                AE2_PROCESS_ENG,
-                'W',
-                AE2_WORK_BENCH));
+        GameRegistry.addRecipe(
+                new ShapedOreRecipe(
+                        DISCRETIZER.stack(),
+                        "IPI",
+                        "TMT",
+                        "IPI",
+                        'I',
+                        "ingotIron",
+                        'P',
+                        AE2_PROCESS_ENG,
+                        'T',
+                        AE2_STORAGE_BUS,
+                        'M',
+                        AE2_CONDENSER));
+        GameRegistry.addRecipe(
+                new ShapedOreRecipe(
+                        DECODER.stack(),
+                        "IHI",
+                        "CFC",
+                        "IPI",
+                        'I',
+                        "ingotIron",
+                        'H',
+                        Blocks.hopper,
+                        'C',
+                        AE2_GLASS_CABLE,
+                        'F',
+                        INTERFACE,
+                        'P',
+                        AE2_PROCESS_CAL));
+        GameRegistry.addRecipe(
+                new ShapedOreRecipe(
+                        ENCODER.stack(),
+                        "LPL",
+                        "IWI",
+                        "III",
+                        'I',
+                        "ingotIron",
+                        'L',
+                        "blockLapis",
+                        'P',
+                        AE2_PROCESS_ENG,
+                        'W',
+                        AE2_WORK_BENCH));
         GameRegistry.addShapelessRecipe(FLUID_STORAGE_BUS.stack(), FLUID_INTERFACE, STICKY_PISTON, PISTON);
         GameRegistry.addShapelessRecipe(FLUID_STORAGE_BUS.stack(), INTERFACE, STICKY_PISTON, PISTON);
         GameRegistry.addRecipe(

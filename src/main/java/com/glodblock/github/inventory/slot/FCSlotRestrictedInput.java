@@ -1,10 +1,10 @@
 package com.glodblock.github.inventory.slot;
 
-import appeng.container.slot.SlotRestrictedInput;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
+
 import org.apache.commons.lang3.tuple.MutablePair;
 
 import appeng.container.slot.SlotRestrictedInput;
@@ -13,6 +13,7 @@ public class FCSlotRestrictedInput extends SlotRestrictedInput {
 
     @FunctionalInterface
     public interface Filter {
+
         MutablePair<Boolean, ItemStack> isItemValid(final ItemStack inputItem);
     }
 
@@ -23,9 +24,7 @@ public class FCSlotRestrictedInput extends SlotRestrictedInput {
     public FCSlotRestrictedInput(ItemStack valid, IInventory i, int slotIndex, int x, int y, InventoryPlayer p) {
         this(
                 (inputItem) -> new MutablePair<>(
-                        valid.getItem()
-                                .getClass()
-                                .isAssignableFrom(inputItem.getItem().getClass()),
+                        valid.getItem().getClass().isAssignableFrom(inputItem.getItem().getClass()),
                         valid),
                 i,
                 slotIndex,

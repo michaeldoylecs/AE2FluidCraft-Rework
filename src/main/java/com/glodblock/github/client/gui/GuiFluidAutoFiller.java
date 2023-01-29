@@ -1,17 +1,20 @@
 package com.glodblock.github.client.gui;
 
-import appeng.client.gui.AEBaseMEGui;
-import appeng.core.localization.GuiText;
-import com.glodblock.github.FluidCraft;
-import com.glodblock.github.client.gui.container.ContainerFluidAutoFiller;
-import com.glodblock.github.common.tile.TileFluidAutoFiller;
-import com.glodblock.github.util.NameConst;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.util.ResourceLocation;
 
+import appeng.client.gui.AEBaseMEGui;
+import appeng.core.localization.GuiText;
+
+import com.glodblock.github.FluidCraft;
+import com.glodblock.github.client.gui.container.ContainerFluidAutoFiller;
+import com.glodblock.github.common.tile.TileFluidAutoFiller;
+import com.glodblock.github.util.NameConst;
+
 public class GuiFluidAutoFiller extends AEBaseMEGui {
+
     protected EntityPlayer player;
     private static final ResourceLocation TEX_BG = FluidCraft.resource("textures/gui/fluid_auto_filler.png");
 

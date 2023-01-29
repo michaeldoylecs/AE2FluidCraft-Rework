@@ -27,6 +27,7 @@ import com.google.common.collect.ImmutableList;
 public enum GuiType {
 
     FLUID_AUTO_FILLER(new TileGuiFactory<TileFluidAutoFiller>(TileFluidAutoFiller.class) {
+
         @Override
         protected Object createServerGui(EntityPlayer player, TileFluidAutoFiller inv) {
             return new ContainerFluidAutoFiller(player.inventory, inv);

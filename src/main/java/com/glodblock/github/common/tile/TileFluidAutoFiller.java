@@ -2,6 +2,21 @@ package com.glodblock.github.common.tile;
 
 import static com.glodblock.github.loader.RecipeLoader.BUCKET;
 
+import javax.annotation.Nonnull;
+
+import net.minecraft.inventory.IInventory;
+import net.minecraft.inventory.InventoryCrafting;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTBase;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.NBTTagList;
+import net.minecraftforge.common.util.ForgeDirection;
+import net.minecraftforge.fluids.Fluid;
+import net.minecraftforge.fluids.FluidStack;
+
+import org.apache.commons.lang3.tuple.MutablePair;
+
 import appeng.api.AEApi;
 import appeng.api.config.Actionable;
 import appeng.api.config.PowerMultiplier;
@@ -35,29 +50,18 @@ import appeng.tile.events.TileEventType;
 import appeng.tile.grid.AENetworkInvTile;
 import appeng.tile.inventory.AppEngInternalInventory;
 import appeng.tile.inventory.InvOperation;
+
 import com.glodblock.github.common.item.ItemFluidDrop;
 import com.glodblock.github.util.Util;
-import javax.annotation.Nonnull;
-import net.minecraft.inventory.IInventory;
-import net.minecraft.inventory.InventoryCrafting;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTBase;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.nbt.NBTTagList;
-import net.minecraftforge.common.util.ForgeDirection;
-import net.minecraftforge.fluids.Fluid;
-import net.minecraftforge.fluids.FluidStack;
-import org.apache.commons.lang3.tuple.MutablePair;
 
 public class TileFluidAutoFiller extends AENetworkInvTile
         implements ICraftingProvider, IMEMonitorHandlerReceiver<IAEFluidStack>, IGridTickable {
+
     private final AppEngInternalInventory inventory = new AppEngInternalInventory(this, 1);
     private final BaseActionSource source = new MachineSource(this);
     private IItemList<IAEFluidStack> fluids = AEApi.instance().storage().createFluidList();
     public ItemStack containerItem;
-    private final Item encodedPattern =
-            AEApi.instance().definitions().items().encodedPattern().maybeItem().orNull();
+    private final Item encodedPattern = AEApi.instance().definitions().items().encodedPattern().maybeItem().orNull();
     private IAEItemStack returnStack;
     private boolean isPowered;
 
@@ -132,15 +136,15 @@ public class TileFluidAutoFiller extends AENetworkInvTile
     public void provideCrafting(ICraftingProviderHelper craftingTracker) {
         IStorageGrid storage = getStorageGrid();
         if (storage == null) return;
-        IItemList<IAEFluidStack> fluidStorage =
-                this.fluids.isEmpty() ? storage.getFluidInventory().getStorageList() : this.fluids;
+        IItemList<IAEFluidStack> fluidStorage = this.fluids.isEmpty() ? storage.getFluidInventory().getStorageList()
+                : this.fluids;
         for (IAEFluidStack fluidStack : fluidStorage) {
             Fluid fluid = fluidStack.getFluid();
             if (fluid == null) continue;
             int maxCapacity = Util.FluidUtil.getCapacity(this.containerItem, fluid);
             if (maxCapacity == 0) continue;
-            MutablePair<Integer, ItemStack> filled =
-                    Util.FluidUtil.fillStack(this.containerItem.copy(), new FluidStack(fluid, maxCapacity));
+            MutablePair<Integer, ItemStack> filled = Util.FluidUtil
+                    .fillStack(this.containerItem.copy(), new FluidStack(fluid, maxCapacity));
             if (filled.right == null) continue;
             ItemStack pattern = getPattern(this.containerItem, filled.right);
             ICraftingPatternItem patter = (ICraftingPatternItem) pattern.getItem();
@@ -175,8 +179,8 @@ public class TileFluidAutoFiller extends AENetworkInvTile
 
     @Override
     public boolean pushPattern(ICraftingPatternDetails patternDetails, InventoryCrafting table) {
-        this.returnStack =
-                AEApi.instance().storage().createItemStack(patternDetails.getCondensedOutputs()[0].getItemStack());
+        this.returnStack = AEApi.instance().storage()
+                .createItemStack(patternDetails.getCondensedOutputs()[0].getItemStack());
         try {
             this.getProxy().getTick().alertDevice(this.getProxy().getNode());
         } catch (GridAccessException ignored) {
@@ -196,12 +200,11 @@ public class TileFluidAutoFiller extends AENetworkInvTile
     }
 
     @Override
-    public void postChange(
-            IBaseMonitor<IAEFluidStack> monitor, Iterable<IAEFluidStack> change, BaseActionSource source) {
+    public void postChange(IBaseMonitor<IAEFluidStack> monitor, Iterable<IAEFluidStack> change,
+            BaseActionSource source) {
         if (this.getProxy().isActive() && this.getStorageGrid() != null) {
             boolean hasChanged = false;
-            IItemList<IAEFluidStack> stored = this.getStorageGrid()
-                    .getFluidInventory()
+            IItemList<IAEFluidStack> stored = this.getStorageGrid().getFluidInventory()
                     .getAvailableItems(AEApi.instance().storage().createFluidList());
             for (IAEFluidStack tmp : change) {
                 if (stored.findPrecise(tmp) == null || this.fluids.findPrecise(tmp) == null) {
@@ -216,8 +219,7 @@ public class TileFluidAutoFiller extends AENetworkInvTile
 
     private boolean postEvent() {
         try {
-            this.getProxy()
-                    .getGrid()
+            this.getProxy().getGrid()
                     .postEvent(new MENetworkCraftingPatternChange(this, getGridNode(ForgeDirection.UNKNOWN)));
             return true;
         } catch (GridAccessException ignored) {
@@ -247,8 +249,7 @@ public class TileFluidAutoFiller extends AENetworkInvTile
             if (newState != this.isPowered && newState) {
                 this.getProxy().getStorage().getFluidInventory().addListener(this, null);
             }
-        } catch (final GridAccessException ignored) {
-        }
+        } catch (final GridAccessException ignored) {}
         if (newState != this.isPowered) {
             this.isPowered = newState;
             this.markForUpdate();
@@ -259,8 +260,7 @@ public class TileFluidAutoFiller extends AENetworkInvTile
     public void gridChanged() {
         try {
             this.getProxy().getStorage().getFluidInventory().removeListener(this);
-        } catch (final GridAccessException ignored) {
-        }
+        } catch (final GridAccessException ignored) {}
         super.gridChanged();
     }
 
@@ -274,8 +274,8 @@ public class TileFluidAutoFiller extends AENetworkInvTile
         if (this.getStorageGrid() == null) {
             return TickRateModulation.SLOWER;
         }
-        IAEItemStack nodAdded =
-                getStorageGrid().getItemInventory().injectItems(this.returnStack, Actionable.SIMULATE, this.source);
+        IAEItemStack nodAdded = getStorageGrid().getItemInventory()
+                .injectItems(this.returnStack, Actionable.SIMULATE, this.source);
         if (nodAdded == null) {
             getStorageGrid().getItemInventory().injectItems(this.returnStack, Actionable.MODULATE, this.source);
             this.returnStack = null;

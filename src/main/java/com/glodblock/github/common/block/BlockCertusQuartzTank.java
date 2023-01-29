@@ -1,19 +1,5 @@
 package com.glodblock.github.common.block;
 
-import appeng.api.implementations.items.IAEWrench;
-import buildcraft.api.tools.IToolWrench;
-import buildcraft.factory.BlockTank;
-import com.glodblock.github.FluidCraft;
-import com.glodblock.github.common.item.ItemCertusQuartzTank;
-import com.glodblock.github.common.tabs.FluidCraftingTabs;
-import com.glodblock.github.common.tile.TileCertusQuartzTank;
-import com.glodblock.github.loader.IRegister;
-import com.glodblock.github.loader.ItemAndBlockHolder;
-import com.glodblock.github.util.NameConst;
-import cpw.mods.fml.common.registry.GameRegistry;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
-import extracells.tileentity.TileEntityCertusTank;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
@@ -25,6 +11,22 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.fluids.FluidContainerRegistry;
 import net.minecraftforge.fluids.FluidStack;
+
+import appeng.api.implementations.items.IAEWrench;
+import buildcraft.api.tools.IToolWrench;
+import buildcraft.factory.BlockTank;
+
+import com.glodblock.github.FluidCraft;
+import com.glodblock.github.common.item.ItemCertusQuartzTank;
+import com.glodblock.github.common.tabs.FluidCraftingTabs;
+import com.glodblock.github.common.tile.TileCertusQuartzTank;
+import com.glodblock.github.loader.IRegister;
+import com.glodblock.github.loader.ItemAndBlockHolder;
+import com.glodblock.github.util.NameConst;
+
+import cpw.mods.fml.common.registry.GameRegistry;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 
 public class BlockCertusQuartzTank extends BlockTank implements IRegister<BlockTank> {
 
@@ -72,16 +74,8 @@ public class BlockCertusQuartzTank extends BlockTank implements IRegister<BlockT
     }
 
     @Override
-    public boolean onBlockActivated(
-            World worldObj,
-            int x,
-            int y,
-            int z,
-            EntityPlayer p,
-            int blockID,
-            float offsetX,
-            float offsetY,
-            float offsetZ) {
+    public boolean onBlockActivated(World worldObj, int x, int y, int z, EntityPlayer p, int blockID, float offsetX,
+            float offsetY, float offsetZ) {
         ItemStack current = p.inventory.getCurrentItem();
 
         if (p.isSneaking() && current != null) {
@@ -106,7 +100,7 @@ public class BlockCertusQuartzTank extends BlockTank implements IRegister<BlockT
 
         if (current != null) {
             FluidStack liquid = FluidContainerRegistry.getFluidForFilledItem(current);
-            TileEntityCertusTank tank = (TileEntityCertusTank) worldObj.getTileEntity(x, y, z);
+            TileCertusQuartzTank tank = (TileCertusQuartzTank) worldObj.getTileEntity(x, y, z);
 
             if (liquid != null) {
                 int amountFilled = tank.fill(ForgeDirection.UNKNOWN, liquid, true);
@@ -116,8 +110,8 @@ public class BlockCertusQuartzTank extends BlockTank implements IRegister<BlockT
                         p.inventory.mainInventory[p.inventory.currentItem].stackSize -= 1;
                         p.inventory.addItemStackToInventory(current.getItem().getContainerItem(current));
                     } else {
-                        p.inventory.mainInventory[p.inventory.currentItem] =
-                                current.getItem().getContainerItem(current);
+                        p.inventory.mainInventory[p.inventory.currentItem] = current.getItem()
+                                .getContainerItem(current);
                     }
                 }
 

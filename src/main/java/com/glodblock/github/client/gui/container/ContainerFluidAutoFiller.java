@@ -1,16 +1,21 @@
 package com.glodblock.github.client.gui.container;
 
-import appeng.container.AEBaseContainer;
-import appeng.container.slot.SlotFake;
-import com.glodblock.github.common.tile.TileFluidAutoFiller;
-import com.glodblock.github.util.Util;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
+
 import org.apache.commons.lang3.tuple.MutablePair;
 
+import appeng.container.AEBaseContainer;
+import appeng.container.slot.SlotFake;
+
+import com.glodblock.github.common.tile.TileFluidAutoFiller;
+import com.glodblock.github.util.Util;
+
 public class ContainerFluidAutoFiller extends AEBaseContainer {
+
     public static class FakeSlot extends SlotFake {
+
         public FakeSlot(IInventory inv, int idx, int x, int y) {
             super(inv, idx, x, y);
         }

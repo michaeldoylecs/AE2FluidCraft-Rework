@@ -88,7 +88,7 @@ public abstract class FCGuiEncodeTerminal extends GuiItemMonitor {
             FluidCraft.proxy.netHandler.sendToServer(
                     new CPacketFluidPatternTermBtns(
                             "PatternTerminal.Prioritize",
-                            container.prioritize ? PRIORITY_DISABLE : PRIORITY_ENABLE));
+                            isShiftKeyDown() ? "2" : (container.prioritize ? PRIORITY_DISABLE : PRIORITY_ENABLE)));
         } else if (this.invertBtn == btn) {
             FluidCraft.proxy.netHandler.sendToServer(
                     new CPacketFluidPatternTermBtns("PatternTerminal.Invert", container.inverted ? "0" : "1"));
