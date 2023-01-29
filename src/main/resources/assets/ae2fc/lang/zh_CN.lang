@@ -37,6 +37,7 @@ tile.level_maintainer.name=ME库存维持器
 tile.fluid_buffer.name=ME流体缓存器
 tile.walrus.name=海象
 tile.fluid_auto_filler.name=ME流体自动装填器
+tile.certus_quartz_tank.name=赛特斯石英水槽
 
 ae2fc.waila.speed=速度
 ae2fc.waila.enable=启用

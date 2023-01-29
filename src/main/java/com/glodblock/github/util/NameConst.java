@@ -7,6 +7,7 @@ import net.minecraft.util.StatCollector;
 
 public class NameConst {
 
+    public static final String BLOCK_CERTUS_QUARTZ_TANK = "certus_quartz_tank";
     public static final String BLOCK_FLUID_DISCRETIZER = "fluid_discretizer";
     public static final String BLOCK_FLUID_PATTERN_ENCODER = "fluid_pattern_encoder";
     public static final String BLOCK_FLUID_PACKET_DECODER = "fluid_packet_decoder";
