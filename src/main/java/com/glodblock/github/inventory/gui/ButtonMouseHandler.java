@@ -1,13 +1,16 @@
 package com.glodblock.github.inventory.gui;
 
+import java.util.Collections;
+import java.util.List;
+
+import javax.annotation.Nullable;
+
+import net.minecraft.client.resources.I18n;
+
 import com.glodblock.github.FluidCraft;
 import com.glodblock.github.client.gui.ITankDump;
 import com.glodblock.github.network.CPacketDumpTank;
 import com.glodblock.github.util.NameConst;
-import java.util.Collections;
-import java.util.List;
-import javax.annotation.Nullable;
-import net.minecraft.client.resources.I18n;
 
 public class ButtonMouseHandler implements MouseRegionManager.Handler {
 

@@ -1,13 +1,5 @@
 package com.glodblock.github.crossmod.opencomputers;
 
-import appeng.items.misc.ItemEncodedPattern;
-import appeng.util.item.AEItemStack;
-import com.glodblock.github.common.item.ItemFluidDrop;
-import com.glodblock.github.common.item.ItemFluidEncodedPattern;
-import com.glodblock.github.common.tile.TileOCPatternEditor;
-import com.glodblock.github.loader.ItemAndBlockHolder;
-import com.glodblock.github.util.NameConst;
-import com.glodblock.github.util.Util;
 import li.cil.oc.api.driver.EnvironmentProvider;
 import li.cil.oc.api.driver.NamedBlock;
 import li.cil.oc.api.internal.Database;
@@ -19,6 +11,7 @@ import li.cil.oc.api.network.ManagedEnvironment;
 import li.cil.oc.api.network.Node;
 import li.cil.oc.api.prefab.DriverSidedTileEntity;
 import li.cil.oc.integration.ManagedTileEntityEnvironment;
+
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -26,6 +19,16 @@ import net.minecraft.nbt.NBTTagList;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.fluids.FluidStack;
+
+import appeng.items.misc.ItemEncodedPattern;
+import appeng.util.item.AEItemStack;
+
+import com.glodblock.github.common.item.ItemFluidDrop;
+import com.glodblock.github.common.item.ItemFluidEncodedPattern;
+import com.glodblock.github.common.tile.TileOCPatternEditor;
+import com.glodblock.github.loader.ItemAndBlockHolder;
+import com.glodblock.github.util.NameConst;
+import com.glodblock.github.util.Util;
 
 public class DriverOCPatternEditor extends DriverSidedTileEntity {
 
@@ -134,7 +137,7 @@ public class DriverOCPatternEditor extends DriverSidedTileEntity {
                 inv.setInventorySlotContents(slot, null);
                 inv.setInventorySlotContents(slot, pattern);
                 context.pause(0.1);
-                return new Object[] {true};
+                return new Object[] { true };
             } else {
                 throw new IllegalArgumentException("Not Fluid Encoded pattern!");
             }
@@ -170,7 +173,7 @@ public class DriverOCPatternEditor extends DriverSidedTileEntity {
                 inv.setInventorySlotContents(slot, null);
                 inv.setInventorySlotContents(slot, pattern);
                 context.pause(0.1);
-                return new Object[] {true};
+                return new Object[] { true };
             } else {
                 throw new IllegalArgumentException("Not Fluid Encoded pattern!");
             }
@@ -184,18 +187,17 @@ public class DriverOCPatternEditor extends DriverSidedTileEntity {
             if (!validPattern(stack)) {
                 throw new IllegalArgumentException("Not Fluid Encoded pattern!");
             }
-            return new Object[] {stack};
+            return new Object[] { stack };
         }
 
         @Callback(
-                doc =
-                        "function([slot:number][, database:address, entry:number[, size:number]]):boolean -- Configure the interface.")
+                doc = "function([slot:number][, database:address, entry:number[, size:number]]):boolean -- Configure the interface.")
         public Object[] setInterfaceConfiguration(Context context, Arguments args) {
             IInventory config = tileEntity.getInternalInventory();
             int slot = args.isString(0) ? 0 : optSlot(args, config, 0, 0);
             config.setInventorySlotContents(slot, getStack(args));
             context.pause(0.5);
-            return new Object[] {true};
+            return new Object[] { true };
         }
 
         @Callback(doc = "function([slot:number]):table -- Get the given pattern in the interface.")
@@ -203,33 +205,29 @@ public class DriverOCPatternEditor extends DriverSidedTileEntity {
             IInventory inv = tileEntity.getInternalInventory();
             int slot = optSlot(args, inv, 0, 0);
             ItemStack stack = inv.getStackInSlot(slot);
-            return new Object[] {stack};
+            return new Object[] { stack };
         }
 
         @Callback(
-                doc =
-                        "function(slot:number, database:address, entry:number, size:number, index:number):boolean -- Set the pattern item input at the given index.")
+                doc = "function(slot:number, database:address, entry:number, size:number, index:number):boolean -- Set the pattern item input at the given index.")
         public Object[] setInterfacePatternItemInput(Context context, Arguments args) {
             return setPatternSlot(context, args, "in", false);
         }
 
         @Callback(
-                doc =
-                        "function(slot:number, database:address, entry:number, size:number, index:number):boolean -- Set the pattern item output at the given index.")
+                doc = "function(slot:number, database:address, entry:number, size:number, index:number):boolean -- Set the pattern item output at the given index.")
         public Object[] setInterfacePatternItemOutput(Context context, Arguments args) {
             return setPatternSlot(context, args, "out", false);
         }
 
         @Callback(
-                doc =
-                        "function(slot:number, database:address, entry:number, size:number, index:number):boolean -- Set the pattern fluid input at the given index.")
+                doc = "function(slot:number, database:address, entry:number, size:number, index:number):boolean -- Set the pattern fluid input at the given index.")
         public Object[] setInterfacePatternFluidInput(Context context, Arguments args) {
             return setPatternSlot(context, args, "in", true);
         }
 
         @Callback(
-                doc =
-                        "function(slot:number, database:address, entry:number, size:number, index:number):boolean -- Set the pattern fluid output at the given index.")
+                doc = "function(slot:number, database:address, entry:number, size:number, index:number):boolean -- Set the pattern fluid output at the given index.")
         public Object[] setInterfacePatternFluidOutput(Context context, Arguments args) {
             return setPatternSlot(context, args, "out", true);
         }
@@ -256,6 +254,7 @@ public class DriverOCPatternEditor extends DriverSidedTileEntity {
     }
 
     public static class Provider implements EnvironmentProvider {
+
         Provider() {}
 
         @Override

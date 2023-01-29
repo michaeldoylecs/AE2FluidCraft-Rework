@@ -1,9 +1,5 @@
 package com.glodblock.github.client.render;
 
-import appeng.client.render.BaseBlockRender;
-import appeng.client.render.BlockRenderInfo;
-import com.glodblock.github.common.block.BlockFluidBuffer;
-import com.glodblock.github.common.tile.TileFluidBuffer;
 import net.minecraft.block.Block;
 import net.minecraft.client.renderer.RenderBlocks;
 import net.minecraft.client.renderer.Tessellator;
@@ -11,7 +7,14 @@ import net.minecraft.util.IIcon;
 import net.minecraft.world.IBlockAccess;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidRegistry;
+
 import org.lwjgl.opengl.GL11;
+
+import appeng.client.render.BaseBlockRender;
+import appeng.client.render.BlockRenderInfo;
+
+import com.glodblock.github.common.block.BlockFluidBuffer;
+import com.glodblock.github.common.tile.TileFluidBuffer;
 
 public class RenderBlockFluidBuffer extends BaseBlockRender<BlockFluidBuffer, TileFluidBuffer> {
 
@@ -20,13 +23,8 @@ public class RenderBlockFluidBuffer extends BaseBlockRender<BlockFluidBuffer, Ti
     }
 
     @Override
-    public boolean renderInWorld(
-            final BlockFluidBuffer block,
-            final IBlockAccess world,
-            final int x,
-            final int y,
-            final int z,
-            final RenderBlocks renderer) {
+    public boolean renderInWorld(final BlockFluidBuffer block, final IBlockAccess world, final int x, final int y,
+            final int z, final RenderBlocks renderer) {
         final TileFluidBuffer ti = block.getTileEntity(world, x, y, z);
         final BlockRenderInfo info = block.getRendererInstance();
         this.renderFluid(ti, x, y, z, renderer);

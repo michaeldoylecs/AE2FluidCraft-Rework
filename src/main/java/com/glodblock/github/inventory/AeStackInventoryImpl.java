@@ -1,18 +1,22 @@
 package com.glodblock.github.inventory;
 
+import java.util.Arrays;
+import java.util.Iterator;
+import java.util.stream.Stream;
+
+import javax.annotation.Nullable;
+
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.NBTTagList;
+import net.minecraftforge.common.util.Constants;
+
 import appeng.api.storage.StorageChannel;
 import appeng.api.storage.data.IAEStack;
 import appeng.tile.inventory.IAEAppEngInventory;
 import appeng.util.item.AEItemStack;
+
 import com.glodblock.github.util.ObjectArrayIterator;
 import com.glodblock.github.util.Util;
-import java.util.Arrays;
-import java.util.Iterator;
-import java.util.stream.Stream;
-import javax.annotation.Nullable;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.nbt.NBTTagList;
-import net.minecraftforge.common.util.Constants;
 
 public class AeStackInventoryImpl<T extends IAEStack<T>> implements AeStackInventory<T> {
 

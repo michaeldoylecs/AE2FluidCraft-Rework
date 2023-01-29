@@ -1,20 +1,23 @@
 package com.glodblock.github.client.gui.container;
 
+import java.util.HashMap;
+import java.util.Map;
+
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.entity.player.InventoryPlayer;
+import net.minecraft.inventory.IInventory;
+
 import appeng.api.storage.data.IAEFluidStack;
 import appeng.container.AEBaseContainer;
 import appeng.container.slot.IOptionalSlotHost;
 import appeng.util.item.AEFluidStack;
+
 import com.glodblock.github.FluidCraft;
 import com.glodblock.github.common.item.ItemFluidPacket;
 import com.glodblock.github.inventory.IDualHost;
 import com.glodblock.github.inventory.slot.OptionalFluidSlotFakeTypeOnly;
 import com.glodblock.github.network.SPacketFluidUpdate;
-import java.util.HashMap;
-import java.util.Map;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.entity.player.InventoryPlayer;
-import net.minecraft.inventory.IInventory;
 
 public class ContainerFluidInterface extends AEBaseContainer implements IOptionalSlotHost {
 
@@ -27,8 +30,8 @@ public class ContainerFluidInterface extends AEBaseContainer implements IOptiona
         final int y = 35;
         final int x = 35;
         for (int i = 0; i < 6; i++) {
-            addSlotToContainer(new OptionalFluidSlotFakeTypeOnly(
-                    inv, tile.getDualityFluid().getConfig(), this, i, x, y, i, 0, 0));
+            addSlotToContainer(
+                    new OptionalFluidSlotFakeTypeOnly(inv, tile.getDualityFluid().getConfig(), this, i, x, y, i, 0, 0));
         }
         bindPlayerInventory(ipl, 0, 149);
     }
@@ -50,10 +53,7 @@ public class ContainerFluidInterface extends AEBaseContainer implements IOptiona
             tmp.put(i, tile.getInternalFluid().getFluidInSlot(i));
         }
         for (int i = 0; i < tile.getConfig().getSizeInventory(); i++) {
-            tmp.put(
-                    i + 100,
-                    AEFluidStack.create(
-                            ItemFluidPacket.getFluidStack(tile.getConfig().getStackInSlot(i))));
+            tmp.put(i + 100, AEFluidStack.create(ItemFluidPacket.getFluidStack(tile.getConfig().getStackInSlot(i))));
         }
         for (final Object g : this.crafters) {
             if (g instanceof EntityPlayer) {

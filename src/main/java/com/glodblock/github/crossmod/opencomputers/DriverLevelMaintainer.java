@@ -1,14 +1,8 @@
 package com.glodblock.github.crossmod.opencomputers;
 
-import appeng.util.item.AEItemStack;
-import com.glodblock.github.common.item.ItemFluidDrop;
-import com.glodblock.github.common.tile.TileLevelMaintainer;
-import com.glodblock.github.inventory.AeItemStackHandler;
-import com.glodblock.github.loader.ItemAndBlockHolder;
-import com.glodblock.github.util.NameConst;
-import cpw.mods.fml.common.registry.GameRegistry;
 import java.util.HashMap;
 import java.util.Map;
+
 import li.cil.oc.api.driver.EnvironmentProvider;
 import li.cil.oc.api.driver.NamedBlock;
 import li.cil.oc.api.internal.Database;
@@ -20,12 +14,23 @@ import li.cil.oc.api.network.ManagedEnvironment;
 import li.cil.oc.api.network.Node;
 import li.cil.oc.api.prefab.DriverSidedTileEntity;
 import li.cil.oc.integration.ManagedTileEntityEnvironment;
+
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 
+import appeng.util.item.AEItemStack;
+
+import com.glodblock.github.common.item.ItemFluidDrop;
+import com.glodblock.github.common.tile.TileLevelMaintainer;
+import com.glodblock.github.inventory.AeItemStackHandler;
+import com.glodblock.github.loader.ItemAndBlockHolder;
+import com.glodblock.github.util.NameConst;
+import cpw.mods.fml.common.registry.GameRegistry;
+
 public class DriverLevelMaintainer extends DriverSidedTileEntity {
+
     @Override
     public Class<?> getTileEntityClass() {
         return TileLevelMaintainer.class;
@@ -100,18 +105,16 @@ public class DriverLevelMaintainer extends DriverSidedTileEntity {
                 result.put("hasTag", stack.hasTagCompound());
                 result.put("label", stack.getDisplayName());
                 result.put("maxDamage", stack.getMaxDamage());
-                result.put(
-                        "name",
-                        GameRegistry.findUniqueIdentifierFor(stack.getItem()).toString());
+                result.put("name", GameRegistry.findUniqueIdentifierFor(stack.getItem()).toString());
                 result.put("quantity", tileEntity.requests.getQuantity(slot));
                 result.put("batch", tileEntity.requests.getBatchSize(slot));
                 result.put("isFluid", ItemFluidDrop.isFluidStack(stack));
                 if (ItemFluidDrop.isFluidStack(stack)) result.put("fluid", ItemFluidDrop.getFluidStack(stack));
                 result.put("isEnable", tileEntity.requests.isEnable(slot));
                 result.put("isDone", tileEntity.requests.isDone(slot));
-                return new Object[] {result};
+                return new Object[] { result };
             }
-            return new Object[] {null};
+            return new Object[] { null };
         }
 
         private void setSlot(int slot, String address, int index) {
@@ -123,8 +126,7 @@ public class DriverLevelMaintainer extends DriverSidedTileEntity {
                         throw new IllegalArgumentException("Invalid slot");
                     }
                     dbStack.stackSize = 1;
-                    ((AeItemStackHandler) tileEntity.getInventory())
-                            .getAeInventory()
+                    ((AeItemStackHandler) tileEntity.getInventory()).getAeInventory()
                             .setStack(slot, AEItemStack.create(dbStack));
                 } else {
                     throw new IllegalArgumentException("Not a database");
@@ -135,8 +137,7 @@ public class DriverLevelMaintainer extends DriverSidedTileEntity {
         }
 
         @Callback(
-                doc =
-                        "function(slot:number[,database:address[,index:number]],quantity:number,batch:number):boolean -- Configuration the slot.")
+                doc = "function(slot:number[,database:address[,index:number]],quantity:number,batch:number):boolean -- Configuration the slot.")
         public Object[] setSlot(Context context, Arguments args) {
             int slot;
             String address;
@@ -162,7 +163,7 @@ public class DriverLevelMaintainer extends DriverSidedTileEntity {
             } else {
                 throw new IllegalArgumentException("Invalid args");
             }
-            return new Object[] {true};
+            return new Object[] { true };
         }
 
         private boolean isActive() {
@@ -171,22 +172,22 @@ public class DriverLevelMaintainer extends DriverSidedTileEntity {
 
         @Callback(doc = "function(slot:number):boolean -- Get the crafting task state.")
         public Object[] isDone(Context context, Arguments args) {
-            return new Object[] {this.isDone(args)};
+            return new Object[] { this.isDone(args) };
         }
 
         @Callback(doc = "function(slot:number):boolean -- Get the crafting state of slot.")
         public Object[] isEnable(Context context, Arguments args) {
-            return new Object[] {this.isEnable(args)};
+            return new Object[] { this.isEnable(args) };
         }
 
         @Callback(doc = "function(slot:number,value:boolean):boolean -- Set the crafting state of slot.")
         public Object[] setEnable(Context context, Arguments args) {
-            return new Object[] {this.setEnable(args)};
+            return new Object[] { this.setEnable(args) };
         }
 
         @Callback(doc = "function():boolean Get Level Maintainer state")
         public Object[] active(Context context, Arguments args) {
-            return new Object[] {this.isActive()};
+            return new Object[] { this.isActive() };
         }
 
         @Override
@@ -201,6 +202,7 @@ public class DriverLevelMaintainer extends DriverSidedTileEntity {
     }
 
     public static class Provider implements EnvironmentProvider {
+
         Provider() {}
 
         @Override

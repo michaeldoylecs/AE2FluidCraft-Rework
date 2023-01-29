@@ -1,12 +1,13 @@
 package com.glodblock.github.inventory;
 
-import com.glodblock.github.common.item.ItemFluidDrop;
-import com.glodblock.github.common.item.ItemFluidPacket;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.InventoryCrafting;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
+
+import com.glodblock.github.common.item.ItemFluidDrop;
+import com.glodblock.github.common.item.ItemFluidPacket;
 
 public class FluidConvertingInventoryCrafting extends InventoryCrafting {
 
@@ -23,7 +24,8 @@ public class FluidConvertingInventoryCrafting extends InventoryCrafting {
             } else {
                 // wtf?
                 super.setInventorySlotContents(
-                        index, ItemFluidPacket.newStack(new FluidStack(FluidRegistry.WATER, 1000)));
+                        index,
+                        ItemFluidPacket.newStack(new FluidStack(FluidRegistry.WATER, 1000)));
             }
         } else {
             super.setInventorySlotContents(index, stack);

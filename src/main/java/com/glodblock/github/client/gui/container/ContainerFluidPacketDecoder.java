@@ -2,10 +2,12 @@ package com.glodblock.github.client.gui.container;
 
 import static com.glodblock.github.loader.ItemAndBlockHolder.PACKET;
 
+import net.minecraft.entity.player.InventoryPlayer;
+
 import appeng.container.AEBaseContainer;
+
 import com.glodblock.github.common.tile.TileFluidPacketDecoder;
 import com.glodblock.github.inventory.slot.FCSlotRestrictedInput;
-import net.minecraft.entity.player.InventoryPlayer;
 
 public class ContainerFluidPacketDecoder extends AEBaseContainer {
 

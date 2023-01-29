@@ -1,20 +1,24 @@
 package com.glodblock.github.network;
 
-import appeng.api.storage.data.IAEFluidStack;
-import appeng.util.item.AEItemStack;
-import com.glodblock.github.client.gui.container.ContainerFluidMonitor;
-import com.glodblock.github.util.Util;
-import cpw.mods.fml.common.network.simpleimpl.IMessage;
-import cpw.mods.fml.common.network.simpleimpl.IMessageHandler;
-import cpw.mods.fml.common.network.simpleimpl.MessageContext;
-import io.netty.buffer.ByteBuf;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraft.item.ItemStack;
+
+import appeng.api.storage.data.IAEFluidStack;
+import appeng.util.item.AEItemStack;
+
+import com.glodblock.github.client.gui.container.ContainerFluidMonitor;
+import com.glodblock.github.util.Util;
+
+import cpw.mods.fml.common.network.simpleimpl.IMessage;
+import cpw.mods.fml.common.network.simpleimpl.IMessageHandler;
+import cpw.mods.fml.common.network.simpleimpl.MessageContext;
+import io.netty.buffer.ByteBuf;
 
 public class CPacketFluidUpdate implements IMessage {
 
@@ -78,12 +82,11 @@ public class CPacketFluidUpdate implements IMessage {
             EntityPlayer player = ctx.getServerHandler().playerEntity;
             if (container instanceof ContainerFluidMonitor) {
                 ItemStack item = player.inventory.getItemStack();
-                ((ContainerFluidMonitor) container)
-                        .postChange(
-                                new ArrayList<>(message.list.values()),
-                                message.itemStack == null ? item : message.itemStack,
-                                player,
-                                message.slotIndex);
+                ((ContainerFluidMonitor) container).postChange(
+                        new ArrayList<>(message.list.values()),
+                        message.itemStack == null ? item : message.itemStack,
+                        player,
+                        message.slotIndex);
             }
             return null;
         }

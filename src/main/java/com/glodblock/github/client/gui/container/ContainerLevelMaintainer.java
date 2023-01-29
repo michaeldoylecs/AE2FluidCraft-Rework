@@ -1,16 +1,19 @@
 package com.glodblock.github.client.gui.container;
 
-import appeng.container.AEBaseContainer;
-import appeng.util.item.AEItemStack;
-import com.glodblock.github.common.tile.TileLevelMaintainer;
-import com.glodblock.github.inventory.AeItemStackHandler;
-import com.glodblock.github.inventory.slot.SlotFluidConvertingFake;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 
+import appeng.container.AEBaseContainer;
+import appeng.util.item.AEItemStack;
+
+import com.glodblock.github.common.tile.TileLevelMaintainer;
+import com.glodblock.github.inventory.AeItemStackHandler;
+import com.glodblock.github.inventory.slot.SlotFluidConvertingFake;
+
 public class ContainerLevelMaintainer extends AEBaseContainer {
+
     private final TileLevelMaintainer tile;
     private final SlotFluidConvertingFake[] requestSlots = new SlotFluidConvertingFake[TileLevelMaintainer.REQ_COUNT];
 

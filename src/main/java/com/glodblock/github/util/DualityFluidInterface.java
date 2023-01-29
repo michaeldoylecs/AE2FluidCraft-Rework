@@ -1,5 +1,16 @@
 package com.glodblock.github.util;
 
+import java.util.Objects;
+
+import net.minecraft.inventory.IInventory;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.tileentity.TileEntity;
+import net.minecraftforge.common.util.ForgeDirection;
+import net.minecraftforge.fluids.Fluid;
+import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.fluids.FluidTankInfo;
+import net.minecraftforge.fluids.IFluidHandler;
+
 import appeng.api.config.Actionable;
 import appeng.api.config.Upgrades;
 import appeng.api.implementations.IUpgradeableHost;
@@ -30,28 +41,15 @@ import appeng.util.ConfigManager;
 import appeng.util.IConfigManagerHost;
 import appeng.util.Platform;
 import appeng.util.item.AEFluidStack;
+
 import com.glodblock.github.common.item.ItemFluidPacket;
 import com.glodblock.github.inventory.AEFluidInventory;
 import com.glodblock.github.inventory.IAEFluidInventory;
 import com.glodblock.github.inventory.IAEFluidTank;
 import com.glodblock.github.inventory.MEMonitorIFluidHandler;
-import java.util.Objects;
-import net.minecraft.inventory.IInventory;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraftforge.common.util.ForgeDirection;
-import net.minecraftforge.fluids.Fluid;
-import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.FluidTankInfo;
-import net.minecraftforge.fluids.IFluidHandler;
 
-public class DualityFluidInterface
-        implements IGridTickable,
-                IStorageMonitorable,
-                IAEFluidInventory,
-                IUpgradeableHost,
-                IConfigManagerHost,
-                IFluidHandler {
+public class DualityFluidInterface implements IGridTickable, IStorageMonitorable, IAEFluidInventory, IUpgradeableHost,
+        IConfigManagerHost, IFluidHandler {
 
     public static final int NUMBER_OF_TANKS = 6;
     public static final long TANK_CAPACITY = 16000;
@@ -64,10 +62,12 @@ public class DualityFluidInterface
     private final AEFluidInventory config = new AEFluidInventory(this, NUMBER_OF_TANKS, Integer.MAX_VALUE);
     private final IAEFluidStack[] requireWork;
     private int isWorking = -1;
-    private final MEMonitorPassThrough<IAEItemStack> items =
-            new MEMonitorPassThrough<IAEItemStack>(new NullInventory<>(), StorageChannel.ITEMS);
-    private final MEMonitorPassThrough<IAEFluidStack> fluids =
-            new MEMonitorPassThrough<IAEFluidStack>(new NullInventory<>(), StorageChannel.FLUIDS);
+    private final MEMonitorPassThrough<IAEItemStack> items = new MEMonitorPassThrough<IAEItemStack>(
+            new NullInventory<>(),
+            StorageChannel.ITEMS);
+    private final MEMonitorPassThrough<IAEFluidStack> fluids = new MEMonitorPassThrough<IAEFluidStack>(
+            new NullInventory<>(),
+            StorageChannel.FLUIDS);
     private boolean resetConfigCache = true;
 
     public DualityFluidInterface(final AENetworkProxy networkProxy, final IInterfaceHost ih) {
@@ -147,10 +147,7 @@ public class DualityFluidInterface
 
     private IMEMonitor<IAEFluidStack> getFluidGrid() {
         try {
-            return gridProxy
-                    .getGrid()
-                    .<IStorageGrid>getCache(IStorageGrid.class)
-                    .getFluidInventory();
+            return gridProxy.getGrid().<IStorageGrid>getCache(IStorageGrid.class).getFluidInventory();
         } catch (GridAccessException e) {
             return null;
         }
@@ -178,7 +175,10 @@ public class DualityFluidInterface
     @Override
     public TickingRequest getTickingRequest(IGridNode node) {
         return new TickingRequest(
-                TickRates.Interface.getMin(), TickRates.Interface.getMax(), !this.hasWorkToDo(), true);
+                TickRates.Interface.getMin(),
+                TickRates.Interface.getMax(),
+                !this.hasWorkToDo(),
+                true);
     }
 
     @Override
@@ -187,8 +187,7 @@ public class DualityFluidInterface
             return TickRateModulation.SLEEP;
         } else {
             boolean couldDoWork = this.updateStorage();
-            return this.hasWorkToDo()
-                    ? (couldDoWork ? TickRateModulation.URGENT : TickRateModulation.SLOWER)
+            return this.hasWorkToDo() ? (couldDoWork ? TickRateModulation.URGENT : TickRateModulation.SLOWER)
                     : TickRateModulation.SLEEP;
         }
     }
@@ -243,8 +242,7 @@ public class DualityFluidInterface
                         } else {
                             this.gridProxy.getTick().sleepDevice(this.gridProxy.getNode());
                         }
-                    } catch (GridAccessException ignored) {
-                    }
+                    } catch (GridAccessException ignored) {}
                 }
             }
         }
@@ -303,8 +301,7 @@ public class DualityFluidInterface
             toStore.setStackSize(-toStore.getStackSize());
             FluidStack canExtract = this.tanks.drain(slot, toStore.getFluidStack(), false);
             if (canExtract != null && (long) canExtract.amount == toStore.getStackSize()) {
-                IAEFluidStack notStored = dest.injectItems(toStore, Actionable.MODULATE, this.mySource);
-                ;
+                IAEFluidStack notStored = dest.injectItems(toStore, Actionable.MODULATE, this.mySource);;
                 toStore.setStackSize(toStore.getStackSize() - (notStored == null ? 0L : notStored.getStackSize()));
                 if (toStore.getStackSize() > 0L) {
                     changed = true;
@@ -361,8 +358,7 @@ public class DualityFluidInterface
         if (this.gridProxy.isActive()) {
             try {
                 this.gridProxy.getTick().wakeDevice(this.gridProxy.getNode());
-            } catch (GridAccessException ignored) {
-            }
+            } catch (GridAccessException ignored) {}
         }
         TileEntity te = this.iHost.getTileEntity();
         if (te != null && te.getWorldObj() != null) {
@@ -398,8 +394,7 @@ public class DualityFluidInterface
                 } else {
                     this.gridProxy.getTick().sleepDevice(this.gridProxy.getNode());
                 }
-            } catch (GridAccessException ignored) {
-            }
+            } catch (GridAccessException ignored) {}
         }
 
         this.notifyNeighbors();
@@ -445,6 +440,7 @@ public class DualityFluidInterface
     }
 
     private static class InterfaceInventory extends MEMonitorIFluidHandler {
+
         InterfaceInventory(DualityFluidInterface tileInterface) {
             super(tileInterface.tanks);
         }

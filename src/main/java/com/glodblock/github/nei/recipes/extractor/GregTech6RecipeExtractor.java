@@ -1,13 +1,17 @@
 package com.glodblock.github.nei.recipes.extractor;
 
-import codechicken.nei.PositionedStack;
-import com.glodblock.github.nei.object.IRecipeExtractor;
-import com.glodblock.github.nei.object.OrderStack;
-import gregapi.item.ItemFluidDisplay;
-import gregapi.recipes.Recipe;
 import java.util.List;
+
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fluids.FluidStack;
+
+import codechicken.nei.PositionedStack;
+
+import com.glodblock.github.nei.object.IRecipeExtractor;
+import com.glodblock.github.nei.object.OrderStack;
+
+import gregapi.item.ItemFluidDisplay;
+import gregapi.recipes.Recipe;
 
 public class GregTech6RecipeExtractor implements IRecipeExtractor {
 

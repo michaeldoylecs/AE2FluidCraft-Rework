@@ -1,5 +1,22 @@
 package com.glodblock.github.common.parts;
 
+import java.util.Objects;
+import java.util.Random;
+
+import net.minecraft.client.renderer.RenderBlocks;
+import net.minecraft.client.renderer.Tessellator;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.inventory.IInventory;
+import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.server.MinecraftServer;
+import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.IIcon;
+import net.minecraft.util.Vec3;
+import net.minecraft.world.World;
+import net.minecraftforge.common.util.ForgeDirection;
+import net.minecraftforge.fluids.FluidStack;
+
 import appeng.api.config.*;
 import appeng.api.networking.IGridNode;
 import appeng.api.networking.crafting.*;
@@ -33,28 +50,15 @@ import appeng.parts.automation.PartUpgradeable;
 import appeng.tile.inventory.AppEngInternalAEInventory;
 import appeng.tile.inventory.InvOperation;
 import appeng.util.Platform;
+
 import com.glodblock.github.common.item.ItemFluidPacket;
 import com.glodblock.github.inventory.InventoryHandler;
 import com.glodblock.github.inventory.gui.GuiType;
 import com.glodblock.github.util.BlockPos;
 import com.glodblock.github.util.Util;
+
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import java.util.Objects;
-import java.util.Random;
-import net.minecraft.client.renderer.RenderBlocks;
-import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.inventory.IInventory;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.server.MinecraftServer;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.IIcon;
-import net.minecraft.util.Vec3;
-import net.minecraft.world.World;
-import net.minecraftforge.common.util.ForgeDirection;
-import net.minecraftforge.fluids.FluidStack;
 
 public class PartFluidLevelEmitter extends PartUpgradeable
         implements IStackWatcherHost, ICraftingWatcherHost, IMEMonitorHandlerReceiver<IAEFluidStack>, IGridTickable {
@@ -127,10 +131,9 @@ public class PartFluidLevelEmitter extends PartUpgradeable
             return false;
         }
 
-        final boolean flipState =
-                this.getConfigManager().getSetting(Settings.REDSTONE_EMITTER) == RedstoneMode.LOW_SIGNAL;
-        return flipState
-                ? this.reportingValue >= this.lastReportedValue + 1
+        final boolean flipState = this.getConfigManager().getSetting(Settings.REDSTONE_EMITTER)
+                == RedstoneMode.LOW_SIGNAL;
+        return flipState ? this.reportingValue >= this.lastReportedValue + 1
                 : this.reportingValue < this.lastReportedValue + 1;
     }
 
@@ -211,12 +214,8 @@ public class PartFluidLevelEmitter extends PartUpgradeable
     }
 
     @Override
-    public void onStackChange(
-            final IItemList o,
-            final IAEStack fullStack,
-            final IAEStack diffStack,
-            final BaseActionSource src,
-            final StorageChannel chan) {
+    public void onStackChange(final IItemList o, final IAEStack fullStack, final IAEStack diffStack,
+            final BaseActionSource src, final StorageChannel chan) {
         if (chan == StorageChannel.FLUIDS && fullStack.equals(this.getIAEFluidStack())) {
             this.lastReportedValue = fullStack.getStackSize();
             this.updateState();
@@ -257,9 +256,7 @@ public class PartFluidLevelEmitter extends PartUpgradeable
     }
 
     @Override
-    public void postChange(
-            final IBaseMonitor<IAEFluidStack> monitor,
-            final Iterable<IAEFluidStack> change,
+    public void postChange(final IBaseMonitor<IAEFluidStack> monitor, final Iterable<IAEFluidStack> change,
             final BaseActionSource actionSource) {
         if (canDoWork()) {
             if (delayedUpdatesQueued) {
@@ -504,8 +501,8 @@ public class PartFluidLevelEmitter extends PartUpgradeable
 
     @Override
     @SideOnly(Side.CLIENT)
-    public void renderStatic(
-            final int x, final int y, final int z, final IPartRenderHelper rh, final RenderBlocks renderer) {
+    public void renderStatic(final int x, final int y, final int z, final IPartRenderHelper rh,
+            final RenderBlocks renderer) {
         rh.setTexture(this.getItemStack().getIconIndex());
         // rh.setTexture( CableBusTextures.ItemPartLevelEmitterOn.getIcon() );
 
@@ -518,8 +515,7 @@ public class PartFluidLevelEmitter extends PartUpgradeable
         renderer.renderAllFaces = true;
 
         final Tessellator tess = Tessellator.instance;
-        tess.setBrightness(rh.getBlock()
-                .getMixedBrightnessForBlock(this.getHost().getTile().getWorldObj(), x, y, z));
+        tess.setBrightness(rh.getBlock().getMixedBrightnessForBlock(this.getHost().getTile().getWorldObj(), x, y, z));
         tess.setColorOpaque_F(1.0F, 1.0F, 1.0F);
 
         this.renderTorchAtAngle(x, y, z);
@@ -584,12 +580,8 @@ public class PartFluidLevelEmitter extends PartUpgradeable
     }
 
     @Override
-    public void onChangeInventory(
-            final IInventory inv,
-            final int slot,
-            final InvOperation mc,
-            final ItemStack removedStack,
-            final ItemStack newStack) {
+    public void onChangeInventory(final IInventory inv, final int slot, final InvOperation mc,
+            final ItemStack removedStack, final ItemStack newStack) {
         if (inv == this.config) {
             this.configureWatchers();
         }

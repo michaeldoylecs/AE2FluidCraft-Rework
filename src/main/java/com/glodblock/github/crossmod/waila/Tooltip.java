@@ -1,21 +1,23 @@
 package com.glodblock.github.crossmod.waila;
 
-import com.glodblock.github.util.NameConst;
-import com.glodblock.github.util.Util;
 import java.text.NumberFormat;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.I18n;
 import net.minecraftforge.fluids.FluidStack;
 
+import com.glodblock.github.util.NameConst;
+import com.glodblock.github.util.Util;
+
 public class Tooltip {
+
     public static String fluidFormat(String name, long amount) {
         return String.format("%s: %s mB", name, NumberFormat.getInstance().format(amount));
     }
 
     public static String partFluidBusFormat(int amount) {
-        return String.format(
-                "%s: %s mB/t",
-                I18n.format(NameConst.WAILA_SPEED), NumberFormat.getInstance().format(amount));
+        return String
+                .format("%s: %s mB/t", I18n.format(NameConst.WAILA_SPEED), NumberFormat.getInstance().format(amount));
     }
 
     public static String tileFluidInterfaceFormat(String name, int amount, int face) {

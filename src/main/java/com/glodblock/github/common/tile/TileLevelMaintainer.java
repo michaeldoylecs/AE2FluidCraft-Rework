@@ -1,5 +1,11 @@
 package com.glodblock.github.common.tile;
 
+import java.util.concurrent.Future;
+
+import net.minecraft.inventory.IInventory;
+import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
+
 import appeng.api.AEApi;
 import appeng.api.config.Actionable;
 import appeng.api.config.PowerMultiplier;
@@ -34,16 +40,13 @@ import appeng.tile.grid.AENetworkTile;
 import appeng.tile.inventory.IAEAppEngInventory;
 import appeng.tile.inventory.InvOperation;
 import appeng.util.item.AEItemStack;
+
 import com.glodblock.github.common.item.ItemFluidDrop;
 import com.glodblock.github.inventory.AeItemStackHandler;
 import com.glodblock.github.inventory.AeStackInventory;
 import com.glodblock.github.inventory.AeStackInventoryImpl;
 import com.google.common.collect.ImmutableSet;
 import io.netty.buffer.ByteBuf;
-import java.util.concurrent.Future;
-import net.minecraft.inventory.IInventory;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
 
 public class TileLevelMaintainer extends AENetworkTile
         implements IAEAppEngInventory, IGridTickable, ICraftingRequester, IPowerChannelState {
@@ -83,13 +86,11 @@ public class TileLevelMaintainer extends AENetworkTile
         try {
             if (this.getProxy().isActive()) {
                 final IEnergyGrid energy = this.getProxy().getEnergy();
-                final double power = Math.ceil(
-                        ItemFluidDrop.isFluidStack(items) ? items.getStackSize() / 1000D : items.getStackSize());
+                final double power = Math
+                        .ceil(ItemFluidDrop.isFluidStack(items) ? items.getStackSize() / 1000D : items.getStackSize());
                 if (energy.extractAEPower(power, mode, PowerMultiplier.CONFIG) > power - 0.01) {
                     if (ItemFluidDrop.isFluidStack(items)) {
-                        IAEFluidStack notInserted = this.getProxy()
-                                .getStorage()
-                                .getFluidInventory()
+                        IAEFluidStack notInserted = this.getProxy().getStorage().getFluidInventory()
                                 .injectItems(ItemFluidDrop.getAeFluidStack(items), mode, this.source);
                         if (notInserted != null) {
                             items.setStackSize(notInserted.getStackSize());
@@ -140,19 +141,18 @@ public class TileLevelMaintainer extends AENetworkTile
         try {
             ICraftingGrid cg = this.getProxy().getCrafting();
             IGrid grid = this.getProxy().getGrid();
-            final IItemList<IAEItemStack> inv =
-                    this.getProxy().getStorage().getItemInventory().getStorageList();
+            final IItemList<IAEItemStack> inv = this.getProxy().getStorage().getItemInventory().getStorageList();
             for (int i = 0; i < REQ_COUNT; i++) {
                 IAEItemStack is = requests.getRequestQtyStack(i);
                 if (is != null && requests.getBatchSize(i) > 0) {
                     IAEItemStack craftItem = requests.getCraftItem(i);
                     if (this.requests.isDone(i)) this.requests.setState(i, State.Idling);
-                    if (cg.canEmitFor(craftItem)
-                            || cg.isRequesting(craftItem)
+                    if (cg.canEmitFor(craftItem) || cg.isRequesting(craftItem)
                             || inv.findPrecise(is) == null
                             || !inv.findPrecise(is).isCraftable()
                             || inv.findPrecise(is).getStackSize() >= is.getStackSize()
-                            || !this.requests.isDone(i)) continue;
+                            || !this.requests.isDone(i))
+                        continue;
                     // do crafting
                     Future<ICraftingJob> jobTask = requests.getJobs()[i];
                     if (jobTask == null) {
@@ -176,8 +176,7 @@ public class TileLevelMaintainer extends AENetworkTile
                     }
                 }
             }
-        } catch (final GridAccessException ignore) {
-        }
+        } catch (final GridAccessException ignore) {}
         return didSomething ? TickRateModulation.FASTER : TickRateModulation.SLOWER;
     }
 
@@ -187,8 +186,8 @@ public class TileLevelMaintainer extends AENetworkTile
     }
 
     @Override
-    public void onChangeInventory(
-            IInventory inv, int slot, InvOperation mc, ItemStack removedStack, ItemStack newStack) {
+    public void onChangeInventory(IInventory inv, int slot, InvOperation mc, ItemStack removedStack,
+            ItemStack newStack) {
         try {
             getProxy().getTick().alertDevice(getProxy().getNode());
         } catch (GridAccessException e) {
@@ -244,8 +243,7 @@ public class TileLevelMaintainer extends AENetworkTile
                     if (!this.requests.isDone(i)) this.requests.setState(i, State.Crafting);
                 }
             }
-        } catch (Exception ignore) {
-        }
+        } catch (Exception ignore) {}
     }
 
     private NBTTagCompound writeLinkToNBT(NBTTagCompound data) {
@@ -322,6 +320,7 @@ public class TileLevelMaintainer extends AENetworkTile
     }
 
     public static class InventoryRequest {
+
         private final AeStackInventoryImpl<IAEItemStack> requestStacks;
         private final AeStackInventoryImpl<IAEItemStack> requestBatches;
         private final AeStackInventoryImpl<IAEItemStack> requestQtys;

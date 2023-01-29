@@ -1,23 +1,27 @@
 package com.glodblock.github.network;
 
-import appeng.api.storage.data.IAEFluidStack;
-import appeng.api.storage.data.IAEItemStack;
-import appeng.util.item.AEFluidStack;
-import appeng.util.item.AEItemStack;
-import com.glodblock.github.client.gui.GuiFluidCraftConfirm;
-import com.glodblock.github.client.gui.GuiFluidMonitor;
-import com.glodblock.github.client.gui.GuiItemMonitor;
-import com.glodblock.github.client.gui.GuiLevelMaintainer;
-import cpw.mods.fml.common.network.simpleimpl.IMessage;
-import cpw.mods.fml.common.network.simpleimpl.IMessageHandler;
-import cpw.mods.fml.common.network.simpleimpl.MessageContext;
-import io.netty.buffer.ByteBuf;
 import java.io.IOException;
 import java.nio.BufferOverflowException;
 import java.util.LinkedList;
 import java.util.List;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
+
+import appeng.api.storage.data.IAEFluidStack;
+import appeng.api.storage.data.IAEItemStack;
+import appeng.util.item.AEFluidStack;
+import appeng.util.item.AEItemStack;
+
+import com.glodblock.github.client.gui.GuiFluidCraftConfirm;
+import com.glodblock.github.client.gui.GuiFluidMonitor;
+import com.glodblock.github.client.gui.GuiItemMonitor;
+import com.glodblock.github.client.gui.GuiLevelMaintainer;
+
+import cpw.mods.fml.common.network.simpleimpl.IMessage;
+import cpw.mods.fml.common.network.simpleimpl.IMessageHandler;
+import cpw.mods.fml.common.network.simpleimpl.MessageContext;
+import io.netty.buffer.ByteBuf;
 
 public class SPacketMEInventoryUpdate implements IMessage {
 
@@ -90,7 +94,7 @@ public class SPacketMEInventoryUpdate implements IMessage {
     public static class Handler implements IMessageHandler<SPacketMEInventoryUpdate, IMessage> {
 
         @Override
-        @SuppressWarnings({"unchecked", "rawtypes"})
+        @SuppressWarnings({ "unchecked", "rawtypes" })
         public IMessage onMessage(SPacketMEInventoryUpdate message, MessageContext ctx) {
             final GuiScreen gs = Minecraft.getMinecraft().currentScreen;
             if (gs instanceof GuiFluidMonitor) {

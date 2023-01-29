@@ -1,5 +1,11 @@
 package com.glodblock.github.common.parts;
 
+import net.minecraft.client.renderer.RenderBlocks;
+import net.minecraft.item.ItemStack;
+import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.IIcon;
+import net.minecraftforge.fluids.IFluidHandler;
+
 import appeng.api.config.*;
 import appeng.api.networking.IGridNode;
 import appeng.api.networking.crafting.ICraftingGrid;
@@ -22,19 +28,16 @@ import appeng.me.GridAccessException;
 import appeng.util.InventoryAdaptor;
 import appeng.util.item.AEFluidStack;
 import appeng.util.item.AEItemStack;
+
 import com.glodblock.github.client.textures.FCPartsTexture;
 import com.glodblock.github.common.item.ItemFluidDrop;
 import com.glodblock.github.common.item.ItemFluidPacket;
 import com.glodblock.github.common.parts.base.FCSharedFluidBus;
 import com.glodblock.github.inventory.FluidConvertingInventoryAdaptor;
 import com.google.common.collect.ImmutableSet;
+
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import net.minecraft.client.renderer.RenderBlocks;
-import net.minecraft.item.ItemStack;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.IIcon;
-import net.minecraftforge.fluids.IFluidHandler;
 
 public class PartFluidExportBus extends FCSharedFluidBus implements ICraftingRequester {
 
@@ -83,12 +86,11 @@ public class PartFluidExportBus extends FCSharedFluidBus implements ICraftingReq
                 final InventoryAdaptor destination = this.getHandler(te);
                 final ICraftingGrid cg = this.getProxy().getCrafting();
                 final IFluidHandler fh = (IFluidHandler) te;
-                final IMEMonitor<IAEFluidStack> inv =
-                        this.getProxy().getStorage().getFluidInventory();
+                final IMEMonitor<IAEFluidStack> inv = this.getProxy().getStorage().getFluidInventory();
 
                 for (int i = 0; i < this.getInventoryByName("config").getSizeInventory(); i++) {
-                    IAEFluidStack fluid = AEFluidStack.create(ItemFluidPacket.getFluidStack(
-                            this.getInventoryByName("config").getStackInSlot(i)));
+                    IAEFluidStack fluid = AEFluidStack
+                            .create(ItemFluidPacket.getFluidStack(this.getInventoryByName("config").getStackInSlot(i)));
                     if (fluid != null) {
                         boolean isAllowed = true;
 
@@ -175,8 +177,8 @@ public class PartFluidExportBus extends FCSharedFluidBus implements ICraftingReq
 
     @Override
     @SideOnly(Side.CLIENT)
-    public void renderStatic(
-            final int x, final int y, final int z, final IPartRenderHelper rh, final RenderBlocks renderer) {
+    public void renderStatic(final int x, final int y, final int z, final IPartRenderHelper rh,
+            final RenderBlocks renderer) {
         this.setRenderCache(rh.useSimplifiedRendering(x, y, z, this, this.getRenderCache()));
         rh.setTexture(
                 CableBusTextures.PartExportSides.getIcon(),
@@ -228,9 +230,7 @@ public class PartFluidExportBus extends FCSharedFluidBus implements ICraftingReq
     }
 
     protected InventoryAdaptor getHandler(TileEntity target) {
-        return target != null
-                ? FluidConvertingInventoryAdaptor.wrap(target, this.getSide().getOpposite())
-                : null;
+        return target != null ? FluidConvertingInventoryAdaptor.wrap(target, this.getSide().getOpposite()) : null;
     }
 
     @Override

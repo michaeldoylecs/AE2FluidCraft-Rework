@@ -1,5 +1,11 @@
 package com.glodblock.github.client.gui.base;
 
+import net.minecraft.client.gui.GuiButton;
+import net.minecraft.entity.player.InventoryPlayer;
+import net.minecraft.inventory.Slot;
+
+import org.lwjgl.input.Keyboard;
+
 import appeng.api.storage.ITerminalHost;
 import appeng.api.storage.data.IAEItemStack;
 import appeng.client.gui.widgets.GuiImgButton;
@@ -9,6 +15,7 @@ import appeng.client.render.AppEngRenderItem;
 import appeng.container.slot.AppEngSlot;
 import appeng.container.slot.SlotFake;
 import appeng.util.item.AEItemStack;
+
 import com.glodblock.github.FluidCraft;
 import com.glodblock.github.client.gui.GuiFCImgButton;
 import com.glodblock.github.client.gui.GuiItemMonitor;
@@ -20,10 +27,6 @@ import com.glodblock.github.inventory.slot.SlotSingleItem;
 import com.glodblock.github.network.CPacketFluidPatternTermBtns;
 import com.glodblock.github.util.Ae2ReflectClient;
 import com.glodblock.github.util.ModAndClassUtil;
-import net.minecraft.client.gui.GuiButton;
-import net.minecraft.entity.player.InventoryPlayer;
-import net.minecraft.inventory.Slot;
-import org.lwjgl.input.Keyboard;
 
 public abstract class FCGuiEncodeTerminal extends GuiItemMonitor {
 
@@ -51,8 +54,8 @@ public abstract class FCGuiEncodeTerminal extends GuiItemMonitor {
     protected final GuiScrollbar processingScrollBar = new GuiScrollbar();
     protected final AppEngRenderItem stackSizeRenderer = Ae2ReflectClient.getStackSizeRenderer(this);
 
-    public FCGuiEncodeTerminal(
-            final InventoryPlayer inventoryPlayer, final ITerminalHost te, final FCContainerEncodeTerminal c) {
+    public FCGuiEncodeTerminal(final InventoryPlayer inventoryPlayer, final ITerminalHost te,
+            final FCContainerEncodeTerminal c) {
         super(inventoryPlayer, te, c);
         this.container = (FCContainerEncodeTerminal) this.inventorySlots;
         c.setGui(this);
@@ -65,35 +68,46 @@ public abstract class FCGuiEncodeTerminal extends GuiItemMonitor {
         if (btn == craftingStatusBtn) {
             InventoryHandler.switchGui(GuiType.CRAFTING_STATUS);
         } else if (this.tabCraftButton == btn || this.tabProcessButton == btn) {
-            FluidCraft.proxy.netHandler.sendToServer(new CPacketFluidPatternTermBtns(
-                    "PatternTerminal.CraftMode", this.tabProcessButton == btn ? MODE_CRAFTING : MODE_PROCESSING));
+            FluidCraft.proxy.netHandler.sendToServer(
+                    new CPacketFluidPatternTermBtns(
+                            "PatternTerminal.CraftMode",
+                            this.tabProcessButton == btn ? MODE_CRAFTING : MODE_PROCESSING));
         } else if (this.encodeBtn == btn) {
-            FluidCraft.proxy.netHandler.sendToServer(new CPacketFluidPatternTermBtns(
-                    "PatternTerminal.Encode", (isCtrlKeyDown() ? 1 : 0) << 1 | (isShiftKeyDown() ? 1 : 0)));
+            FluidCraft.proxy.netHandler.sendToServer(
+                    new CPacketFluidPatternTermBtns(
+                            "PatternTerminal.Encode",
+                            (isCtrlKeyDown() ? 1 : 0) << 1 | (isShiftKeyDown() ? 1 : 0)));
         } else if (this.clearBtn == btn) {
             FluidCraft.proxy.netHandler.sendToServer(new CPacketFluidPatternTermBtns("PatternTerminal.Clear", "1"));
         } else if (this.substitutionsEnabledBtn == btn || this.substitutionsDisabledBtn == btn) {
-            FluidCraft.proxy.netHandler.sendToServer(new CPacketFluidPatternTermBtns(
-                    "PatternTerminal.Substitute",
-                    this.substitutionsEnabledBtn == btn ? SUBSTITUTION_DISABLE : SUBSTITUTION_ENABLE));
+            FluidCraft.proxy.netHandler.sendToServer(
+                    new CPacketFluidPatternTermBtns(
+                            "PatternTerminal.Substitute",
+                            this.substitutionsEnabledBtn == btn ? SUBSTITUTION_DISABLE : SUBSTITUTION_ENABLE));
         } else if (this.fluidPrioritizedEnabledBtn == btn || this.fluidPrioritizedDisabledBtn == btn) {
-            FluidCraft.proxy.netHandler.sendToServer(new CPacketFluidPatternTermBtns(
-                    "PatternTerminal.Prioritize", container.prioritize ? PRIORITY_DISABLE : PRIORITY_ENABLE));
+            FluidCraft.proxy.netHandler.sendToServer(
+                    new CPacketFluidPatternTermBtns(
+                            "PatternTerminal.Prioritize",
+                            container.prioritize ? PRIORITY_DISABLE : PRIORITY_ENABLE));
         } else if (this.invertBtn == btn) {
             FluidCraft.proxy.netHandler.sendToServer(
                     new CPacketFluidPatternTermBtns("PatternTerminal.Invert", container.inverted ? "0" : "1"));
         } else if (this.combineDisableBtn == btn || this.combineEnableBtn == btn) {
-            FluidCraft.proxy.netHandler.sendToServer(new CPacketFluidPatternTermBtns(
-                    "PatternTerminal.Combine", this.combineDisableBtn == btn ? "1" : "0"));
+            FluidCraft.proxy.netHandler.sendToServer(
+                    new CPacketFluidPatternTermBtns(
+                            "PatternTerminal.Combine",
+                            this.combineDisableBtn == btn ? "1" : "0"));
         } else if (ModAndClassUtil.isDoubleButton && doubleBtn == btn) {
-            FluidCraft.proxy.netHandler.sendToServer(new CPacketFluidPatternTermBtns(
-                    "PatternTerminal.Double", Keyboard.isKeyDown(Keyboard.KEY_LSHIFT) ? "1" : "0"));
+            FluidCraft.proxy.netHandler.sendToServer(
+                    new CPacketFluidPatternTermBtns(
+                            "PatternTerminal.Double",
+                            Keyboard.isKeyDown(Keyboard.KEY_LSHIFT) ? "1" : "0"));
         } else if (ModAndClassUtil.isBeSubstitutionsButton && beSubstitutionsDisabledBtn == btn) {
-            FluidCraft.proxy.netHandler.sendToServer(
-                    new CPacketFluidPatternTermBtns("PatternTerminal.beSubstitute", "1"));
+            FluidCraft.proxy.netHandler
+                    .sendToServer(new CPacketFluidPatternTermBtns("PatternTerminal.beSubstitute", "1"));
         } else if (ModAndClassUtil.isBeSubstitutionsButton && beSubstitutionsEnabledBtn == btn) {
-            FluidCraft.proxy.netHandler.sendToServer(
-                    new CPacketFluidPatternTermBtns("PatternTerminal.beSubstitute", "0"));
+            FluidCraft.proxy.netHandler
+                    .sendToServer(new CPacketFluidPatternTermBtns("PatternTerminal.beSubstitute", "0"));
         }
     }
 

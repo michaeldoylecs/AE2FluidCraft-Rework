@@ -23,5 +23,5 @@ dependencies {
     compileOnly('com.github.GTNewHorizons:GTplusplus:1.7.191:dev') { transitive = false }
 
     compileOnly('com.github.GTNewHorizons:KekzTech:0.6.25:dev')
-    runtime('com.github.GTNewHorizons:Baubles:1.0.1.14:dev')
+    runtimeOnly('com.github.GTNewHorizons:Baubles:1.0.1.14:dev')
 }

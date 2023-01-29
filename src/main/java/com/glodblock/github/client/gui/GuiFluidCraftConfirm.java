@@ -1,5 +1,15 @@
 package com.glodblock.github.client.gui;
 
+import java.text.NumberFormat;
+import java.util.*;
+
+import net.minecraft.client.gui.GuiButton;
+import net.minecraft.entity.player.InventoryPlayer;
+import net.minecraft.item.ItemStack;
+
+import org.lwjgl.input.Mouse;
+import org.lwjgl.opengl.GL11;
+
 import appeng.api.AEApi;
 import appeng.api.storage.ITerminalHost;
 import appeng.api.storage.data.IAEItemStack;
@@ -10,6 +20,7 @@ import appeng.core.AELog;
 import appeng.core.localization.GuiText;
 import appeng.integration.modules.NEI;
 import appeng.util.Platform;
+
 import com.glodblock.github.FluidCraft;
 import com.glodblock.github.client.gui.container.ContainerFluidCraftConfirm;
 import com.glodblock.github.common.parts.PartFluidPatternTerminal;
@@ -20,13 +31,6 @@ import com.glodblock.github.network.CPacketFluidPatternTermBtns;
 import com.glodblock.github.network.CPacketSwitchGuis;
 import com.glodblock.github.util.ModAndClassUtil;
 import com.google.common.base.Joiner;
-import java.text.NumberFormat;
-import java.util.*;
-import net.minecraft.client.gui.GuiButton;
-import net.minecraft.entity.player.InventoryPlayer;
-import net.minecraft.item.ItemStack;
-import org.lwjgl.input.Mouse;
-import org.lwjgl.opengl.GL11;
 
 public class GuiFluidCraftConfirm extends AEBaseGui {
 
@@ -72,8 +76,13 @@ public class GuiFluidCraftConfirm extends AEBaseGui {
     public void initGui() {
         super.initGui();
 
-        this.start =
-                new GuiButton(0, this.guiLeft + 162, this.guiTop + this.ySize - 25, 50, 20, GuiText.Start.getLocal());
+        this.start = new GuiButton(
+                0,
+                this.guiLeft + 162,
+                this.guiTop + this.ySize - 25,
+                50,
+                20,
+                GuiText.Start.getLocal());
         this.start.enabled = false;
         this.buttonList.add(this.start);
 
@@ -89,7 +98,12 @@ public class GuiFluidCraftConfirm extends AEBaseGui {
 
         if (this.OriginalGui != null) {
             this.cancel = new GuiButton(
-                    0, this.guiLeft + 6, this.guiTop + this.ySize - 25, 50, 20, GuiText.Cancel.getLocal());
+                    0,
+                    this.guiLeft + 6,
+                    this.guiTop + this.ySize - 25,
+                    50,
+                    20,
+                    GuiText.Cancel.getLocal());
         }
 
         this.buttonList.add(this.cancel);
@@ -137,9 +151,7 @@ public class GuiFluidCraftConfirm extends AEBaseGui {
         if (this.ccc.getSelectedCpu() >= 0) // && status.selectedCpu < status.cpus.size() )
         {
             if (this.ccc.getName().length() > 0) {
-                final String name = this.ccc
-                        .getName()
-                        .substring(0, Math.min(20, this.ccc.getName().length()));
+                final String name = this.ccc.getName().substring(0, Math.min(20, this.ccc.getName().length()));
                 btnTextText = GuiText.CraftingCPU.getLocal() + ": " + name;
             } else {
                 btnTextText = GuiText.CraftingCPU.getLocal() + ": #" + this.ccc.getSelectedCpu();
@@ -161,8 +173,8 @@ public class GuiFluidCraftConfirm extends AEBaseGui {
     public void drawFG(final int offsetX, final int offsetY, final int mouseX, final int mouseY) {
         final long BytesUsed = this.ccc.getUsedBytes();
         final String byteUsed = NumberFormat.getInstance().format(BytesUsed);
-        final String Add =
-                BytesUsed > 0 ? (byteUsed + ' ' + GuiText.BytesUsed.getLocal()) : GuiText.CalculatingWait.getLocal();
+        final String Add = BytesUsed > 0 ? (byteUsed + ' ' + GuiText.BytesUsed.getLocal())
+                : GuiText.CalculatingWait.getLocal();
         this.fontRendererObj.drawString(GuiText.CraftingPlan.getLocal() + " - " + Add, 8, 7, 4210752);
 
         String dsp = null;
@@ -171,8 +183,12 @@ public class GuiFluidCraftConfirm extends AEBaseGui {
             dsp = GuiText.Simulation.getLocal();
         } else {
             dsp = this.ccc.getCpuAvailableBytes() > 0
-                    ? (GuiText.Bytes.getLocal() + ": " + this.ccc.getCpuAvailableBytes() + " : "
-                            + GuiText.CoProcessors.getLocal() + ": " + this.ccc.getCpuCoProcessors())
+                    ? (GuiText.Bytes.getLocal() + ": "
+                            + this.ccc.getCpuAvailableBytes()
+                            + " : "
+                            + GuiText.CoProcessors.getLocal()
+                            + ": "
+                            + this.ccc.getCpuCoProcessors())
                     : GuiText.Bytes.getLocal() + ": N/A : " + GuiText.CoProcessors.getLocal() + ": N/A";
         }
 
@@ -479,8 +495,8 @@ public class GuiFluidCraftConfirm extends AEBaseGui {
         final boolean backwards = Mouse.isButtonDown(1);
 
         if (btn == this.selectCPU) {
-            FluidCraft.proxy.netHandler.sendToServer(
-                    new CPacketFluidPatternTermBtns("Terminal.Cpu", backwards ? "Prev" : "Next"));
+            FluidCraft.proxy.netHandler
+                    .sendToServer(new CPacketFluidPatternTermBtns("Terminal.Cpu", backwards ? "Prev" : "Next"));
         }
 
         if (btn == this.cancel) {
@@ -497,7 +513,7 @@ public class GuiFluidCraftConfirm extends AEBaseGui {
         }
     }
 
-    @SuppressWarnings({"rawtypes", "unchecked"})
+    @SuppressWarnings({ "rawtypes", "unchecked" })
     protected void addItemTooltip(ItemStack is, List<String> lineList) {
         if (isShiftKeyDown()) {
             List l = is.getTooltip(this.mc.thePlayer, this.mc.gameSettings.advancedItemTooltips);

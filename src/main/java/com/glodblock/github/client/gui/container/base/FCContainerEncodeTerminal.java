@@ -1,5 +1,22 @@
 package com.glodblock.github.client.gui.container.base;
 
+import java.util.*;
+import java.util.stream.Collectors;
+
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.entity.player.InventoryPlayer;
+import net.minecraft.inventory.ICrafting;
+import net.minecraft.inventory.IInventory;
+import net.minecraft.inventory.Slot;
+import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTBase;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.NBTTagList;
+import net.minecraftforge.fluids.FluidContainerRegistry;
+import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.fluids.IFluidContainerItem;
+
 import appeng.api.AEApi;
 import appeng.api.definitions.IDefinitions;
 import appeng.api.storage.ITerminalHost;
@@ -14,6 +31,7 @@ import appeng.tile.inventory.IAEAppEngInventory;
 import appeng.tile.inventory.InvOperation;
 import appeng.util.Platform;
 import appeng.util.item.AEItemStack;
+
 import com.glodblock.github.client.gui.container.ContainerItemMonitor;
 import com.glodblock.github.common.item.ItemFluidDrop;
 import com.glodblock.github.common.item.ItemFluidEncodedPattern;
@@ -23,21 +41,6 @@ import com.glodblock.github.inventory.IPatternConsumer;
 import com.glodblock.github.loader.ItemAndBlockHolder;
 import com.glodblock.github.util.FluidPatternDetails;
 import com.glodblock.github.util.Util;
-import java.util.*;
-import java.util.stream.Collectors;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.entity.player.InventoryPlayer;
-import net.minecraft.inventory.ICrafting;
-import net.minecraft.inventory.IInventory;
-import net.minecraft.inventory.Slot;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTBase;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.nbt.NBTTagList;
-import net.minecraftforge.fluids.FluidContainerRegistry;
-import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.IFluidContainerItem;
 
 public abstract class FCContainerEncodeTerminal extends ContainerItemMonitor
         implements IAEAppEngInventory, IOptionalSlotHost, IContainerCraftingPacket, IPatternConsumer {
@@ -154,8 +157,7 @@ public abstract class FCContainerEncodeTerminal extends ContainerItemMonitor
     public ItemStack transferStackInSlot(EntityPlayer p, int idx) {
         Slot clickSlot = (Slot) this.inventorySlots.get(idx);
         ItemStack is = clickSlot.getStack();
-        if (is != null
-                && !patternSlotOUT.getHasStack()
+        if (is != null && !patternSlotOUT.getHasStack()
                 && is.stackSize == 1
                 && (is.getItem() instanceof ItemFluidEncodedPattern || is.getItem() instanceof ItemEncodedPattern)) {
             ItemStack output = is.copy();
@@ -173,20 +175,16 @@ public abstract class FCContainerEncodeTerminal extends ContainerItemMonitor
     }
 
     protected static boolean canDoubleStacks(SlotFake[] slots) {
-        List<SlotFake> enabledSlots =
-                Arrays.stream(slots).filter(SlotFake::isEnabled).collect(Collectors.toList());
-        long emptySlots =
-                enabledSlots.stream().filter(s -> s.getStack() == null).count();
-        long fullSlots = enabledSlots.stream()
-                .filter(s -> s.getStack() != null && s.getStack().stackSize * 2 > 127)
+        List<SlotFake> enabledSlots = Arrays.stream(slots).filter(SlotFake::isEnabled).collect(Collectors.toList());
+        long emptySlots = enabledSlots.stream().filter(s -> s.getStack() == null).count();
+        long fullSlots = enabledSlots.stream().filter(s -> s.getStack() != null && s.getStack().stackSize * 2 > 127)
                 .count();
         return fullSlots <= emptySlots;
     }
 
     protected static void doubleStacksInternal(SlotFake[] slots) {
         List<ItemStack> overFlowStacks = new ArrayList<>();
-        List<SlotFake> enabledSlots =
-                Arrays.stream(slots).filter(SlotFake::isEnabled).collect(Collectors.toList());
+        List<SlotFake> enabledSlots = Arrays.stream(slots).filter(SlotFake::isEnabled).collect(Collectors.toList());
         for (final Slot s : enabledSlots) {
             ItemStack st = s.getStack();
             if (st == null) continue;
@@ -214,26 +212,20 @@ public abstract class FCContainerEncodeTerminal extends ContainerItemMonitor
     }
 
     protected static boolean containsItem(SlotFake[] slots) {
-        List<SlotFake> enabledSlots =
-                Arrays.stream(slots).filter(SlotFake::isEnabled).collect(Collectors.toList());
-        long item = enabledSlots.stream()
-                .filter(s -> s.getStack() != null && !Util.isFluidPacket(s.getStack()))
+        List<SlotFake> enabledSlots = Arrays.stream(slots).filter(SlotFake::isEnabled).collect(Collectors.toList());
+        long item = enabledSlots.stream().filter(s -> s.getStack() != null && !Util.isFluidPacket(s.getStack()))
                 .count();
         return item > 0;
     }
 
     protected static boolean containsFluid(SlotFake[] slots) {
-        List<SlotFake> enabledSlots =
-                Arrays.stream(slots).filter(SlotFake::isEnabled).collect(Collectors.toList());
-        long fluid = enabledSlots.stream()
-                .filter(s -> Util.isFluidPacket(s.getStack()))
-                .count();
+        List<SlotFake> enabledSlots = Arrays.stream(slots).filter(SlotFake::isEnabled).collect(Collectors.toList());
+        long fluid = enabledSlots.stream().filter(s -> Util.isFluidPacket(s.getStack())).count();
         return fluid > 0;
     }
 
     protected static boolean nonNullSlot(SlotFake[] slots) {
-        List<SlotFake> enabledSlots =
-                Arrays.stream(slots).filter(SlotFake::isEnabled).collect(Collectors.toList());
+        List<SlotFake> enabledSlots = Arrays.stream(slots).filter(SlotFake::isEnabled).collect(Collectors.toList());
         long object = enabledSlots.stream().filter(s -> s.getStack() != null).count();
         return object > 0;
     }
@@ -296,12 +288,8 @@ public abstract class FCContainerEncodeTerminal extends ContainerItemMonitor
     }
 
     @Override
-    public void onChangeInventory(
-            final IInventory inv,
-            final int slot,
-            final InvOperation mc,
-            final ItemStack removedStack,
-            final ItemStack newStack) {
+    public void onChangeInventory(final IInventory inv, final int slot, final InvOperation mc,
+            final ItemStack removedStack, final ItemStack newStack) {
         // NO-OP
     }
 
@@ -377,22 +365,14 @@ public abstract class FCContainerEncodeTerminal extends ContainerItemMonitor
             }
 
             // add a new encoded pattern.
-            for (final ItemStack encodedPatternStack : AEApi.instance()
-                    .definitions()
-                    .items()
-                    .encodedPattern()
-                    .maybeStack(1)
-                    .asSet()) {
+            for (final ItemStack encodedPatternStack : AEApi.instance().definitions().items().encodedPattern()
+                    .maybeStack(1).asSet()) {
                 output = encodedPatternStack;
                 this.patternSlotOUT.putStack(output);
             }
         } else if (output.getItem() instanceof ItemFluidEncodedPattern) {
-            for (final ItemStack encodedPatternStack : AEApi.instance()
-                    .definitions()
-                    .items()
-                    .encodedPattern()
-                    .maybeStack(1)
-                    .asSet()) {
+            for (final ItemStack encodedPatternStack : AEApi.instance().definitions().items().encodedPattern()
+                    .maybeStack(1).asSet()) {
                 output = encodedPatternStack;
                 this.patternSlotOUT.putStack(output);
             }

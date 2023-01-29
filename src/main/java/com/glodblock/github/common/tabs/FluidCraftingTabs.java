@@ -1,9 +1,10 @@
 package com.glodblock.github.common.tabs;
 
-import com.glodblock.github.FluidCraft;
-import com.glodblock.github.loader.ItemAndBlockHolder;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
+
+import com.glodblock.github.FluidCraft;
+import com.glodblock.github.loader.ItemAndBlockHolder;
 
 public class FluidCraftingTabs extends CreativeTabs {
 

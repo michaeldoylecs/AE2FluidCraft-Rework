@@ -1,24 +1,28 @@
 package com.glodblock.github.crossmod.waila;
 
-import com.glodblock.github.common.item.ItemFluidDrop;
-import com.glodblock.github.util.Util;
 import java.util.List;
+
 import mcp.mobius.waila.handlers.nei.TooltipHandlerWaila;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraftforge.fluids.FluidStack;
 
+import com.glodblock.github.common.item.ItemFluidDrop;
+import com.glodblock.github.util.Util;
+
 public class FCTooltipHandlerWaila extends TooltipHandlerWaila {
+
     @Override
     public List<String> handleItemDisplayName(GuiContainer arg0, ItemStack itemstack, List<String> currenttip) {
         return currenttip;
     }
 
     @Override
-    public List<String> handleItemTooltip(
-            GuiContainer arg0, ItemStack itemstack, int arg2, int arg3, List<String> currenttip) {
+    public List<String> handleItemTooltip(GuiContainer arg0, ItemStack itemstack, int arg2, int arg3,
+            List<String> currenttip) {
         if (itemstack != null && itemstack.getItem() instanceof ItemFluidDrop && currenttip.size() > 0) {
             FluidStack fs = ItemFluidDrop.getFluidStack(itemstack);
             if (fs == null) return currenttip;
@@ -27,10 +31,7 @@ public class FCTooltipHandlerWaila extends TooltipHandlerWaila {
                 currenttip.set(
                         1,
                         EnumChatFormatting.GRAY
-                                + String.format(
-                                        "%s:%s",
-                                        Util.getFluidModID(fs.getFluid()),
-                                        fs.getFluid().getName())
+                                + String.format("%s:%s", Util.getFluidModID(fs.getFluid()), fs.getFluid().getName())
                                 + EnumChatFormatting.RESET);
             }
             String modName = Util.getFluidModName(fs.getFluid());

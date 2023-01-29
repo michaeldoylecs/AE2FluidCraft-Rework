@@ -1,18 +1,22 @@
 package com.glodblock.github.network;
 
+import javax.annotation.Nullable;
+
+import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
+
 import appeng.api.storage.data.IAEItemStack;
 import appeng.util.item.AEItemStack;
+
 import com.glodblock.github.FluidCraft;
 import com.glodblock.github.client.gui.container.ContainerLevelMaintainer;
 import com.glodblock.github.common.tile.TileLevelMaintainer;
+
 import cpw.mods.fml.common.network.simpleimpl.IMessage;
 import cpw.mods.fml.common.network.simpleimpl.IMessageHandler;
 import cpw.mods.fml.common.network.simpleimpl.MessageContext;
 import io.netty.buffer.ByteBuf;
-import javax.annotation.Nullable;
-import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
 
 public class CPacketLevelMaintainer implements IMessage {
 
@@ -82,6 +86,7 @@ public class CPacketLevelMaintainer implements IMessage {
     }
 
     public static class Handler implements IMessageHandler<CPacketLevelMaintainer, IMessage> {
+
         private void refresh(ContainerLevelMaintainer cca, EntityPlayerMP player) {
             SPacketMEInventoryUpdate piu = new SPacketMEInventoryUpdate(false);
             for (int i = 0; i < TileLevelMaintainer.REQ_COUNT; i++) {
@@ -91,12 +96,13 @@ public class CPacketLevelMaintainer implements IMessage {
                     if (is1 != null) {
                         NBTTagCompound data;
                         data = is1.getItemStack().getTagCompound();
-                        piu.appendItem(setTag(
-                                is,
-                                is1.getStackSize(),
-                                i,
-                                data.getBoolean("Enable"),
-                                cca.getTile().requests.getState(i).ordinal()));
+                        piu.appendItem(
+                                setTag(
+                                        is,
+                                        is1.getStackSize(),
+                                        i,
+                                        data.getBoolean("Enable"),
+                                        cca.getTile().requests.getState(i).ordinal()));
                     } else {
                         piu.appendItem(setTag(is, 0, i, true, 0));
                     }
@@ -111,8 +117,8 @@ public class CPacketLevelMaintainer implements IMessage {
             if (message.action.startsWith("TileLevelMaintainer.")
                     && ctx.getServerHandler().playerEntity.openContainer instanceof ContainerLevelMaintainer) {
                 EntityPlayerMP player = ctx.getServerHandler().playerEntity;
-                final ContainerLevelMaintainer cca =
-                        (ContainerLevelMaintainer) ctx.getServerHandler().playerEntity.openContainer;
+                final ContainerLevelMaintainer cca = (ContainerLevelMaintainer) ctx
+                        .getServerHandler().playerEntity.openContainer;
                 switch (message.action) {
                     case "TileLevelMaintainer.Quantity":
                         cca.getTile().updateQuantity(message.slotIndex, message.size);

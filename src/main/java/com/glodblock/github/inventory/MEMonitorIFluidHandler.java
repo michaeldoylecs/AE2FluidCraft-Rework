@@ -1,5 +1,12 @@
 package com.glodblock.github.inventory;
 
+import java.util.*;
+
+import net.minecraftforge.common.util.ForgeDirection;
+import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.fluids.FluidTankInfo;
+import net.minecraftforge.fluids.IFluidHandler;
+
 import appeng.api.AEApi;
 import appeng.api.config.AccessRestriction;
 import appeng.api.config.Actionable;
@@ -12,13 +19,9 @@ import appeng.api.storage.StorageChannel;
 import appeng.api.storage.data.IAEFluidStack;
 import appeng.api.storage.data.IItemList;
 import appeng.util.item.AEFluidStack;
-import java.util.*;
-import net.minecraftforge.common.util.ForgeDirection;
-import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.FluidTankInfo;
-import net.minecraftforge.fluids.IFluidHandler;
 
 public class MEMonitorIFluidHandler implements IMEMonitor<IAEFluidStack> {
+
     private final IFluidHandler handler;
     private final ForgeDirection side;
     private IItemList<IAEFluidStack> cache = AEApi.instance().storage().createFluidList();

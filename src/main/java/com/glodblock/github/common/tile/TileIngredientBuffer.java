@@ -1,17 +1,9 @@
 package com.glodblock.github.common.tile;
 
-import appeng.tile.AEBaseInvTile;
-import appeng.tile.TileEvent;
-import appeng.tile.events.TileEventType;
-import appeng.tile.inventory.AppEngInternalInventory;
-import appeng.tile.inventory.InvOperation;
-import com.glodblock.github.inventory.AEFluidInventory;
-import com.glodblock.github.inventory.IAEFluidInventory;
-import com.glodblock.github.inventory.IAEFluidTank;
-import cpw.mods.fml.common.network.ByteBufUtils;
-import io.netty.buffer.ByteBuf;
 import java.io.IOException;
+
 import javax.annotation.Nonnull;
+
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -20,6 +12,19 @@ import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTankInfo;
 import net.minecraftforge.fluids.IFluidHandler;
+
+import appeng.tile.AEBaseInvTile;
+import appeng.tile.TileEvent;
+import appeng.tile.events.TileEventType;
+import appeng.tile.inventory.AppEngInternalInventory;
+import appeng.tile.inventory.InvOperation;
+
+import com.glodblock.github.inventory.AEFluidInventory;
+import com.glodblock.github.inventory.IAEFluidInventory;
+import com.glodblock.github.inventory.IAEFluidTank;
+
+import cpw.mods.fml.common.network.ByteBufUtils;
+import io.netty.buffer.ByteBuf;
 
 public class TileIngredientBuffer extends AEBaseInvTile implements IAEFluidInventory, IFluidHandler {
 
@@ -49,7 +54,7 @@ public class TileIngredientBuffer extends AEBaseInvTile implements IAEFluidInven
 
     @Override
     public int[] getAccessibleSlotsBySide(ForgeDirection whichSide) {
-        return new int[] {0, 1, 2, 3, 4, 5, 6, 7, 8};
+        return new int[] { 0, 1, 2, 3, 4, 5, 6, 7, 8 };
     }
 
     @Override

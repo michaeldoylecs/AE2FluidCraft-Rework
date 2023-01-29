@@ -1,18 +1,21 @@
 package com.glodblock.github.util;
 
-import appeng.api.networking.crafting.ICraftingPatternDetails;
-import appeng.api.storage.data.IAEItemStack;
-import appeng.helpers.PatternHelper;
-import appeng.util.item.AEItemStack;
 import java.util.Arrays;
 import java.util.Objects;
+
 import javax.annotation.Nullable;
+
 import net.minecraft.inventory.InventoryCrafting;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.Constants;
+
+import appeng.api.networking.crafting.ICraftingPatternDetails;
+import appeng.api.storage.data.IAEItemStack;
+import appeng.helpers.PatternHelper;
+import appeng.util.item.AEItemStack;
 
 public class FluidPatternDetails implements ICraftingPatternDetails, Comparable<FluidPatternDetails> {
 

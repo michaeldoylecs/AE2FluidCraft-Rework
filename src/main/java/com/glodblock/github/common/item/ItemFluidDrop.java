@@ -1,18 +1,10 @@
 package com.glodblock.github.common.item;
 
-import appeng.api.storage.data.IAEFluidStack;
-import appeng.api.storage.data.IAEItemStack;
-import appeng.util.item.AEFluidStack;
-import appeng.util.item.AEItemStack;
-import com.glodblock.github.FluidCraft;
-import com.glodblock.github.loader.ItemAndBlockHolder;
-import com.glodblock.github.util.NameConst;
-import cpw.mods.fml.common.registry.GameRegistry;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 import java.util.List;
 import java.util.Objects;
+
 import javax.annotation.Nullable;
+
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
@@ -26,6 +18,19 @@ import net.minecraftforge.common.util.Constants;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
+
+import appeng.api.storage.data.IAEFluidStack;
+import appeng.api.storage.data.IAEItemStack;
+import appeng.util.item.AEFluidStack;
+import appeng.util.item.AEItemStack;
+
+import com.glodblock.github.FluidCraft;
+import com.glodblock.github.loader.ItemAndBlockHolder;
+import com.glodblock.github.util.NameConst;
+
+import cpw.mods.fml.common.registry.GameRegistry;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 
 public class ItemFluidDrop extends FCBaseItem {
 
@@ -48,8 +53,8 @@ public class ItemFluidDrop extends FCBaseItem {
         if (ItemFluidPacket.isDisplay(stack)) {
             return fluid != null ? fluid.getLocalizedName() : StatCollector.translateToLocalFormatted("error.unknown");
         }
-        return StatCollector.translateToLocalFormatted(
-                "item.fluid_drop.name", fluid == null ? "???" : fluid.getLocalizedName());
+        return StatCollector
+                .translateToLocalFormatted("item.fluid_drop.name", fluid == null ? "???" : fluid.getLocalizedName());
     }
 
     @Override

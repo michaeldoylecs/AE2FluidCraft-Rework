@@ -1,5 +1,11 @@
 package com.glodblock.github.util;
 
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
+import java.util.Arrays;
+
+import net.minecraftforge.fluids.IFluidHandler;
+
 import appeng.api.implementations.IUpgradeableHost;
 import appeng.api.networking.IGrid;
 import appeng.api.networking.crafting.ICraftingCPU;
@@ -16,10 +22,6 @@ import appeng.me.storage.MEPassThrough;
 import appeng.parts.p2p.PartP2PLiquids;
 import appeng.util.inv.ItemSlot;
 import appeng.util.prioitylist.IPartitionList;
-import java.lang.reflect.Field;
-import java.lang.reflect.Method;
-import java.util.Arrays;
-import net.minecraftforge.fluids.IFluidHandler;
 
 public class Ae2Reflect {
 
@@ -53,8 +55,11 @@ public class Ae2Reflect {
             fContainerUpgradeable_upgradeable = Ae2Reflect.reflectField(ContainerUpgradeable.class, "upgradeable");
             mItemSlot_setExtractable = reflectMethod(ItemSlot.class, "setExtractable", boolean.class);
             mCPU_getGrid = reflectMethod(CraftingCPUCluster.class, "getGrid");
-            mCPU_postChange =
-                    reflectMethod(CraftingCPUCluster.class, "postChange", IAEItemStack.class, BaseActionSource.class);
+            mCPU_postChange = reflectMethod(
+                    CraftingCPUCluster.class,
+                    "postChange",
+                    IAEItemStack.class,
+                    BaseActionSource.class);
             mCPU_markDirty = reflectMethod(CraftingCPUCluster.class, "markDirty");
             mP2PLiquids_getTarget = reflectMethod(PartP2PLiquids.class, "getTarget");
         } catch (Exception e) {
@@ -75,8 +80,7 @@ public class Ae2Reflect {
             try {
                 f = owner.getDeclaredField(name);
                 if (f != null) break;
-            } catch (NoSuchFieldException ignore) {
-            }
+            } catch (NoSuchFieldException ignore) {}
         }
         if (f == null) throw new NoSuchFieldException("Can't find field from " + Arrays.toString(names));
         f.setAccessible(true);

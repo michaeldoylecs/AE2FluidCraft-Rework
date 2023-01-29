@@ -7,6 +7,8 @@ import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import org.apache.commons.lang3.tuple.MutablePair;
 
+import appeng.container.slot.SlotRestrictedInput;
+
 public class FCSlotRestrictedInput extends SlotRestrictedInput {
 
     @FunctionalInterface

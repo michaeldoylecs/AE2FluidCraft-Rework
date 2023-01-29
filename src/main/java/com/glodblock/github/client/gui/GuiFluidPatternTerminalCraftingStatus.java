@@ -1,8 +1,13 @@
 package com.glodblock.github.client.gui;
 
+import net.minecraft.client.gui.GuiButton;
+import net.minecraft.entity.player.InventoryPlayer;
+import net.minecraft.item.ItemStack;
+
 import appeng.api.storage.ITerminalHost;
 import appeng.client.gui.implementations.GuiCraftingStatus;
 import appeng.client.gui.widgets.GuiTabButton;
+
 import com.glodblock.github.common.parts.PartFluidPatternTerminal;
 import com.glodblock.github.common.parts.PartFluidPatternTerminalEx;
 import com.glodblock.github.common.parts.PartFluidTerminal;
@@ -10,9 +15,6 @@ import com.glodblock.github.inventory.InventoryHandler;
 import com.glodblock.github.inventory.gui.GuiType;
 import com.glodblock.github.loader.ItemAndBlockHolder;
 import com.glodblock.github.util.Ae2ReflectClient;
-import net.minecraft.client.gui.GuiButton;
-import net.minecraft.entity.player.InventoryPlayer;
-import net.minecraft.item.ItemStack;
 
 public class GuiFluidPatternTerminalCraftingStatus extends GuiCraftingStatus {
 

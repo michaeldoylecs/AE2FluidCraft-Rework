@@ -1,5 +1,18 @@
 package com.glodblock.github.common.parts;
 
+import java.io.IOException;
+import java.util.Objects;
+
+import net.minecraft.client.renderer.RenderBlocks;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.Vec3;
+import net.minecraftforge.common.util.ForgeDirection;
+import net.minecraftforge.fluids.Fluid;
+import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.fluids.FluidTankInfo;
+
 import appeng.api.config.Actionable;
 import appeng.api.config.Upgrades;
 import appeng.api.networking.IGridNode;
@@ -21,6 +34,7 @@ import appeng.parts.misc.PartInterface;
 import appeng.tile.inventory.AppEngInternalAEInventory;
 import appeng.util.Platform;
 import appeng.util.item.AEFluidStack;
+
 import com.glodblock.github.client.textures.FCPartsTexture;
 import com.glodblock.github.common.item.ItemFluidPacket;
 import com.glodblock.github.inventory.AEFluidInventory;
@@ -31,21 +45,11 @@ import com.glodblock.github.inventory.gui.GuiType;
 import com.glodblock.github.util.BlockPos;
 import com.glodblock.github.util.DualityFluidInterface;
 import com.glodblock.github.util.Util;
+
 import cpw.mods.fml.common.network.ByteBufUtils;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import io.netty.buffer.ByteBuf;
-import java.io.IOException;
-import java.util.Objects;
-import net.minecraft.client.renderer.RenderBlocks;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.Vec3;
-import net.minecraftforge.common.util.ForgeDirection;
-import net.minecraftforge.fluids.Fluid;
-import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.FluidTankInfo;
 
 public class PartFluidInterface extends PartInterface implements IDualHost {
 
@@ -59,8 +63,8 @@ public class PartFluidInterface extends PartInterface implements IDualHost {
 
     @Override
     @SideOnly(Side.CLIENT)
-    public void renderStatic(
-            final int x, final int y, final int z, final IPartRenderHelper rh, final RenderBlocks renderer) {
+    public void renderStatic(final int x, final int y, final int z, final IPartRenderHelper rh,
+            final RenderBlocks renderer) {
         this.setRenderCache(rh.useSimplifiedRendering(x, y, z, this, this.getRenderCache()));
         rh.setTexture(
                 CableBusTextures.PartMonitorSides.getIcon(),
@@ -122,11 +126,13 @@ public class PartFluidInterface extends PartInterface implements IDualHost {
     @MENetworkEventSubscribe
     public void stateChange(final MENetworkChannelsChanged c) {
         fluidDuality.onChannelStateChange(c);
+        super.stateChange(c);
     }
 
     @MENetworkEventSubscribe
     public void stateChange(final MENetworkPowerStatusChange c) {
         fluidDuality.onPowerStateChange(c);
+        super.stateChange(c);
     }
 
     @Override
@@ -198,10 +204,7 @@ public class PartFluidInterface extends PartInterface implements IDualHost {
 
     private IMEMonitor<IAEFluidStack> getFluidGrid() {
         try {
-            return getProxy()
-                    .getGrid()
-                    .<IStorageGrid>getCache(IStorageGrid.class)
-                    .getFluidInventory();
+            return getProxy().getGrid().<IStorageGrid>getCache(IStorageGrid.class).getFluidInventory();
         } catch (GridAccessException e) {
             return null;
         }
@@ -266,7 +269,7 @@ public class PartFluidInterface extends PartInterface implements IDualHost {
                     this.getHost().getTile().getWorldObj(),
                     new BlockPos(this.getHost().getTile()),
                     Objects.requireNonNull(this.getSide()),
-                    GuiType.DUAL_INTERFACE_PART);
+                    GuiType.DUAL_INTERFACE);
         }
         return true;
     }
@@ -282,7 +285,8 @@ public class PartFluidInterface extends PartInterface implements IDualHost {
     public void setConfig(int id, IAEFluidStack fluid) {
         if (id >= 0 && id < 6) {
             config.setInventorySlotContents(
-                    id, ItemFluidPacket.newDisplayStack(fluid == null ? null : fluid.getFluidStack()));
+                    id,
+                    ItemFluidPacket.newDisplayStack(fluid == null ? null : fluid.getFluidStack()));
             fluidDuality.getConfig().setFluidInSlot(id, fluidDuality.getStandardFluid(fluid));
         }
     }

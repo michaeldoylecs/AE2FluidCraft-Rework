@@ -1,14 +1,17 @@
 package com.glodblock.github.client.textures;
 
-import com.glodblock.github.util.NameConst;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.util.IIcon;
 import net.minecraft.util.ResourceLocation;
 
+import com.glodblock.github.util.NameConst;
+
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
+
 public enum FCPartsTexture {
+
     PartFluidTerminal_Bright("fluid_terminal_bright"),
     PartFluidTerminal_Dark("fluid_terminal_dark"),
     PartFluidTerminal_Colored("fluid_terminal_medium"),

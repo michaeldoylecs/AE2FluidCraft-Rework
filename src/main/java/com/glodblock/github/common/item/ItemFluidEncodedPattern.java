@@ -1,14 +1,16 @@
 package com.glodblock.github.common.item;
 
+import net.minecraft.item.ItemStack;
+import net.minecraft.world.World;
+
 import appeng.api.networking.crafting.ICraftingPatternDetails;
 import appeng.items.misc.ItemEncodedPattern;
+
 import com.glodblock.github.FluidCraft;
 import com.glodblock.github.loader.IRegister;
 import com.glodblock.github.util.FluidPatternDetails;
 import com.glodblock.github.util.NameConst;
 import cpw.mods.fml.common.registry.GameRegistry;
-import net.minecraft.item.ItemStack;
-import net.minecraft.world.World;
 
 public class ItemFluidEncodedPattern extends ItemEncodedPattern implements IRegister<ItemFluidEncodedPattern> {
 

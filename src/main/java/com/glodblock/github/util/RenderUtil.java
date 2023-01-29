@@ -1,13 +1,18 @@
 package com.glodblock.github.util;
 
-import appeng.api.storage.data.IAEFluidStack;
+import java.util.List;
+
 import javax.annotation.Nullable;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.util.IIcon;
+
 import org.lwjgl.opengl.GL11;
+
+import appeng.api.storage.data.IAEFluidStack;
 
 public final class RenderUtil {
 
@@ -15,16 +20,8 @@ public final class RenderUtil {
         renderItemIcon(icon, 0.0D, 0.0D, size, size, z, nx, ny, nz);
     }
 
-    public static void renderItemIcon(
-            IIcon icon,
-            double xStart,
-            double yStart,
-            double xEnd,
-            double yEnd,
-            double z,
-            float nx,
-            float ny,
-            float nz) {
+    public static void renderItemIcon(IIcon icon, double xStart, double yStart, double xEnd, double yEnd, double z,
+            float nx, float ny, float nz) {
         if (icon == null) {
             return;
         }
@@ -44,8 +41,8 @@ public final class RenderUtil {
         Tessellator.instance.draw();
     }
 
-    public static void renderFluidIntoGui(
-            Gui gui, int x, int y, int width, int height, @Nullable IAEFluidStack aeFluidStack, int capacity) {
+    public static void renderFluidIntoGui(Gui gui, int x, int y, int width, int height,
+            @Nullable IAEFluidStack aeFluidStack, int capacity) {
         if (aeFluidStack != null) {
             GL11.glDisable(2896);
             GL11.glColor3f(1.0F, 1.0F, 1.0F);
@@ -60,10 +57,19 @@ public final class RenderUtil {
                 for (int th = 0; th <= hi; th += 16) {
                     if (hi - th <= 0) break;
                     gui.drawTexturedModelRectFromIcon(
-                            x, y + height - Math.min(16, hi - th) - th, fluidIcon, width, Math.min(16, hi - th));
+                            x,
+                            y + height - Math.min(16, hi - th) - th,
+                            fluidIcon,
+                            width,
+                            Math.min(16, hi - th));
                 }
                 GL11.glColor3f(1.0F, 1.0F, 1.0F);
             }
         }
+    }
+
+    @SuppressWarnings("unchecked")
+    public static List<String> listFormattedStringToWidth(String str) {
+        return Minecraft.getMinecraft().fontRenderer.listFormattedStringToWidth(str, 150);
     }
 }

@@ -1,12 +1,7 @@
 package com.glodblock.github.inventory;
 
-import appeng.api.storage.data.IAEFluidStack;
-import appeng.core.AELog;
-import appeng.util.Platform;
-import appeng.util.item.AEFluidStack;
-import com.glodblock.github.util.Util;
-import io.netty.buffer.ByteBuf;
 import java.io.IOException;
+
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.fluids.Fluid;
@@ -14,7 +9,16 @@ import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTankInfo;
 import net.minecraftforge.fluids.IFluidTank;
 
+import appeng.api.storage.data.IAEFluidStack;
+import appeng.core.AELog;
+import appeng.util.Platform;
+import appeng.util.item.AEFluidStack;
+
+import com.glodblock.github.util.Util;
+import io.netty.buffer.ByteBuf;
+
 public class AEFluidInventory implements IAEFluidTank {
+
     private final IAEFluidStack[] fluids;
     private final IAEFluidInventory handler;
     private final int capacity;
@@ -33,8 +37,7 @@ public class AEFluidInventory implements IAEFluidTank {
     @Override
     public void setFluidInSlot(final int slot, final IAEFluidStack fluid) {
         if (slot >= 0 && slot < this.getSlots()) {
-            if (fluid != null
-                    && this.fluids[slot] != null
+            if (fluid != null && this.fluids[slot] != null
                     && fluid.getFluidStack().isFluidEqual(this.fluids[slot].getFluidStack())) {
                 if (fluid.getStackSize() != this.fluids[slot].getStackSize()) {
                     this.fluids[slot].setStackSize(Math.min(fluid.getStackSize(), this.capacity));
@@ -299,8 +302,7 @@ public class AEFluidInventory implements IAEFluidTank {
                 }
 
                 target.setTag("#" + x, c);
-            } catch (final Exception ignored) {
-            }
+            } catch (final Exception ignored) {}
         }
     }
 
@@ -327,6 +329,7 @@ public class AEFluidInventory implements IAEFluidTank {
     }
 
     private class FluidTankPropertiesWrapper implements IFluidTank {
+
         private final int slot;
 
         public FluidTankPropertiesWrapper(final int slot) {
@@ -335,8 +338,7 @@ public class AEFluidInventory implements IAEFluidTank {
 
         @Override
         public FluidStack getFluid() {
-            return AEFluidInventory.this.fluids[this.slot] == null
-                    ? null
+            return AEFluidInventory.this.fluids[this.slot] == null ? null
                     : AEFluidInventory.this.fluids[this.slot].getFluidStack();
         }
 
@@ -366,9 +368,8 @@ public class AEFluidInventory implements IAEFluidTank {
                 acc = Math.max(resource.amount, getCapacity() - getFluid().amount);
             }
             if (doFill) {
-                if (getFluid() == null)
-                    AEFluidInventory.this.setFluidInSlot(
-                            this.slot, AEFluidStack.create(new FluidStack(resource.getFluid(), acc)));
+                if (getFluid() == null) AEFluidInventory.this
+                        .setFluidInSlot(this.slot, AEFluidStack.create(new FluidStack(resource.getFluid(), acc)));
                 else getFluid().amount += acc;
             }
             return acc;

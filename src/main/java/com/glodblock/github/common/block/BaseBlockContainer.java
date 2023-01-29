@@ -1,6 +1,7 @@
 package com.glodblock.github.common.block;
 
 import java.util.List;
+
 import net.minecraft.block.BlockContainer;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.player.EntityPlayer;
@@ -12,6 +13,6 @@ public abstract class BaseBlockContainer extends BlockContainer {
         super(p_i45386_1_);
     }
 
-    public void addInformation(
-            ItemStack itemStack, EntityPlayer player, List<String> toolTip, boolean advancedToolTips) {}
+    public void addInformation(ItemStack itemStack, EntityPlayer player, List<String> toolTip,
+            boolean advancedToolTips) {}
 }

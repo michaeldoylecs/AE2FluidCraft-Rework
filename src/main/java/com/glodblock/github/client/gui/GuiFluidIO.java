@@ -1,16 +1,19 @@
 package com.glodblock.github.client.gui;
 
+import net.minecraft.client.resources.I18n;
+import net.minecraft.entity.player.InventoryPlayer;
+
 import appeng.api.storage.data.IAEFluidStack;
 import appeng.client.gui.implementations.GuiUpgradeable;
 import appeng.core.localization.GuiText;
+
 import com.glodblock.github.client.gui.container.ContainerFluidIO;
 import com.glodblock.github.common.parts.PartFluidImportBus;
 import com.glodblock.github.common.parts.base.FCSharedFluidBus;
 import com.glodblock.github.util.NameConst;
-import net.minecraft.client.resources.I18n;
-import net.minecraft.entity.player.InventoryPlayer;
 
 public class GuiFluidIO extends GuiUpgradeable {
+
     private final FCSharedFluidBus bus;
 
     public GuiFluidIO(InventoryPlayer inventoryPlayer, FCSharedFluidBus te) {
@@ -30,10 +33,10 @@ public class GuiFluidIO extends GuiUpgradeable {
     @Override
     public void drawFG(final int offsetX, final int offsetY, final int mouseX, final int mouseY) {
         this.fontRendererObj.drawString(
-                this.getGuiDisplayName(I18n.format(
-                        this.bus instanceof PartFluidImportBus
-                                ? NameConst.GUI_FLUID_IMPORT
-                                : NameConst.GUI_FLUID_EXPORT)),
+                this.getGuiDisplayName(
+                        I18n.format(
+                                this.bus instanceof PartFluidImportBus ? NameConst.GUI_FLUID_IMPORT
+                                        : NameConst.GUI_FLUID_EXPORT)),
                 8,
                 6,
                 4210752);

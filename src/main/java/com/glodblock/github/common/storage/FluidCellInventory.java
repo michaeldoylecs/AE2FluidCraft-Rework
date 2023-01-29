@@ -1,5 +1,15 @@
 package com.glodblock.github.common.storage;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import net.minecraft.inventory.IInventory;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTBase;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraftforge.fluids.FluidStack;
+
 import appeng.api.AEApi;
 import appeng.api.config.Actionable;
 import appeng.api.exceptions.AppEngException;
@@ -11,14 +21,6 @@ import appeng.api.storage.data.IAEFluidStack;
 import appeng.api.storage.data.IItemList;
 import appeng.util.Platform;
 import appeng.util.item.AEFluidStack;
-import java.util.ArrayList;
-import java.util.List;
-import net.minecraft.inventory.IInventory;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTBase;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraftforge.fluids.FluidStack;
 
 public class FluidCellInventory implements IFluidCellInventory {
 
@@ -31,7 +33,7 @@ public class FluidCellInventory implements IFluidCellInventory {
     private static String[] fluidSlotCount;
     private final ItemStack cellItem;
     private final ISaveProvider container;
-    private final int MAX_TYPE = 1;
+    private final int MAX_TYPE = 63;
     private long storedFluidCount;
     private short storedFluids;
     private IItemList<IAEFluidStack> cellFluids;
@@ -39,6 +41,22 @@ public class FluidCellInventory implements IFluidCellInventory {
     public static final int singleByteAmount = 256 * 8;
 
     public FluidCellInventory(final ItemStack o, final ISaveProvider container) throws AppEngException {
+        if (o == null) {
+            throw new AppEngException("ItemStack was used as a cell, but was not a cell!");
+        }
+        this.cellType = null;
+        this.cellItem = o;
+        final Item type = this.cellItem.getItem();
+        if (type instanceof IStorageFluidCell) {
+            this.cellType = (IStorageFluidCell) this.cellItem.getItem();
+        }
+        if (this.cellType == null) {
+            throw new AppEngException("ItemStack was used as a cell, but was not a cell!");
+        }
+        if (!this.cellType.isStorageCell(this.cellItem)) {
+            throw new AppEngException("ItemStack was used as a cell, but was not a cell!");
+        }
+
         if (fluidSlots == null) {
             fluidSlots = new String[MAX_TYPE];
             fluidSlotCount = new String[MAX_TYPE];
@@ -47,27 +65,6 @@ public class FluidCellInventory implements IFluidCellInventory {
                 fluidSlots[x] = FLUID_SLOT + x;
                 fluidSlotCount[x] = FLUID_SLOT_COUNT + x;
             }
-        }
-
-        if (o == null) {
-            throw new AppEngException("ItemStack was used as a cell, but was not a cell!");
-        }
-
-        this.cellType = null;
-        this.cellItem = o;
-
-        final Item type = this.cellItem.getItem();
-
-        if (type instanceof IStorageFluidCell) {
-            this.cellType = (IStorageFluidCell) this.cellItem.getItem();
-        }
-
-        if (this.cellType == null) {
-            throw new AppEngException("ItemStack was used as a cell, but was not a cell!");
-        }
-
-        if (!this.cellType.isStorageCell(this.cellItem)) {
-            throw new AppEngException("ItemStack was used as a cell, but was not a cell!");
         }
 
         this.container = container;
@@ -120,7 +117,7 @@ public class FluidCellInventory implements IFluidCellInventory {
     public boolean canHoldNewFluid() {
         final long bytesFree = this.getFreeBytes();
         return (bytesFree > this.getBytesPerType()
-                        || (bytesFree == this.getBytesPerType() && this.getUnusedFluidCount() > 0))
+                || (bytesFree == this.getBytesPerType() && this.getUnusedFluidCount() > 0))
                 && this.getRemainingFluidTypes() > 0;
     }
 
@@ -142,7 +139,7 @@ public class FluidCellInventory implements IFluidCellInventory {
 
     @Override
     public long getTotalFluidTypes() {
-        return MAX_TYPE;
+        return this.cellType.getTotalTypes(this.cellItem);
     }
 
     @Override
@@ -305,8 +302,8 @@ public class FluidCellInventory implements IFluidCellInventory {
 
         if (this.canHoldNewFluid()) // room for new type, and for at least one item!
         {
-            final long remainingFluidCount =
-                    this.getRemainingFluidCount() - ((long) this.getBytesPerType() * singleByteAmount);
+            final long remainingFluidCount = this.getRemainingFluidCount()
+                    - ((long) this.getBytesPerType() * singleByteAmount);
 
             if (remainingFluidCount > 0) {
                 if (input.getStackSize() > remainingFluidCount) {

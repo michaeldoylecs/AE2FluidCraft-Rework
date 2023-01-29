@@ -1,13 +1,16 @@
 package com.glodblock.github.nei.object;
 
-import codechicken.nei.PositionedStack;
-import com.glodblock.github.util.Util;
 import javax.annotation.Nullable;
+
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.oredict.OreDictionary;
+
+import codechicken.nei.PositionedStack;
+
+import com.glodblock.github.util.Util;
 
 public class OrderStack<T> {
 

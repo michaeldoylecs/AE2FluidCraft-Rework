@@ -1,5 +1,19 @@
 package com.glodblock.github.client.gui.container;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Objects;
+import java.util.concurrent.Future;
+
+import javax.annotation.Nonnull;
+
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.entity.player.InventoryPlayer;
+import net.minecraft.inventory.ICrafting;
+import net.minecraft.util.ChatComponentText;
+import net.minecraft.world.World;
+
 import appeng.api.AEApi;
 import appeng.api.config.Actionable;
 import appeng.api.config.SecurityPermissions;
@@ -21,6 +35,7 @@ import appeng.container.guisync.GuiSync;
 import appeng.container.implementations.CraftingCPURecord;
 import appeng.core.AELog;
 import appeng.util.Platform;
+
 import com.glodblock.github.FluidCraft;
 import com.glodblock.github.common.parts.PartFluidPatternTerminal;
 import com.glodblock.github.common.parts.PartFluidPatternTerminalEx;
@@ -30,17 +45,6 @@ import com.glodblock.github.network.SPacketMEInventoryUpdate;
 import com.glodblock.github.util.Ae2Reflect;
 import com.glodblock.github.util.BlockPos;
 import com.google.common.collect.ImmutableSet;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Objects;
-import java.util.concurrent.Future;
-import javax.annotation.Nonnull;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.entity.player.InventoryPlayer;
-import net.minecraft.inventory.ICrafting;
-import net.minecraft.util.ChatComponentText;
-import net.minecraft.world.World;
 
 public class ContainerFluidCraftConfirm extends AEBaseContainer {
 
@@ -162,8 +166,8 @@ public class ContainerFluidCraftConfirm extends AEBaseContainer {
 
                 final SPacketMEInventoryUpdate a = new SPacketMEInventoryUpdate((byte) 0);
                 final SPacketMEInventoryUpdate b = new SPacketMEInventoryUpdate((byte) 1);
-                final SPacketMEInventoryUpdate c =
-                        this.result.isSimulation() ? new SPacketMEInventoryUpdate((byte) 2) : null;
+                final SPacketMEInventoryUpdate c = this.result.isSimulation() ? new SPacketMEInventoryUpdate((byte) 2)
+                        : null;
 
                 final IItemList<IAEItemStack> plan = AEApi.instance().storage().createItemList();
                 this.result.populatePlan(plan);

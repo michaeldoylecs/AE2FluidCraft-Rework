@@ -1,5 +1,8 @@
 package com.glodblock.github.common.storage;
 
+import net.minecraft.inventory.IInventory;
+import net.minecraft.item.ItemStack;
+
 import appeng.api.AEApi;
 import appeng.api.config.IncludeExclude;
 import appeng.api.storage.IMEInventory;
@@ -10,10 +13,9 @@ import appeng.me.storage.MEInventoryHandler;
 import appeng.me.storage.MEPassThrough;
 import appeng.util.item.AEFluidStack;
 import appeng.util.prioitylist.PrecisePriorityList;
+
 import com.glodblock.github.util.Ae2Reflect;
 import com.glodblock.github.util.Util;
-import net.minecraft.inventory.IInventory;
-import net.minecraft.item.ItemStack;
 
 public class FluidCellInventoryHandler extends MEInventoryHandler<IAEFluidStack> implements IFluidCellInventoryHandler {
 
@@ -25,8 +27,7 @@ public class FluidCellInventoryHandler extends MEInventoryHandler<IAEFluidStack>
         if (ci != null) {
             final IInventory config = ci.getConfigInventory();
 
-            final IItemList<IAEFluidStack> priorityList =
-                    AEApi.instance().storage().createFluidList();
+            final IItemList<IAEFluidStack> priorityList = AEApi.instance().storage().createFluidList();
             for (int x = 0; x < config.getSizeInventory(); x++) {
                 final ItemStack is = config.getStackInSlot(x);
                 if (Util.getFluidFromItem(is) != null) {

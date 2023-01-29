@@ -1,13 +1,15 @@
 package com.glodblock.github.network;
 
+import net.minecraft.inventory.Container;
+
 import com.glodblock.github.client.gui.container.ContainerFluidCraftConfirm;
 import com.glodblock.github.client.gui.container.ContainerFluidStorageBus;
 import com.glodblock.github.client.gui.container.base.FCContainerEncodeTerminal;
+
 import cpw.mods.fml.common.network.simpleimpl.IMessage;
 import cpw.mods.fml.common.network.simpleimpl.IMessageHandler;
 import cpw.mods.fml.common.network.simpleimpl.MessageContext;
 import io.netty.buffer.ByteBuf;
-import net.minecraft.inventory.Container;
 
 public class CPacketFluidPatternTermBtns implements IMessage {
 

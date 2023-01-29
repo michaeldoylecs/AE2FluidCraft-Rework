@@ -1,17 +1,20 @@
 package com.glodblock.github.client.gui;
 
+import net.minecraft.entity.player.InventoryPlayer;
+import net.minecraft.util.StatCollector;
+
+import org.lwjgl.input.Mouse;
+
 import appeng.api.config.*;
 import appeng.api.storage.ITerminalHost;
 import appeng.client.gui.widgets.GuiImgButton;
+
 import com.glodblock.github.FluidCraft;
 import com.glodblock.github.client.gui.base.FCGuiEncodeTerminal;
 import com.glodblock.github.client.gui.container.ContainerFluidPatternTerminalEx;
 import com.glodblock.github.network.CPacketFluidPatternTermBtns;
 import com.glodblock.github.util.ModAndClassUtil;
 import com.glodblock.github.util.NameConst;
-import net.minecraft.entity.player.InventoryPlayer;
-import net.minecraft.util.StatCollector;
-import org.lwjgl.input.Mouse;
 
 public class GuiFluidPatternTerminalEx extends FCGuiEncodeTerminal {
 
@@ -27,22 +30,34 @@ public class GuiFluidPatternTerminalEx extends FCGuiEncodeTerminal {
         super.initGui();
 
         this.substitutionsEnabledBtn = new GuiImgButton(
-                this.guiLeft + 97, this.guiTop + this.ySize - 163, Settings.ACTIONS, ItemSubstitution.ENABLED);
+                this.guiLeft + 97,
+                this.guiTop + this.ySize - 163,
+                Settings.ACTIONS,
+                ItemSubstitution.ENABLED);
         this.substitutionsEnabledBtn.setHalfSize(true);
         this.buttonList.add(this.substitutionsEnabledBtn);
 
         this.substitutionsDisabledBtn = new GuiImgButton(
-                this.guiLeft + 97, this.guiTop + this.ySize - 163, Settings.ACTIONS, ItemSubstitution.DISABLED);
+                this.guiLeft + 97,
+                this.guiTop + this.ySize - 163,
+                Settings.ACTIONS,
+                ItemSubstitution.DISABLED);
         this.substitutionsDisabledBtn.setHalfSize(true);
         this.buttonList.add(this.substitutionsDisabledBtn);
 
-        this.fluidPrioritizedEnabledBtn =
-                new GuiFCImgButton(this.guiLeft + 97, this.guiTop + this.ySize - 114, "FORCE_PRIO", "DO_PRIO");
+        this.fluidPrioritizedEnabledBtn = new GuiFCImgButton(
+                this.guiLeft + 97,
+                this.guiTop + this.ySize - 114,
+                "FORCE_PRIO",
+                "DO_PRIO");
         this.fluidPrioritizedEnabledBtn.setHalfSize(true);
         this.buttonList.add(this.fluidPrioritizedEnabledBtn);
 
-        this.fluidPrioritizedDisabledBtn =
-                new GuiFCImgButton(this.guiLeft + 97, this.guiTop + this.ySize - 114, "NOT_PRIO", "DONT_PRIO");
+        this.fluidPrioritizedDisabledBtn = new GuiFCImgButton(
+                this.guiLeft + 97,
+                this.guiTop + this.ySize - 114,
+                "NOT_PRIO",
+                "DONT_PRIO");
         this.fluidPrioritizedDisabledBtn.setHalfSize(true);
         this.buttonList.add(this.fluidPrioritizedDisabledBtn);
 
@@ -55,33 +70,51 @@ public class GuiFluidPatternTerminalEx extends FCGuiEncodeTerminal {
         this.buttonList.add(this.invertBtn);
 
         this.clearBtn = new GuiImgButton(
-                this.guiLeft + 87, this.guiTop + this.ySize - 163, Settings.ACTIONS, ActionItems.CLOSE);
+                this.guiLeft + 87,
+                this.guiTop + this.ySize - 163,
+                Settings.ACTIONS,
+                ActionItems.CLOSE);
         this.clearBtn.setHalfSize(true);
         this.buttonList.add(this.clearBtn);
 
         this.encodeBtn = new GuiImgButton(
-                this.guiLeft + 147, this.guiTop + this.ySize - 142, Settings.ACTIONS, ActionItems.ENCODE);
+                this.guiLeft + 147,
+                this.guiTop + this.ySize - 142,
+                Settings.ACTIONS,
+                ActionItems.ENCODE);
         this.buttonList.add(this.encodeBtn);
 
         if (ModAndClassUtil.isDoubleButton) {
             this.doubleBtn = new GuiImgButton(
-                    this.guiLeft + 97, this.guiTop + this.ySize - 153, Settings.ACTIONS, ActionItems.DOUBLE);
+                    this.guiLeft + 97,
+                    this.guiTop + this.ySize - 153,
+                    Settings.ACTIONS,
+                    ActionItems.DOUBLE);
             this.doubleBtn.setHalfSize(true);
             this.buttonList.add(this.doubleBtn);
         }
 
-        this.combineEnableBtn =
-                new GuiFCImgButton(this.guiLeft + 87, this.guiTop + this.ySize - 114, "FORCE_COMBINE", "DO_COMBINE");
+        this.combineEnableBtn = new GuiFCImgButton(
+                this.guiLeft + 87,
+                this.guiTop + this.ySize - 114,
+                "FORCE_COMBINE",
+                "DO_COMBINE");
         this.combineEnableBtn.setHalfSize(true);
         this.buttonList.add(this.combineEnableBtn);
 
-        this.combineDisableBtn =
-                new GuiFCImgButton(this.guiLeft + 87, this.guiTop + this.ySize - 114, "NOT_COMBINE", "DONT_COMBINE");
+        this.combineDisableBtn = new GuiFCImgButton(
+                this.guiLeft + 87,
+                this.guiTop + this.ySize - 114,
+                "NOT_COMBINE",
+                "DONT_COMBINE");
         this.combineDisableBtn.setHalfSize(true);
         this.buttonList.add(this.combineDisableBtn);
         if (ModAndClassUtil.isBeSubstitutionsButton) {
             this.beSubstitutionsEnabledBtn = new GuiImgButton(
-                    this.guiLeft + 87, this.guiTop + this.ySize - 103, Settings.ACTIONS, PatternBeSubstitution.ENABLED);
+                    this.guiLeft + 87,
+                    this.guiTop + this.ySize - 103,
+                    Settings.ACTIONS,
+                    PatternBeSubstitution.ENABLED);
             this.beSubstitutionsEnabledBtn.setHalfSize(true);
             this.buttonList.add(this.beSubstitutionsEnabledBtn);
 
@@ -173,7 +206,9 @@ public class GuiFluidPatternTerminalEx extends FCGuiEncodeTerminal {
     }
 
     private void changeActivePage() {
-        FluidCraft.proxy.netHandler.sendToServer(new CPacketFluidPatternTermBtns(
-                "PatternTerminal.ActivePage", String.valueOf(this.processingScrollBar.getCurrentScroll())));
+        FluidCraft.proxy.netHandler.sendToServer(
+                new CPacketFluidPatternTermBtns(
+                        "PatternTerminal.ActivePage",
+                        String.valueOf(this.processingScrollBar.getCurrentScroll())));
     }
 }

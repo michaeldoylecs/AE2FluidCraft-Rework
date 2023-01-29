@@ -1,12 +1,8 @@
 package com.glodblock.github.client.render;
 
-import com.glodblock.github.common.item.ItemFluidDrop;
-import com.glodblock.github.loader.ItemAndBlockHolder;
-import com.glodblock.github.util.RenderUtil;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 import java.util.HashMap;
 import java.util.Map;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.ItemRenderer;
 import net.minecraft.client.renderer.Tessellator;
@@ -18,7 +14,15 @@ import net.minecraftforge.client.IItemRenderer;
 import net.minecraftforge.client.MinecraftForgeClient;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidStack;
+
 import org.lwjgl.opengl.GL11;
+
+import com.glodblock.github.common.item.ItemFluidDrop;
+import com.glodblock.github.loader.ItemAndBlockHolder;
+import com.glodblock.github.util.RenderUtil;
+
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 
 @SideOnly(Side.CLIENT)
 public class ItemDropRender implements IItemRenderer {
@@ -91,8 +95,7 @@ public class ItemDropRender implements IItemRenderer {
         if (colour == 0xFFFFFF) {
             TextureAtlasSprite sprite;
             try {
-                sprite = Minecraft.getMinecraft()
-                        .getTextureMapBlocks()
+                sprite = Minecraft.getMinecraft().getTextureMapBlocks()
                         .getTextureExtry(fluid.getStillIcon().getIconName());
             } catch (NullPointerException e) {
                 colourCache.put(fluid.getName(), colour);

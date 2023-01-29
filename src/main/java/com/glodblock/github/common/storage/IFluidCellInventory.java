@@ -1,10 +1,12 @@
 package com.glodblock.github.common.storage;
 
-import appeng.api.storage.IMEInventory;
-import appeng.api.storage.data.IAEFluidStack;
 import java.util.List;
+
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
+
+import appeng.api.storage.IMEInventory;
+import appeng.api.storage.data.IAEFluidStack;
 
 public interface IFluidCellInventory extends IMEInventory<IAEFluidStack> {
 

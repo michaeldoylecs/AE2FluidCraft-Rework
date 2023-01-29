@@ -1,10 +1,11 @@
 package com.glodblock.github.coremod.transform;
 
-import com.glodblock.github.coremod.FCClassTransformer;
 import org.objectweb.asm.ClassVisitor;
 import org.objectweb.asm.Label;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
+
+import com.glodblock.github.coremod.FCClassTransformer;
 
 public class CraftingCpuTransformer extends FCClassTransformer.ClassMapper {
 
@@ -47,8 +48,7 @@ public class CraftingCpuTransformer extends FCClassTransformer.ClassMapper {
 
         @Override
         public void visitFieldInsn(int opcode, String owner, String name, String desc) {
-            if (opcode == Opcodes.GETFIELD
-                    && owner.equals("appeng/me/cluster/implementations/CraftingCPUCluster")
+            if (opcode == Opcodes.GETFIELD && owner.equals("appeng/me/cluster/implementations/CraftingCPUCluster")
                     && name.equals("inventory")) {
                 gotInventory = true;
             }
@@ -72,8 +72,7 @@ public class CraftingCpuTransformer extends FCClassTransformer.ClassMapper {
         @Override
         public void visitMethodInsn(int opcode, String owner, String name, String desc, boolean itf) {
             if (reach_stack == 1) {
-                if (opcode == Opcodes.INVOKEINTERFACE
-                        && owner.equals("appeng/api/storage/data/IAEItemStack")
+                if (opcode == Opcodes.INVOKEINTERFACE && owner.equals("appeng/api/storage/data/IAEItemStack")
                         && name.equals("getStackSize")) {
                     reach_stack = 2;
                     super.visitMethodInsn(
@@ -85,8 +84,7 @@ public class CraftingCpuTransformer extends FCClassTransformer.ClassMapper {
                     return;
                 }
             }
-            if (opcode == Opcodes.INVOKEVIRTUAL
-                    && owner.equals("net/minecraft/inventory/InventoryCrafting")
+            if (opcode == Opcodes.INVOKEVIRTUAL && owner.equals("net/minecraft/inventory/InventoryCrafting")
                     && (name.equals("getStackInSlot") || name.equals("func_70301_a"))) {
                 super.visitMethodInsn(
                         Opcodes.INVOKESTATIC,
@@ -98,8 +96,7 @@ public class CraftingCpuTransformer extends FCClassTransformer.ClassMapper {
             }
             super.visitMethodInsn(opcode, owner, name, desc, itf);
             if (gotInventory) {
-                if (opcode == Opcodes.INVOKESTATIC
-                        && owner.equals("appeng/util/item/AEItemStack")
+                if (opcode == Opcodes.INVOKESTATIC && owner.equals("appeng/util/item/AEItemStack")
                         && name.equals("create")) {
                     gotInventory = false;
                     super.visitMethodInsn(
@@ -109,16 +106,15 @@ public class CraftingCpuTransformer extends FCClassTransformer.ClassMapper {
                             "(Lappeng/api/storage/data/IAEItemStack;)Lappeng/api/storage/data/IAEItemStack;",
                             false);
                 }
-            } else if (opcode == Opcodes.INVOKESPECIAL
-                    && owner.equals("net/minecraft/inventory/InventoryCrafting")
+            } else if (opcode == Opcodes.INVOKESPECIAL && owner.equals("net/minecraft/inventory/InventoryCrafting")
                     && name.equals("<init>")) {
-                super.visitMethodInsn(
-                        Opcodes.INVOKESTATIC,
-                        "com/glodblock/github/coremod/hooker/CoreModHooks",
-                        "wrapCraftingBuffer",
-                        "(Lnet/minecraft/inventory/InventoryCrafting;)Lnet/minecraft/inventory/InventoryCrafting;",
-                        false);
-            }
+                        super.visitMethodInsn(
+                                Opcodes.INVOKESTATIC,
+                                "com/glodblock/github/coremod/hooker/CoreModHooks",
+                                "wrapCraftingBuffer",
+                                "(Lnet/minecraft/inventory/InventoryCrafting;)Lnet/minecraft/inventory/InventoryCrafting;",
+                                false);
+                    }
         }
     }
 
@@ -130,8 +126,7 @@ public class CraftingCpuTransformer extends FCClassTransformer.ClassMapper {
 
         @Override
         public void visitMethodInsn(int opcode, String owner, String name, String desc, boolean itf) {
-            if (opcode == Opcodes.INVOKESPECIAL
-                    && owner.equals("appeng/me/cluster/implementations/CraftingCPUCluster")
+            if (opcode == Opcodes.INVOKESPECIAL && owner.equals("appeng/me/cluster/implementations/CraftingCPUCluster")
                     && name.equals("storeItems")) {
                 super.visitMethodInsn(
                         Opcodes.INVOKESTATIC,

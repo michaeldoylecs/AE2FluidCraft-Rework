@@ -2,6 +2,14 @@ package com.glodblock.github.common.block;
 
 import static net.minecraft.client.gui.GuiScreen.isShiftKeyDown;
 
+import java.util.List;
+
+import net.minecraft.block.material.Material;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.ItemStack;
+import net.minecraft.world.World;
+import net.minecraftforge.common.util.ForgeDirection;
+
 import com.glodblock.github.common.item.FCBaseItemBlock;
 import com.glodblock.github.common.tabs.FluidCraftingTabs;
 import com.glodblock.github.common.tile.TileFluidPacketDecoder;
@@ -9,15 +17,11 @@ import com.glodblock.github.inventory.InventoryHandler;
 import com.glodblock.github.inventory.gui.GuiType;
 import com.glodblock.github.util.BlockPos;
 import com.glodblock.github.util.NameConst;
+import com.glodblock.github.util.RenderUtil;
+
 import cpw.mods.fml.common.registry.GameRegistry;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import java.util.List;
-import net.minecraft.block.material.Material;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.ItemStack;
-import net.minecraft.world.World;
-import net.minecraftforge.common.util.ForgeDirection;
 
 public class BlockFluidPacketDecoder extends FCBaseBlock {
 
@@ -29,8 +33,8 @@ public class BlockFluidPacketDecoder extends FCBaseBlock {
     }
 
     @Override
-    public boolean onActivated(
-            World world, int x, int y, int z, EntityPlayer player, int facing, float hitX, float hitY, float hitZ) {
+    public boolean onActivated(World world, int x, int y, int z, EntityPlayer player, int facing, float hitX,
+            float hitY, float hitZ) {
         if (player.isSneaking()) {
             return false;
         }
@@ -59,13 +63,11 @@ public class BlockFluidPacketDecoder extends FCBaseBlock {
 
     @Override
     @SideOnly(Side.CLIENT)
-    public void addInformation(
-            final ItemStack itemStack,
-            final EntityPlayer player,
-            final List<String> toolTip,
+    public void addInformation(final ItemStack itemStack, final EntityPlayer player, final List<String> toolTip,
             final boolean advancedToolTips) {
         if (isShiftKeyDown()) {
-            toolTip.addAll(this.listFormattedStringToWidth(NameConst.i18n(NameConst.TT_FLUID_PACKET_DECODER_DESC)));
+            toolTip.addAll(
+                    RenderUtil.listFormattedStringToWidth(NameConst.i18n(NameConst.TT_FLUID_PACKET_DECODER_DESC)));
         } else {
             toolTip.add(NameConst.i18n(NameConst.TT_SHIFT_FOR_MORE));
         }

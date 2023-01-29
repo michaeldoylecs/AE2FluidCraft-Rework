@@ -1,5 +1,12 @@
 package com.glodblock.github.common.tile;
 
+import java.util.List;
+
+import net.minecraft.inventory.IInventory;
+import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.world.World;
+
 import appeng.api.storage.StorageChannel;
 import appeng.api.storage.data.IAEItemStack;
 import appeng.tile.AEBaseTile;
@@ -8,19 +15,17 @@ import appeng.tile.events.TileEventType;
 import appeng.tile.inventory.AppEngInternalInventory;
 import appeng.tile.inventory.IAEAppEngInventory;
 import appeng.tile.inventory.InvOperation;
+
 import com.glodblock.github.inventory.AeStackInventory;
 import com.glodblock.github.inventory.AeStackInventoryImpl;
-import java.util.List;
-import net.minecraft.inventory.IInventory;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.world.World;
 
 public class TileFluidPatternEncoder extends AEBaseTile implements IAEAppEngInventory {
 
     private final AppEngInternalInventory patternInv = new AppEngInternalInventory(this, 2);
-    private final AeStackInventoryImpl<IAEItemStack> crafting =
-            new AeStackInventoryImpl<>(StorageChannel.ITEMS, 9, this);
+    private final AeStackInventoryImpl<IAEItemStack> crafting = new AeStackInventoryImpl<>(
+            StorageChannel.ITEMS,
+            9,
+            this);
     private final AeStackInventoryImpl<IAEItemStack> output = new AeStackInventoryImpl<>(StorageChannel.ITEMS, 3, this);
 
     public IInventory getInventory() {
@@ -65,6 +70,6 @@ public class TileFluidPatternEncoder extends AEBaseTile implements IAEAppEngInve
     }
 
     @Override
-    public void onChangeInventory(
-            IInventory inv, int slot, InvOperation mc, ItemStack removedStack, ItemStack newStack) {}
+    public void onChangeInventory(IInventory inv, int slot, InvOperation mc, ItemStack removedStack,
+            ItemStack newStack) {}
 }

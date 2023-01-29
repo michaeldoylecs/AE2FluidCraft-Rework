@@ -1,8 +1,17 @@
 package com.glodblock.github.client.gui;
 
+import net.minecraft.client.renderer.texture.TextureMap;
+import net.minecraft.client.resources.I18n;
+import net.minecraft.entity.player.InventoryPlayer;
+import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.common.util.ForgeDirection;
+
+import org.lwjgl.opengl.GL11;
+
 import appeng.api.storage.data.IAEFluidStack;
 import appeng.client.gui.AEBaseGui;
 import appeng.core.localization.GuiText;
+
 import com.glodblock.github.FluidCraft;
 import com.glodblock.github.client.gui.container.ContainerLargeIngredientBuffer;
 import com.glodblock.github.common.tile.TileLargeIngredientBuffer;
@@ -12,12 +21,6 @@ import com.glodblock.github.inventory.gui.MouseRegionManager;
 import com.glodblock.github.inventory.gui.TankMouseHandler;
 import com.glodblock.github.util.NameConst;
 import com.glodblock.github.util.RenderUtil;
-import net.minecraft.client.renderer.texture.TextureMap;
-import net.minecraft.client.resources.I18n;
-import net.minecraft.entity.player.InventoryPlayer;
-import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.common.util.ForgeDirection;
-import org.lwjgl.opengl.GL11;
 
 public class GuiLargeIngredientBuffer extends AEBaseGui {
 
@@ -40,7 +43,11 @@ public class GuiLargeIngredientBuffer extends AEBaseGui {
                     TANK_HEIGHT,
                     new TankMouseHandler(cont.getTile().getInternalFluid(), i));
             mouseRegions.addRegion(
-                    TANK_X + 10 + 22 * i, TANK_Y + TANK_HEIGHT + 2, 7, 7, ButtonMouseHandler.dumpTank(cont, i));
+                    TANK_X + 10 + 22 * i,
+                    TANK_Y + TANK_HEIGHT + 2,
+                    7,
+                    7,
+                    ButtonMouseHandler.dumpTank(cont, i));
         }
     }
 
@@ -59,8 +66,8 @@ public class GuiLargeIngredientBuffer extends AEBaseGui {
 
     @Override
     public void drawFG(int offsetX, int offsetY, int mouseX, int mouseY) {
-        fontRendererObj.drawString(
-                getGuiDisplayName(I18n.format(NameConst.GUI_LARGE_INGREDIENT_BUFFER)), 8, 6, 0x404040);
+        fontRendererObj
+                .drawString(getGuiDisplayName(I18n.format(NameConst.GUI_LARGE_INGREDIENT_BUFFER)), 8, 6, 0x404040);
         fontRendererObj.drawString(GuiText.inventory.getLocal(), 8, ySize - 94, 0x404040);
         GL11.glColor4f(1F, 1F, 1F, 1F);
 

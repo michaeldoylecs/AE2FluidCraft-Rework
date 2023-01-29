@@ -1,10 +1,20 @@
 package com.glodblock.github.client.gui.container;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
+
+import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.entity.player.InventoryPlayer;
+import net.minecraft.inventory.Slot;
+import net.minecraft.item.ItemStack;
+
 import appeng.api.AEApi;
 import appeng.api.storage.data.IAEItemStack;
 import appeng.container.AEBaseContainer;
 import appeng.container.slot.SlotRestrictedInput;
 import appeng.helpers.InventoryAction;
+
 import com.glodblock.github.common.item.ItemFluidDrop;
 import com.glodblock.github.common.item.ItemFluidEncodedPattern;
 import com.glodblock.github.common.item.ItemFluidPacket;
@@ -16,13 +26,6 @@ import com.glodblock.github.inventory.slot.SlotFluidConvertingFake;
 import com.glodblock.github.loader.ItemAndBlockHolder;
 import com.glodblock.github.util.FluidPatternDetails;
 import com.glodblock.github.util.Util;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.entity.player.InventoryPlayer;
-import net.minecraft.inventory.Slot;
-import net.minecraft.item.ItemStack;
 
 public class ContainerFluidPatternEncoder extends AEBaseContainer implements IPatternConsumer {
 
@@ -39,10 +42,22 @@ public class ContainerFluidPatternEncoder extends AEBaseContainer implements IPa
             }
             addSlotToContainer(new SlotFluidConvertingFake(output, y, 113, 17 + y * 18));
         }
-        addSlotToContainer(new SlotRestrictedInput(
-                SlotRestrictedInput.PlacableItemType.BLANK_PATTERN, tile.getInventory(), 0, 138, 20, ipl));
-        addSlotToContainer(new SlotRestrictedInput(
-                SlotRestrictedInput.PlacableItemType.ENCODED_PATTERN, tile.getInventory(), 1, 138, 50, ipl));
+        addSlotToContainer(
+                new SlotRestrictedInput(
+                        SlotRestrictedInput.PlacableItemType.BLANK_PATTERN,
+                        tile.getInventory(),
+                        0,
+                        138,
+                        20,
+                        ipl));
+        addSlotToContainer(
+                new SlotRestrictedInput(
+                        SlotRestrictedInput.PlacableItemType.ENCODED_PATTERN,
+                        tile.getInventory(),
+                        1,
+                        138,
+                        50,
+                        ipl));
         bindPlayerInventory(ipl, 0, 84);
     }
 
@@ -51,9 +66,8 @@ public class ContainerFluidPatternEncoder extends AEBaseContainer implements IPa
     }
 
     private static boolean isNotPattern(ItemStack stack) {
-        return stack == null
-                || !(AEApi.instance().definitions().materials().blankPattern().isSameAs(stack)
-                        || (stack.getItem() instanceof ItemFluidEncodedPattern));
+        return stack == null || !(AEApi.instance().definitions().materials().blankPattern().isSameAs(stack)
+                || (stack.getItem() instanceof ItemFluidEncodedPattern));
     }
 
     public boolean canEncodePattern() {
@@ -61,8 +75,7 @@ public class ContainerFluidPatternEncoder extends AEBaseContainer implements IPa
                 && isNotPattern(tile.getInventory().getStackInSlot(1))) {
             return false;
         }
-        find_input:
-        {
+        find_input: {
             for (IAEItemStack stack : tile.getCraftingSlots()) {
                 if (stack != null && stack.getStackSize() > 0) {
                     break find_input;
@@ -136,8 +149,10 @@ public class ContainerFluidPatternEncoder extends AEBaseContainer implements IPa
                         if (stack == null) {
                             slot.putStack(Util.copyStackWithSize(inSlot, Math.max(1, inSlot.stackSize - 1)));
                         } else if (stack.isItemEqual(inSlot)) {
-                            slot.putStack(Util.copyStackWithSize(
-                                    inSlot, Math.min(inSlot.getMaxStackSize(), inSlot.stackSize + 1)));
+                            slot.putStack(
+                                    Util.copyStackWithSize(
+                                            inSlot,
+                                            Math.min(inSlot.getMaxStackSize(), inSlot.stackSize + 1)));
                         } else {
                             ((SlotFluidConvertingFake) slot)
                                     .putConvertedStack(Objects.requireNonNull(Util.copyStackWithSize(stack, 1)));

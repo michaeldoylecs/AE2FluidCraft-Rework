@@ -1,18 +1,20 @@
 package com.glodblock.github.common.parts;
 
+import net.minecraft.inventory.IInventory;
+import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
+
 import appeng.api.implementations.ICraftingPatternItem;
 import appeng.api.networking.crafting.ICraftingPatternDetails;
 import appeng.api.storage.data.IAEItemStack;
 import appeng.tile.inventory.BiggerAppEngInventory;
 import appeng.tile.inventory.InvOperation;
+
 import com.glodblock.github.client.textures.FCPartsTexture;
 import com.glodblock.github.common.item.ItemFluidDrop;
 import com.glodblock.github.common.item.ItemFluidPacket;
 import com.glodblock.github.common.parts.base.FCFluidEncodeTerminal;
 import com.glodblock.github.inventory.gui.GuiType;
-import net.minecraft.inventory.IInventory;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
 
 public class PartFluidPatternTerminal extends FCFluidEncodeTerminal {
 
@@ -35,18 +37,14 @@ public class PartFluidPatternTerminal extends FCFluidEncodeTerminal {
     }
 
     @Override
-    public void onChangeInventory(
-            final IInventory inv,
-            final int slot,
-            final InvOperation mc,
-            final ItemStack removedStack,
-            final ItemStack newStack) {
+    public void onChangeInventory(final IInventory inv, final int slot, final InvOperation mc,
+            final ItemStack removedStack, final ItemStack newStack) {
         if (inv == this.pattern && slot == 1) {
             final ItemStack is = inv.getStackInSlot(1);
             if (is != null && is.getItem() instanceof ICraftingPatternItem) {
                 final ICraftingPatternItem pattern = (ICraftingPatternItem) is.getItem();
-                final ICraftingPatternDetails details =
-                        pattern.getPatternForItem(is, this.getHost().getTile().getWorldObj());
+                final ICraftingPatternDetails details = pattern
+                        .getPatternForItem(is, this.getHost().getTile().getWorldObj());
                 if (details != null) {
                     final IAEItemStack[] inItems = details.getInputs();
                     final IAEItemStack[] outItems = details.getOutputs();
@@ -70,8 +68,8 @@ public class PartFluidPatternTerminal extends FCFluidEncodeTerminal {
                         if (inItems[i] != null) {
                             final IAEItemStack item = inItems[i];
                             if (item != null && item.getItem() instanceof ItemFluidDrop) {
-                                ItemStack packet =
-                                        ItemFluidPacket.newStack(ItemFluidDrop.getFluidStack(item.getItemStack()));
+                                ItemStack packet = ItemFluidPacket
+                                        .newStack(ItemFluidDrop.getFluidStack(item.getItemStack()));
                                 this.crafting.setInventorySlotContents(i, packet);
                             } else this.crafting.setInventorySlotContents(i, item == null ? null : item.getItemStack());
                         }
@@ -81,8 +79,8 @@ public class PartFluidPatternTerminal extends FCFluidEncodeTerminal {
                         if (outItems[i] != null) {
                             final IAEItemStack item = outItems[i];
                             if (item != null && item.getItem() instanceof ItemFluidDrop) {
-                                ItemStack packet =
-                                        ItemFluidPacket.newStack(ItemFluidDrop.getFluidStack(item.getItemStack()));
+                                ItemStack packet = ItemFluidPacket
+                                        .newStack(ItemFluidDrop.getFluidStack(item.getItemStack()));
                                 this.output.setInventorySlotContents(i, packet);
                             } else this.output.setInventorySlotContents(i, item == null ? null : item.getItemStack());
                         }

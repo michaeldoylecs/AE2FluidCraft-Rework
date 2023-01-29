@@ -1,11 +1,13 @@
 package com.glodblock.github.client.gui;
 
-import appeng.client.gui.AEBaseGui;
-import appeng.client.gui.widgets.ITooltip;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.GuiTextField;
 
+import appeng.client.gui.AEBaseGui;
+import appeng.client.gui.widgets.ITooltip;
+
 public class FCGuiTextField extends GuiTextField {
+
     private static final int PADDING = 2;
     private final FontRenderer _fontRender;
     private String tooltip;
@@ -18,8 +20,7 @@ public class FCGuiTextField extends GuiTextField {
     private int _color;
 
     /**
-     * Uses the values to instantiate a padded version of a text field.
-     * Pays attention to the '_' caret.
+     * Uses the values to instantiate a padded version of a text field. Pays attention to the '_' caret.
      *
      * @param fontRenderer renderer for the strings
      * @param xPos         absolute left position
@@ -27,8 +28,8 @@ public class FCGuiTextField extends GuiTextField {
      * @param width        absolute width
      * @param height       absolute height
      */
-    public FCGuiTextField(
-            final FontRenderer fontRenderer, final int xPos, final int yPos, final int width, final int height) {
+    public FCGuiTextField(final FontRenderer fontRenderer, final int xPos, final int yPos, final int width,
+            final int height) {
         super(
                 fontRenderer,
                 xPos + PADDING,
@@ -136,6 +137,7 @@ public class FCGuiTextField extends GuiTextField {
     }
 
     public class TooltipProvider implements ITooltip {
+
         @Override
         public String getMessage() {
             return tooltip;

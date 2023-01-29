@@ -1,12 +1,13 @@
 package com.glodblock.github.common.tile;
 
+import net.minecraft.inventory.IInventory;
+import net.minecraft.item.ItemStack;
+import net.minecraftforge.common.util.ForgeDirection;
+
 import appeng.items.misc.ItemEncodedPattern;
 import appeng.tile.AEBaseInvTile;
 import appeng.tile.inventory.AppEngInternalInventory;
 import appeng.tile.inventory.InvOperation;
-import net.minecraft.inventory.IInventory;
-import net.minecraft.item.ItemStack;
-import net.minecraftforge.common.util.ForgeDirection;
 
 public class TileOCPatternEditor extends AEBaseInvTile {
 
@@ -24,7 +25,7 @@ public class TileOCPatternEditor extends AEBaseInvTile {
 
     @Override
     public int[] getAccessibleSlotsBySide(ForgeDirection whichSide) {
-        return new int[] {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15};
+        return new int[] { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15 };
     }
 
     @Override

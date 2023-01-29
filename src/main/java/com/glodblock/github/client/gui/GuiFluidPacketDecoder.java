@@ -1,14 +1,16 @@
 package com.glodblock.github.client.gui;
 
+import net.minecraft.client.resources.I18n;
+import net.minecraft.entity.player.InventoryPlayer;
+import net.minecraft.util.ResourceLocation;
+
 import appeng.client.gui.AEBaseGui;
 import appeng.core.localization.GuiText;
+
 import com.glodblock.github.FluidCraft;
 import com.glodblock.github.client.gui.container.ContainerFluidPacketDecoder;
 import com.glodblock.github.common.tile.TileFluidPacketDecoder;
 import com.glodblock.github.util.NameConst;
-import net.minecraft.client.resources.I18n;
-import net.minecraft.entity.player.InventoryPlayer;
-import net.minecraft.util.ResourceLocation;
 
 public class GuiFluidPacketDecoder extends AEBaseGui {
 

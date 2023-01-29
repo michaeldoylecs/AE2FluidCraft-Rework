@@ -1,20 +1,24 @@
 package com.glodblock.github.nei.recipes.extractor;
 
-import codechicken.nei.PositionedStack;
-import codechicken.nei.recipe.IRecipeHandler;
-import com.glodblock.github.nei.object.IRecipeExtractor;
-import com.glodblock.github.nei.object.OrderStack;
-import com.glodblock.github.util.Ae2Reflect;
-import ic2.neiIntegration.core.recipehandler.FluidCannerRecipeHandler;
-import ic2.neiIntegration.core.recipehandler.OreWashingRecipeHandler;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
+
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
+
+import codechicken.nei.PositionedStack;
+import codechicken.nei.recipe.IRecipeHandler;
+
+import com.glodblock.github.nei.object.IRecipeExtractor;
+import com.glodblock.github.nei.object.OrderStack;
+import com.glodblock.github.util.Ae2Reflect;
+
+import ic2.neiIntegration.core.recipehandler.FluidCannerRecipeHandler;
+import ic2.neiIntegration.core.recipehandler.OreWashingRecipeHandler;
 
 public class IndustrialCraftRecipeExtractor implements IRecipeExtractor {
 
@@ -33,9 +37,8 @@ public class IndustrialCraftRecipeExtractor implements IRecipeExtractor {
         List<OrderStack<?>> stacks = new LinkedList<>();
 
         if (recipe instanceof FluidCannerRecipeHandler) {
-            FluidCannerRecipeHandler.CachedFluidCannerRecipe cachedRecipe =
-                    (FluidCannerRecipeHandler.CachedFluidCannerRecipe)
-                            ((FluidCannerRecipeHandler) recipe).arecipes.get(index);
+            FluidCannerRecipeHandler.CachedFluidCannerRecipe cachedRecipe = (FluidCannerRecipeHandler.CachedFluidCannerRecipe) ((FluidCannerRecipeHandler) recipe).arecipes
+                    .get(index);
             FluidStack input = ReflectIC2.getInputFluid(cachedRecipe);
             PositionedStack add = rawInputs.size() > 1 ? rawInputs.get(1) : null;
             stacks.add(OrderStack.pack(add, 0));
@@ -52,14 +55,13 @@ public class IndustrialCraftRecipeExtractor implements IRecipeExtractor {
     }
 
     @Override
-    public List<OrderStack<?>> getOutputIngredients(
-            List<PositionedStack> rawOutputs, IRecipeHandler recipe, int index) {
+    public List<OrderStack<?>> getOutputIngredients(List<PositionedStack> rawOutputs, IRecipeHandler recipe,
+            int index) {
         List<OrderStack<?>> stacks = new LinkedList<>();
 
         if (recipe instanceof FluidCannerRecipeHandler) {
-            FluidCannerRecipeHandler.CachedFluidCannerRecipe cachedRecipe =
-                    (FluidCannerRecipeHandler.CachedFluidCannerRecipe)
-                            ((FluidCannerRecipeHandler) recipe).arecipes.get(index);
+            FluidCannerRecipeHandler.CachedFluidCannerRecipe cachedRecipe = (FluidCannerRecipeHandler.CachedFluidCannerRecipe) ((FluidCannerRecipeHandler) recipe).arecipes
+                    .get(index);
             FluidStack output = ReflectIC2.getOutputFluid(cachedRecipe);
             stacks.add(new OrderStack<>(output, 0));
         } else {
@@ -79,8 +81,8 @@ public class IndustrialCraftRecipeExtractor implements IRecipeExtractor {
         static {
             try {
                 inputsF = Ae2Reflect.reflectField(FluidCannerRecipeHandler.CachedFluidCannerRecipe.class, "fluidInput");
-                resultF =
-                        Ae2Reflect.reflectField(FluidCannerRecipeHandler.CachedFluidCannerRecipe.class, "fluidOutput");
+                resultF = Ae2Reflect
+                        .reflectField(FluidCannerRecipeHandler.CachedFluidCannerRecipe.class, "fluidOutput");
                 oreWasherWater = Ae2Reflect.reflectMethod(OreWashingRecipeHandler.class, "getreqWater", int.class);
             } catch (NoSuchFieldException | NoSuchMethodException e) {
                 throw new IllegalStateException("Failed to initialize IC2 reflection hacks!", e);

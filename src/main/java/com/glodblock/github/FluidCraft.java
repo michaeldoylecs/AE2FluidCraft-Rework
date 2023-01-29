@@ -1,6 +1,9 @@
 package com.glodblock.github;
 
+import net.minecraft.util.ResourceLocation;
+
 import appeng.api.AEApi;
+
 import com.glodblock.github.common.Config;
 import com.glodblock.github.common.storage.FluidCellHandler;
 import com.glodblock.github.crossmod.opencomputers.OCDriverInit;
@@ -12,6 +15,7 @@ import com.glodblock.github.loader.ItemAndBlockHolder;
 import com.glodblock.github.loader.RecipeLoader;
 import com.glodblock.github.proxy.CommonProxy;
 import com.glodblock.github.util.ModAndClassUtil;
+
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.SidedProxy;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
@@ -19,7 +23,6 @@ import cpw.mods.fml.common.event.FMLLoadCompleteEvent;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.network.NetworkRegistry;
-import net.minecraft.util.ResourceLocation;
 
 @Mod(
         modid = FluidCraft.MODID,

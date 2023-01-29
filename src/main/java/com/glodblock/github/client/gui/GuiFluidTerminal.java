@@ -1,21 +1,8 @@
 package com.glodblock.github.client.gui;
 
-import appeng.api.storage.ITerminalHost;
-import appeng.api.storage.data.IAEFluidStack;
-import appeng.api.storage.data.IAEItemStack;
-import appeng.client.me.SlotME;
-import appeng.client.render.AppEngRenderItem;
-import appeng.container.slot.AppEngSlot;
-import com.glodblock.github.FluidCraft;
-import com.glodblock.github.client.gui.container.ContainerFluidMonitor;
-import com.glodblock.github.common.item.ItemFluidDrop;
-import com.glodblock.github.inventory.InventoryHandler;
-import com.glodblock.github.inventory.gui.GuiType;
-import com.glodblock.github.network.CPacketFluidUpdate;
-import com.glodblock.github.util.Ae2ReflectClient;
-import com.glodblock.github.util.Util;
 import java.util.HashMap;
 import java.util.Map;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.renderer.texture.TextureMap;
@@ -25,9 +12,27 @@ import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidStack;
+
 import org.lwjgl.opengl.GL11;
 
+import appeng.api.storage.ITerminalHost;
+import appeng.api.storage.data.IAEFluidStack;
+import appeng.api.storage.data.IAEItemStack;
+import appeng.client.me.SlotME;
+import appeng.client.render.AppEngRenderItem;
+import appeng.container.slot.AppEngSlot;
+
+import com.glodblock.github.FluidCraft;
+import com.glodblock.github.client.gui.container.ContainerFluidMonitor;
+import com.glodblock.github.common.item.ItemFluidDrop;
+import com.glodblock.github.inventory.InventoryHandler;
+import com.glodblock.github.inventory.gui.GuiType;
+import com.glodblock.github.network.CPacketFluidUpdate;
+import com.glodblock.github.util.Ae2ReflectClient;
+import com.glodblock.github.util.Util;
+
 public class GuiFluidTerminal extends GuiFluidMonitor {
+
     private final AppEngRenderItem stackSizeRenderer = Ae2ReflectClient.getStackSizeRenderer(this);
     protected EntityPlayer player;
     public ContainerFluidMonitor container;
@@ -35,6 +40,14 @@ public class GuiFluidTerminal extends GuiFluidMonitor {
     public GuiFluidTerminal(InventoryPlayer inventoryPlayer, ITerminalHost te) {
         super(inventoryPlayer, te, new ContainerFluidMonitor(inventoryPlayer, te));
         this.container = new ContainerFluidMonitor(inventoryPlayer, te);
+        this.player = inventoryPlayer.player;
+        this.showViewBtn = false;
+    }
+
+    public GuiFluidTerminal(final InventoryPlayer inventoryPlayer, final ITerminalHost te,
+            final ContainerFluidMonitor c) {
+        super(inventoryPlayer, te, c);
+        this.container = c;
         this.player = inventoryPlayer.player;
         this.showViewBtn = false;
     }

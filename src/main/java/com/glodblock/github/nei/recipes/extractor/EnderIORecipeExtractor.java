@@ -1,18 +1,22 @@
 package com.glodblock.github.nei.recipes.extractor;
 
-import codechicken.nei.PositionedStack;
-import codechicken.nei.recipe.IRecipeHandler;
-import codechicken.nei.recipe.TemplateRecipeHandler;
-import com.glodblock.github.nei.object.IRecipeExtractor;
-import com.glodblock.github.nei.object.OrderStack;
-import com.glodblock.github.util.Ae2Reflect;
-import crazypants.enderio.machine.crusher.CrusherRecipeManager;
-import crazypants.enderio.nei.VatRecipeHandler;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
+
 import net.minecraftforge.fluids.FluidStack;
+
+import codechicken.nei.PositionedStack;
+import codechicken.nei.recipe.IRecipeHandler;
+import codechicken.nei.recipe.TemplateRecipeHandler;
+
+import com.glodblock.github.nei.object.IRecipeExtractor;
+import com.glodblock.github.nei.object.OrderStack;
+import com.glodblock.github.util.Ae2Reflect;
+
+import crazypants.enderio.machine.crusher.CrusherRecipeManager;
+import crazypants.enderio.nei.VatRecipeHandler;
 
 public class EnderIORecipeExtractor implements IRecipeExtractor {
 
@@ -56,8 +60,8 @@ public class EnderIORecipeExtractor implements IRecipeExtractor {
     }
 
     @Override
-    public List<OrderStack<?>> getOutputIngredients(
-            List<PositionedStack> rawOutputs, IRecipeHandler recipe, int index) {
+    public List<OrderStack<?>> getOutputIngredients(List<PositionedStack> rawOutputs, IRecipeHandler recipe,
+            int index) {
         TemplateRecipeHandler tRecipe = (TemplateRecipeHandler) recipe;
         List<OrderStack<?>> tmp = new LinkedList<>();
         if (tRecipe.arecipes.get(index) instanceof VatRecipeHandler.InnerVatRecipe) {

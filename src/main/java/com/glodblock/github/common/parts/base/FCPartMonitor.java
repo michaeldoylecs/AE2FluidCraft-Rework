@@ -1,5 +1,25 @@
 package com.glodblock.github.common.parts.base;
 
+import java.io.IOException;
+
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.FontRenderer;
+import net.minecraft.client.renderer.GLAllocation;
+import net.minecraft.client.renderer.OpenGlHelper;
+import net.minecraft.client.renderer.RenderBlocks;
+import net.minecraft.client.renderer.Tessellator;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.IIcon;
+import net.minecraft.util.MovingObjectPosition;
+import net.minecraft.util.Vec3;
+import net.minecraftforge.common.util.ForgeDirection;
+
+import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL12;
+
 import appeng.api.implementations.parts.IPartStorageMonitor;
 import appeng.api.networking.security.BaseActionSource;
 import appeng.api.networking.storage.IStackWatcher;
@@ -22,31 +42,17 @@ import appeng.util.IWideReadableNumberConverter;
 import appeng.util.Platform;
 import appeng.util.ReadableNumberConverter;
 import appeng.util.item.AEFluidStack;
+
 import com.glodblock.github.client.textures.FCPartsTexture;
 import com.glodblock.github.common.item.ItemFluidPacket;
 import com.glodblock.github.util.Util;
+
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import io.netty.buffer.ByteBuf;
-import java.io.IOException;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.FontRenderer;
-import net.minecraft.client.renderer.GLAllocation;
-import net.minecraft.client.renderer.OpenGlHelper;
-import net.minecraft.client.renderer.RenderBlocks;
-import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.IIcon;
-import net.minecraft.util.MovingObjectPosition;
-import net.minecraft.util.Vec3;
-import net.minecraftforge.common.util.ForgeDirection;
-import org.lwjgl.opengl.GL11;
-import org.lwjgl.opengl.GL12;
 
 public abstract class FCPartMonitor extends AbstractPartDisplay implements IPartStorageMonitor, IStackWatcherHost {
+
     private static final IWideReadableNumberConverter NUMBER_CONVERTER = ReadableNumberConverter.INSTANCE;
 
     private IAEFluidStack configuredFluid;
@@ -197,8 +203,8 @@ public abstract class FCPartMonitor extends AbstractPartDisplay implements IPart
 
     @Override
     @SideOnly(Side.CLIENT)
-    public void renderDynamic(
-            final double x, final double y, final double z, final IPartRenderHelper rh, final RenderBlocks renderer) {
+    public void renderDynamic(final double x, final double y, final double z, final IPartRenderHelper rh,
+            final RenderBlocks renderer) {
         if (this.dspList == null) {
             this.dspList = GLAllocation.generateDisplayLists(1);
         }
@@ -325,12 +331,8 @@ public abstract class FCPartMonitor extends AbstractPartDisplay implements IPart
     }
 
     @Override
-    public void onStackChange(
-            final IItemList o,
-            final IAEStack fullStack,
-            final IAEStack diffStack,
-            final BaseActionSource src,
-            final StorageChannel chan) {
+    public void onStackChange(final IItemList o, final IAEStack fullStack, final IAEStack diffStack,
+            final BaseActionSource src, final StorageChannel chan) {
         if (this.configuredFluid != null) {
             if (fullStack == null) {
                 this.configuredFluid.setStackSize(0);
@@ -385,8 +387,8 @@ public abstract class FCPartMonitor extends AbstractPartDisplay implements IPart
 
     @Override
     @SideOnly(Side.CLIENT)
-    public void renderStatic(
-            final int x, final int y, final int z, final IPartRenderHelper rh, final RenderBlocks renderer) {
+    public void renderStatic(final int x, final int y, final int z, final IPartRenderHelper rh,
+            final RenderBlocks renderer) {
         this.setRenderCache(rh.useSimplifiedRendering(x, y, z, this, this.getRenderCache()));
 
         final IIcon sideTexture = CableBusTextures.PartMonitorSides.getIcon();
@@ -408,8 +410,8 @@ public abstract class FCPartMonitor extends AbstractPartDisplay implements IPart
             Tessellator.instance.setBrightness(l << 20 | l << 4);
         }
 
-        renderer.uvRotateBottom = renderer.uvRotateEast = renderer.uvRotateNorth =
-                renderer.uvRotateSouth = renderer.uvRotateTop = renderer.uvRotateWest = this.getSpin();
+        renderer.uvRotateBottom = renderer.uvRotateEast = renderer.uvRotateNorth = renderer.uvRotateSouth = renderer.uvRotateTop = renderer.uvRotateWest = this
+                .getSpin();
 
         Tessellator.instance.setColorOpaque_I(this.getColor().whiteVariant);
         rh.renderFace(x, y, z, this.getFrontBright().getIcon(), ForgeDirection.SOUTH, renderer);
@@ -420,8 +422,7 @@ public abstract class FCPartMonitor extends AbstractPartDisplay implements IPart
         Tessellator.instance.setColorOpaque_I(this.getColor().blackVariant);
         rh.renderFace(x, y, z, this.getFrontColored().getIcon(), ForgeDirection.SOUTH, renderer);
 
-        renderer.uvRotateBottom = renderer.uvRotateEast =
-                renderer.uvRotateNorth = renderer.uvRotateSouth = renderer.uvRotateTop = renderer.uvRotateWest = 0;
+        renderer.uvRotateBottom = renderer.uvRotateEast = renderer.uvRotateNorth = renderer.uvRotateSouth = renderer.uvRotateTop = renderer.uvRotateWest = 0;
 
         final IIcon sideStatusTexture = CableBusTextures.PartMonitorSidesStatus.getIcon();
 

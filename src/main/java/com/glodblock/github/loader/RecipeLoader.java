@@ -4,12 +4,6 @@ import static com.glodblock.github.loader.ItemAndBlockHolder.*;
 import static net.minecraft.init.Blocks.redstone_torch;
 import static net.minecraft.init.Items.fish;
 
-import com.glodblock.github.common.Config;
-import com.glodblock.github.common.item.ItemBasicFluidStorageCell;
-import com.glodblock.github.common.storage.CellType;
-import com.glodblock.github.util.ModAndClassUtil;
-import cpw.mods.fml.common.registry.GameRegistry;
-import extracells.registries.ItemEnum;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
@@ -17,68 +11,121 @@ import net.minecraftforge.oredict.OreDictionary;
 import net.minecraftforge.oredict.ShapedOreRecipe;
 import net.minecraftforge.oredict.ShapelessOreRecipe;
 
+import com.glodblock.github.common.Config;
+import com.glodblock.github.common.item.ItemBasicFluidStorageCell;
+import com.glodblock.github.common.storage.CellType;
+import com.glodblock.github.util.ModAndClassUtil;
+
+import cpw.mods.fml.common.registry.GameRegistry;
+import extracells.registries.ItemEnum;
+
 public class RecipeLoader implements Runnable {
 
-    public static final ItemStack AE2_INTERFACE =
-            GameRegistry.findItemStack("appliedenergistics2", "tile.BlockInterface", 1);
-    public static final ItemStack AE2_PROCESS_ENG =
-            new ItemStack(GameRegistry.findItem("appliedenergistics2", "item.ItemMultiMaterial"), 1, 24);
-    public static final ItemStack AE2_STORAGE_BUS =
-            new ItemStack(GameRegistry.findItem("appliedenergistics2", "item.ItemMultiPart"), 1, 220);
-    public static final ItemStack AE2_CONDENSER =
-            GameRegistry.findItemStack("appliedenergistics2", "tile.BlockCondenser", 1);
-    public static final ItemStack AE2_GLASS_CABLE =
-            new ItemStack(GameRegistry.findItem("appliedenergistics2", "item.ItemMultiPart"), 1, 16);
-    public static final ItemStack AE2_PROCESS_CAL =
-            new ItemStack(GameRegistry.findItem("appliedenergistics2", "item.ItemMultiMaterial"), 1, 23);
-    public static final ItemStack AE2_WORK_BENCH =
-            GameRegistry.findItemStack("appliedenergistics2", "tile.BlockCellWorkbench", 1);
-    public static final ItemStack AE2_PATTERN_TERM =
-            new ItemStack(GameRegistry.findItem("appliedenergistics2", "item.ItemMultiPart"), 1, 340);
-    public static final ItemStack AE2_PROCESS_LOG =
-            new ItemStack(GameRegistry.findItem("appliedenergistics2", "item.ItemMultiMaterial"), 1, 22);
-    public static final ItemStack AE2_PURE_CERTUS =
-            new ItemStack(GameRegistry.findItem("appliedenergistics2", "item.ItemMultiMaterial"), 1, 10);
-    public static final ItemStack AE2_QUARTZ_GLASS =
-            GameRegistry.findItemStack("appliedenergistics2", "tile.BlockQuartzGlass", 1);
-    public static final ItemStack AE2_LAMP_GLASS =
-            GameRegistry.findItemStack("appliedenergistics2", "tile.BlockQuartzLamp", 1);
-    public static final ItemStack AE2_CELL_HOUSING =
-            new ItemStack(GameRegistry.findItem("appliedenergistics2", "item.ItemMultiMaterial"), 1, 39);
-    public static final ItemStack AE2_CELL_1K =
-            new ItemStack(GameRegistry.findItem("appliedenergistics2", "item.ItemMultiMaterial"), 1, 35);
-    public static final ItemStack AE2_CORE_ANN =
-            new ItemStack(GameRegistry.findItem("appliedenergistics2", "item.ItemMultiMaterial"), 1, 44);
-    public static final ItemStack AE2_CORE_FOM =
-            new ItemStack(GameRegistry.findItem("appliedenergistics2", "item.ItemMultiMaterial"), 1, 43);
+    public static final ItemStack AE2_INTERFACE = GameRegistry
+            .findItemStack("appliedenergistics2", "tile.BlockInterface", 1);
+    public static final ItemStack AE2_PROCESS_ENG = new ItemStack(
+            GameRegistry.findItem("appliedenergistics2", "item.ItemMultiMaterial"),
+            1,
+            24);
+    public static final ItemStack AE2_STORAGE_BUS = new ItemStack(
+            GameRegistry.findItem("appliedenergistics2", "item.ItemMultiPart"),
+            1,
+            220);
+    public static final ItemStack AE2_CONDENSER = GameRegistry
+            .findItemStack("appliedenergistics2", "tile.BlockCondenser", 1);
+    public static final ItemStack AE2_GLASS_CABLE = new ItemStack(
+            GameRegistry.findItem("appliedenergistics2", "item.ItemMultiPart"),
+            1,
+            16);
+    public static final ItemStack AE2_PROCESS_CAL = new ItemStack(
+            GameRegistry.findItem("appliedenergistics2", "item.ItemMultiMaterial"),
+            1,
+            23);
+    public static final ItemStack AE2_WORK_BENCH = GameRegistry
+            .findItemStack("appliedenergistics2", "tile.BlockCellWorkbench", 1);
+    public static final ItemStack AE2_PATTERN_TERM = new ItemStack(
+            GameRegistry.findItem("appliedenergistics2", "item.ItemMultiPart"),
+            1,
+            340);
+    public static final ItemStack AE2_PROCESS_LOG = new ItemStack(
+            GameRegistry.findItem("appliedenergistics2", "item.ItemMultiMaterial"),
+            1,
+            22);
+    public static final ItemStack AE2_PURE_CERTUS = new ItemStack(
+            GameRegistry.findItem("appliedenergistics2", "item.ItemMultiMaterial"),
+            1,
+            10);
+    public static final ItemStack AE2_QUARTZ_GLASS = GameRegistry
+            .findItemStack("appliedenergistics2", "tile.BlockQuartzGlass", 1);
+    public static final ItemStack AE2_LAMP_GLASS = GameRegistry
+            .findItemStack("appliedenergistics2", "tile.BlockQuartzLamp", 1);
+    public static final ItemStack AE2_CELL_HOUSING = new ItemStack(
+            GameRegistry.findItem("appliedenergistics2", "item.ItemMultiMaterial"),
+            1,
+            39);
+    public static final ItemStack AE2_CELL_1K = new ItemStack(
+            GameRegistry.findItem("appliedenergistics2", "item.ItemMultiMaterial"),
+            1,
+            35);
+    public static final ItemStack AE2_CORE_ANN = new ItemStack(
+            GameRegistry.findItem("appliedenergistics2", "item.ItemMultiMaterial"),
+            1,
+            44);
+    public static final ItemStack AE2_CORE_FOM = new ItemStack(
+            GameRegistry.findItem("appliedenergistics2", "item.ItemMultiMaterial"),
+            1,
+            43);
     public static final ItemStack PISTON = new ItemStack(Blocks.piston, 1);
     public static final ItemStack STICKY_PISTON = new ItemStack(Blocks.sticky_piston, 1);
-    public static final ItemStack AE2_BLANK_PATTERN =
-            new ItemStack(GameRegistry.findItem("appliedenergistics2", "item.ItemMultiMaterial"), 1, 52);
-    public static final ItemStack AE2_TERMINAL =
-            new ItemStack(GameRegistry.findItem("appliedenergistics2", "item.ItemMultiPart"), 1, 380);
-    public static final ItemStack AE2_CRAFTING_CP_UNIT =
-            new ItemStack(GameRegistry.findItem("appliedenergistics2", "tile.BlockCraftingUnit"), 1, 1);
-    public static final ItemStack AE2_PATTERN_CAPACITY_CARD =
-            new ItemStack(GameRegistry.findItem("appliedenergistics2", "item.ItemMultiMaterial"), 1, 54);
+    public static final ItemStack AE2_BLANK_PATTERN = new ItemStack(
+            GameRegistry.findItem("appliedenergistics2", "item.ItemMultiMaterial"),
+            1,
+            52);
+    public static final ItemStack AE2_TERMINAL = new ItemStack(
+            GameRegistry.findItem("appliedenergistics2", "item.ItemMultiPart"),
+            1,
+            380);
+    public static final ItemStack AE2_CRAFTING_CP_UNIT = new ItemStack(
+            GameRegistry.findItem("appliedenergistics2", "tile.BlockCraftingUnit"),
+            1,
+            1);
+    public static final ItemStack AE2_PATTERN_CAPACITY_CARD = new ItemStack(
+            GameRegistry.findItem("appliedenergistics2", "item.ItemMultiMaterial"),
+            1,
+            54);
+    public static final ItemStack AE2_ME_CHEST = GameRegistry
+            .findItemStack("appliedenergistics2", "tile.BlockChest", 1);
+    public static final ItemStack AE2_ENERGY_CELL = GameRegistry
+            .findItemStack("appliedenergistics2", "tile.BlockEnergyCell", 1);
     public static final ItemStack BUCKET = new ItemStack(Items.bucket, 1);
     public static final ItemStack IRON_BAR = new ItemStack(Blocks.iron_bars, 1);
 
     @Override
     public void run() {
-        GameRegistry.addRecipe(new ShapedOreRecipe(
-                INTERFACE.stack(),
-                "IPI",
-                "GEG",
-                "IPI",
-                'I',
-                "ingotIron",
-                'P',
-                "dyeBlue",
-                'G',
-                "blockGlass",
-                'E',
-                AE2_INTERFACE));
+        GameRegistry.addRecipe(
+                new ShapedOreRecipe(
+                        PORTABLE_FLUID_CELL.stack(),
+                        "ABC",
+                        'A',
+                        AE2_ME_CHEST,
+                        'B',
+                        CellType.Cell1kPart.stack(1),
+                        'C',
+                        AE2_ENERGY_CELL));
+        GameRegistry.addRecipe(
+                new ShapedOreRecipe(
+                        INTERFACE.stack(),
+                        "IPI",
+                        "GEG",
+                        "IPI",
+                        'I',
+                        "ingotIron",
+                        'P',
+                        "dyeBlue",
+                        'G',
+                        "blockGlass",
+                        'E',
+                        AE2_INTERFACE));
         GameRegistry.addShapelessRecipe(FLUID_INTERFACE.stack(), INTERFACE.stack());
         GameRegistry.addShapelessRecipe(INTERFACE.stack(), FLUID_INTERFACE.stack());
         GameRegistry.addRecipe(
@@ -127,209 +174,269 @@ public class RecipeLoader implements Runnable {
                 AE2_WORK_BENCH));
         GameRegistry.addShapelessRecipe(FLUID_STORAGE_BUS.stack(), FLUID_INTERFACE, STICKY_PISTON, PISTON);
         GameRegistry.addShapelessRecipe(FLUID_STORAGE_BUS.stack(), INTERFACE, STICKY_PISTON, PISTON);
-        GameRegistry.addRecipe(new ShapedOreRecipe(
-                FLUID_STORAGE_MONITOR.stack(),
-                "EIP",
-                "P  ",
-                'I',
-                "itemIlluminatedPanel",
-                'E',
-                FLUID_LEVEL_EMITTER,
-                'P',
-                "dyeBlue"));
-        GameRegistry.addRecipe(new ShapedOreRecipe(
-                FLUID_CONVERSION_MONITOR.stack(),
-                "ASF",
-                'A',
-                AE2_CORE_ANN,
-                'S',
-                FLUID_STORAGE_MONITOR,
-                'F',
-                AE2_CORE_FOM));
+        GameRegistry.addRecipe(
+                new ShapedOreRecipe(
+                        FLUID_STORAGE_MONITOR.stack(),
+                        "EIP",
+                        "P  ",
+                        'I',
+                        "itemIlluminatedPanel",
+                        'E',
+                        FLUID_LEVEL_EMITTER,
+                        'P',
+                        "dyeBlue"));
+        GameRegistry.addRecipe(
+                new ShapedOreRecipe(
+                        FLUID_CONVERSION_MONITOR.stack(),
+                        "ASF",
+                        'A',
+                        AE2_CORE_ANN,
+                        'S',
+                        FLUID_STORAGE_MONITOR,
+                        'F',
+                        AE2_CORE_FOM));
         GameRegistry.addShapelessRecipe(FLUID_TERMINAL.stack(), AE2_PATTERN_TERM, ENCODER);
         GameRegistry.addShapelessRecipe(
-                FLUID_TERMINAL_EX.stack(), FLUID_TERMINAL.stack(), AE2_PROCESS_CAL, AE2_PROCESS_ENG, AE2_PROCESS_LOG);
-        GameRegistry.addRecipe(new ShapedOreRecipe(
-                BUFFER.stack(),
-                "ILI",
-                "AGF",
-                "IBI",
-                'I',
-                "ingotIron",
-                'G',
-                AE2_QUARTZ_GLASS,
-                'L',
-                AE2_CELL_1K,
-                'A',
-                AE2_CORE_ANN,
-                'F',
-                AE2_CORE_FOM,
-                'B',
-                BUCKET));
+                FLUID_TERMINAL_EX.stack(),
+                FLUID_TERMINAL.stack(),
+                AE2_PROCESS_CAL,
+                AE2_PROCESS_ENG,
+                AE2_PROCESS_LOG);
+        GameRegistry.addRecipe(
+                new ShapedOreRecipe(
+                        BUFFER.stack(),
+                        "ILI",
+                        "AGF",
+                        "IBI",
+                        'I',
+                        "ingotIron",
+                        'G',
+                        AE2_QUARTZ_GLASS,
+                        'L',
+                        AE2_CELL_1K,
+                        'A',
+                        AE2_CORE_ANN,
+                        'F',
+                        AE2_CORE_FOM,
+                        'B',
+                        BUCKET));
         GameRegistry.addRecipe(new ShapedOreRecipe(WALRUS, "FFF", "F F", "FFF", 'F', fish));
-        GameRegistry.addRecipe(new ShapedOreRecipe(
-                FLUID_LEVEL_EMITTER.stack(), "RPD", 'R', redstone_torch, 'P', AE2_PROCESS_CAL, 'D', "dyeBlue"));
-        GameRegistry.addRecipe(new ShapedOreRecipe(
-                LARGE_BUFFER.stack(),
-                "BGB",
-                "GEG",
-                "BGB",
-                'B',
-                BUFFER.stack(),
-                'G',
-                AE2_QUARTZ_GLASS,
-                'E',
-                AE2_PROCESS_ENG));
+        GameRegistry.addRecipe(
+                new ShapedOreRecipe(
+                        FLUID_LEVEL_EMITTER.stack(),
+                        "RPD",
+                        'R',
+                        redstone_torch,
+                        'P',
+                        AE2_PROCESS_CAL,
+                        'D',
+                        "dyeBlue"));
+        GameRegistry.addRecipe(
+                new ShapedOreRecipe(
+                        LARGE_BUFFER.stack(),
+                        "BGB",
+                        "GEG",
+                        "BGB",
+                        'B',
+                        BUFFER.stack(),
+                        'G',
+                        AE2_QUARTZ_GLASS,
+                        'E',
+                        AE2_PROCESS_ENG));
         GameRegistry.addShapelessRecipe(AE2_BLANK_PATTERN, PATTERN.stack());
         GameRegistry.addShapelessRecipe(FLUID_TERM.stack(), AE2_TERMINAL, BUFFER);
         GameRegistry.addShapelessRecipe(
                 FLUID_BUFFER.stack(),
                 LARGE_BUFFER.stack(),
-                Config.fluidCells
-                        ? CELL1K.getComponent()
+                Config.fluidCells ? CELL1K.getComponent()
                         : ModAndClassUtil.EC2 ? ItemEnum.STORAGECOMPONENT.getDamagedStack(4) : null);
-        GameRegistry.addShapelessRecipe(
-                LEVEL_MAINTAINER.stack(), AE2_CRAFTING_CP_UNIT, ENCODER, AE2_PATTERN_CAPACITY_CARD);
+        GameRegistry
+                .addShapelessRecipe(LEVEL_MAINTAINER.stack(), AE2_CRAFTING_CP_UNIT, ENCODER, AE2_PATTERN_CAPACITY_CARD);
         if (Config.fluidCells) {
             OreDictionary.registerOre("anyCertusCrystal", AE2_PURE_CERTUS);
             for (ItemStack it : OreDictionary.getOres("crystalCertusQuartz"))
                 OreDictionary.registerOre("anyCertusCrystal", it);
 
-            GameRegistry.addRecipe(new ShapedOreRecipe(
-                    CellType.Cell1kPart.stack(1),
-                    "DCD",
-                    "CEC",
-                    "DCD",
-                    'D',
-                    "dyeBlue",
-                    'C',
-                    "anyCertusCrystal",
-                    'E',
-                    AE2_PROCESS_ENG));
-            GameRegistry.addRecipe(new ShapedOreRecipe(
-                    CellType.Cell4kPart.stack(1),
-                    "DPD",
-                    "CGC",
-                    "DCD",
-                    'D',
-                    "dyeBlue",
-                    'C',
-                    CellType.Cell1kPart.stack(1),
-                    'P',
-                    AE2_PROCESS_CAL,
-                    'G',
-                    AE2_QUARTZ_GLASS));
-            GameRegistry.addRecipe(new ShapedOreRecipe(
-                    CellType.Cell16kPart.stack(1),
-                    "DPD",
-                    "CGC",
-                    "DCD",
-                    'D',
-                    "dyeBlue",
-                    'C',
-                    CellType.Cell4kPart.stack(1),
-                    'P',
-                    AE2_PROCESS_LOG,
-                    'G',
-                    AE2_QUARTZ_GLASS));
-            GameRegistry.addRecipe(new ShapedOreRecipe(
-                    CellType.Cell64kPart.stack(1),
-                    "DPD",
-                    "CGC",
-                    "DCD",
-                    'D',
-                    "dyeBlue",
-                    'C',
-                    CellType.Cell16kPart.stack(1),
-                    'P',
-                    AE2_PROCESS_ENG,
-                    'G',
-                    AE2_QUARTZ_GLASS));
-            GameRegistry.addRecipe(new ShapedOreRecipe(
-                    CellType.Cell256kPart.stack(1),
-                    "DPD",
-                    "CGC",
-                    "DCD",
-                    'D',
-                    "dyeBlue",
-                    'C',
-                    CellType.Cell64kPart.stack(1),
-                    'P',
-                    AE2_PROCESS_CAL,
-                    'G',
-                    AE2_LAMP_GLASS));
-            GameRegistry.addRecipe(new ShapedOreRecipe(
-                    CellType.Cell1024kPart.stack(1),
-                    "DPD",
-                    "CGC",
-                    "DCD",
-                    'D',
-                    "dyeBlue",
-                    'C',
-                    CellType.Cell256kPart.stack(1),
-                    'P',
-                    AE2_PROCESS_LOG,
-                    'G',
-                    AE2_LAMP_GLASS));
-            GameRegistry.addRecipe(new ShapedOreRecipe(
-                    CellType.Cell4096kPart.stack(1),
-                    "DPD",
-                    "CGC",
-                    "DCD",
-                    'D',
-                    "dyeBlue",
-                    'C',
-                    CellType.Cell1024kPart.stack(1),
-                    'P',
-                    AE2_PROCESS_ENG,
-                    'G',
-                    AE2_LAMP_GLASS));
+            GameRegistry.addRecipe(
+                    new ShapedOreRecipe(
+                            CellType.Cell1kPart.stack(1),
+                            "DCD",
+                            "CEC",
+                            "DCD",
+                            'D',
+                            "dyeRed",
+                            'C',
+                            "anyCertusCrystal",
+                            'E',
+                            AE2_PROCESS_ENG));
+            GameRegistry.addRecipe(
+                    new ShapedOreRecipe(
+                            CellType.Cell4kPart.stack(1),
+                            "DPD",
+                            "CGC",
+                            "DCD",
+                            'D',
+                            "dyeRed",
+                            'C',
+                            CellType.Cell1kPart.stack(1),
+                            'P',
+                            AE2_PROCESS_CAL,
+                            'G',
+                            AE2_QUARTZ_GLASS));
+            GameRegistry.addRecipe(
+                    new ShapedOreRecipe(
+                            CellType.Cell16kPart.stack(1),
+                            "DPD",
+                            "CGC",
+                            "DCD",
+                            'D',
+                            "dyeRed",
+                            'C',
+                            CellType.Cell4kPart.stack(1),
+                            'P',
+                            AE2_PROCESS_LOG,
+                            'G',
+                            AE2_QUARTZ_GLASS));
+            GameRegistry.addRecipe(
+                    new ShapedOreRecipe(
+                            CellType.Cell64kPart.stack(1),
+                            "DPD",
+                            "CGC",
+                            "DCD",
+                            'D',
+                            "dyeRed",
+                            'C',
+                            CellType.Cell16kPart.stack(1),
+                            'P',
+                            AE2_PROCESS_ENG,
+                            'G',
+                            AE2_QUARTZ_GLASS));
+            GameRegistry.addRecipe(
+                    new ShapedOreRecipe(
+                            CellType.Cell256kPart.stack(1),
+                            "DPD",
+                            "CGC",
+                            "DCD",
+                            'D',
+                            "dyeRed",
+                            'C',
+                            CellType.Cell64kPart.stack(1),
+                            'P',
+                            AE2_PROCESS_CAL,
+                            'G',
+                            AE2_LAMP_GLASS));
+            GameRegistry.addRecipe(
+                    new ShapedOreRecipe(
+                            CellType.Cell1024kPart.stack(1),
+                            "DPD",
+                            "CGC",
+                            "DCD",
+                            'D',
+                            "dyeRed",
+                            'C',
+                            CellType.Cell256kPart.stack(1),
+                            'P',
+                            AE2_PROCESS_LOG,
+                            'G',
+                            AE2_LAMP_GLASS));
+            GameRegistry.addRecipe(
+                    new ShapedOreRecipe(
+                            CellType.Cell4096kPart.stack(1),
+                            "DPD",
+                            "CGC",
+                            "DCD",
+                            'D',
+                            "dyeRed",
+                            'C',
+                            CellType.Cell1024kPart.stack(1),
+                            'P',
+                            AE2_PROCESS_CAL,
+                            'G',
+                            AE2_LAMP_GLASS));
+            GameRegistry.addRecipe(
+                    new ShapedOreRecipe(
+                            CellType.Cell16384kPart.stack(1),
+                            "DPD",
+                            "CGC",
+                            "DCD",
+                            'D',
+                            "dyeRed",
+                            'C',
+                            CellType.Cell4096kPart.stack(1),
+                            'P',
+                            AE2_PROCESS_ENG,
+                            'G',
+                            AE2_LAMP_GLASS));
 
-            ItemBasicFluidStorageCell[] cells =
-                    new ItemBasicFluidStorageCell[] {CELL1K, CELL4K, CELL16K, CELL64K, CELL256K, CELL1024K, CELL4096K};
+            ItemBasicFluidStorageCell[] cells = new ItemBasicFluidStorageCell[] { CELL1K, CELL4K, CELL16K, CELL64K,
+                    CELL256K, CELL1024K, CELL4096K, CELL16384K };
 
             for (ItemBasicFluidStorageCell cell : cells) {
-                GameRegistry.addRecipe(new ShapedOreRecipe(
-                        cell,
-                        "GDG",
-                        "DCD",
-                        "III",
-                        'D',
-                        "dustRedstone",
-                        'G',
-                        AE2_QUARTZ_GLASS,
-                        'C',
-                        cell.getComponent(),
-                        'I',
-                        "ingotIron"));
+                GameRegistry.addRecipe(
+                        new ShapedOreRecipe(
+                                cell,
+                                "GDG",
+                                "DCD",
+                                "III",
+                                'D',
+                                "dustRedstone",
+                                'G',
+                                AE2_QUARTZ_GLASS,
+                                'C',
+                                cell.getComponent(),
+                                'I',
+                                "ingotIron"));
                 GameRegistry.addRecipe(new ShapelessOreRecipe(cell, AE2_CELL_HOUSING, cell.getComponent()));
             }
         }
 
         if (Config.fluidIOBus) {
-            GameRegistry.addRecipe(new ShapedOreRecipe(
-                    FLUID_EXPORT_BUS, "ICI", "BPB", 'B', "dyeBlue", 'I', "ingotIron", 'P', PISTON, 'C', AE2_CORE_FOM));
-            GameRegistry.addRecipe(new ShapedOreRecipe(
-                    FLUID_IMPORT_BUS, "BCB", "IPI", 'B', "dyeBlue", 'I', "ingotIron", 'P', PISTON, 'C', AE2_CORE_ANN));
+            GameRegistry.addRecipe(
+                    new ShapedOreRecipe(
+                            FLUID_EXPORT_BUS,
+                            "ICI",
+                            "BPB",
+                            'B',
+                            "dyeBlue",
+                            'I',
+                            "ingotIron",
+                            'P',
+                            PISTON,
+                            'C',
+                            AE2_CORE_FOM));
+            GameRegistry.addRecipe(
+                    new ShapedOreRecipe(
+                            FLUID_IMPORT_BUS,
+                            "BCB",
+                            "IPI",
+                            'B',
+                            "dyeBlue",
+                            'I',
+                            "ingotIron",
+                            'P',
+                            PISTON,
+                            'C',
+                            AE2_CORE_ANN));
         }
 
         if (ModAndClassUtil.OC) {
             ItemStack CHIP_T1 = new ItemStack(GameRegistry.findItem("OpenComputers", "item"), 1, 24);
-            GameRegistry.addRecipe(new ShapedOreRecipe(
-                    OC_EDITOR,
-                    "IMI",
-                    "CBC",
-                    "IPI",
-                    'I',
-                    IRON_BAR,
-                    'M',
-                    CHIP_T1,
-                    'C',
-                    "oc:cable",
-                    'B',
-                    BUCKET,
-                    'P',
-                    AE2_BLANK_PATTERN));
+            GameRegistry.addRecipe(
+                    new ShapedOreRecipe(
+                            OC_EDITOR,
+                            "IMI",
+                            "CBC",
+                            "IPI",
+                            'I',
+                            IRON_BAR,
+                            'M',
+                            CHIP_T1,
+                            'C',
+                            "oc:cable",
+                            'B',
+                            BUCKET,
+                            'P',
+                            AE2_BLANK_PATTERN));
         }
     }
 }

@@ -1,5 +1,15 @@
 package com.glodblock.github.client.gui.container.base;
 
+import java.util.HashMap;
+import java.util.Map;
+
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.entity.player.InventoryPlayer;
+import net.minecraft.inventory.IInventory;
+import net.minecraft.item.ItemStack;
+import net.minecraftforge.fluids.FluidStack;
+
 import appeng.api.config.Upgrades;
 import appeng.api.implementations.IUpgradeableHost;
 import appeng.api.storage.data.IAEFluidStack;
@@ -8,20 +18,13 @@ import appeng.container.slot.AppEngSlot;
 import appeng.tile.inventory.AppEngInternalAEInventory;
 import appeng.util.Platform;
 import appeng.util.item.AEFluidStack;
+
 import com.glodblock.github.FluidCraft;
 import com.glodblock.github.common.item.ItemFluidPacket;
 import com.glodblock.github.inventory.slot.OptionalFluidSlotFakeTypeOnly;
 import com.glodblock.github.network.SPacketFluidUpdate;
 import com.glodblock.github.util.Ae2Reflect;
 import com.glodblock.github.util.Util;
-import java.util.HashMap;
-import java.util.Map;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.entity.player.InventoryPlayer;
-import net.minecraft.inventory.IInventory;
-import net.minecraft.item.ItemStack;
-import net.minecraftforge.fluids.FluidStack;
 
 public abstract class FCContainerFluidConfigurable extends ContainerUpgradeable {
 
@@ -99,9 +102,9 @@ public abstract class FCContainerFluidConfigurable extends ContainerUpgradeable 
             final AppEngInternalAEInventory inv = this.getFakeFluidInv();
             final Map<Integer, IAEFluidStack> tmp = new HashMap<>();
             for (int i = 0; i < inv.getSizeInventory(); ++i) {
-                if (inv.getStackInSlot(i) != null
-                        && !this.isValidForConfig(
-                                i, AEFluidStack.create(ItemFluidPacket.getFluidStack(inv.getStackInSlot(i))))) {
+                if (inv.getStackInSlot(i) != null && !this.isValidForConfig(
+                        i,
+                        AEFluidStack.create(ItemFluidPacket.getFluidStack(inv.getStackInSlot(i))))) {
                     inv.setInventorySlotContents(i, null);
                 }
                 tmp.put(i, AEFluidStack.create(ItemFluidPacket.getFluidStack(inv.getStackInSlot(i))));

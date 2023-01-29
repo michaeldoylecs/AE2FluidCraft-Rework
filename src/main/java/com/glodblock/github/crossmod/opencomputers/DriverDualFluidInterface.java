@@ -1,12 +1,5 @@
 package com.glodblock.github.crossmod.opencomputers;
 
-import appeng.api.parts.IPartHost;
-import com.glodblock.github.common.parts.PartFluidInterface;
-import com.glodblock.github.common.tile.TileFluidInterface;
-import com.glodblock.github.loader.ItemAndBlockHolder;
-import com.glodblock.github.util.DualityFluidInterface;
-import com.glodblock.github.util.NameConst;
-import com.glodblock.github.util.Util;
 import li.cil.oc.api.driver.EnvironmentProvider;
 import li.cil.oc.api.driver.NamedBlock;
 import li.cil.oc.api.driver.SidedBlock;
@@ -18,11 +11,21 @@ import li.cil.oc.api.network.ManagedEnvironment;
 import li.cil.oc.api.network.Node;
 import li.cil.oc.integration.ManagedTileEntityEnvironment;
 import li.cil.oc.server.network.Component;
+
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.fluids.FluidStack;
+
+import appeng.api.parts.IPartHost;
+
+import com.glodblock.github.common.parts.PartFluidInterface;
+import com.glodblock.github.common.tile.TileFluidInterface;
+import com.glodblock.github.loader.ItemAndBlockHolder;
+import com.glodblock.github.util.DualityFluidInterface;
+import com.glodblock.github.util.NameConst;
+import com.glodblock.github.util.Util;
 
 public class DriverDualFluidInterface implements SidedBlock {
 
@@ -45,20 +48,18 @@ public class DriverDualFluidInterface implements SidedBlock {
         }
 
         @Callback(
-                doc =
-                        "function(index:number):table -- Get the configuration of the dual fluid interface on the specified slot.")
+                doc = "function(index:number):table -- Get the configuration of the dual fluid interface on the specified slot.")
         public Object[] getFluidInterfaceConfiguration(Context context, Arguments args) {
             int index = args.checkInteger(0);
             if (index >= 0 && index < DualityFluidInterface.NUMBER_OF_TANKS) {
                 FluidStack fluid = tileEntity.getConfig().getFluidStackInSlot(index);
-                return new Object[] {fluid == null ? null : new FluidStack(fluid.getFluid(), 1000)};
+                return new Object[] { fluid == null ? null : new FluidStack(fluid.getFluid(), 1000) };
             }
             throw new IllegalArgumentException("invalid slot");
         }
 
         @Callback(
-                doc =
-                        "function(index:number[, database:address, entry:number]):boolean -- Configure the filter in fluid interface on the specified slot.")
+                doc = "function(index:number[, database:address, entry:number]):boolean -- Configure the filter in fluid interface on the specified slot.")
         public Object[] setFluidInterfaceConfiguration(Context context, Arguments args) {
             int index = args.checkInteger(0);
             String address;
@@ -69,7 +70,7 @@ public class DriverDualFluidInterface implements SidedBlock {
             } else {
                 tileEntity.getConfig().setFluidInSlot(index, null);
                 context.pause(0.5);
-                return new Object[] {true};
+                return new Object[] { true };
             }
             Node node = node().network().node(address);
             if (!(node instanceof Component)) throw new IllegalArgumentException("no such component");
@@ -84,7 +85,7 @@ public class DriverDualFluidInterface implements SidedBlock {
                     tileEntity.getConfig().setFluidInSlot(index, tileEntity.getStandardFluid(fluid));
                 }
                 context.pause(0.5);
-                return new Object[] {true};
+                return new Object[] { true };
             }
             throw new IllegalArgumentException("invalid slot");
         }
@@ -125,13 +126,13 @@ public class DriverDualFluidInterface implements SidedBlock {
     }
 
     public static class Provider implements EnvironmentProvider {
+
         Provider() {}
 
         @Override
         public Class<?> getEnvironment(ItemStack itemStack) {
-            if (itemStack != null
-                    && (itemStack.isItemEqual(ItemAndBlockHolder.FLUID_INTERFACE.stack())
-                            || itemStack.isItemEqual(ItemAndBlockHolder.INTERFACE.stack()))) {
+            if (itemStack != null && (itemStack.isItemEqual(ItemAndBlockHolder.FLUID_INTERFACE.stack())
+                    || itemStack.isItemEqual(ItemAndBlockHolder.INTERFACE.stack()))) {
                 return DriverDualFluidInterface.Environment.class;
             }
             return null;

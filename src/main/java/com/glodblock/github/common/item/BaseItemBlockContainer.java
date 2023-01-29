@@ -1,15 +1,19 @@
 package com.glodblock.github.common.item;
 
-import com.glodblock.github.common.block.BaseBlockContainer;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 import java.util.List;
+
 import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 
+import com.glodblock.github.common.block.BaseBlockContainer;
+
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
+
 public class BaseItemBlockContainer extends ItemBlock {
+
     private final BaseBlockContainer blockType;
 
     public BaseItemBlockContainer(Block id) {
@@ -20,8 +24,8 @@ public class BaseItemBlockContainer extends ItemBlock {
     @Override
     @SideOnly(Side.CLIENT)
     @SuppressWarnings("unchecked")
-    public void addInformation(
-            final ItemStack itemStack, final EntityPlayer player, final List toolTip, final boolean advancedToolTips) {
+    public void addInformation(final ItemStack itemStack, final EntityPlayer player, final List toolTip,
+            final boolean advancedToolTips) {
         blockType.addInformation(itemStack, player, toolTip, advancedToolTips);
     }
 }

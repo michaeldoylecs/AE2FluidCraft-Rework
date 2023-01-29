@@ -2,23 +2,29 @@ package com.glodblock.github.common.item;
 
 import static net.minecraft.client.gui.GuiScreen.isShiftKeyDown;
 
-import appeng.api.AEApi;
-import appeng.api.parts.IPartItem;
-import com.glodblock.github.FluidCraft;
-import com.glodblock.github.common.parts.PartFluidTerminal;
-import com.glodblock.github.common.tabs.FluidCraftingTabs;
-import com.glodblock.github.util.NameConst;
-import cpw.mods.fml.common.registry.GameRegistry;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 import java.util.List;
+
 import javax.annotation.Nullable;
+
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
 
+import appeng.api.AEApi;
+import appeng.api.parts.IPartItem;
+
+import com.glodblock.github.FluidCraft;
+import com.glodblock.github.common.parts.PartFluidTerminal;
+import com.glodblock.github.common.tabs.FluidCraftingTabs;
+import com.glodblock.github.util.NameConst;
+
+import cpw.mods.fml.common.registry.GameRegistry;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
+
 public class ItemPartFluidTerminal extends FCBaseItem implements IPartItem {
+
     public ItemPartFluidTerminal() {
         this.setMaxStackSize(64);
         this.setUnlocalizedName(NameConst.ITEM_PART_FLUID_TERMINAL);
@@ -32,17 +38,8 @@ public class ItemPartFluidTerminal extends FCBaseItem implements IPartItem {
     }
 
     @Override
-    public boolean onItemUse(
-            ItemStack stack,
-            EntityPlayer player,
-            World world,
-            int x,
-            int y,
-            int z,
-            int side,
-            float xOffset,
-            float yOffset,
-            float zOffset) {
+    public boolean onItemUse(ItemStack stack, EntityPlayer player, World world, int x, int y, int z, int side,
+            float xOffset, float yOffset, float zOffset) {
         return AEApi.instance().partHelper().placeBus(player.getHeldItem(), x, y, z, side, player, world);
     }
 

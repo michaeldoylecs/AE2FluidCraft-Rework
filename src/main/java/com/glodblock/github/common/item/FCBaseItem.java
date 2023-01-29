@@ -1,8 +1,9 @@
 package com.glodblock.github.common.item;
 
-import com.glodblock.github.loader.IRegister;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+
+import com.glodblock.github.loader.IRegister;
 
 public abstract class FCBaseItem extends Item implements IRegister<FCBaseItem> {
 

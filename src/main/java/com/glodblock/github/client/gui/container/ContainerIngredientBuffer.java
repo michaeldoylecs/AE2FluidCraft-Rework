@@ -1,18 +1,21 @@
 package com.glodblock.github.client.gui.container;
 
-import appeng.api.storage.data.IAEFluidStack;
-import appeng.container.AEBaseContainer;
-import appeng.container.slot.SlotNormal;
-import com.glodblock.github.FluidCraft;
-import com.glodblock.github.client.gui.ITankDump;
-import com.glodblock.github.common.tile.TileIngredientBuffer;
-import com.glodblock.github.network.SPacketFluidUpdate;
 import java.util.HashMap;
 import java.util.Map;
+
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.IInventory;
+
+import appeng.api.storage.data.IAEFluidStack;
+import appeng.container.AEBaseContainer;
+import appeng.container.slot.SlotNormal;
+
+import com.glodblock.github.FluidCraft;
+import com.glodblock.github.client.gui.ITankDump;
+import com.glodblock.github.common.tile.TileIngredientBuffer;
+import com.glodblock.github.network.SPacketFluidUpdate;
 
 public class ContainerIngredientBuffer extends AEBaseContainer implements ITankDump {
 

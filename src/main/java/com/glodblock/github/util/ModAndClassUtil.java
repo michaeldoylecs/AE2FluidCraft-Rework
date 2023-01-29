@@ -1,5 +1,7 @@
 package com.glodblock.github.util;
 
+import java.lang.reflect.Field;
+
 import appeng.api.config.ActionItems;
 import appeng.api.config.Settings;
 import appeng.api.config.Upgrades;
@@ -7,7 +9,6 @@ import appeng.core.AEConfig;
 import appeng.core.localization.ButtonToolTips;
 import appeng.core.localization.GuiText;
 import cpw.mods.fml.common.Loader;
-import java.lang.reflect.Field;
 
 public final class ModAndClassUtil {
 

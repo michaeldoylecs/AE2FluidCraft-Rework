@@ -1,5 +1,13 @@
 package com.glodblock.github.client.gui.container;
 
+import java.nio.BufferOverflowException;
+
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.entity.player.InventoryPlayer;
+import net.minecraft.inventory.ICrafting;
+import net.minecraftforge.common.util.ForgeDirection;
+
 import appeng.api.AEApi;
 import appeng.api.implementations.guiobjects.IPortableCell;
 import appeng.api.implementations.tiles.IMEChest;
@@ -17,25 +25,21 @@ import appeng.api.storage.data.IItemList;
 import appeng.container.slot.SlotRestrictedInput;
 import appeng.me.helpers.ChannelPowerSrc;
 import appeng.util.Platform;
+
 import com.glodblock.github.FluidCraft;
 import com.glodblock.github.client.gui.container.base.FCContainerMonitor;
 import com.glodblock.github.network.SPacketMEInventoryUpdate;
-import java.nio.BufferOverflowException;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.entity.player.InventoryPlayer;
-import net.minecraft.inventory.ICrafting;
-import net.minecraftforge.common.util.ForgeDirection;
 
 public class ContainerItemMonitor extends FCContainerMonitor<IAEItemStack> {
+
     private final IItemList<IAEItemStack> items = AEApi.instance().storage().createItemList();
 
     public ContainerItemMonitor(final InventoryPlayer ip, final ITerminalHost monitorable) {
         this(ip, monitorable, true);
     }
 
-    protected ContainerItemMonitor(
-            final InventoryPlayer ip, final ITerminalHost monitorable, final boolean bindInventory) {
+    protected ContainerItemMonitor(final InventoryPlayer ip, final ITerminalHost monitorable,
+            final boolean bindInventory) {
         super(ip, monitorable, bindInventory);
         if (Platform.isServer()) {
             this.serverCM = monitorable.getConfigManager();
@@ -140,9 +144,7 @@ public class ContainerItemMonitor extends FCContainerMonitor<IAEItemStack> {
     }
 
     @Override
-    public void postChange(
-            final IBaseMonitor<IAEItemStack> monitor,
-            final Iterable<IAEItemStack> change,
+    public void postChange(final IBaseMonitor<IAEItemStack> monitor, final Iterable<IAEItemStack> change,
             final BaseActionSource source) {
         for (final IAEItemStack is : change) {
             this.items.add(is);

@@ -1,5 +1,18 @@
 package com.glodblock.github.common.parts;
 
+import java.util.Collections;
+import java.util.List;
+import java.util.Objects;
+
+import net.minecraft.client.renderer.RenderBlocks;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.inventory.IInventory;
+import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.Vec3;
+import net.minecraftforge.fluids.IFluidHandler;
+
 import appeng.api.AEApi;
 import appeng.api.config.*;
 import appeng.api.networking.IGridNode;
@@ -36,6 +49,7 @@ import appeng.tile.networking.TileCableBus;
 import appeng.util.Platform;
 import appeng.util.item.AEFluidStack;
 import appeng.util.prioitylist.PrecisePriorityList;
+
 import com.glodblock.github.client.textures.FCPartsTexture;
 import com.glodblock.github.common.item.ItemFluidPacket;
 import com.glodblock.github.common.tile.TileFluidInterface;
@@ -43,19 +57,10 @@ import com.glodblock.github.inventory.*;
 import com.glodblock.github.inventory.gui.GuiType;
 import com.glodblock.github.util.BlockPos;
 import com.glodblock.github.util.ModAndClassUtil;
+
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import extracells.tileentity.TileEntityFluidInterface;
-import java.util.Collections;
-import java.util.List;
-import java.util.Objects;
-import net.minecraft.client.renderer.RenderBlocks;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.inventory.IInventory;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.Vec3;
 
 public class PartFluidStorageBus extends PartUpgradeable
         implements IGridTickable, ICellContainer, IMEMonitorHandlerReceiver<IAEFluidStack>, IPriorityHost {
@@ -149,12 +154,8 @@ public class PartFluidStorageBus extends PartUpgradeable
     }
 
     @Override
-    public void onChangeInventory(
-            final IInventory inv,
-            final int slot,
-            final InvOperation mc,
-            final ItemStack removedStack,
-            final ItemStack newStack) {
+    public void onChangeInventory(final IInventory inv, final int slot, final InvOperation mc,
+            final ItemStack removedStack, final ItemStack newStack) {
         super.onChangeInventory(inv, slot, mc, removedStack, newStack);
 
         if (inv == this.config) {
@@ -163,8 +164,7 @@ public class PartFluidStorageBus extends PartUpgradeable
     }
 
     protected void resetCache(final boolean fullReset) {
-        if (this.getHost() == null
-                || this.getHost().getTile() == null
+        if (this.getHost() == null || this.getHost().getTile() == null
                 || this.getHost().getTile().getWorldObj() == null
                 || this.getHost().getTile().getWorldObj().isRemote) {
             return;
@@ -178,8 +178,7 @@ public class PartFluidStorageBus extends PartUpgradeable
 
         try {
             this.getProxy().getTick().alertDevice(this.getProxy().getNode());
-        } catch (final GridAccessException ignore) {
-        }
+        } catch (final GridAccessException ignore) {}
     }
 
     protected void resetCache() {
@@ -190,8 +189,8 @@ public class PartFluidStorageBus extends PartUpgradeable
         IItemList<IAEFluidStack> before = AEApi.instance().storage().createFluidList();
         if (in != null) {
             if (accessChanged) {
-                AccessRestriction currentAccess =
-                        (AccessRestriction) this.getConfigManager().getSetting(Settings.ACCESS);
+                AccessRestriction currentAccess = (AccessRestriction) this.getConfigManager()
+                        .getSetting(Settings.ACCESS);
                 if (!currentAccess.hasPermission(AccessRestriction.READ)) {
                     readOncePass = true;
                 }
@@ -225,21 +224,16 @@ public class PartFluidStorageBus extends PartUpgradeable
     }
 
     @Override
-    public void postChange(
-            final IBaseMonitor<IAEFluidStack> monitor,
-            final Iterable<IAEFluidStack> change,
+    public void postChange(final IBaseMonitor<IAEFluidStack> monitor, final Iterable<IAEFluidStack> change,
             final BaseActionSource source) {
         if (this.getProxy().isActive()) {
-            AccessRestriction currentAccess =
-                    (AccessRestriction) this.getConfigManager().getSetting(Settings.ACCESS);
+            AccessRestriction currentAccess = (AccessRestriction) this.getConfigManager().getSetting(Settings.ACCESS);
             if (readOncePass) {
                 readOncePass = false;
                 try {
-                    this.getProxy()
-                            .getStorage()
+                    this.getProxy().getStorage()
                             .postAlterationOfStoredItems(StorageChannel.FLUIDS, change, this.source);
-                } catch (final GridAccessException ignore) {
-                }
+                } catch (final GridAccessException ignore) {}
                 return;
             }
             if (!currentAccess.hasPermission(AccessRestriction.READ)) {
@@ -247,8 +241,7 @@ public class PartFluidStorageBus extends PartUpgradeable
             }
             try {
                 this.getProxy().getStorage().postAlterationOfStoredItems(StorageChannel.FLUIDS, change, source);
-            } catch (final GridAccessException ignore) {
-            }
+            } catch (final GridAccessException ignore) {}
         }
     }
 
@@ -289,6 +282,9 @@ public class PartFluidStorageBus extends PartUpgradeable
                 this.resetCache(true);
                 this.resetCache();
             }
+        } else if (te instanceof IFluidHandler) {
+            this.resetCache(true);
+            this.resetCache();
         } else {
             this.resetCache(false);
         }
@@ -326,7 +322,7 @@ public class PartFluidStorageBus extends PartUpgradeable
         return TickRateModulation.SLEEP;
     }
 
-    @SuppressWarnings({"rawtypes", "unchecked"})
+    @SuppressWarnings({ "rawtypes", "unchecked" })
     public MEInventoryHandler<IAEFluidStack> getInternalHandler() {
         if (this.cached) {
             return this.handler;
@@ -345,13 +341,11 @@ public class PartFluidStorageBus extends PartUpgradeable
         this.handler = null;
         this.monitor = null;
         if (target != null) {
-            final IExternalStorageHandler esh = AEApi.instance()
-                    .registries()
-                    .externalStorage()
+            final IExternalStorageHandler esh = AEApi.instance().registries().externalStorage()
                     .getHandler(target, this.getSide().getOpposite(), StorageChannel.FLUIDS, this.source);
             if (esh != null) {
-                final IMEInventory<?> inv =
-                        esh.getInventory(target, this.getSide().getOpposite(), StorageChannel.FLUIDS, this.source);
+                final IMEInventory<?> inv = esh
+                        .getInventory(target, this.getSide().getOpposite(), StorageChannel.FLUIDS, this.source);
                 if (inv instanceof MEMonitorIFluidHandler) {
                     final MEMonitorIFluidHandler h = (MEMonitorIFluidHandler) inv;
                     h.setMode((StorageFilter) this.getConfigManager().getSetting(Settings.STORAGE_FILTER));
@@ -360,18 +354,15 @@ public class PartFluidStorageBus extends PartUpgradeable
                 }
                 if (inv != null) {
                     this.handler = new MEInventoryHandler(inv, StorageChannel.FLUIDS);
-                    this.handler.setBaseAccess(
-                            (AccessRestriction) this.getConfigManager().getSetting(Settings.ACCESS));
+                    this.handler.setBaseAccess((AccessRestriction) this.getConfigManager().getSetting(Settings.ACCESS));
                     this.handler.setWhitelist(
-                            this.getInstalledUpgrades(Upgrades.INVERTER) > 0
-                                    ? IncludeExclude.BLACKLIST
+                            this.getInstalledUpgrades(Upgrades.INVERTER) > 0 ? IncludeExclude.BLACKLIST
                                     : IncludeExclude.WHITELIST);
                     this.handler.setPriority(this.priority);
                     if (inv instanceof IMEMonitor) {
                         ((IBaseMonitor) inv).addListener(this, this.handler);
                     }
-                    final IItemList<IAEFluidStack> priorityList =
-                            AEApi.instance().storage().createFluidList();
+                    final IItemList<IAEFluidStack> priorityList = AEApi.instance().storage().createFluidList();
 
                     final int slotsToUse = 18 + this.getInstalledUpgrades(Upgrades.CAPACITY) * 9;
                     for (int x = 0; x < this.config.getSizeInventory() && x < slotsToUse; x++) {
@@ -392,15 +383,13 @@ public class PartFluidStorageBus extends PartUpgradeable
                 } else {
                     tm.wakeDevice(this.getProxy().getNode());
                 }
-            } catch (final GridAccessException ignore) {
-            }
+            } catch (final GridAccessException ignore) {}
         }
 
         try {
             // force grid to update handlers...
             ((GridStorageCache) this.getProxy().getGrid().getCache(IStorageGrid.class)).cellUpdate(null);
-        } catch (final GridAccessException ignore) {
-        }
+        } catch (final GridAccessException ignore) {}
 
         return this.handler;
     }
@@ -471,8 +460,8 @@ public class PartFluidStorageBus extends PartUpgradeable
 
     @Override
     @SideOnly(Side.CLIENT)
-    public void renderStatic(
-            final int x, final int y, final int z, final IPartRenderHelper rh, final RenderBlocks renderer) {
+    public void renderStatic(final int x, final int y, final int z, final IPartRenderHelper rh,
+            final RenderBlocks renderer) {
         this.setRenderCache(rh.useSimplifiedRendering(x, y, z, this, this.getRenderCache()));
         rh.setTexture(
                 CableBusTextures.PartStorageSides.getIcon(),

@@ -1,7 +1,12 @@
 package com.glodblock.github.client.gui;
 
+import net.minecraft.client.gui.GuiButton;
+import net.minecraft.entity.player.InventoryPlayer;
+import net.minecraft.item.ItemStack;
+
 import appeng.api.storage.ITerminalHost;
 import appeng.core.localization.GuiText;
+
 import com.glodblock.github.FluidCraft;
 import com.glodblock.github.client.gui.base.FCGuiAmount;
 import com.glodblock.github.client.gui.container.ContainerPatternValueAmount;
@@ -10,9 +15,6 @@ import com.glodblock.github.common.parts.PartFluidPatternTerminalEx;
 import com.glodblock.github.inventory.gui.GuiType;
 import com.glodblock.github.loader.ItemAndBlockHolder;
 import com.glodblock.github.network.CPacketPatternValueSet;
-import net.minecraft.client.gui.GuiButton;
-import net.minecraft.entity.player.InventoryPlayer;
-import net.minecraft.item.ItemStack;
 
 public class GuiPatternValueAmount extends FCGuiAmount {
 
@@ -48,10 +50,11 @@ public class GuiPatternValueAmount extends FCGuiAmount {
         super.actionPerformed(btn);
         try {
             if (btn == this.submit && btn.enabled) {
-                FluidCraft.proxy.netHandler.sendToServer(new CPacketPatternValueSet(
-                        originalGui.ordinal(),
-                        getAmount(),
-                        ((ContainerPatternValueAmount) this.inventorySlots).getValueIndex()));
+                FluidCraft.proxy.netHandler.sendToServer(
+                        new CPacketPatternValueSet(
+                                originalGui.ordinal(),
+                                getAmount(),
+                                ((ContainerPatternValueAmount) this.inventorySlots).getValueIndex()));
             }
         } catch (final NumberFormatException e) {
             this.amountBox.setText("1");

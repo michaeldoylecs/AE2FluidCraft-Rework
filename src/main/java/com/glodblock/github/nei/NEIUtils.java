@@ -1,13 +1,15 @@
 package com.glodblock.github.nei;
 
-import com.glodblock.github.nei.object.OrderStack;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
+
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fluids.FluidStack;
+
+import com.glodblock.github.nei.object.OrderStack;
 
 public class NEIUtils {
 

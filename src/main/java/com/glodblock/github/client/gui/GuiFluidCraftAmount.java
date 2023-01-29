@@ -1,8 +1,13 @@
 package com.glodblock.github.client.gui;
 
+import net.minecraft.client.gui.GuiButton;
+import net.minecraft.entity.player.InventoryPlayer;
+import net.minecraft.item.ItemStack;
+
 import appeng.api.storage.ITerminalHost;
 import appeng.container.implementations.ContainerCraftAmount;
 import appeng.core.localization.GuiText;
+
 import com.glodblock.github.FluidCraft;
 import com.glodblock.github.client.gui.base.FCGuiAmount;
 import com.glodblock.github.common.parts.PartFluidPatternTerminal;
@@ -11,9 +16,6 @@ import com.glodblock.github.common.parts.PartFluidTerminal;
 import com.glodblock.github.inventory.gui.GuiType;
 import com.glodblock.github.loader.ItemAndBlockHolder;
 import com.glodblock.github.network.CPacketCraftRequest;
-import net.minecraft.client.gui.GuiButton;
-import net.minecraft.entity.player.InventoryPlayer;
-import net.minecraft.item.ItemStack;
 
 public class GuiFluidCraftAmount extends FCGuiAmount {
 
