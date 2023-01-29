@@ -1,13 +1,15 @@
 package com.glodblock.github.client.render;
 
-import appeng.client.render.BaseBlockRender;
-import appeng.client.render.BlockRenderInfo;
-import com.glodblock.github.client.textures.FCPartsTexture;
-import com.glodblock.github.common.block.BlockLevelMaintainer;
-import com.glodblock.github.common.tile.TileLevelMaintainer;
 import net.minecraft.client.renderer.RenderBlocks;
 import net.minecraft.util.IIcon;
 import net.minecraft.world.IBlockAccess;
+
+import appeng.client.render.BaseBlockRender;
+import appeng.client.render.BlockRenderInfo;
+
+import com.glodblock.github.client.textures.FCPartsTexture;
+import com.glodblock.github.common.block.BlockLevelMaintainer;
+import com.glodblock.github.common.tile.TileLevelMaintainer;
 
 public class RenderBlockLevelMaintainer extends BaseBlockRender<BlockLevelMaintainer, TileLevelMaintainer> {
 
@@ -16,13 +18,8 @@ public class RenderBlockLevelMaintainer extends BaseBlockRender<BlockLevelMainta
     }
 
     @Override
-    public boolean renderInWorld(
-            final BlockLevelMaintainer block,
-            final IBlockAccess world,
-            final int x,
-            final int y,
-            final int z,
-            final RenderBlocks renderer) {
+    public boolean renderInWorld(final BlockLevelMaintainer block, final IBlockAccess world, final int x, final int y,
+            final int z, final RenderBlocks renderer) {
         final TileLevelMaintainer ti = block.getTileEntity(world, x, y, z);
         final BlockRenderInfo info = block.getRendererInstance();
 

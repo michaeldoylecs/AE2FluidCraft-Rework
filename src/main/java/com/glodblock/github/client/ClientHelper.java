@@ -1,10 +1,12 @@
 package com.glodblock.github.client;
 
-import com.glodblock.github.client.textures.FCPartsTexture;
-import cpw.mods.fml.common.FMLCommonHandler;
-import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.client.event.TextureStitchEvent;
 import net.minecraftforge.common.MinecraftForge;
+
+import com.glodblock.github.client.textures.FCPartsTexture;
+
+import cpw.mods.fml.common.FMLCommonHandler;
+import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 
 public class ClientHelper {
 

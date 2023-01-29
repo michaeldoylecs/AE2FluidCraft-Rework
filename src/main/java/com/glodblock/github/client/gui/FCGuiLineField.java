@@ -3,6 +3,7 @@ package com.glodblock.github.client.gui;
 import net.minecraft.client.gui.FontRenderer;
 
 public class FCGuiLineField extends FCGuiTextField {
+
     private final int _xPos;
     private final int _yPos;
     private final int _width;

@@ -1,5 +1,10 @@
 package com.glodblock.github.client.gui.container;
 
+import java.util.Iterator;
+
+import net.minecraft.entity.player.InventoryPlayer;
+import net.minecraft.inventory.IInventory;
+
 import appeng.api.AEApi;
 import appeng.api.config.*;
 import appeng.api.storage.IMEInventory;
@@ -10,14 +15,12 @@ import appeng.container.slot.SlotRestrictedInput;
 import appeng.tile.inventory.AppEngInternalAEInventory;
 import appeng.util.Platform;
 import appeng.util.iterators.NullIterator;
+
 import com.glodblock.github.client.gui.container.base.FCContainerFluidConfigurable;
 import com.glodblock.github.common.item.ItemFluidPacket;
 import com.glodblock.github.common.parts.PartFluidStorageBus;
 import com.glodblock.github.inventory.slot.OptionalFluidSlotFakeTypeOnly;
 import com.glodblock.github.util.Ae2Reflect;
-import java.util.Iterator;
-import net.minecraft.entity.player.InventoryPlayer;
-import net.minecraft.inventory.IInventory;
 
 public class ContainerFluidStorageBus extends FCContainerFluidConfigurable {
 
@@ -51,41 +54,46 @@ public class ContainerFluidStorageBus extends FCContainerFluidConfigurable {
                         new OptionalFluidSlotFakeTypeOnly(config, null, this, y * 9 + x, xo, yo, x, y, y));
             }
         }
-        this.addSlotToContainer((new SlotRestrictedInput(
-                        SlotRestrictedInput.PlacableItemType.UPGRADES, upgrades, 0, 187, 8, this.getInventoryPlayer()))
-                .setNotDraggable());
-        this.addSlotToContainer((new SlotRestrictedInput(
+        this.addSlotToContainer(
+                (new SlotRestrictedInput(
+                        SlotRestrictedInput.PlacableItemType.UPGRADES,
+                        upgrades,
+                        0,
+                        187,
+                        8,
+                        this.getInventoryPlayer())).setNotDraggable());
+        this.addSlotToContainer(
+                (new SlotRestrictedInput(
                         SlotRestrictedInput.PlacableItemType.UPGRADES,
                         upgrades,
                         1,
                         187,
                         8 + 18,
-                        this.getInventoryPlayer()))
-                .setNotDraggable());
-        this.addSlotToContainer((new SlotRestrictedInput(
+                        this.getInventoryPlayer())).setNotDraggable());
+        this.addSlotToContainer(
+                (new SlotRestrictedInput(
                         SlotRestrictedInput.PlacableItemType.UPGRADES,
                         upgrades,
                         2,
                         187,
                         8 + 18 * 2,
-                        this.getInventoryPlayer()))
-                .setNotDraggable());
-        this.addSlotToContainer((new SlotRestrictedInput(
+                        this.getInventoryPlayer())).setNotDraggable());
+        this.addSlotToContainer(
+                (new SlotRestrictedInput(
                         SlotRestrictedInput.PlacableItemType.UPGRADES,
                         upgrades,
                         3,
                         187,
                         8 + 18 * 3,
-                        this.getInventoryPlayer()))
-                .setNotDraggable());
-        this.addSlotToContainer((new SlotRestrictedInput(
+                        this.getInventoryPlayer())).setNotDraggable());
+        this.addSlotToContainer(
+                (new SlotRestrictedInput(
                         SlotRestrictedInput.PlacableItemType.UPGRADES,
                         upgrades,
                         4,
                         187,
                         8 + 18 * 4,
-                        this.getInventoryPlayer()))
-                .setNotDraggable());
+                        this.getInventoryPlayer())).setNotDraggable());
     }
 
     @Override
@@ -113,10 +121,11 @@ public class ContainerFluidStorageBus extends FCContainerFluidConfigurable {
         this.verifyPermissions(SecurityPermissions.BUILD, false);
 
         if (Platform.isServer()) {
-            this.setReadWriteMode((AccessRestriction)
-                    Ae2Reflect.getUpgradeList(this).getConfigManager().getSetting(Settings.ACCESS));
-            this.setStorageFilter((StorageFilter)
-                    Ae2Reflect.getUpgradeList(this).getConfigManager().getSetting(Settings.STORAGE_FILTER));
+            this.setReadWriteMode(
+                    (AccessRestriction) Ae2Reflect.getUpgradeList(this).getConfigManager().getSetting(Settings.ACCESS));
+            this.setStorageFilter(
+                    (StorageFilter) Ae2Reflect.getUpgradeList(this).getConfigManager()
+                            .getSetting(Settings.STORAGE_FILTER));
         }
 
         this.standardDetectAndSendChanges();
@@ -142,8 +151,8 @@ public class ContainerFluidStorageBus extends FCContainerFluidConfigurable {
         final IMEInventory<IAEFluidStack> cellInv = this.bus.getInternalHandler();
         Iterator<IAEFluidStack> i = new NullIterator<>();
         if (cellInv != null) {
-            final IItemList<IAEFluidStack> list =
-                    cellInv.getAvailableItems(AEApi.instance().storage().createFluidList());
+            final IItemList<IAEFluidStack> list = cellInv
+                    .getAvailableItems(AEApi.instance().storage().createFluidList());
             i = list.iterator();
         }
 

@@ -1,17 +1,10 @@
 package com.glodblock.github.common.item;
 
-import appeng.api.storage.data.IAEFluidStack;
-import appeng.api.storage.data.IAEItemStack;
-import appeng.util.item.AEItemStack;
-import com.glodblock.github.FluidCraft;
-import com.glodblock.github.loader.ItemAndBlockHolder;
-import com.glodblock.github.util.NameConst;
-import cpw.mods.fml.common.registry.GameRegistry;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 import java.util.List;
 import java.util.Objects;
+
 import javax.annotation.Nullable;
+
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
@@ -22,6 +15,18 @@ import net.minecraft.util.StatCollector;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
+
+import appeng.api.storage.data.IAEFluidStack;
+import appeng.api.storage.data.IAEItemStack;
+import appeng.util.item.AEItemStack;
+
+import com.glodblock.github.FluidCraft;
+import com.glodblock.github.loader.ItemAndBlockHolder;
+import com.glodblock.github.util.NameConst;
+
+import cpw.mods.fml.common.registry.GameRegistry;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 
 public class ItemFluidPacket extends FCBaseItem {
 
@@ -34,8 +39,8 @@ public class ItemFluidPacket extends FCBaseItem {
         if (stack == null || !stack.hasTagCompound()) {
             return null;
         }
-        FluidStack fluid = FluidStack.loadFluidStackFromNBT(
-                Objects.requireNonNull(stack.getTagCompound()).getCompoundTag("FluidStack"));
+        FluidStack fluid = FluidStack
+                .loadFluidStackFromNBT(Objects.requireNonNull(stack.getTagCompound()).getCompoundTag("FluidStack"));
         return (fluid != null && fluid.amount > 0) ? fluid : null;
     }
 
@@ -46,8 +51,7 @@ public class ItemFluidPacket extends FCBaseItem {
         if (display) {
             return fluid != null ? fluid.getLocalizedName() : super.getItemStackDisplayName(stack);
         }
-        return fluid != null
-                ? String.format("%s, %,d mB", fluid.getLocalizedName(), fluid.amount)
+        return fluid != null ? String.format("%s, %,d mB", fluid.getLocalizedName(), fluid.amount)
                 : super.getItemStackDisplayName(stack);
     }
 
@@ -65,8 +69,7 @@ public class ItemFluidPacket extends FCBaseItem {
         boolean display = isDisplay(stack);
         if (display) return;
         if (fluid != null) {
-            for (String line : StatCollector.translateToLocalFormatted(NameConst.TT_FLUID_PACKET)
-                    .split("\\\\n")) {
+            for (String line : StatCollector.translateToLocalFormatted(NameConst.TT_FLUID_PACKET).split("\\\\n")) {
                 tooltip.add(EnumChatFormatting.GRAY + line);
             }
         } else {

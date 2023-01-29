@@ -1,16 +1,20 @@
 package com.glodblock.github.util;
 
+import java.util.Comparator;
+
+import net.minecraftforge.fluids.Fluid;
+
 import appeng.api.config.SortDir;
 import appeng.api.storage.data.IAEItemStack;
 import appeng.integration.IntegrationRegistry;
 import appeng.integration.IntegrationType;
 import appeng.integration.abstraction.IInvTweaks;
 import appeng.util.Platform;
+
 import com.glodblock.github.common.item.ItemFluidDrop;
-import java.util.Comparator;
-import net.minecraftforge.fluids.Fluid;
 
 public class FluidSorters {
+
     private static SortDir Direction = SortDir.ASCENDING;
     public static final Comparator<IAEItemStack> CONFIG_BASED_SORT_BY_MOD = new Comparator<IAEItemStack>() {
 
@@ -19,8 +23,8 @@ public class FluidSorters {
             final Fluid f1 = ItemFluidDrop.getAeFluidStack(o1).getFluid();
             final Fluid f2 = ItemFluidDrop.getAeFluidStack(o2).getFluid();
             if (getDirection() == SortDir.ASCENDING) {
-                return this.secondarySort(
-                        Util.getFluidModName(f2).compareToIgnoreCase(Util.getFluidModName(f1)), f1, f2);
+                return this
+                        .secondarySort(Util.getFluidModName(f2).compareToIgnoreCase(Util.getFluidModName(f1)), f1, f2);
             }
             return this.secondarySort(Util.getFluidModName(f1).compareToIgnoreCase(Util.getFluidModName(f2)), f2, f1);
         }

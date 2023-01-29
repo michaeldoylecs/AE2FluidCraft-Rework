@@ -1,5 +1,16 @@
 package com.glodblock.github.common.tile;
 
+import java.io.IOException;
+
+import javax.annotation.Nullable;
+
+import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraftforge.common.util.ForgeDirection;
+import net.minecraftforge.fluids.Fluid;
+import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.fluids.FluidTankInfo;
+
 import appeng.api.config.Settings;
 import appeng.api.config.SidelessMode;
 import appeng.api.config.Upgrades;
@@ -15,6 +26,7 @@ import appeng.tile.TileEvent;
 import appeng.tile.events.TileEventType;
 import appeng.tile.inventory.AppEngInternalAEInventory;
 import appeng.tile.misc.TileInterface;
+
 import com.glodblock.github.common.item.ItemFluidPacket;
 import com.glodblock.github.inventory.AEFluidInventory;
 import com.glodblock.github.inventory.IAEFluidTank;
@@ -22,22 +34,16 @@ import com.glodblock.github.inventory.IDualHost;
 import com.glodblock.github.loader.ItemAndBlockHolder;
 import com.glodblock.github.util.DualityFluidInterface;
 import com.glodblock.github.util.Util;
+
 import cpw.mods.fml.common.network.ByteBufUtils;
 import io.netty.buffer.ByteBuf;
-import java.io.IOException;
-import javax.annotation.Nullable;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraftforge.common.util.ForgeDirection;
-import net.minecraftforge.fluids.Fluid;
-import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.FluidTankInfo;
 
 public class TileFluidInterface extends TileInterface implements IDualHost {
 
     private final IConfigManager dualityConfigManager = getInterfaceDuality().getConfigManager();
 
     private final DualityFluidInterface fluidDuality = new DualityFluidInterface(this.getProxy(), this) {
+
         @Override
         public FluidStack drain(ForgeDirection from, int maxDrain, boolean doDrain) {
             SidelessMode mode = (SidelessMode) dualityConfigManager.getSetting(Settings.SIDELESS_MODE);
@@ -201,7 +207,8 @@ public class TileFluidInterface extends TileInterface implements IDualHost {
     public void setConfig(int id, IAEFluidStack fluid) {
         if (id >= 0 && id < 6) {
             config.setInventorySlotContents(
-                    id, ItemFluidPacket.newDisplayStack(fluid == null ? null : fluid.getFluidStack()));
+                    id,
+                    ItemFluidPacket.newDisplayStack(fluid == null ? null : fluid.getFluidStack()));
             fluidDuality.getConfig().setFluidInSlot(id, fluidDuality.getStandardFluid(fluid));
         }
     }

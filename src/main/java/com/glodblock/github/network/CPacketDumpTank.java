@@ -1,12 +1,15 @@
 package com.glodblock.github.network;
 
+import javax.annotation.Nullable;
+
+import net.minecraft.entity.player.EntityPlayerMP;
+
 import com.glodblock.github.client.gui.ITankDump;
+
 import cpw.mods.fml.common.network.simpleimpl.IMessage;
 import cpw.mods.fml.common.network.simpleimpl.IMessageHandler;
 import cpw.mods.fml.common.network.simpleimpl.MessageContext;
 import io.netty.buffer.ByteBuf;
-import javax.annotation.Nullable;
-import net.minecraft.entity.player.EntityPlayerMP;
 
 public class CPacketDumpTank implements IMessage {
 

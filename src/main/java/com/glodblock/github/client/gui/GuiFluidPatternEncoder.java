@@ -1,9 +1,23 @@
 package com.glodblock.github.client.gui;
 
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+
+import net.minecraft.client.gui.FontRenderer;
+import net.minecraft.client.resources.I18n;
+import net.minecraft.entity.player.InventoryPlayer;
+import net.minecraft.inventory.Slot;
+import net.minecraft.item.ItemStack;
+import net.minecraft.util.EnumChatFormatting;
+import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.fluids.FluidStack;
+
 import appeng.api.storage.data.IAEItemStack;
 import appeng.client.gui.AEBaseGui;
 import appeng.client.render.AppEngRenderItem;
 import appeng.core.localization.GuiText;
+
 import com.glodblock.github.FluidCraft;
 import com.glodblock.github.client.gui.container.ContainerFluidPatternEncoder;
 import com.glodblock.github.common.item.ItemFluidPacket;
@@ -14,17 +28,6 @@ import com.glodblock.github.inventory.slot.SlotSingleItem;
 import com.glodblock.github.network.CPacketEncodePattern;
 import com.glodblock.github.util.Ae2ReflectClient;
 import com.glodblock.github.util.NameConst;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-import net.minecraft.client.gui.FontRenderer;
-import net.minecraft.client.resources.I18n;
-import net.minecraft.entity.player.InventoryPlayer;
-import net.minecraft.inventory.Slot;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.EnumChatFormatting;
-import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.fluids.FluidStack;
 
 public class GuiFluidPatternEncoder extends AEBaseGui {
 
@@ -38,6 +41,7 @@ public class GuiFluidPatternEncoder extends AEBaseGui {
         super(new ContainerFluidPatternEncoder(ipl, tile));
         this.cont = (ContainerFluidPatternEncoder) inventorySlots;
         mouseRegions.addRegion(141, 38, 10, 10, new MouseRegionManager.Handler() {
+
             @Override
             public List<String> getTooltip() {
                 return Collections.singletonList(I18n.format(NameConst.TT_ENCODE_PATTERN));
@@ -104,14 +108,15 @@ public class GuiFluidPatternEncoder extends AEBaseGui {
     }
 
     @Override
-    @SuppressWarnings({"unchecked", "rawtypes"})
+    @SuppressWarnings({ "unchecked", "rawtypes" })
     protected void renderToolTip(ItemStack stack, int x, int y) {
         List list;
         if (stack.getItem() instanceof ItemFluidPacket) {
             FluidStack fluid = ItemFluidPacket.getFluidStack(stack);
             if (fluid != null) {
                 list = Arrays.asList(
-                        fluid.getLocalizedName(), String.format(EnumChatFormatting.GRAY + "%,d mB", fluid.amount));
+                        fluid.getLocalizedName(),
+                        String.format(EnumChatFormatting.GRAY + "%,d mB", fluid.amount));
             } else {
                 list = stack.getTooltip(this.mc.thePlayer, this.mc.gameSettings.advancedItemTooltips);
             }

@@ -1,12 +1,12 @@
 package com.glodblock.github.crossmod.waila;
 
+import mcp.mobius.waila.api.IWailaDataProvider;
+import mcp.mobius.waila.api.IWailaRegistrar;
 import appeng.api.parts.IPartHost;
 import appeng.tile.AEBaseTile;
 import appeng.util.Platform;
 import codechicken.nei.guihook.GuiContainerManager;
 import cpw.mods.fml.common.event.FMLInterModComms;
-import mcp.mobius.waila.api.IWailaDataProvider;
-import mcp.mobius.waila.api.IWailaRegistrar;
 
 public class WailaInit {
 

@@ -5,4 +5,5 @@ import appeng.api.networking.energy.IEnergySource;
 import appeng.api.storage.ITerminalHost;
 import appeng.container.interfaces.IInventorySlotAware;
 
-public interface IFluidPortableCell extends ITerminalHost, IInventorySlotAware, IEnergySource, IGuiItemObject {}
+public interface IFluidPortableCell extends ITerminalHost, IInventorySlotAware, IEnergySource, IGuiItemObject {
+}

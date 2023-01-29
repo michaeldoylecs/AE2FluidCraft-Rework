@@ -1,10 +1,12 @@
 package com.glodblock.github.inventory.gui;
 
-import appeng.api.parts.IPart;
-import appeng.api.parts.IPartHost;
 import javax.annotation.Nullable;
+
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.util.ForgeDirection;
+
+import appeng.api.parts.IPart;
+import appeng.api.parts.IPartHost;
 
 public abstract class TileOrPartGuiFactory<T> extends TileGuiFactory<T> {
 

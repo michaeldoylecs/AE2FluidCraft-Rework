@@ -1,5 +1,16 @@
 package com.glodblock.github.client.gui.container.base;
 
+import java.io.IOException;
+
+import javax.annotation.Nonnull;
+
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.entity.player.InventoryPlayer;
+import net.minecraft.inventory.ICrafting;
+import net.minecraft.item.ItemStack;
+import net.minecraft.tileentity.TileEntity;
+
 import appeng.api.config.*;
 import appeng.api.networking.IGridNode;
 import appeng.api.networking.energy.IEnergyGrid;
@@ -20,14 +31,6 @@ import appeng.helpers.WirelessTerminalGuiObject;
 import appeng.util.ConfigManager;
 import appeng.util.IConfigManagerHost;
 import appeng.util.Platform;
-import java.io.IOException;
-import javax.annotation.Nonnull;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.entity.player.InventoryPlayer;
-import net.minecraft.inventory.ICrafting;
-import net.minecraft.item.ItemStack;
-import net.minecraft.tileentity.TileEntity;
 
 public abstract class FCContainerMonitor<T extends IAEStack<T>> extends AEBaseContainer
         implements IConfigManagerHost, IConfigurableObject, IMEMonitorHandlerReceiver<T> {
@@ -51,8 +54,8 @@ public abstract class FCContainerMonitor<T extends IAEStack<T>> extends AEBaseCo
         this(ip, monitorable, true);
     }
 
-    protected FCContainerMonitor(
-            final InventoryPlayer ip, final ITerminalHost monitorable, final boolean bindInventory) {
+    protected FCContainerMonitor(final InventoryPlayer ip, final ITerminalHost monitorable,
+            final boolean bindInventory) {
         super(
                 ip,
                 monitorable instanceof TileEntity ? (TileEntity) monitorable : null,
@@ -83,7 +86,8 @@ public abstract class FCContainerMonitor<T extends IAEStack<T>> extends AEBaseCo
                     for (final Object crafter : this.crafters) {
                         try {
                             NetworkHandler.instance.sendTo(
-                                    new PacketValueConfig(set.name(), sideLocal.name()), (EntityPlayerMP) crafter);
+                                    new PacketValueConfig(set.name(), sideLocal.name()),
+                                    (EntityPlayerMP) crafter);
                         } catch (final IOException e) {
                             AELog.debug(e);
                         }
@@ -93,8 +97,8 @@ public abstract class FCContainerMonitor<T extends IAEStack<T>> extends AEBaseCo
             processItemList();
             this.updatePowerStatus();
             final boolean oldAccessible = this.canAccessViewCells;
-            this.canAccessViewCells =
-                    this.host instanceof WirelessTerminalGuiObject || this.hasAccess(SecurityPermissions.BUILD, false);
+            this.canAccessViewCells = this.host instanceof WirelessTerminalGuiObject
+                    || this.hasAccess(SecurityPermissions.BUILD, false);
             if (this.canAccessViewCells != oldAccessible) {
                 for (int y = 0; y < 5; y++) {
                     if (this.cellView[y] != null) {
@@ -122,8 +126,7 @@ public abstract class FCContainerMonitor<T extends IAEStack<T>> extends AEBaseCo
                 this.setPowered(
                         this.getPowerSource().extractAEPower(1, Actionable.SIMULATE, PowerMultiplier.CONFIG) > 0.8);
             }
-        } catch (final Throwable ignore) {
-        }
+        } catch (final Throwable ignore) {}
     }
 
     @Override

@@ -1,8 +1,17 @@
 package com.glodblock.github.network;
 
+import java.util.Objects;
+
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.inventory.Slot;
+import net.minecraft.item.ItemStack;
+import net.minecraft.tileentity.TileEntity;
+import net.minecraftforge.fluids.FluidStack;
+
 import appeng.api.networking.IGridHost;
 import appeng.container.ContainerOpenContext;
 import appeng.container.slot.SlotFake;
+
 import com.glodblock.github.client.gui.container.ContainerPatternValueAmount;
 import com.glodblock.github.client.gui.container.base.FCContainerEncodeTerminal;
 import com.glodblock.github.common.item.ItemFluidPacket;
@@ -10,16 +19,11 @@ import com.glodblock.github.inventory.InventoryHandler;
 import com.glodblock.github.inventory.gui.GuiType;
 import com.glodblock.github.util.BlockPos;
 import com.glodblock.github.util.Util;
+
 import cpw.mods.fml.common.network.simpleimpl.IMessage;
 import cpw.mods.fml.common.network.simpleimpl.IMessageHandler;
 import cpw.mods.fml.common.network.simpleimpl.MessageContext;
 import io.netty.buffer.ByteBuf;
-import java.util.Objects;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.inventory.Slot;
-import net.minecraft.item.ItemStack;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraftforge.fluids.FluidStack;
 
 public class CPacketPatternValueSet implements IMessage {
 
@@ -76,8 +80,7 @@ public class CPacketPatternValueSet implements IMessage {
                                 if (Util.isFluidPacket(stack)) {
                                     FluidStack fluidStack = ItemFluidPacket.getFluidStack(stack);
                                     if (fluidStack != null) {
-                                        fluidStack = ItemFluidPacket.getFluidStack(stack)
-                                                .copy();
+                                        fluidStack = ItemFluidPacket.getFluidStack(stack).copy();
                                         fluidStack.amount = message.amount;
                                     }
                                     slot.putStack(ItemFluidPacket.newStack(fluidStack));

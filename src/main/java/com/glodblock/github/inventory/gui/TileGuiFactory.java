@@ -1,12 +1,14 @@
 package com.glodblock.github.inventory.gui;
 
-import appeng.container.AEBaseContainer;
-import appeng.container.ContainerOpenContext;
 import javax.annotation.Nullable;
+
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
+
+import appeng.container.AEBaseContainer;
+import appeng.container.ContainerOpenContext;
 
 public abstract class TileGuiFactory<T> implements IGuiFactory {
 

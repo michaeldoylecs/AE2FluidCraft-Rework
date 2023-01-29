@@ -2,6 +2,7 @@ package com.glodblock.github.nei.recipes;
 
 import com.glodblock.github.nei.recipes.extractor.*;
 import com.glodblock.github.util.ModAndClassUtil;
+
 import forestry.factory.recipes.nei.*;
 import gregapi.recipes.Recipe;
 import gregtech.api.util.GTPP_Recipe;
@@ -20,8 +21,9 @@ public class DefaultExtractorLoader implements Runnable {
             for (GT_Recipe.GT_Recipe_Map tMap : GT_Recipe.GT_Recipe_Map.sMappings) {
                 FluidRecipe.addRecipeMap(
                         tMap.mNEIName,
-                        new GregTech5RecipeExtractor(tMap.mNEIName.equals("gt.recipe.scanner")
-                                || tMap.mNEIName.equals("gt.recipe.fakeAssemblylineProcess")));
+                        new GregTech5RecipeExtractor(
+                                tMap.mNEIName.equals("gt.recipe.scanner")
+                                        || tMap.mNEIName.equals("gt.recipe.fakeAssemblylineProcess")));
             }
         }
 

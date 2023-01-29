@@ -1,10 +1,11 @@
 package com.glodblock.github.coremod.transform;
 
-import com.glodblock.github.coremod.FCClassTransformer;
 import org.objectweb.asm.ClassVisitor;
 import org.objectweb.asm.Label;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
+
+import com.glodblock.github.coremod.FCClassTransformer;
 
 public class CraftingTreeNodeTransformer extends FCClassTransformer.ClassMapper {
 
@@ -45,8 +46,7 @@ public class CraftingTreeNodeTransformer extends FCClassTransformer.ClassMapper 
 
         @Override
         public void visitFieldInsn(int opcode, String owner, String name, String desc) {
-            if (opcode == Opcodes.GETFIELD
-                    && owner.equals("appeng/crafting/CraftingTreeNode")
+            if (opcode == Opcodes.GETFIELD && owner.equals("appeng/crafting/CraftingTreeNode")
                     && name.equals("bytes")) {
                 writingBytes = true;
             }
@@ -61,8 +61,7 @@ public class CraftingTreeNodeTransformer extends FCClassTransformer.ClassMapper 
 
         @Override
         public void visitMethodInsn(int opcode, String owner, String name, String desc, boolean itf) {
-            if (writingBytes
-                    && opcode == Opcodes.INVOKEINTERFACE
+            if (writingBytes && opcode == Opcodes.INVOKEINTERFACE
                     && owner.equals("appeng/api/storage/data/IAEItemStack")
                     && name.equals("getStackSize")) {
                 writingBytes = false;

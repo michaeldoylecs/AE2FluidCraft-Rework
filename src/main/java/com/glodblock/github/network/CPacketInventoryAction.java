@@ -1,27 +1,32 @@
 package com.glodblock.github.network;
 
+import java.io.IOException;
+import java.util.Objects;
+
+import javax.annotation.Nullable;
+
+import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.tileentity.TileEntity;
+import net.minecraftforge.fluids.FluidStack;
+
 import appeng.api.storage.data.IAEItemStack;
 import appeng.container.AEBaseContainer;
 import appeng.container.ContainerOpenContext;
 import appeng.container.implementations.ContainerCraftAmount;
 import appeng.helpers.InventoryAction;
 import appeng.util.item.AEItemStack;
+
 import com.glodblock.github.FluidCraft;
 import com.glodblock.github.client.gui.container.ContainerPatternValueAmount;
 import com.glodblock.github.common.item.ItemFluidPacket;
 import com.glodblock.github.inventory.InventoryHandler;
 import com.glodblock.github.inventory.gui.GuiType;
 import com.glodblock.github.util.BlockPos;
+
 import cpw.mods.fml.common.network.simpleimpl.IMessage;
 import cpw.mods.fml.common.network.simpleimpl.IMessageHandler;
 import cpw.mods.fml.common.network.simpleimpl.MessageContext;
 import io.netty.buffer.ByteBuf;
-import java.io.IOException;
-import java.util.Objects;
-import javax.annotation.Nullable;
-import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraftforge.fluids.FluidStack;
 
 public class CPacketInventoryAction implements IMessage {
 
@@ -95,14 +100,12 @@ public class CPacketInventoryAction implements IMessage {
                                 sender,
                                 te.getWorldObj(),
                                 new BlockPos(te),
-                                Objects.requireNonNull(
-                                        baseContainer.getOpenContext().getSide()),
+                                Objects.requireNonNull(baseContainer.getOpenContext().getSide()),
                                 GuiType.FLUID_CRAFTING_AMOUNT);
                         if (sender.openContainer instanceof ContainerCraftAmount) {
                             final ContainerCraftAmount cca = (ContainerCraftAmount) sender.openContainer;
                             if (baseContainer.getTargetStack() != null) {
-                                cca.getCraftingItem()
-                                        .putStack(baseContainer.getTargetStack().getItemStack());
+                                cca.getCraftingItem().putStack(baseContainer.getTargetStack().getItemStack());
                                 cca.setItemToCraft(baseContainer.getTargetStack());
                             }
                             cca.detectAndSendChanges();
@@ -116,8 +119,7 @@ public class CPacketInventoryAction implements IMessage {
                                 sender,
                                 te.getWorldObj(),
                                 new BlockPos(te),
-                                Objects.requireNonNull(
-                                        baseContainer.getOpenContext().getSide()),
+                                Objects.requireNonNull(baseContainer.getOpenContext().getSide()),
                                 GuiType.PATTERN_VALUE_SET);
                         int amt = (int) message.stack.getStackSize();
                         if (message.stack.getItem() instanceof ItemFluidPacket) {
@@ -129,8 +131,7 @@ public class CPacketInventoryAction implements IMessage {
                             final ContainerPatternValueAmount cpv = (ContainerPatternValueAmount) sender.openContainer;
                             if (baseContainer.getTargetStack() != null) {
                                 cpv.setValueIndex(message.slot);
-                                cpv.getPatternValue()
-                                        .putStack(baseContainer.getTargetStack().getItemStack());
+                                cpv.getPatternValue().putStack(baseContainer.getTargetStack().getItemStack());
                             }
                             cpv.detectAndSendChanges();
                         }

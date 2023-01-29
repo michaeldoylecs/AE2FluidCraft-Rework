@@ -1,5 +1,18 @@
 package com.glodblock.github.util;
 
+import java.io.IOException;
+import java.util.Map;
+
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.inventory.IInventory;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraftforge.common.util.ForgeDirection;
+import net.minecraftforge.fluids.*;
+
+import org.apache.commons.lang3.tuple.MutablePair;
+
 import appeng.api.AEApi;
 import appeng.api.config.SecurityPermissions;
 import appeng.api.networking.IGrid;
@@ -10,24 +23,17 @@ import appeng.api.parts.IPart;
 import appeng.api.storage.data.IAEFluidStack;
 import appeng.tile.networking.TileCableBus;
 import appeng.util.item.AEFluidStack;
+
 import com.glodblock.github.common.item.ItemFluidDrop;
 import com.glodblock.github.common.item.ItemFluidPacket;
 import com.glodblock.github.inventory.IAEFluidTank;
+
 import cpw.mods.fml.common.ModContainer;
 import cpw.mods.fml.common.registry.GameData;
 import io.netty.buffer.ByteBuf;
-import java.io.IOException;
-import java.util.Map;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.inventory.IInventory;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraftforge.common.util.ForgeDirection;
-import net.minecraftforge.fluids.*;
-import org.apache.commons.lang3.tuple.MutablePair;
 
 public final class Util {
+
     public static int findItemInPlayerInvSlot(EntityPlayer player, ItemStack itemStack) {
         for (int i = 0; i < player.inventory.mainInventory.length; i++) {
             if (player.inventory.mainInventory[i] != null && player.inventory.mainInventory[i] == itemStack) return i;
@@ -43,8 +49,8 @@ public final class Util {
         return hasPermission(player, permission, host, ForgeDirection.UNKNOWN);
     }
 
-    public static boolean hasPermission(
-            EntityPlayer player, SecurityPermissions permission, IGridHost host, ForgeDirection side) {
+    public static boolean hasPermission(EntityPlayer player, SecurityPermissions permission, IGridHost host,
+            ForgeDirection side) {
         return host == null || hasPermission(player, permission, host.getGridNode(side));
     }
 
@@ -56,10 +62,9 @@ public final class Util {
         return part == null || hasPermission(player, permission, part.getGridNode());
     }
 
-    public static boolean hasPermission(
-            EntityPlayer player, SecurityPermissions permission, ISecurityGrid securityGrid) {
-        return player == null
-                || permission == null
+    public static boolean hasPermission(EntityPlayer player, SecurityPermissions permission,
+            ISecurityGrid securityGrid) {
+        return player == null || permission == null
                 || securityGrid == null
                 || securityGrid.hasPermission(player, permission);
     }
@@ -214,6 +219,7 @@ public final class Util {
     }
 
     public static class FluidUtil {
+
         public static IAEFluidStack createAEFluidStack(Fluid fluid) {
             return createAEFluidStack(new FluidStack(fluid, FluidContainerRegistry.BUCKET_VOLUME));
         }
@@ -227,8 +233,7 @@ public final class Util {
         }
 
         public static IAEFluidStack createAEFluidStack(int fluidId, long amount) {
-            return createAEFluidStack(new FluidStack(FluidRegistry.getFluid(fluidId), 1))
-                    .setStackSize(amount);
+            return createAEFluidStack(new FluidStack(FluidRegistry.getFluid(fluidId), 1)).setStackSize(amount);
         }
 
         public static boolean isEmpty(ItemStack itemStack) {

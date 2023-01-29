@@ -1,6 +1,12 @@
 package com.glodblock.github.common.block;
 
+import net.minecraft.block.material.Material;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.world.World;
+import net.minecraftforge.common.util.ForgeDirection;
+
 import appeng.block.AEBaseItemBlock;
+
 import com.glodblock.github.common.tabs.FluidCraftingTabs;
 import com.glodblock.github.common.tile.TileOCPatternEditor;
 import com.glodblock.github.inventory.InventoryHandler;
@@ -9,10 +15,6 @@ import com.glodblock.github.util.BlockPos;
 import com.glodblock.github.util.ModAndClassUtil;
 import com.glodblock.github.util.NameConst;
 import cpw.mods.fml.common.registry.GameRegistry;
-import net.minecraft.block.material.Material;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.world.World;
-import net.minecraftforge.common.util.ForgeDirection;
 
 public class BlockOCPatternEditor extends FCBaseBlock {
 
@@ -24,8 +26,8 @@ public class BlockOCPatternEditor extends FCBaseBlock {
     }
 
     @Override
-    public boolean onActivated(
-            World world, int x, int y, int z, EntityPlayer player, int facing, float hitX, float hitY, float hitZ) {
+    public boolean onActivated(World world, int x, int y, int z, EntityPlayer player, int facing, float hitX,
+            float hitY, float hitZ) {
         if (player.isSneaking()) {
             return false;
         }

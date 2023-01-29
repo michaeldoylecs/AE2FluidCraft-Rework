@@ -1,7 +1,8 @@
 package com.glodblock.github.coremod.transform;
 
-import com.glodblock.github.coremod.FCClassTransformer;
 import org.objectweb.asm.*;
+
+import com.glodblock.github.coremod.FCClassTransformer;
 
 public class ExternalStorageRegistryTransformer extends FCClassTransformer.ClassMapper {
 

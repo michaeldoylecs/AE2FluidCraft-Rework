@@ -1,15 +1,17 @@
 package com.glodblock.github.client.gui.container;
 
+import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.entity.player.InventoryPlayer;
+import net.minecraft.inventory.IInventory;
+import net.minecraft.inventory.Slot;
+
 import appeng.api.storage.ITerminalHost;
 import appeng.container.slot.IOptionalSlotHost;
 import appeng.container.slot.OptionalSlotFake;
 import appeng.helpers.InventoryAction;
 import appeng.util.Platform;
+
 import com.glodblock.github.client.gui.container.base.FCContainerEncodeTerminal;
-import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.entity.player.InventoryPlayer;
-import net.minecraft.inventory.IInventory;
-import net.minecraft.inventory.Slot;
 
 public class ContainerFluidPatternTerminalEx extends FCContainerEncodeTerminal {
 
@@ -27,8 +29,8 @@ public class ContainerFluidPatternTerminalEx extends FCContainerEncodeTerminal {
             for (int y = 0; y < CRAFTING_GRID_HEIGHT; y++) {
                 for (int x = 0; x < CRAFTING_GRID_WIDTH; x++) {
                     this.addSlotToContainer(
-                            this.craftingSlots[x + y * CRAFTING_GRID_WIDTH + page * CRAFTING_GRID_SLOTS] =
-                                    new ProcessingSlotFake(
+                            this.craftingSlots[x + y * CRAFTING_GRID_WIDTH
+                                    + page * CRAFTING_GRID_SLOTS] = new ProcessingSlotFake(
                                             crafting,
                                             this,
                                             x + y * CRAFTING_GRID_WIDTH + page * CRAFTING_GRID_SLOTS,
@@ -42,8 +44,8 @@ public class ContainerFluidPatternTerminalEx extends FCContainerEncodeTerminal {
             for (int x = 0; x < CRAFTING_GRID_WIDTH; x++) {
                 for (int y = 0; y < CRAFTING_GRID_HEIGHT; y++) {
                     this.addSlotToContainer(
-                            this.outputSlots[x * CRAFTING_GRID_HEIGHT + y + page * CRAFTING_GRID_SLOTS] =
-                                    new ProcessingSlotFake(
+                            this.outputSlots[x * CRAFTING_GRID_HEIGHT + y
+                                    + page * CRAFTING_GRID_SLOTS] = new ProcessingSlotFake(
                                             output,
                                             this,
                                             x * CRAFTING_GRID_HEIGHT + y + page * CRAFTING_GRID_SLOTS,
@@ -135,15 +137,8 @@ public class ContainerFluidPatternTerminalEx extends FCContainerEncodeTerminal {
         private static final int POSITION_SHIFT = 9000;
         private boolean hidden = false;
 
-        public ProcessingSlotFake(
-                IInventory inv,
-                IOptionalSlotHost containerBus,
-                int idx,
-                int x,
-                int y,
-                int offX,
-                int offY,
-                int groupNum) {
+        public ProcessingSlotFake(IInventory inv, IOptionalSlotHost containerBus, int idx, int x, int y, int offX,
+                int offY, int groupNum) {
             super(inv, containerBus, idx, x, y, offX, offY, groupNum);
             this.setRenderDisabled(false);
         }

@@ -1,22 +1,24 @@
 /*
- * This file is part of Applied Energistics 2.
- * Copyright (c) 2013 - 2014, AlgorithmX2, All rights reserved.
- *
- * Applied Energistics 2 is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * Applied Energistics 2 is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
- *
- * You should have received a copy of the GNU Lesser General Public License
- * along with Applied Energistics 2.  If not, see <http://www.gnu.org/licenses/lgpl>.
+ * This file is part of Applied Energistics 2. Copyright (c) 2013 - 2014, AlgorithmX2, All rights reserved. Applied
+ * Energistics 2 is free software: you can redistribute it and/or modify it under the terms of the GNU Lesser General
+ * Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any
+ * later version. Applied Energistics 2 is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+ * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU Lesser General
+ * Public License for more details. You should have received a copy of the GNU Lesser General Public License along with
+ * Applied Energistics 2. If not, see <http://www.gnu.org/licenses/lgpl>.
  */
 
 package com.glodblock.github.client.me;
+
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
+import java.util.ArrayList;
+import java.util.regex.Pattern;
+
+import javax.annotation.Nonnull;
+
+import net.minecraft.item.ItemStack;
+import net.minecraftforge.fluids.Fluid;
 
 import appeng.api.AEApi;
 import appeng.api.config.*;
@@ -28,17 +30,11 @@ import appeng.client.me.ItemRepo;
 import appeng.core.AEConfig;
 import appeng.items.storage.ItemViewCell;
 import appeng.util.prioitylist.IPartitionList;
+
 import com.glodblock.github.common.item.ItemFluidDrop;
 import com.glodblock.github.util.FluidSorters;
 import com.glodblock.github.util.Util;
 import cpw.mods.fml.relauncher.ReflectionHelper;
-import java.lang.reflect.Field;
-import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.regex.Pattern;
-import javax.annotation.Nonnull;
-import net.minecraft.item.ItemStack;
-import net.minecraftforge.fluids.Fluid;
 
 public class FluidRepo extends ItemRepo {
 
@@ -186,8 +182,8 @@ public class FluidRepo extends ItemRepo {
     private void updateNEI(final String filter) {
         try {
             if (this.NEIWord == null || !this.NEIWord.equals(filter)) {
-                final Class c =
-                        ReflectionHelper.getClass(this.getClass().getClassLoader(), "codechicken.nei.LayoutManager");
+                final Class c = ReflectionHelper
+                        .getClass(this.getClass().getClassLoader(), "codechicken.nei.LayoutManager");
                 final Field fldSearchField = c.getField("searchField");
                 final Object searchField = fldSearchField.get(c);
 

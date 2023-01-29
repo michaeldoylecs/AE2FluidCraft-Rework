@@ -1,18 +1,20 @@
 package com.glodblock.github.client.gui.container;
 
-import appeng.api.storage.ITerminalHost;
-import appeng.container.slot.OptionalSlotFake;
-import appeng.container.slot.SlotFakeCraftingMatrix;
-import appeng.container.slot.SlotPatternOutputs;
-import appeng.container.slot.SlotPatternTerm;
-import appeng.util.Platform;
-import com.glodblock.github.client.gui.container.base.FCContainerEncodeTerminal;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.InventoryCrafting;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.CraftingManager;
+
+import appeng.api.storage.ITerminalHost;
+import appeng.container.slot.OptionalSlotFake;
+import appeng.container.slot.SlotFakeCraftingMatrix;
+import appeng.container.slot.SlotPatternOutputs;
+import appeng.container.slot.SlotPatternTerm;
+import appeng.util.Platform;
+
+import com.glodblock.github.client.gui.container.base.FCContainerEncodeTerminal;
 
 public class ContainerFluidPatternTerminal extends FCContainerEncodeTerminal {
 
@@ -25,8 +27,11 @@ public class ContainerFluidPatternTerminal extends FCContainerEncodeTerminal {
         for (int y = 0; y < 3; y++) {
             for (int x = 0; x < 3; x++) {
                 this.addSlotToContainer(
-                        this.craftingSlots[x + y * 3] =
-                                new SlotFakeCraftingMatrix(this.crafting, x + y * 3, 18 + x * 18, -76 + y * 18));
+                        this.craftingSlots[x + y * 3] = new SlotFakeCraftingMatrix(
+                                this.crafting,
+                                x + y * 3,
+                                18 + x * 18,
+                                -76 + y * 18));
             }
         }
 
@@ -101,7 +106,7 @@ public class ContainerFluidPatternTerminal extends FCContainerEncodeTerminal {
         if (this.isCraftingMode()) {
             final ItemStack out = this.getAndUpdateOutput();
             if (out != null && out.stackSize > 0) {
-                return new ItemStack[] {out};
+                return new ItemStack[] { out };
             }
         }
         return super.getOutputs();

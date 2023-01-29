@@ -1,15 +1,18 @@
 package com.glodblock.github.client.render;
 
-import com.glodblock.github.FluidCraft;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.model.AdvancedModelLoader;
 import net.minecraftforge.client.model.IModelCustom;
+
 import org.lwjgl.opengl.GL11;
 
+import com.glodblock.github.FluidCraft;
+
 public class RenderBlockWalrus extends TileEntitySpecialRenderer {
+
     IModelCustom modelWalrus = AdvancedModelLoader.loadModel(FluidCraft.resource("models/walrus.obj"));
     ResourceLocation textureWalrus = FluidCraft.resource("textures/blocks/walrus.png");
 

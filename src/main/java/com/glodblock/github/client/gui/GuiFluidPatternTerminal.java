@@ -1,5 +1,11 @@
 package com.glodblock.github.client.gui;
 
+import net.minecraft.entity.player.InventoryPlayer;
+import net.minecraft.init.Blocks;
+import net.minecraft.inventory.Slot;
+import net.minecraft.item.ItemStack;
+import net.minecraft.util.StatCollector;
+
 import appeng.api.config.ActionItems;
 import appeng.api.config.ItemSubstitution;
 import appeng.api.config.PatternBeSubstitution;
@@ -11,15 +17,11 @@ import appeng.container.slot.OptionalSlotFake;
 import appeng.container.slot.SlotFakeCraftingMatrix;
 import appeng.container.slot.SlotPatternTerm;
 import appeng.core.localization.GuiText;
+
 import com.glodblock.github.client.gui.base.FCGuiEncodeTerminal;
 import com.glodblock.github.client.gui.container.ContainerFluidPatternTerminal;
 import com.glodblock.github.util.ModAndClassUtil;
 import com.glodblock.github.util.NameConst;
-import net.minecraft.entity.player.InventoryPlayer;
-import net.minecraft.init.Blocks;
-import net.minecraft.inventory.Slot;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.StatCollector;
 
 public class GuiFluidPatternTerminal extends FCGuiEncodeTerminal {
 
@@ -48,29 +50,44 @@ public class GuiFluidPatternTerminal extends FCGuiEncodeTerminal {
         this.buttonList.add(this.tabProcessButton);
 
         this.substitutionsEnabledBtn = new GuiImgButton(
-                this.guiLeft + 84, this.guiTop + this.ySize - 163, Settings.ACTIONS, ItemSubstitution.ENABLED);
+                this.guiLeft + 84,
+                this.guiTop + this.ySize - 163,
+                Settings.ACTIONS,
+                ItemSubstitution.ENABLED);
         this.substitutionsEnabledBtn.setHalfSize(true);
         this.buttonList.add(this.substitutionsEnabledBtn);
 
         this.substitutionsDisabledBtn = new GuiImgButton(
-                this.guiLeft + 84, this.guiTop + this.ySize - 163, Settings.ACTIONS, ItemSubstitution.DISABLED);
+                this.guiLeft + 84,
+                this.guiTop + this.ySize - 163,
+                Settings.ACTIONS,
+                ItemSubstitution.DISABLED);
         this.substitutionsDisabledBtn.setHalfSize(true);
         this.buttonList.add(this.substitutionsDisabledBtn);
 
         this.clearBtn = new GuiImgButton(
-                this.guiLeft + 74, this.guiTop + this.ySize - 163, Settings.ACTIONS, ActionItems.CLOSE);
+                this.guiLeft + 74,
+                this.guiTop + this.ySize - 163,
+                Settings.ACTIONS,
+                ActionItems.CLOSE);
         this.clearBtn.setHalfSize(true);
         this.buttonList.add(this.clearBtn);
 
         this.encodeBtn = new GuiImgButton(
-                this.guiLeft + 147, this.guiTop + this.ySize - 142, Settings.ACTIONS, ActionItems.ENCODE);
+                this.guiLeft + 147,
+                this.guiTop + this.ySize - 142,
+                Settings.ACTIONS,
+                ActionItems.ENCODE);
         this.buttonList.add(this.encodeBtn);
 
         int combineLeft = 74;
         int combineTop = 153;
         if (ModAndClassUtil.isDoubleButton) {
             this.doubleBtn = new GuiImgButton(
-                    this.guiLeft + 74, this.guiTop + this.ySize - 153, Settings.ACTIONS, ActionItems.DOUBLE);
+                    this.guiLeft + 74,
+                    this.guiTop + this.ySize - 153,
+                    Settings.ACTIONS,
+                    ActionItems.DOUBLE);
             this.doubleBtn.setHalfSize(true);
             this.buttonList.add(this.doubleBtn);
             combineLeft = 84;
@@ -79,7 +96,10 @@ public class GuiFluidPatternTerminal extends FCGuiEncodeTerminal {
             combineLeft = 74;
             combineTop -= 11;
             this.beSubstitutionsEnabledBtn = new GuiImgButton(
-                    this.guiLeft + 84, this.guiTop + this.ySize - 153, Settings.ACTIONS, PatternBeSubstitution.ENABLED);
+                    this.guiLeft + 84,
+                    this.guiTop + this.ySize - 153,
+                    Settings.ACTIONS,
+                    PatternBeSubstitution.ENABLED);
             this.beSubstitutionsEnabledBtn.setHalfSize(true);
             this.buttonList.add(this.beSubstitutionsEnabledBtn);
 
@@ -92,12 +112,18 @@ public class GuiFluidPatternTerminal extends FCGuiEncodeTerminal {
             this.buttonList.add(this.beSubstitutionsDisabledBtn);
         }
         this.combineEnableBtn = new GuiFCImgButton(
-                this.guiLeft + combineLeft, this.guiTop + this.ySize - combineTop, "FORCE_COMBINE", "DO_COMBINE");
+                this.guiLeft + combineLeft,
+                this.guiTop + this.ySize - combineTop,
+                "FORCE_COMBINE",
+                "DO_COMBINE");
         this.combineEnableBtn.setHalfSize(true);
         this.buttonList.add(this.combineEnableBtn);
 
         this.combineDisableBtn = new GuiFCImgButton(
-                this.guiLeft + combineLeft, this.guiTop + this.ySize - combineTop, "NOT_COMBINE", "DONT_COMBINE");
+                this.guiLeft + combineLeft,
+                this.guiTop + this.ySize - combineTop,
+                "NOT_COMBINE",
+                "DONT_COMBINE");
         this.combineDisableBtn.setHalfSize(true);
         this.buttonList.add(this.combineDisableBtn);
     }
@@ -116,8 +142,7 @@ public class GuiFluidPatternTerminal extends FCGuiEncodeTerminal {
     protected void handleMouseClick(final Slot slot, final int slotIdx, final int ctrlDown, final int mouseButton) {
         if (mouseButton == 3) {
             if (this.container.isCraftingMode()
-                    && (slot instanceof OptionalSlotFake
-                            || slot instanceof SlotFakeCraftingMatrix
+                    && (slot instanceof OptionalSlotFake || slot instanceof SlotFakeCraftingMatrix
                             || slot instanceof SlotPatternTerm)) {
                 return;
             }

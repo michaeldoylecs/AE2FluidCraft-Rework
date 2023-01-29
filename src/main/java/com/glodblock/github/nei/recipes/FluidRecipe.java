@@ -1,17 +1,20 @@
 package com.glodblock.github.nei.recipes;
 
-import codechicken.nei.PositionedStack;
-import codechicken.nei.recipe.IRecipeHandler;
-import codechicken.nei.recipe.TemplateRecipeHandler;
-import com.glodblock.github.nei.object.IRecipeExtractor;
-import com.glodblock.github.nei.object.IRecipeExtractorLegacy;
-import com.glodblock.github.nei.object.OrderStack;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
+
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fluids.FluidStack;
+
+import codechicken.nei.PositionedStack;
+import codechicken.nei.recipe.IRecipeHandler;
+import codechicken.nei.recipe.TemplateRecipeHandler;
+
+import com.glodblock.github.nei.object.IRecipeExtractor;
+import com.glodblock.github.nei.object.IRecipeExtractorLegacy;
+import com.glodblock.github.nei.object.OrderStack;
 
 public final class FluidRecipe {
 

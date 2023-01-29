@@ -1,5 +1,9 @@
 package com.glodblock.github.common.tile;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
 import appeng.api.AEApi;
 import appeng.api.config.Actionable;
 import appeng.api.networking.GridFlags;
@@ -20,10 +24,8 @@ import appeng.me.GridAccessException;
 import appeng.me.cache.CraftingGridCache;
 import appeng.me.storage.MEInventoryHandler;
 import appeng.tile.grid.AENetworkTile;
+
 import com.glodblock.github.common.item.ItemFluidDrop;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
 
 public class TileFluidDiscretizer extends AENetworkTile implements IPriorityHost, ICellContainer {
 
@@ -87,10 +89,7 @@ public class TileFluidDiscretizer extends AENetworkTile implements IPriorityHost
 
     private IMEMonitor<IAEFluidStack> getFluidGrid() {
         try {
-            return getProxy()
-                    .getGrid()
-                    .<IStorageGrid>getCache(IStorageGrid.class)
-                    .getFluidInventory();
+            return getProxy().getGrid().<IStorageGrid>getCache(IStorageGrid.class).getFluidInventory();
         } catch (GridAccessException e) {
             return null;
         }
@@ -211,12 +210,12 @@ public class TileFluidDiscretizer extends AENetworkTile implements IPriorityHost
         @Override
         public boolean isValid(Object verificationToken) {
             IMEMonitor<IAEFluidStack> fluidGrid = getFluidGrid();
-            return fluidGrid != null && fluidGrid == verificationToken /*&& !conflict*/;
+            return fluidGrid != null && fluidGrid == verificationToken /* && !conflict */;
         }
 
         @Override
-        public void postChange(
-                IBaseMonitor<IAEFluidStack> monitor, Iterable<IAEFluidStack> change, BaseActionSource actionSource) {
+        public void postChange(IBaseMonitor<IAEFluidStack> monitor, Iterable<IAEFluidStack> change,
+                BaseActionSource actionSource) {
             itemCache = null;
             try {
                 List<IAEItemStack> mappedChanges = new ArrayList<>();
@@ -226,9 +225,7 @@ public class TileFluidDiscretizer extends AENetworkTile implements IPriorityHost
                         mappedChanges.add(itemStack);
                     }
                 }
-                getProxy()
-                        .getGrid()
-                        .<IStorageGrid>getCache(IStorageGrid.class)
+                getProxy().getGrid().<IStorageGrid>getCache(IStorageGrid.class)
                         .postAlterationOfStoredItems(getChannel(), mappedChanges, ownActionSource);
             } catch (GridAccessException e) {
                 // NO-OP

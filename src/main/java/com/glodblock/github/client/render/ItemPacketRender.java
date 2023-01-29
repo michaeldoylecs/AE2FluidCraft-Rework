@@ -1,10 +1,5 @@
 package com.glodblock.github.client.render;
 
-import com.glodblock.github.common.item.ItemFluidPacket;
-import com.glodblock.github.loader.ItemAndBlockHolder;
-import com.glodblock.github.util.RenderUtil;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.client.renderer.ItemRenderer;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.item.ItemStack;
@@ -13,7 +8,15 @@ import net.minecraftforge.client.IItemRenderer;
 import net.minecraftforge.client.MinecraftForgeClient;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
+
 import org.lwjgl.opengl.GL11;
+
+import com.glodblock.github.common.item.ItemFluidPacket;
+import com.glodblock.github.loader.ItemAndBlockHolder;
+import com.glodblock.github.util.RenderUtil;
+
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 
 @SideOnly(Side.CLIENT)
 public class ItemPacketRender implements IItemRenderer {
@@ -45,9 +48,7 @@ public class ItemPacketRender implements IItemRenderer {
         if (fluid != null) {
             RGB = fluid.getFluid().getColor(fluid);
         }
-        IIcon icon = fluid == null
-                ? FluidRegistry.WATER.getStillIcon()
-                : fluid.getFluid().getStillIcon();
+        IIcon icon = fluid == null ? FluidRegistry.WATER.getStillIcon() : fluid.getFluid().getStillIcon();
 
         if (RGB != 0xFFFFFF) {
             GL11.glColor3f((RGB >> 16 & 0xFF) / 255.0F, (RGB >> 8 & 0xFF) / 255.0F, (RGB & 0xFF) / 255.0F);

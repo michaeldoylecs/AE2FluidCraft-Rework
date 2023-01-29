@@ -1,5 +1,12 @@
 package com.glodblock.github.common.tile;
 
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraftforge.common.util.ForgeDirection;
+import net.minecraftforge.fluids.Fluid;
+import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.fluids.FluidTankInfo;
+import net.minecraftforge.fluids.IFluidHandler;
+
 import appeng.api.config.Actionable;
 import appeng.api.config.PowerMultiplier;
 import appeng.api.implementations.IPowerChannelState;
@@ -15,16 +22,11 @@ import appeng.tile.TileEvent;
 import appeng.tile.events.TileEventType;
 import appeng.tile.grid.AENetworkTile;
 import appeng.util.item.AEFluidStack;
+
 import com.glodblock.github.inventory.AEFluidInventory;
 import com.glodblock.github.inventory.IAEFluidInventory;
 import com.glodblock.github.inventory.IAEFluidTank;
 import io.netty.buffer.ByteBuf;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraftforge.common.util.ForgeDirection;
-import net.minecraftforge.fluids.Fluid;
-import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.FluidTankInfo;
-import net.minecraftforge.fluids.IFluidHandler;
 
 public class TileFluidBuffer extends AENetworkTile implements IAEFluidInventory, IFluidHandler, IPowerChannelState {
 
@@ -44,10 +46,7 @@ public class TileFluidBuffer extends AENetworkTile implements IAEFluidInventory,
             return false;
         }
         try {
-            IAEFluidStack ias = this.getProxy()
-                    .getStorage()
-                    .getFluidInventory()
-                    .getStorageList()
+            IAEFluidStack ias = this.getProxy().getStorage().getFluidInventory().getStorageList()
                     .findPrecise(AEFluidStack.create(fs));
             this.invFluids.setFluidInSlot(0, ias);
             if (ias != null) return true;
@@ -62,13 +61,10 @@ public class TileFluidBuffer extends AENetworkTile implements IAEFluidInventory,
         IAEFluidStack ifs = this.getAEFluidStack();
         if (ifs != null && ifs.getFluid() == fluidStack.getFluid()) {
             try {
-                IAEFluidStack notInserted = this.getProxy()
-                        .getStorage()
-                        .getFluidInventory()
-                        .injectItems(
-                                AEFluidStack.create(fluidStack),
-                                b ? Actionable.MODULATE : Actionable.SIMULATE,
-                                this.source);
+                IAEFluidStack notInserted = this.getProxy().getStorage().getFluidInventory().injectItems(
+                        AEFluidStack.create(fluidStack),
+                        b ? Actionable.MODULATE : Actionable.SIMULATE,
+                        this.source);
                 if (notInserted != null) return fluidStack.amount -= notInserted.getStackSize();
                 return fluidStack.amount;
             } catch (final GridAccessException e) {
@@ -92,8 +88,8 @@ public class TileFluidBuffer extends AENetworkTile implements IAEFluidInventory,
         if (fs == null || fs.amount <= 0) return null;
         try {
             IAEFluidStack ias = AEFluidStack.create(fs);
-            IAEFluidStack extracted =
-                    this.getProxy().getStorage().getFluidInventory().extractItems(ias, actionable, this.source);
+            IAEFluidStack extracted = this.getProxy().getStorage().getFluidInventory()
+                    .extractItems(ias, actionable, this.source);
             if (extracted == null) return null;
             return extracted.getFluidStack();
         } catch (final GridAccessException e) {
@@ -115,10 +111,7 @@ public class TileFluidBuffer extends AENetworkTile implements IAEFluidInventory,
 
     public IAEFluidStack getAEStoreFluidStack() {
         try {
-            return this.getProxy()
-                    .getStorage()
-                    .getFluidInventory()
-                    .getStorageList()
+            return this.getProxy().getStorage().getFluidInventory().getStorageList()
                     .findPrecise(this.getAEFluidStack());
         } catch (final GridAccessException e) {
             // :P
@@ -205,8 +198,7 @@ public class TileFluidBuffer extends AENetworkTile implements IAEFluidInventory,
             newState = this.getProxy().isActive()
                     && this.getProxy().getEnergy().extractAEPower(1, Actionable.SIMULATE, PowerMultiplier.CONFIG)
                             > 0.0001;
-        } catch (final GridAccessException ignored) {
-        }
+        } catch (final GridAccessException ignored) {}
         if (newState != this.isPowered) {
             this.isPowered = newState;
             this.markForUpdate();

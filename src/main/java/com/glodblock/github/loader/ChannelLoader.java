@@ -5,39 +5,46 @@ import com.glodblock.github.network.*;
 import cpw.mods.fml.relauncher.Side;
 
 public class ChannelLoader implements Runnable {
+
     @Override
     @SuppressWarnings("all")
     public void run() {
         int id = 0;
+        FluidCraft.proxy.netHandler
+                .registerMessage(new CPacketSwitchGuis.Handler(), CPacketSwitchGuis.class, id++, Side.SERVER);
         FluidCraft.proxy.netHandler.registerMessage(
-                new CPacketSwitchGuis.Handler(), CPacketSwitchGuis.class, id++, Side.SERVER);
+                new CPacketFluidPatternTermBtns.Handler(),
+                CPacketFluidPatternTermBtns.class,
+                id++,
+                Side.SERVER);
+        FluidCraft.proxy.netHandler
+                .registerMessage(new CPacketEncodePattern.Handler(), CPacketEncodePattern.class, id++, Side.SERVER);
         FluidCraft.proxy.netHandler.registerMessage(
-                new CPacketFluidPatternTermBtns.Handler(), CPacketFluidPatternTermBtns.class, id++, Side.SERVER);
-        FluidCraft.proxy.netHandler.registerMessage(
-                new CPacketEncodePattern.Handler(), CPacketEncodePattern.class, id++, Side.SERVER);
-        FluidCraft.proxy.netHandler.registerMessage(
-                new SPacketMEInventoryUpdate.Handler(), SPacketMEInventoryUpdate.class, id++, Side.CLIENT);
-        FluidCraft.proxy.netHandler.registerMessage(
-                new CPacketCraftRequest.Handler(), CPacketCraftRequest.class, id++, Side.SERVER);
-        FluidCraft.proxy.netHandler.registerMessage(
-                new CPacketInventoryAction.Handler(), CPacketInventoryAction.class, id++, Side.SERVER);
-        FluidCraft.proxy.netHandler.registerMessage(
-                new CPacketSwitchGuis.Handler(), CPacketSwitchGuis.class, id++, Side.CLIENT);
-        FluidCraft.proxy.netHandler.registerMessage(
-                new CPacketTransferRecipe.Handler(), CPacketTransferRecipe.class, id++, Side.SERVER);
-        FluidCraft.proxy.netHandler.registerMessage(
-                new CPacketDumpTank.Handler(), CPacketDumpTank.class, id++, Side.SERVER);
-        FluidCraft.proxy.netHandler.registerMessage(
-                new SPacketFluidUpdate.Handler(), SPacketFluidUpdate.class, id++, Side.CLIENT);
-        FluidCraft.proxy.netHandler.registerMessage(
-                new CPacketPatternValueSet.Handler(), CPacketPatternValueSet.class, id++, Side.SERVER);
-        FluidCraft.proxy.netHandler.registerMessage(
-                new CPacketValueConfig.Handler(), CPacketValueConfig.class, id++, Side.SERVER);
-        FluidCraft.proxy.netHandler.registerMessage(
-                new CPacketFluidUpdate.Handler(), CPacketFluidUpdate.class, id++, Side.SERVER);
-        FluidCraft.proxy.netHandler.registerMessage(
-                new CPacketLevelMaintainer.Handler(), CPacketLevelMaintainer.class, id++, Side.SERVER);
-        FluidCraft.proxy.netHandler.registerMessage(
-                new SPacketSetItemAmount.Handler(), SPacketSetItemAmount.class, id++, Side.CLIENT);
+                new SPacketMEInventoryUpdate.Handler(),
+                SPacketMEInventoryUpdate.class,
+                id++,
+                Side.CLIENT);
+        FluidCraft.proxy.netHandler
+                .registerMessage(new CPacketCraftRequest.Handler(), CPacketCraftRequest.class, id++, Side.SERVER);
+        FluidCraft.proxy.netHandler
+                .registerMessage(new CPacketInventoryAction.Handler(), CPacketInventoryAction.class, id++, Side.SERVER);
+        FluidCraft.proxy.netHandler
+                .registerMessage(new CPacketSwitchGuis.Handler(), CPacketSwitchGuis.class, id++, Side.CLIENT);
+        FluidCraft.proxy.netHandler
+                .registerMessage(new CPacketTransferRecipe.Handler(), CPacketTransferRecipe.class, id++, Side.SERVER);
+        FluidCraft.proxy.netHandler
+                .registerMessage(new CPacketDumpTank.Handler(), CPacketDumpTank.class, id++, Side.SERVER);
+        FluidCraft.proxy.netHandler
+                .registerMessage(new SPacketFluidUpdate.Handler(), SPacketFluidUpdate.class, id++, Side.CLIENT);
+        FluidCraft.proxy.netHandler
+                .registerMessage(new CPacketPatternValueSet.Handler(), CPacketPatternValueSet.class, id++, Side.SERVER);
+        FluidCraft.proxy.netHandler
+                .registerMessage(new CPacketValueConfig.Handler(), CPacketValueConfig.class, id++, Side.SERVER);
+        FluidCraft.proxy.netHandler
+                .registerMessage(new CPacketFluidUpdate.Handler(), CPacketFluidUpdate.class, id++, Side.SERVER);
+        FluidCraft.proxy.netHandler
+                .registerMessage(new CPacketLevelMaintainer.Handler(), CPacketLevelMaintainer.class, id++, Side.SERVER);
+        FluidCraft.proxy.netHandler
+                .registerMessage(new SPacketSetItemAmount.Handler(), SPacketSetItemAmount.class, id++, Side.CLIENT);
     }
 }

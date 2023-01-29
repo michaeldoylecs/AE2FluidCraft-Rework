@@ -1,9 +1,11 @@
 package com.glodblock.github.nei;
 
+import net.minecraft.client.gui.inventory.GuiContainer;
+
 import codechicken.nei.api.INEIGuiAdapter;
+
 import com.glodblock.github.client.gui.GuiFluidMonitor;
 import com.glodblock.github.client.gui.GuiItemMonitor;
-import net.minecraft.client.gui.inventory.GuiContainer;
 
 public class NEIGuiHandler extends INEIGuiAdapter {
 

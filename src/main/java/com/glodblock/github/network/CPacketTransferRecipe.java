@@ -1,22 +1,26 @@
 package com.glodblock.github.network;
 
-import com.glodblock.github.client.gui.container.base.FCContainerEncodeTerminal;
-import com.glodblock.github.common.item.ItemFluidPacket;
-import com.glodblock.github.nei.NEIUtils;
-import com.glodblock.github.nei.object.OrderStack;
-import cpw.mods.fml.common.network.ByteBufUtils;
-import cpw.mods.fml.common.network.simpleimpl.IMessage;
-import cpw.mods.fml.common.network.simpleimpl.IMessageHandler;
-import cpw.mods.fml.common.network.simpleimpl.MessageContext;
-import io.netty.buffer.ByteBuf;
 import java.util.LinkedList;
 import java.util.List;
+
 import javax.annotation.Nullable;
+
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.fluids.FluidStack;
+
+import com.glodblock.github.client.gui.container.base.FCContainerEncodeTerminal;
+import com.glodblock.github.common.item.ItemFluidPacket;
+import com.glodblock.github.nei.NEIUtils;
+import com.glodblock.github.nei.object.OrderStack;
+
+import cpw.mods.fml.common.network.ByteBufUtils;
+import cpw.mods.fml.common.network.simpleimpl.IMessage;
+import cpw.mods.fml.common.network.simpleimpl.IMessageHandler;
+import cpw.mods.fml.common.network.simpleimpl.MessageContext;
+import io.netty.buffer.ByteBuf;
 
 public class CPacketTransferRecipe implements IMessage {
 

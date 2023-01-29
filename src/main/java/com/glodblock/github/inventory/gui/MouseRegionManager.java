@@ -1,14 +1,18 @@
 package com.glodblock.github.inventory.gui;
 
-import appeng.client.gui.AEBaseGui;
 import java.util.ArrayList;
 import java.util.List;
+
 import javax.annotation.Nullable;
+
 import net.minecraft.client.audio.PositionedSoundRecord;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.util.ResourceLocation;
 
+import appeng.client.gui.AEBaseGui;
+
 public class MouseRegionManager {
+
     private final GuiContainer gui;
     private final List<Region> regions = new ArrayList<>();
 
@@ -25,8 +29,7 @@ public class MouseRegionManager {
         mY -= gui.guiTop;
         for (Region region : regions) {
             if (region.containsMouse(mX, mY) && region.handler.onClick(button)) {
-                gui.mc
-                        .getSoundHandler()
+                gui.mc.getSoundHandler()
                         .playSound(PositionedSoundRecord.func_147674_a(new ResourceLocation("gui.button.press"), 1F));
                 return false;
             }

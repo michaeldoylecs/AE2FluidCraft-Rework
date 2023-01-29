@@ -1,17 +1,8 @@
 package com.glodblock.github.common.parts;
 
-import appeng.api.config.Actionable;
-import appeng.api.networking.energy.IEnergySource;
-import appeng.api.networking.security.PlayerSource;
-import appeng.api.storage.IMEMonitor;
-import appeng.api.storage.data.IAEFluidStack;
-import appeng.me.GridAccessException;
-import appeng.util.InventoryAdaptor;
-import appeng.util.Platform;
-import com.glodblock.github.common.item.ItemFluidPacket;
-import com.glodblock.github.util.Util;
 import java.util.Collections;
 import java.util.List;
+
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
@@ -20,9 +11,23 @@ import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.fluids.FluidContainerRegistry;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.IFluidContainerItem;
+
 import org.apache.commons.lang3.tuple.MutablePair;
 
+import appeng.api.config.Actionable;
+import appeng.api.networking.energy.IEnergySource;
+import appeng.api.networking.security.PlayerSource;
+import appeng.api.storage.IMEMonitor;
+import appeng.api.storage.data.IAEFluidStack;
+import appeng.me.GridAccessException;
+import appeng.util.InventoryAdaptor;
+import appeng.util.Platform;
+
+import com.glodblock.github.common.item.ItemFluidPacket;
+import com.glodblock.github.util.Util;
+
 public class PartFluidConversionMonitor extends PartFluidStorageMonitor {
+
     public PartFluidConversionMonitor(ItemStack is) {
         super(is);
     }
@@ -47,8 +52,7 @@ public class PartFluidConversionMonitor extends PartFluidStorageMonitor {
         } else {
             fluidStack = Util.FluidUtil.getFluidFromContainer(item);
         }
-        if (this.getDisplayed() == null
-                || fluidStack == null
+        if (this.getDisplayed() == null || fluidStack == null
                 || fluidStack.getFluid() != ((IAEFluidStack) this.getDisplayed()).getFluid()) {
             return false;
         }
@@ -59,18 +63,16 @@ public class PartFluidConversionMonitor extends PartFluidStorageMonitor {
             }
             final IEnergySource energy = this.getProxy().getEnergy();
             final IMEMonitor<IAEFluidStack> cell = this.getProxy().getStorage().getFluidInventory();
-            final IAEFluidStack input =
-                    (IAEFluidStack) this.getDisplayed().copy().setStackSize(fluidStack.amount);
-            final IAEFluidStack failedToInsert =
-                    Platform.poweredInsert(energy, cell, input, new PlayerSource(player, this));
+            final IAEFluidStack input = (IAEFluidStack) this.getDisplayed().copy().setStackSize(fluidStack.amount);
+            final IAEFluidStack failedToInsert = Platform
+                    .poweredInsert(energy, cell, input, new PlayerSource(player, this));
             if (failedToInsert != null && failedToInsert.getStackSize() == input.getStackSize()) {
                 return false;
             } else if (failedToInsert == null || failedToInsert.getStackSize() != input.getStackSize()) {
                 if (item.getItem() instanceof ItemFluidPacket) {
                     if (failedToInsert != null) {
                         player.getCurrentEquippedItem()
-                                .setTagCompound(
-                                        ItemFluidPacket.newStack(failedToInsert).getTagCompound());
+                                .setTagCompound(ItemFluidPacket.newStack(failedToInsert).getTagCompound());
                         return true;
                     }
                 } else {
@@ -85,9 +87,7 @@ public class PartFluidConversionMonitor extends PartFluidStorageMonitor {
                         } else if (FluidContainerRegistry.isContainer(tmp)) {
                             IAEFluidStack insertedFluid = input.copy();
                             insertedFluid.decStackSize(failedToInsert.getStackSize());
-                            this.getProxy()
-                                    .getStorage()
-                                    .getFluidInventory()
+                            this.getProxy().getStorage().getFluidInventory()
                                     .extractItems(insertedFluid, Actionable.MODULATE, new PlayerSource(player, this));
                             return false;
                         }
@@ -119,15 +119,14 @@ public class PartFluidConversionMonitor extends PartFluidStorageMonitor {
                 }
 
                 final IEnergySource energy = this.getProxy().getEnergy();
-                final IMEMonitor<IAEFluidStack> cell =
-                        this.getProxy().getStorage().getFluidInventory();
+                final IMEMonitor<IAEFluidStack> cell = this.getProxy().getStorage().getFluidInventory();
                 ItemStack tank = eq.copy();
                 tank.stackSize = 1;
                 MutablePair<Integer, ItemStack> fillStack = Util.FluidUtil.fillStack(tank, input.getFluidStack());
                 input.setStackSize(fillStack.left);
 
-                final IAEFluidStack retrieved =
-                        Platform.poweredExtraction(energy, cell, input, new PlayerSource(player, this));
+                final IAEFluidStack retrieved = Platform
+                        .poweredExtraction(energy, cell, input, new PlayerSource(player, this));
                 if (retrieved != null) {
                     if (!player.inventory.addItemStackToInventory(fillStack.right)) {
                         player.entityDropItem(fillStack.right.copy(), 0);

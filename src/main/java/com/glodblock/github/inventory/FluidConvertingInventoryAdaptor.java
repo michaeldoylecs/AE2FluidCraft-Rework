@@ -1,5 +1,19 @@
 package com.glodblock.github.inventory;
 
+import java.util.Collections;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
+
+import javax.annotation.Nullable;
+
+import net.minecraft.item.ItemStack;
+import net.minecraft.tileentity.TileEntity;
+import net.minecraftforge.common.util.ForgeDirection;
+import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.fluids.FluidTankInfo;
+import net.minecraftforge.fluids.IFluidHandler;
+
 import appeng.api.config.FuzzyMode;
 import appeng.api.config.InsertionMode;
 import appeng.me.GridAccessException;
@@ -9,6 +23,7 @@ import appeng.util.InventoryAdaptor;
 import appeng.util.inv.IInventoryDestination;
 import appeng.util.inv.ItemSlot;
 import cofh.api.transport.IItemDuct;
+
 import com.glodblock.github.common.Config;
 import com.glodblock.github.common.item.ItemFluidPacket;
 import com.glodblock.github.common.parts.PartFluidExportBus;
@@ -18,27 +33,11 @@ import com.glodblock.github.util.Ae2Reflect;
 import com.glodblock.github.util.BlockPos;
 import com.glodblock.github.util.ModAndClassUtil;
 import com.glodblock.github.util.Util;
-import java.util.Collections;
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
-import javax.annotation.Nullable;
-import net.minecraft.item.ItemStack;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraftforge.common.util.ForgeDirection;
-import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.FluidTankInfo;
-import net.minecraftforge.fluids.IFluidHandler;
 
 public class FluidConvertingInventoryAdaptor extends InventoryAdaptor {
 
-    public FluidConvertingInventoryAdaptor(
-            @Nullable InventoryAdaptor invItems,
-            @Nullable IFluidHandler invFluids,
-            ForgeDirection facing,
-            BlockPos pos,
-            boolean isOnmi,
-            Object eioConduct) {
+    public FluidConvertingInventoryAdaptor(@Nullable InventoryAdaptor invItems, @Nullable IFluidHandler invFluids,
+            ForgeDirection facing, BlockPos pos, boolean isOnmi, Object eioConduct) {
         this.invItems = invItems;
         this.invFluids = invFluids;
         this.side = facing;
@@ -56,16 +55,13 @@ public class FluidConvertingInventoryAdaptor extends InventoryAdaptor {
 
     public static InventoryAdaptor wrap(TileEntity capProvider, ForgeDirection face) {
         // sometimes i wish 1.7.10 has cap system.
-        TileEntity inter = capProvider
-                .getWorldObj()
-                .getTileEntity(
-                        capProvider.xCoord + face.offsetX,
-                        capProvider.yCoord + face.offsetY,
-                        capProvider.zCoord + face.offsetZ);
-        if (!Config.noFluidPacket
-                && !(inter instanceof TileFluidInterface
-                        || Util.getPart(inter, face.getOpposite()) instanceof PartFluidInterface
-                        || Util.getPart(inter, face.getOpposite()) instanceof PartFluidExportBus))
+        TileEntity inter = capProvider.getWorldObj().getTileEntity(
+                capProvider.xCoord + face.offsetX,
+                capProvider.yCoord + face.offsetY,
+                capProvider.zCoord + face.offsetZ);
+        if (!Config.noFluidPacket && !(inter instanceof TileFluidInterface
+                || Util.getPart(inter, face.getOpposite()) instanceof PartFluidInterface
+                || Util.getPart(inter, face.getOpposite()) instanceof PartFluidExportBus))
             return InventoryAdaptor.getAdaptor(capProvider, face);
         InventoryAdaptor item = InventoryAdaptor.getAdaptor(capProvider, face);
         IFluidHandler fluid = capProvider instanceof IFluidHandler ? (IFluidHandler) capProvider : null;
@@ -155,14 +151,14 @@ public class FluidConvertingInventoryAdaptor extends InventoryAdaptor {
     }
 
     @Override
-    public ItemStack removeSimilarItems(
-            int amount, ItemStack filter, FuzzyMode fuzzyMode, IInventoryDestination destination) {
+    public ItemStack removeSimilarItems(int amount, ItemStack filter, FuzzyMode fuzzyMode,
+            IInventoryDestination destination) {
         return invItems != null ? invItems.removeSimilarItems(amount, filter, fuzzyMode, destination) : null;
     }
 
     @Override
-    public ItemStack simulateSimilarRemove(
-            int amount, ItemStack filter, FuzzyMode fuzzyMode, IInventoryDestination destination) {
+    public ItemStack simulateSimilarRemove(int amount, ItemStack filter, FuzzyMode fuzzyMode,
+            IInventoryDestination destination) {
         return invItems != null ? invItems.simulateSimilarRemove(amount, filter, fuzzyMode, destination) : null;
     }
 
@@ -193,8 +189,7 @@ public class FluidConvertingInventoryAdaptor extends InventoryAdaptor {
                         if (target == null) continue;
                         tankInfos.add(target.getTankInfo(p2p.getSide().getOpposite()));
                     }
-                } catch (GridAccessException ignore) {
-                }
+                } catch (GridAccessException ignore) {}
             } else {
                 tankInfos.add(invFluids.getTankInfo(this.side));
             }

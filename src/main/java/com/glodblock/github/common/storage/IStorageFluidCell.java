@@ -1,8 +1,9 @@
 package com.glodblock.github.common.storage;
 
+import net.minecraft.item.ItemStack;
+
 import appeng.api.storage.ICellWorkbenchItem;
 import appeng.api.storage.data.IAEFluidStack;
-import net.minecraft.item.ItemStack;
 
 public interface IStorageFluidCell extends ICellWorkbenchItem {
 

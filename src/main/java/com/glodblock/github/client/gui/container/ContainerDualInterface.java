@@ -1,13 +1,15 @@
 package com.glodblock.github.client.gui.container;
 
+import net.minecraft.entity.player.InventoryPlayer;
+
 import appeng.api.config.Settings;
 import appeng.api.config.SidelessMode;
 import appeng.api.util.IConfigManager;
 import appeng.container.guisync.GuiSync;
 import appeng.container.implementations.ContainerInterface;
 import appeng.helpers.IInterfaceHost;
+
 import com.glodblock.github.common.tile.TileFluidInterface;
-import net.minecraft.entity.player.InventoryPlayer;
 
 public class ContainerDualInterface extends ContainerInterface {
 

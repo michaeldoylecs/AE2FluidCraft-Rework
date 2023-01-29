@@ -1,5 +1,8 @@
 package com.glodblock.github.client.gui;
 
+import net.minecraft.client.gui.GuiButton;
+import net.minecraft.entity.player.InventoryPlayer;
+
 import appeng.api.config.*;
 import appeng.api.storage.data.IAEFluidStack;
 import appeng.client.gui.implementations.GuiUpgradeable;
@@ -10,16 +13,16 @@ import appeng.core.AEConfig;
 import appeng.core.AELog;
 import appeng.core.localization.GuiColors;
 import appeng.core.localization.GuiText;
+
 import com.glodblock.github.FluidCraft;
 import com.glodblock.github.client.gui.container.ContainerFluidLevelEmitter;
 import com.glodblock.github.common.parts.PartFluidLevelEmitter;
 import com.glodblock.github.network.CPacketValueConfig;
 import com.glodblock.github.util.Ae2ReflectClient;
 import com.glodblock.github.util.NameConst;
-import net.minecraft.client.gui.GuiButton;
-import net.minecraft.entity.player.InventoryPlayer;
 
 public class GuiFluidLevelEmitter extends GuiUpgradeable {
+
     private GuiNumberBox level;
     private final AppEngRenderItem stackSizeRenderer = Ae2ReflectClient.getStackSizeRenderer(this);
     private GuiButton plus1;
@@ -52,7 +55,10 @@ public class GuiFluidLevelEmitter extends GuiUpgradeable {
     @Override
     protected void addButtons() {
         this.redstoneMode = new GuiImgButton(
-                this.guiLeft - 18, this.guiTop + 8, Settings.REDSTONE_EMITTER, RedstoneMode.LOW_SIGNAL);
+                this.guiLeft - 18,
+                this.guiTop + 8,
+                Settings.REDSTONE_EMITTER,
+                RedstoneMode.LOW_SIGNAL);
 
         final int a = AEConfig.instance.levelByStackAmounts(0);
         final int b = AEConfig.instance.levelByStackAmounts(1);
@@ -75,9 +81,15 @@ public class GuiFluidLevelEmitter extends GuiUpgradeable {
     @Override
     public void drawFG(final int offsetX, final int offsetY, final int mouseX, final int mouseY) {
         this.fontRendererObj.drawString(
-                NameConst.i18n(NameConst.GUI_FLUID_LEVEL_EMITTER), 8, 6, GuiColors.UpgradableTitle.getColor());
+                NameConst.i18n(NameConst.GUI_FLUID_LEVEL_EMITTER),
+                8,
+                6,
+                GuiColors.UpgradableTitle.getColor());
         this.fontRendererObj.drawString(
-                GuiText.inventory.getLocal(), 8, this.ySize - 96 + 3, GuiColors.UpgradableInventory.getColor());
+                GuiText.inventory.getLocal(),
+                8,
+                this.ySize - 96 + 3,
+                GuiColors.UpgradableInventory.getColor());
         this.redstoneMode.set(this.cvb.getRedStoneMode());
         this.level.drawTextBox();
         if (isShiftKeyDown() && !isMul) {
@@ -90,8 +102,8 @@ public class GuiFluidLevelEmitter extends GuiUpgradeable {
         } else if (!isShiftKeyDown() && isMul) {
             for (Object btn : this.buttonList) {
                 if (btn instanceof GuiButton) {
-                    ((GuiButton) btn).displayString = ((GuiButton) btn)
-                            .displayString.substring(0, ((GuiButton) btn).displayString.lastIndexOf("000"));
+                    ((GuiButton) btn).displayString = ((GuiButton) btn).displayString
+                            .substring(0, ((GuiButton) btn).displayString.lastIndexOf("000"));
                 }
             }
             isMul = false;
@@ -115,8 +127,9 @@ public class GuiFluidLevelEmitter extends GuiUpgradeable {
     protected void actionPerformed(final GuiButton btn) {
         super.actionPerformed(btn);
         final boolean isPlus = btn == this.plus1 || btn == this.plus10 || btn == this.plus100 || btn == this.plus1000;
-        final boolean isMinus =
-                btn == this.minus1 || btn == this.minus10 || btn == this.minus100 || btn == this.minus1000;
+        final boolean isMinus = btn == this.minus1 || btn == this.minus10
+                || btn == this.minus100
+                || btn == this.minus1000;
 
         if (isPlus || isMinus) {
             this.addQty(this.getQty(btn));

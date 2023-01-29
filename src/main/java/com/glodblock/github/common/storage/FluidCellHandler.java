@@ -1,15 +1,17 @@
 package com.glodblock.github.common.storage;
 
-import appeng.api.implementations.tiles.IChestOrDrive;
-import appeng.api.storage.*;
-import appeng.client.texture.ExtraBlockTextures;
-import com.glodblock.github.inventory.InventoryHandler;
-import com.glodblock.github.inventory.gui.GuiType;
-import com.glodblock.github.util.BlockPos;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.IIcon;
+
+import appeng.api.implementations.tiles.IChestOrDrive;
+import appeng.api.storage.*;
+import appeng.client.texture.ExtraBlockTextures;
+
+import com.glodblock.github.inventory.InventoryHandler;
+import com.glodblock.github.inventory.gui.GuiType;
+import com.glodblock.github.util.BlockPos;
 
 public class FluidCellHandler implements ICellHandler {
 
@@ -20,8 +22,8 @@ public class FluidCellHandler implements ICellHandler {
 
     @Override
     @SuppressWarnings("rawtypes")
-    public IMEInventoryHandler getCellInventory(
-            final ItemStack is, final ISaveProvider container, final StorageChannel channel) {
+    public IMEInventoryHandler getCellInventory(final ItemStack is, final ISaveProvider container,
+            final StorageChannel channel) {
         if (channel == StorageChannel.FLUIDS) {
             return FluidCellInventory.getCell(is, container);
         }
@@ -44,18 +46,13 @@ public class FluidCellHandler implements ICellHandler {
     }
 
     @Override
-    public void openChestGui(
-            final EntityPlayer player,
-            final IChestOrDrive chest,
-            final ICellHandler cellHandler,
-            final IMEInventoryHandler inv,
-            final ItemStack is,
-            final StorageChannel chan) {
+    public void openChestGui(final EntityPlayer player, final IChestOrDrive chest, final ICellHandler cellHandler,
+            final IMEInventoryHandler inv, final ItemStack is, final StorageChannel chan) {
         if (chan == StorageChannel.FLUIDS) {
             if (chest instanceof TileEntity) {
                 TileEntity te = (TileEntity) chest;
-                InventoryHandler.openGui(
-                        player, te.getWorldObj(), new BlockPos(te), chest.getUp(), GuiType.FLUID_TERMINAL);
+                InventoryHandler
+                        .openGui(player, te.getWorldObj(), new BlockPos(te), chest.getUp(), GuiType.FLUID_TERMINAL);
             }
         }
     }

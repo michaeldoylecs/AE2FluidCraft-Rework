@@ -1,9 +1,11 @@
 package com.glodblock.github.util;
 
-import com.glodblock.github.FluidCraft;
 import java.util.ArrayList;
+
 import net.minecraft.client.resources.I18n;
 import net.minecraft.util.StatCollector;
+
+import com.glodblock.github.FluidCraft;
 
 public class NameConst {
 

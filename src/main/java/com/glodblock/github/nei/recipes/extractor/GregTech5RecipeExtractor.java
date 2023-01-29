@@ -1,15 +1,19 @@
 package com.glodblock.github.nei.recipes.extractor;
 
-import codechicken.nei.PositionedStack;
-import com.glodblock.github.nei.object.IRecipeExtractor;
-import com.glodblock.github.nei.object.OrderStack;
-import gregtech.api.enums.ItemList;
-import gregtech.common.items.GT_FluidDisplayItem;
 import java.util.List;
+
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
+
+import codechicken.nei.PositionedStack;
+
+import com.glodblock.github.nei.object.IRecipeExtractor;
+import com.glodblock.github.nei.object.OrderStack;
+
+import gregtech.api.enums.ItemList;
+import gregtech.common.items.GT_FluidDisplayItem;
 
 public class GregTech5RecipeExtractor implements IRecipeExtractor {
 
@@ -33,9 +37,8 @@ public class GregTech5RecipeExtractor implements IRecipeExtractor {
     private void removeSpecial(List<PositionedStack> list) {
         for (int i = list.size() - 1; i >= 0; i--) {
             PositionedStack positionedStack = list.get(i);
-            if (positionedStack != null
-                    && (positionedStack.items[0].isItemEqual(ItemList.Tool_DataStick.get(1))
-                            || positionedStack.items[0].isItemEqual(ItemList.Tool_DataOrb.get(1)))) {
+            if (positionedStack != null && (positionedStack.items[0].isItemEqual(ItemList.Tool_DataStick.get(1))
+                    || positionedStack.items[0].isItemEqual(ItemList.Tool_DataOrb.get(1)))) {
                 list.remove(i);
                 break;
             }

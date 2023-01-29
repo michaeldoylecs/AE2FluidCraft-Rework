@@ -1,9 +1,10 @@
 package com.glodblock.github.inventory;
 
-import appeng.api.storage.data.IAEItemStack;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
+
+import appeng.api.storage.data.IAEItemStack;
 
 public class AeItemStackHandler implements IInventory {
 

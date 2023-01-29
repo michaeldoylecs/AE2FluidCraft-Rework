@@ -1,5 +1,14 @@
 package com.glodblock.github.network;
 
+import java.util.Objects;
+import java.util.concurrent.Future;
+
+import javax.annotation.Nullable;
+
+import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.tileentity.TileEntity;
+import net.minecraftforge.common.util.ForgeDirection;
+
 import appeng.api.networking.IGrid;
 import appeng.api.networking.IGridHost;
 import appeng.api.networking.IGridNode;
@@ -8,20 +17,16 @@ import appeng.api.networking.crafting.ICraftingJob;
 import appeng.container.ContainerOpenContext;
 import appeng.container.implementations.ContainerCraftAmount;
 import appeng.core.AELog;
+
 import com.glodblock.github.client.gui.container.ContainerFluidCraftConfirm;
 import com.glodblock.github.inventory.InventoryHandler;
 import com.glodblock.github.inventory.gui.GuiType;
 import com.glodblock.github.util.BlockPos;
+
 import cpw.mods.fml.common.network.simpleimpl.IMessage;
 import cpw.mods.fml.common.network.simpleimpl.IMessageHandler;
 import cpw.mods.fml.common.network.simpleimpl.MessageContext;
 import io.netty.buffer.ByteBuf;
-import java.util.Objects;
-import java.util.concurrent.Future;
-import javax.annotation.Nullable;
-import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraftforge.common.util.ForgeDirection;
 
 public class CPacketCraftRequest implements IMessage {
 
@@ -54,8 +59,8 @@ public class CPacketCraftRequest implements IMessage {
         public IMessage onMessage(CPacketCraftRequest message, MessageContext ctx) {
             if (ctx.getServerHandler().playerEntity.openContainer instanceof ContainerCraftAmount) {
                 EntityPlayerMP player = ctx.getServerHandler().playerEntity;
-                final ContainerCraftAmount cca =
-                        (ContainerCraftAmount) ctx.getServerHandler().playerEntity.openContainer;
+                final ContainerCraftAmount cca = (ContainerCraftAmount) ctx
+                        .getServerHandler().playerEntity.openContainer;
                 final Object target = cca.getTarget();
                 if (target instanceof IGridHost) {
                     final IGridHost gh = (IGridHost) target;
@@ -76,7 +81,11 @@ public class CPacketCraftRequest implements IMessage {
                     try {
                         final ICraftingGrid cg = g.getCache(ICraftingGrid.class);
                         futureJob = cg.beginCraftingJob(
-                                cca.getWorld(), cca.getGrid(), cca.getActionSrc(), cca.getItemToCraft(), null);
+                                cca.getWorld(),
+                                cca.getGrid(),
+                                cca.getActionSrc(),
+                                cca.getItemToCraft(),
+                                null);
 
                         final ContainerOpenContext context = cca.getOpenContext();
                         if (context != null) {
@@ -90,8 +99,7 @@ public class CPacketCraftRequest implements IMessage {
                                     GuiType.FLUID_CRAFTING_CONFIRM);
 
                             if (player.openContainer instanceof ContainerFluidCraftConfirm) {
-                                final ContainerFluidCraftConfirm ccc =
-                                        (ContainerFluidCraftConfirm) player.openContainer;
+                                final ContainerFluidCraftConfirm ccc = (ContainerFluidCraftConfirm) player.openContainer;
                                 ccc.setAutoStart(message.heldShift);
                                 ccc.setJob(futureJob);
                                 cca.detectAndSendChanges();

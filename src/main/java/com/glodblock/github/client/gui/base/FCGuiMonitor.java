@@ -1,5 +1,20 @@
 package com.glodblock.github.client.gui.base;
 
+import java.io.IOException;
+import java.lang.reflect.Field;
+import java.util.List;
+
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiButton;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.InventoryPlayer;
+import net.minecraft.inventory.Slot;
+import net.minecraft.item.ItemStack;
+import net.minecraft.util.ResourceLocation;
+
+import org.lwjgl.input.Keyboard;
+import org.lwjgl.input.Mouse;
+
 import appeng.api.config.*;
 import appeng.api.implementations.tiles.IViewCellStorage;
 import appeng.api.storage.ITerminalHost;
@@ -32,24 +47,13 @@ import appeng.util.Platform;
 import appeng.util.item.AEItemStack;
 import codechicken.nei.LayoutManager;
 import codechicken.nei.util.TextHistory;
+
 import com.glodblock.github.FluidCraft;
 import com.glodblock.github.client.gui.FCGuiTextField;
 import com.glodblock.github.client.gui.container.base.FCContainerMonitor;
 import com.glodblock.github.network.CPacketInventoryAction;
 import com.glodblock.github.util.Ae2ReflectClient;
 import com.glodblock.github.util.ModAndClassUtil;
-import java.io.IOException;
-import java.lang.reflect.Field;
-import java.util.List;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiButton;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.InventoryPlayer;
-import net.minecraft.inventory.Slot;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.ResourceLocation;
-import org.lwjgl.input.Keyboard;
-import org.lwjgl.input.Mouse;
 
 public abstract class FCGuiMonitor<T extends IAEStack<T>> extends AEBaseMEGui
         implements ISortSource, IConfigManagerHost, IDropToFillTextField {
@@ -98,9 +102,10 @@ public abstract class FCGuiMonitor<T extends IAEStack<T>> extends AEBaseMEGui
 
     protected void setScrollBar() {
         this.getScrollBar().setTop(18).setLeft(175).setHeight(this.rows * 18 - 2);
-        this.getScrollBar()
-                .setRange(
-                        0, (this.repo.size() + this.perRow - 1) / this.perRow - this.rows, Math.max(1, this.rows / 6));
+        this.getScrollBar().setRange(
+                0,
+                (this.repo.size() + this.perRow - 1) / this.perRow - this.rows,
+                Math.max(1, this.rows / 6));
     }
 
     @Override
@@ -114,8 +119,7 @@ public abstract class FCGuiMonitor<T extends IAEStack<T>> extends AEBaseMEGui
             final GuiImgButton iBtn = (GuiImgButton) btn;
             if (iBtn.getSetting() != Settings.ACTIONS) {
                 final Enum<?> cv = iBtn.getCurrentValue();
-                final Enum<?> next =
-                        Platform.rotateEnum(cv, backwards, iBtn.getSetting().getPossibleValues());
+                final Enum<?> next = Platform.rotateEnum(cv, backwards, iBtn.getSetting().getPossibleValues());
                 if (btn == this.terminalStyleBox) {
                     AEConfig.instance.settings.putSetting(iBtn.getSetting(), next);
                 } else if (btn == this.searchBoxSettings) {
@@ -124,8 +128,8 @@ public abstract class FCGuiMonitor<T extends IAEStack<T>> extends AEBaseMEGui
                     AEConfig.instance.preserveSearchBar = next == YesNo.YES;
                 } else {
                     try {
-                        NetworkHandler.instance.sendToServer(
-                                new PacketValueConfig(iBtn.getSetting().name(), next.name()));
+                        NetworkHandler.instance
+                                .sendToServer(new PacketValueConfig(iBtn.getSetting().name(), next.name()));
                     } catch (final IOException e) {
                         AELog.debug(e);
                     }
@@ -149,8 +153,7 @@ public abstract class FCGuiMonitor<T extends IAEStack<T>> extends AEBaseMEGui
         Keyboard.enableRepeatEvents(true);
 
         this.maxRows = this.getMaxRows();
-        this.perRow = AEConfig.instance.getConfigManager().getSetting(Settings.TERMINAL_STYLE) != TerminalStyle.FULL
-                ? 9
+        this.perRow = AEConfig.instance.getConfigManager().getSetting(Settings.TERMINAL_STYLE) != TerminalStyle.FULL ? 9
                 : 9 + ((this.width - this.standardSize) / 18);
 
         final boolean hasNEI = IntegrationRegistry.INSTANCE.isEnabled(IntegrationType.NEI);
@@ -202,7 +205,10 @@ public abstract class FCGuiMonitor<T extends IAEStack<T>> extends AEBaseMEGui
         if (this.customSortOrder) {
             this.buttonList.add(
                     this.SortByBox = new GuiImgButton(
-                            this.guiLeft - 18, offset, Settings.SORT_BY, this.configSrc.getSetting(Settings.SORT_BY)));
+                            this.guiLeft - 18,
+                            offset,
+                            Settings.SORT_BY,
+                            this.configSrc.getSetting(Settings.SORT_BY)));
             offset += 20;
         }
         if (this.showViewBtn) {
@@ -250,7 +256,11 @@ public abstract class FCGuiMonitor<T extends IAEStack<T>> extends AEBaseMEGui
         offset += 20;
 
         this.searchField = new FCGuiTextField(
-                this.fontRendererObj, this.guiLeft + Math.max(80, this.offsetX), this.guiTop + 4, 90, 12);
+                this.fontRendererObj,
+                this.guiLeft + Math.max(80, this.offsetX),
+                this.guiTop + 4,
+                90,
+                12);
         this.searchField.setEnableBackgroundDrawing(false);
         this.searchField.setMaxStringLength(25);
         this.searchField.setTextColor(0xFFFFFF);
@@ -259,11 +269,8 @@ public abstract class FCGuiMonitor<T extends IAEStack<T>> extends AEBaseMEGui
             searchField.setMessage(ButtonToolTips.SearchStringTooltip.getLocal());
 
         if (this.viewCell) {
-            if (ModAndClassUtil.isCraftStatus
-                    && AEConfig.instance
-                            .getConfigManager()
-                            .getSetting(Settings.CRAFTING_STATUS)
-                            .equals(CraftingStatus.BUTTON)) {
+            if (ModAndClassUtil.isCraftStatus && AEConfig.instance.getConfigManager()
+                    .getSetting(Settings.CRAFTING_STATUS).equals(CraftingStatus.BUTTON)) {
                 this.buttonList.add(
                         this.craftingStatusImgBtn = new GuiImgButton(
                                 this.guiLeft - 18,
@@ -356,15 +363,12 @@ public abstract class FCGuiMonitor<T extends IAEStack<T>> extends AEBaseMEGui
                     } else {
                         direction = TextHistory.Direction.NEXT;
                     }
-                    history.get(direction, this.searchField.getText())
-                            .map(newText -> {
-                                setSearchString(newText, true);
-                                return true;
-                            })
-                            .orElse(false);
+                    history.get(direction, this.searchField.getText()).map(newText -> {
+                        setSearchString(newText, true);
+                        return true;
+                    }).orElse(false);
                     return;
-                } catch (NoSuchFieldException | IllegalAccessException ignore) {
-                }
+                } catch (NoSuchFieldException | IllegalAccessException ignore) {}
             }
         }
         super.handleMouseInput();
@@ -391,8 +395,8 @@ public abstract class FCGuiMonitor<T extends IAEStack<T>> extends AEBaseMEGui
         }
 
         if (slot instanceof SlotFake) {
-            InventoryAction action =
-                    ctrlDown == 1 ? InventoryAction.SPLIT_OR_PLACE_SINGLE : InventoryAction.PICKUP_OR_SET_DOWN;
+            InventoryAction action = ctrlDown == 1 ? InventoryAction.SPLIT_OR_PLACE_SINGLE
+                    : InventoryAction.PICKUP_OR_SET_DOWN;
             if (Keyboard.isKeyDown(Keyboard.KEY_LMENU) || Keyboard.isKeyDown(Keyboard.KEY_RMENU)) {
                 if (action == InventoryAction.SPLIT_OR_PLACE_SINGLE) {
                     action = InventoryAction.MOVE_REGION;
@@ -457,13 +461,12 @@ public abstract class FCGuiMonitor<T extends IAEStack<T>> extends AEBaseMEGui
             InventoryAction action = null;
             switch (mouseButton) {
                 case 0: // pickup / set-down.
-                    {
-                        ItemStack heldStack = player.inventory.getItemStack();
-                        if (slot.getStack() == null && heldStack != null)
-                            action = InventoryAction.SPLIT_OR_PLACE_SINGLE;
-                        else if (slot.getStack() != null && (heldStack == null || heldStack.stackSize <= 1))
-                            action = InventoryAction.PICKUP_OR_SET_DOWN;
-                    }
+                {
+                    ItemStack heldStack = player.inventory.getItemStack();
+                    if (slot.getStack() == null && heldStack != null) action = InventoryAction.SPLIT_OR_PLACE_SINGLE;
+                    else if (slot.getStack() != null && (heldStack == null || heldStack.stackSize <= 1))
+                        action = InventoryAction.PICKUP_OR_SET_DOWN;
+                }
                     break;
                 case 1:
                     action = ctrlDown == 1 ? InventoryAction.PICKUP_SINGLE : InventoryAction.SHIFT_CLICK;
@@ -494,8 +497,7 @@ public abstract class FCGuiMonitor<T extends IAEStack<T>> extends AEBaseMEGui
                 case 0: // pickup / set-down.
                     action = ctrlDown == 1 ? InventoryAction.SPLIT_OR_PLACE_SINGLE : InventoryAction.PICKUP_OR_SET_DOWN;
                     stack = ((SlotME) slot).getAEStack();
-                    if (stack != null
-                            && action == InventoryAction.PICKUP_OR_SET_DOWN
+                    if (stack != null && action == InventoryAction.PICKUP_OR_SET_DOWN
                             && stack.getStackSize() == 0
                             && player.inventory.getItemStack() == null) {
                         action = InventoryAction.AUTO_CRAFT;
@@ -523,12 +525,14 @@ public abstract class FCGuiMonitor<T extends IAEStack<T>> extends AEBaseMEGui
             }
             if (action == InventoryAction.AUTO_CRAFT) {
                 ((AEBaseContainer) this.inventorySlots).setTargetStack(stack);
-                FluidCraft.proxy.netHandler.sendToServer(new CPacketInventoryAction(
-                        action, Ae2ReflectClient.getInventorySlots(this).size(), 0, stack));
+                FluidCraft.proxy.netHandler.sendToServer(
+                        new CPacketInventoryAction(action, Ae2ReflectClient.getInventorySlots(this).size(), 0, stack));
             } else if (action != null) {
                 ((AEBaseContainer) this.inventorySlots).setTargetStack(stack);
                 final PacketInventoryAction p = new PacketInventoryAction(
-                        action, Ae2ReflectClient.getInventorySlots(this).size(), 0);
+                        action,
+                        Ae2ReflectClient.getInventorySlots(this).size(),
+                        0);
                 NetworkHandler.instance.sendToServer(p);
             }
 
@@ -575,11 +579,9 @@ public abstract class FCGuiMonitor<T extends IAEStack<T>> extends AEBaseMEGui
         if (this.viewCell) {
             boolean update = false;
             for (int i = 0; i < 5; i++) {
-                if (this.myCurrentViewCells[i]
-                        != this.monitorableContainer.getCellViewSlot(i).getStack()) {
+                if (this.myCurrentViewCells[i] != this.monitorableContainer.getCellViewSlot(i).getStack()) {
                     update = true;
-                    this.myCurrentViewCells[i] =
-                            this.monitorableContainer.getCellViewSlot(i).getStack();
+                    this.myCurrentViewCells[i] = this.monitorableContainer.getCellViewSlot(i).getStack();
                 }
             }
             if (update) {
@@ -601,8 +603,7 @@ public abstract class FCGuiMonitor<T extends IAEStack<T>> extends AEBaseMEGui
     }
 
     protected int getMaxRows() {
-        return AEConfig.instance.getConfigManager().getSetting(Settings.TERMINAL_STYLE) == TerminalStyle.SMALL
-                ? 6
+        return AEConfig.instance.getConfigManager().getSetting(Settings.TERMINAL_STYLE) == TerminalStyle.SMALL ? 6
                 : Integer.MAX_VALUE;
     }
 

@@ -1,9 +1,10 @@
 package com.glodblock.github.coremod.transform;
 
-import com.glodblock.github.coremod.FCClassTransformer;
 import org.objectweb.asm.ClassVisitor;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
+
+import com.glodblock.github.coremod.FCClassTransformer;
 
 public class NEITransfermer extends FCClassTransformer.ClassMapper {
 
@@ -29,7 +30,8 @@ public class NEITransfermer extends FCClassTransformer.ClassMapper {
             switch (name) {
                 case "getStackUnderMouse":
                     return new TransformStackUnderMouse(
-                            api, super.visitMethod(access, name, desc, signature, exceptions));
+                            api,
+                            super.visitMethod(access, name, desc, signature, exceptions));
                 case "shouldShowTooltip":
                     return new TransformShowTooltip(api, super.visitMethod(access, name, desc, signature, exceptions));
                 default:

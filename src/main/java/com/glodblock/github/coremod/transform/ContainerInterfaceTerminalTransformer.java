@@ -1,9 +1,10 @@
 package com.glodblock.github.coremod.transform;
 
-import com.glodblock.github.coremod.FCClassTransformer;
 import org.objectweb.asm.ClassVisitor;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
+
+import com.glodblock.github.coremod.FCClassTransformer;
 
 public class ContainerInterfaceTerminalTransformer extends FCClassTransformer.ClassMapper {
 
@@ -28,7 +29,8 @@ public class ContainerInterfaceTerminalTransformer extends FCClassTransformer.Cl
         public MethodVisitor visitMethod(int access, String name, String desc, String signature, String[] exceptions) {
             if (name.equals("detectAndSendChanges") || name.equals("func_75142_b") || name.equals("regenList")) {
                 return new TransformDetectAndSendChanges(
-                        api, super.visitMethod(access, name, desc, signature, exceptions));
+                        api,
+                        super.visitMethod(access, name, desc, signature, exceptions));
             }
             return super.visitMethod(access, name, desc, signature, exceptions);
         }
@@ -42,8 +44,7 @@ public class ContainerInterfaceTerminalTransformer extends FCClassTransformer.Cl
 
         @Override
         public void visitMethodInsn(int opcode, String owner, String name, String desc, boolean itf) {
-            if (opcode == Opcodes.INVOKEINTERFACE
-                    && owner.equals("appeng/api/networking/IGrid")
+            if (opcode == Opcodes.INVOKEINTERFACE && owner.equals("appeng/api/networking/IGrid")
                     && name.equals("getMachines")) {
                 super.visitMethodInsn(
                         Opcodes.INVOKESTATIC,

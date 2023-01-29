@@ -1,11 +1,13 @@
 package com.glodblock.github.client.gui.container;
 
+import net.minecraft.entity.player.InventoryPlayer;
+import net.minecraft.item.ItemStack;
+
 import appeng.api.config.Actionable;
 import appeng.api.config.PowerMultiplier;
 import appeng.util.Platform;
+
 import com.glodblock.github.inventory.item.IFluidPortableCell;
-import net.minecraft.entity.player.InventoryPlayer;
-import net.minecraft.item.ItemStack;
 
 public class ContainerFluidPortableCell extends ContainerFluidMonitor {
 
@@ -30,8 +32,7 @@ public class ContainerFluidPortableCell extends ContainerFluidMonitor {
 
     @Override
     public void detectAndSendChanges() {
-        final ItemStack currentItem = this.slot < 0
-                ? this.getPlayerInv().getCurrentItem()
+        final ItemStack currentItem = this.slot < 0 ? this.getPlayerInv().getCurrentItem()
                 : this.getPlayerInv().getStackInSlot(this.slot);
         if (this.civ != null) {
             if (currentItem != this.civ.getItemStack()) {
@@ -52,7 +53,9 @@ public class ContainerFluidPortableCell extends ContainerFluidMonitor {
         this.ticks++;
         if (this.ticks > 10 && this.civ != null) {
             this.civ.extractAEPower(
-                    this.getPowerMultiplier() * this.ticks, Actionable.MODULATE, PowerMultiplier.CONFIG);
+                    this.getPowerMultiplier() * this.ticks,
+                    Actionable.MODULATE,
+                    PowerMultiplier.CONFIG);
             this.ticks = 0;
         }
         super.detectAndSendChanges();

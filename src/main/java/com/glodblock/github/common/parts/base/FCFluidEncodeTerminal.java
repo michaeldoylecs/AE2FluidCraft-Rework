@@ -1,11 +1,13 @@
 package com.glodblock.github.common.parts.base;
 
-import appeng.api.storage.data.IAEItemStack;
-import appeng.tile.inventory.AppEngInternalInventory;
 import java.util.List;
+
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+
+import appeng.api.storage.data.IAEItemStack;
+import appeng.tile.inventory.AppEngInternalInventory;
 
 public abstract class FCFluidEncodeTerminal extends FCPart {
 

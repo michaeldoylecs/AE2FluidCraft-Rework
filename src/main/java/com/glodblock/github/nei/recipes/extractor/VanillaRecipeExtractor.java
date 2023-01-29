@@ -1,10 +1,12 @@
 package com.glodblock.github.nei.recipes.extractor;
 
-import codechicken.nei.PositionedStack;
-import com.glodblock.github.nei.object.IRecipeExtractor;
-import com.glodblock.github.nei.object.OrderStack;
 import java.util.LinkedList;
 import java.util.List;
+
+import codechicken.nei.PositionedStack;
+
+import com.glodblock.github.nei.object.IRecipeExtractor;
+import com.glodblock.github.nei.object.OrderStack;
 
 public class VanillaRecipeExtractor implements IRecipeExtractor {
 

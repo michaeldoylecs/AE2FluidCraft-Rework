@@ -1,5 +1,10 @@
 package com.glodblock.github.inventory.item;
 
+import java.util.Objects;
+
+import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
+
 import appeng.api.config.*;
 import appeng.api.implementations.items.IAEItemPowerStorage;
 import appeng.api.storage.IMEMonitor;
@@ -9,10 +14,8 @@ import appeng.api.storage.data.IAEItemStack;
 import appeng.api.util.IConfigManager;
 import appeng.util.ConfigManager;
 import appeng.util.Platform;
+
 import com.glodblock.github.common.storage.FluidCellInventory;
-import java.util.Objects;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
 
 public class PortableFluidCellInventory extends MEMonitorHandler<IAEFluidStack> implements IFluidPortableCell {
 

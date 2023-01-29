@@ -1,5 +1,9 @@
 package com.glodblock.github.client.gui;
 
+import java.io.IOException;
+
+import net.minecraft.entity.player.InventoryPlayer;
+
 import appeng.container.implementations.ContainerPriority;
 import appeng.core.AELog;
 import appeng.core.localization.GuiText;
@@ -8,13 +12,12 @@ import appeng.core.sync.packets.PacketValueConfig;
 import appeng.helpers.IPriorityHost;
 import appeng.util.calculators.ArithHelper;
 import appeng.util.calculators.Calculator;
+
 import com.glodblock.github.client.gui.base.FCGuiAmount;
 import com.glodblock.github.common.parts.PartFluidStorageBus;
 import com.glodblock.github.inventory.IDualHost;
 import com.glodblock.github.inventory.gui.GuiType;
 import com.glodblock.github.loader.ItemAndBlockHolder;
-import java.io.IOException;
-import net.minecraft.entity.player.InventoryPlayer;
 
 public class GuiFCPriority extends FCGuiAmount {
 
@@ -46,11 +49,10 @@ public class GuiFCPriority extends FCGuiAmount {
     protected void addQty(final int i) {
         try {
             this.amountBox.setText(Long.toString(getAmount() + i));
-        } catch (final NumberFormatException ignore) {
-        }
+        } catch (final NumberFormatException ignore) {}
         try {
-            NetworkHandler.instance.sendToServer(
-                    new PacketValueConfig("PriorityHost.Priority", String.valueOf(getAmount())));
+            NetworkHandler.instance
+                    .sendToServer(new PacketValueConfig("PriorityHost.Priority", String.valueOf(getAmount())));
         } catch (IOException e) {
             AELog.debug(e);
         }
@@ -71,8 +73,8 @@ public class GuiFCPriority extends FCGuiAmount {
     protected void keyTyped(final char character, final int key) {
         super.keyTyped(character, key);
         try {
-            NetworkHandler.instance.sendToServer(
-                    new PacketValueConfig("PriorityHost.Priority", String.valueOf(getAmount())));
+            NetworkHandler.instance
+                    .sendToServer(new PacketValueConfig("PriorityHost.Priority", String.valueOf(getAmount())));
         } catch (IOException e) {
             AELog.debug(e);
         }

@@ -1,10 +1,18 @@
 package com.glodblock.github.common.block;
 
+import java.util.EnumSet;
+
+import net.minecraft.block.material.Material;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.world.World;
+import net.minecraftforge.common.util.ForgeDirection;
+
 import appeng.api.util.IOrientable;
 import appeng.block.AEBaseItemBlock;
 import appeng.core.features.AEFeature;
 import appeng.tile.misc.TileInterface;
 import appeng.util.Platform;
+
 import com.glodblock.github.client.render.RenderBlockFluidInterface;
 import com.glodblock.github.common.tabs.FluidCraftingTabs;
 import com.glodblock.github.common.tile.TileFluidInterface;
@@ -12,14 +20,10 @@ import com.glodblock.github.inventory.InventoryHandler;
 import com.glodblock.github.inventory.gui.GuiType;
 import com.glodblock.github.util.BlockPos;
 import com.glodblock.github.util.NameConst;
+
 import cpw.mods.fml.common.registry.GameRegistry;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import java.util.EnumSet;
-import net.minecraft.block.material.Material;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.world.World;
-import net.minecraftforge.common.util.ForgeDirection;
 
 public class BlockFluidInterface extends FCBaseBlock {
 
@@ -38,16 +42,8 @@ public class BlockFluidInterface extends FCBaseBlock {
     }
 
     @Override
-    public boolean onActivated(
-            final World world,
-            final int x,
-            final int y,
-            final int z,
-            final EntityPlayer player,
-            final int facing,
-            final float hitX,
-            final float hitY,
-            final float hitZ) {
+    public boolean onActivated(final World world, final int x, final int y, final int z, final EntityPlayer player,
+            final int facing, final float hitX, final float hitY, final float hitZ) {
         if (player.isSneaking()) {
             return false;
         }

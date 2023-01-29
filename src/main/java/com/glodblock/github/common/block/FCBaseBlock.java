@@ -1,17 +1,21 @@
 package com.glodblock.github.common.block;
 
-import appeng.block.AEBaseTileBlock;
-import appeng.core.features.AEFeature;
-import com.glodblock.github.FluidCraft;
-import com.glodblock.github.loader.IRegister;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 import java.util.EnumSet;
 import java.util.List;
+
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
+
+import appeng.block.AEBaseTileBlock;
+import appeng.core.features.AEFeature;
+
+import com.glodblock.github.FluidCraft;
+import com.glodblock.github.loader.IRegister;
+
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 
 public abstract class FCBaseBlock extends AEBaseTileBlock implements IRegister<FCBaseBlock> {
 
@@ -40,14 +44,11 @@ public abstract class FCBaseBlock extends AEBaseTileBlock implements IRegister<F
     }
 
     @SideOnly(Side.CLIENT)
-    public void addInformation(
-            final ItemStack itemStack,
-            final EntityPlayer player,
-            final List<String> toolTip,
+    public void addInformation(final ItemStack itemStack, final EntityPlayer player, final List<String> toolTip,
             final boolean advancedToolTips) {}
 
-    public void addCheckedInformation(
-            ItemStack itemStack, EntityPlayer player, List<String> toolTip, boolean advancedToolTips) {
+    public void addCheckedInformation(ItemStack itemStack, EntityPlayer player, List<String> toolTip,
+            boolean advancedToolTips) {
         this.addInformation(itemStack, player, toolTip, advancedToolTips);
     }
 

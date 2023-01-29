@@ -1,11 +1,18 @@
 package com.glodblock.github.inventory.gui;
 
+import java.util.List;
+
+import javax.annotation.Nullable;
+
+import net.minecraft.entity.player.EntityPlayer;
+
 import appeng.api.storage.ITerminalHost;
 import appeng.container.implementations.ContainerCraftAmount;
 import appeng.container.implementations.ContainerCraftingStatus;
 import appeng.container.implementations.ContainerPriority;
 import appeng.helpers.IInterfaceHost;
 import appeng.helpers.IPriorityHost;
+
 import com.glodblock.github.client.gui.*;
 import com.glodblock.github.client.gui.container.*;
 import com.glodblock.github.common.parts.PartFluidLevelEmitter;
@@ -16,12 +23,11 @@ import com.glodblock.github.common.tile.*;
 import com.glodblock.github.inventory.IDualHost;
 import com.glodblock.github.inventory.item.IFluidPortableCell;
 import com.google.common.collect.ImmutableList;
-import java.util.List;
-import javax.annotation.Nullable;
-import net.minecraft.entity.player.EntityPlayer;
 
 public enum GuiType {
+
     FLUID_LEVEL_EMITTER(new PartGuiFactory<PartFluidLevelEmitter>(PartFluidLevelEmitter.class) {
+
         @Override
         protected Object createServerGui(EntityPlayer player, PartFluidLevelEmitter inv) {
             return new ContainerFluidLevelEmitter(player.inventory, inv);
@@ -34,6 +40,7 @@ public enum GuiType {
     }),
 
     LEVEL_MAINTAINER(new TileGuiFactory<TileLevelMaintainer>(TileLevelMaintainer.class) {
+
         @Override
         protected Object createServerGui(EntityPlayer player, TileLevelMaintainer inv) {
             return new ContainerLevelMaintainer(player.inventory, inv);
@@ -46,6 +53,7 @@ public enum GuiType {
     }),
 
     OC_PATTERN_EDITOR(new TileGuiFactory<TileOCPatternEditor>(TileOCPatternEditor.class) {
+
         @Override
         protected Object createServerGui(EntityPlayer player, TileOCPatternEditor inv) {
             return new ContainerOCPatternEditor(player.inventory, inv);
@@ -58,6 +66,7 @@ public enum GuiType {
     }),
 
     DUAL_INTERFACE(new TileOrPartGuiFactory<IInterfaceHost>(IInterfaceHost.class) {
+
         @Override
         protected Object createServerGui(EntityPlayer player, IInterfaceHost inv) {
             return new ContainerDualInterface(player.inventory, inv);
@@ -70,6 +79,7 @@ public enum GuiType {
     }),
 
     DUAL_INTERFACE_FLUID(new TileOrPartGuiFactory<IDualHost>(IDualHost.class) {
+
         @Override
         protected Object createServerGui(EntityPlayer player, IDualHost inv) {
             return new ContainerFluidInterface(player.inventory, inv);
@@ -82,6 +92,7 @@ public enum GuiType {
     }),
 
     PRIORITY(new TileOrPartGuiFactory<IPriorityHost>(IPriorityHost.class) {
+
         @Override
         protected Object createServerGui(EntityPlayer player, IPriorityHost inv) {
             return new ContainerPriority(player.inventory, inv);
@@ -94,6 +105,7 @@ public enum GuiType {
     }),
 
     FLUID_BUS_IO(new PartGuiFactory<FCSharedFluidBus>(FCSharedFluidBus.class) {
+
         @Override
         protected Object createServerGui(EntityPlayer player, FCSharedFluidBus inv) {
             return new ContainerFluidIO(player.inventory, inv);
@@ -106,6 +118,7 @@ public enum GuiType {
     }),
 
     FLUID_STORAGE_BUS(new PartGuiFactory<PartFluidStorageBus>(PartFluidStorageBus.class) {
+
         @Override
         protected Object createServerGui(EntityPlayer player, PartFluidStorageBus inv) {
             return new ContainerFluidStorageBus(player.inventory, inv);
@@ -118,6 +131,7 @@ public enum GuiType {
     }),
 
     INGREDIENT_BUFFER(new TileGuiFactory<TileIngredientBuffer>(TileIngredientBuffer.class) {
+
         @Override
         protected Object createServerGui(EntityPlayer player, TileIngredientBuffer inv) {
             return new ContainerIngredientBuffer(player.inventory, inv);
@@ -130,6 +144,7 @@ public enum GuiType {
     }),
 
     LARGE_INGREDIENT_BUFFER(new TileGuiFactory<TileLargeIngredientBuffer>(TileLargeIngredientBuffer.class) {
+
         @Override
         protected Object createServerGui(EntityPlayer player, TileLargeIngredientBuffer inv) {
             return new ContainerLargeIngredientBuffer(player.inventory, inv);
@@ -142,6 +157,7 @@ public enum GuiType {
     }),
 
     CRAFTING_STATUS(new PartGuiFactory<FCPart>(FCPart.class) {
+
         @Override
         protected Object createServerGui(EntityPlayer player, FCPart inv) {
             return new ContainerCraftingStatus(player.inventory, inv);
@@ -154,6 +170,7 @@ public enum GuiType {
     }),
 
     FLUID_TERMINAL(new TileOrPartGuiFactory<ITerminalHost>(ITerminalHost.class) {
+
         @Override
         protected Object createServerGui(EntityPlayer player, ITerminalHost inv) {
             return new ContainerFluidMonitor(player.inventory, inv);
@@ -166,6 +183,7 @@ public enum GuiType {
     }),
 
     PORTABLE_FLUID_CELL(new ItemGuiFactory<IFluidPortableCell>(IFluidPortableCell.class) {
+
         @Override
         protected Object createServerGui(EntityPlayer player, IFluidPortableCell inv) {
             return new ContainerFluidPortableCell(player.inventory, inv);
@@ -178,6 +196,7 @@ public enum GuiType {
     }),
 
     FLUID_PATTERN_TERMINAL(new PartGuiFactory<ITerminalHost>(ITerminalHost.class) {
+
         @Override
         protected Object createServerGui(EntityPlayer player, ITerminalHost inv) {
             return new ContainerFluidPatternTerminal(player.inventory, inv);
@@ -190,6 +209,7 @@ public enum GuiType {
     }),
 
     FLUID_PATTERN_TERMINAL_EX(new PartGuiFactory<ITerminalHost>(ITerminalHost.class) {
+
         @Override
         protected Object createServerGui(EntityPlayer player, ITerminalHost inv) {
             return new ContainerFluidPatternTerminalEx(player.inventory, inv);
@@ -202,6 +222,7 @@ public enum GuiType {
     }),
 
     FLUID_PATTERN_ENCODER(new TileGuiFactory<TileFluidPatternEncoder>(TileFluidPatternEncoder.class) {
+
         @Override
         protected Object createServerGui(EntityPlayer player, TileFluidPatternEncoder inv) {
             return new ContainerFluidPatternEncoder(player.inventory, inv);
@@ -214,6 +235,7 @@ public enum GuiType {
     }),
 
     FLUID_CRAFTING_CONFIRM(new PartGuiFactory<FCPart>(FCPart.class) {
+
         @Override
         protected Object createServerGui(EntityPlayer player, FCPart inv) {
             return new ContainerFluidCraftConfirm(player.inventory, inv);
@@ -226,6 +248,7 @@ public enum GuiType {
     }),
 
     FLUID_CRAFTING_AMOUNT(new PartGuiFactory<FCPart>(FCPart.class) {
+
         @Override
         protected Object createServerGui(EntityPlayer player, FCPart inv) {
             return new ContainerCraftAmount(player.inventory, inv);
@@ -238,6 +261,7 @@ public enum GuiType {
     }),
 
     FLUID_PACKET_DECODER(new TileGuiFactory<TileFluidPacketDecoder>(TileFluidPacketDecoder.class) {
+
         @Override
         protected Object createServerGui(EntityPlayer player, TileFluidPacketDecoder inv) {
             return new ContainerFluidPacketDecoder(player.inventory, inv);
@@ -250,6 +274,7 @@ public enum GuiType {
     }),
 
     PATTERN_VALUE_SET(new PartGuiFactory<FCPart>(FCPart.class) {
+
         @Override
         protected Object createServerGui(EntityPlayer player, FCPart inv) {
             return new ContainerPatternValueAmount(player.inventory, inv);

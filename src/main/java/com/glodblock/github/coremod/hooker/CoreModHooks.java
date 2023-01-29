@@ -1,5 +1,17 @@
 package com.glodblock.github.coremod.hooker;
 
+import java.util.HashSet;
+import java.util.Set;
+
+import javax.annotation.Nullable;
+
+import net.minecraft.client.gui.inventory.GuiContainer;
+import net.minecraft.inventory.InventoryCrafting;
+import net.minecraft.item.ItemStack;
+import net.minecraft.tileentity.TileEntity;
+import net.minecraftforge.common.util.ForgeDirection;
+import net.minecraftforge.fluids.FluidStack;
+
 import appeng.api.config.Actionable;
 import appeng.api.networking.IGrid;
 import appeng.api.networking.IGridHost;
@@ -15,6 +27,7 @@ import appeng.me.cluster.implementations.CraftingCPUCluster;
 import appeng.parts.misc.PartInterface;
 import appeng.tile.misc.TileInterface;
 import appeng.util.InventoryAdaptor;
+
 import com.glodblock.github.client.gui.GuiFluidCraftConfirm;
 import com.glodblock.github.common.item.ItemFluidDrop;
 import com.glodblock.github.common.item.ItemFluidPacket;
@@ -26,21 +39,14 @@ import com.glodblock.github.loader.ItemAndBlockHolder;
 import com.glodblock.github.util.Ae2Reflect;
 import com.glodblock.github.util.SetBackedMachineSet;
 import com.google.common.collect.Sets;
-import java.util.HashSet;
-import java.util.Set;
-import javax.annotation.Nullable;
-import net.minecraft.client.gui.inventory.GuiContainer;
-import net.minecraft.inventory.InventoryCrafting;
-import net.minecraft.item.ItemStack;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraftforge.common.util.ForgeDirection;
-import net.minecraftforge.fluids.FluidStack;
 
 public class CoreModHooks {
 
     public static InventoryCrafting wrapCraftingBuffer(InventoryCrafting inv) {
         return new FluidConvertingInventoryCrafting(
-                inv.eventHandler, inv.inventoryWidth, inv.getSizeInventory() / inv.inventoryWidth);
+                inv.eventHandler,
+                inv.inventoryWidth,
+                inv.getSizeInventory() / inv.inventoryWidth);
     }
 
     public static IAEItemStack wrapFluidPacketStack(IAEItemStack stack) {
@@ -69,8 +75,7 @@ public class CoreModHooks {
     }
 
     public static long getCraftingByteCost(IAEItemStack stack) {
-        return stack.getItem() instanceof ItemFluidDrop
-                ? (long) Math.ceil(stack.getStackSize() / 1000D)
+        return stack.getItem() instanceof ItemFluidDrop ? (long) Math.ceil(stack.getStackSize() / 1000D)
                 : stack.getStackSize();
     }
 

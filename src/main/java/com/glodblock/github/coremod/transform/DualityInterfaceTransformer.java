@@ -1,9 +1,10 @@
 package com.glodblock.github.coremod.transform;
 
-import com.glodblock.github.coremod.FCClassTransformer;
 import org.objectweb.asm.ClassVisitor;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
+
+import com.glodblock.github.coremod.FCClassTransformer;
 
 public class DualityInterfaceTransformer extends FCClassTransformer.ClassMapper {
 
@@ -31,7 +32,8 @@ public class DualityInterfaceTransformer extends FCClassTransformer.ClassMapper 
                 case "pushPattern":
                 case "isBusy":
                     return new TransformInvAdaptorCalls(
-                            api, super.visitMethod(access, name, desc, signature, exceptions));
+                            api,
+                            super.visitMethod(access, name, desc, signature, exceptions));
                 default:
                     return super.visitMethod(access, name, desc, signature, exceptions);
             }
@@ -46,8 +48,7 @@ public class DualityInterfaceTransformer extends FCClassTransformer.ClassMapper 
 
         @Override
         public void visitMethodInsn(int opcode, String owner, String name, String desc, boolean itf) {
-            if (opcode == Opcodes.INVOKESTATIC
-                    && owner.equals("appeng/util/InventoryAdaptor")
+            if (opcode == Opcodes.INVOKESTATIC && owner.equals("appeng/util/InventoryAdaptor")
                     && name.equals("getAdaptor")) {
                 super.visitMethodInsn(
                         Opcodes.INVOKESTATIC,

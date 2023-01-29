@@ -1,15 +1,19 @@
 package com.glodblock.github.client.gui;
 
-import appeng.client.gui.widgets.ITooltip;
-import com.glodblock.github.FluidCraft;
-import com.glodblock.github.util.NameConst;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.regex.Pattern;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.util.StatCollector;
+
 import org.lwjgl.opengl.GL11;
+
+import appeng.client.gui.widgets.ITooltip;
+
+import com.glodblock.github.FluidCraft;
+import com.glodblock.github.util.NameConst;
 
 public class GuiFCImgButton extends GuiButton implements ITooltip {
 
@@ -138,8 +142,8 @@ public class GuiFCImgButton extends GuiButton implements ITooltip {
         String displayValue = null;
 
         if (this.buttonSetting != null && this.currentValue != null) {
-            final ButtonAppearance buttonAppearance =
-                    appearances.get(new EnumPair(this.buttonSetting, this.currentValue));
+            final ButtonAppearance buttonAppearance = appearances
+                    .get(new EnumPair(this.buttonSetting, this.currentValue));
             if (buttonAppearance == null) {
                 return "No Such Message";
             }
@@ -196,8 +200,7 @@ public class GuiFCImgButton extends GuiButton implements ITooltip {
                 }
 
                 par1Minecraft.renderEngine.bindTexture(FluidCraft.resource("textures/gui/states.png"));
-                this.field_146123_n = par2 >= this.xPosition
-                        && par3 >= this.yPosition
+                this.field_146123_n = par2 >= this.xPosition && par3 >= this.yPosition
                         && par2 < this.xPosition + this.width
                         && par3 < this.yPosition + this.height;
 
@@ -233,8 +236,7 @@ public class GuiFCImgButton extends GuiButton implements ITooltip {
                 }
 
                 par1Minecraft.renderEngine.bindTexture(FluidCraft.resource("textures/gui/states.png"));
-                this.field_146123_n = par2 >= this.xPosition
-                        && par3 >= this.yPosition
+                this.field_146123_n = par2 >= this.xPosition && par3 >= this.yPosition
                         && par2 < this.xPosition + this.width
                         && par3 < this.yPosition + this.height;
 
@@ -292,6 +294,7 @@ public class GuiFCImgButton extends GuiButton implements ITooltip {
     }
 
     private static class ButtonAppearance {
+
         public int index;
         public String displayName;
         public String displayValue;

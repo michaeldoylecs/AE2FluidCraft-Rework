@@ -1,5 +1,15 @@
 package com.glodblock.github.common.storage;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import net.minecraft.inventory.IInventory;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTBase;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraftforge.fluids.FluidStack;
+
 import appeng.api.AEApi;
 import appeng.api.config.Actionable;
 import appeng.api.exceptions.AppEngException;
@@ -11,14 +21,6 @@ import appeng.api.storage.data.IAEFluidStack;
 import appeng.api.storage.data.IItemList;
 import appeng.util.Platform;
 import appeng.util.item.AEFluidStack;
-import java.util.ArrayList;
-import java.util.List;
-import net.minecraft.inventory.IInventory;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTBase;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraftforge.fluids.FluidStack;
 
 public class FluidCellInventory implements IFluidCellInventory {
 
@@ -115,7 +117,7 @@ public class FluidCellInventory implements IFluidCellInventory {
     public boolean canHoldNewFluid() {
         final long bytesFree = this.getFreeBytes();
         return (bytesFree > this.getBytesPerType()
-                        || (bytesFree == this.getBytesPerType() && this.getUnusedFluidCount() > 0))
+                || (bytesFree == this.getBytesPerType() && this.getUnusedFluidCount() > 0))
                 && this.getRemainingFluidTypes() > 0;
     }
 
@@ -300,8 +302,8 @@ public class FluidCellInventory implements IFluidCellInventory {
 
         if (this.canHoldNewFluid()) // room for new type, and for at least one item!
         {
-            final long remainingFluidCount =
-                    this.getRemainingFluidCount() - ((long) this.getBytesPerType() * singleByteAmount);
+            final long remainingFluidCount = this.getRemainingFluidCount()
+                    - ((long) this.getBytesPerType() * singleByteAmount);
 
             if (remainingFluidCount > 0) {
                 if (input.getStackSize() > remainingFluidCount) {

@@ -1,5 +1,13 @@
 package com.glodblock.github.common.parts;
 
+import net.minecraft.client.renderer.RenderBlocks;
+import net.minecraft.item.ItemStack;
+import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.IIcon;
+import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.fluids.FluidTankInfo;
+import net.minecraftforge.fluids.IFluidHandler;
+
 import appeng.api.config.*;
 import appeng.api.networking.IGridNode;
 import appeng.api.networking.security.BaseActionSource;
@@ -13,18 +21,13 @@ import appeng.api.storage.data.IAEFluidStack;
 import appeng.client.texture.CableBusTextures;
 import appeng.me.GridAccessException;
 import appeng.util.item.AEFluidStack;
+
 import com.glodblock.github.client.textures.FCPartsTexture;
 import com.glodblock.github.common.item.ItemFluidPacket;
 import com.glodblock.github.common.parts.base.FCSharedFluidBus;
+
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import net.minecraft.client.renderer.RenderBlocks;
-import net.minecraft.item.ItemStack;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.IIcon;
-import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.FluidTankInfo;
-import net.minecraftforge.fluids.IFluidHandler;
 
 public class PartFluidImportBus extends FCSharedFluidBus {
 
@@ -65,8 +68,7 @@ public class PartFluidImportBus extends FCSharedFluidBus {
         if (te instanceof IFluidHandler) {
             try {
                 final IFluidHandler fh = (IFluidHandler) te;
-                final IMEMonitor<IAEFluidStack> inv =
-                        this.getProxy().getStorage().getFluidInventory();
+                final IMEMonitor<IAEFluidStack> inv = this.getProxy().getStorage().getFluidInventory();
 
                 int maxDrain = this.calculateAmountToSend();
                 boolean drained = false;
@@ -84,8 +86,8 @@ public class PartFluidImportBus extends FCSharedFluidBus {
 
                     final AEFluidStack aeFluidStack = AEFluidStack.create(fluidStack);
                     if (aeFluidStack != null) {
-                        final IAEFluidStack notInserted =
-                                inv.injectItems(aeFluidStack, Actionable.MODULATE, this.source);
+                        final IAEFluidStack notInserted = inv
+                                .injectItems(aeFluidStack, Actionable.MODULATE, this.source);
 
                         if (notInserted != null && notInserted.getStackSize() > 0) {
                             aeFluidStack.decStackSize(notInserted.getStackSize());
@@ -113,8 +115,8 @@ public class PartFluidImportBus extends FCSharedFluidBus {
 
     private boolean isInFilter(FluidStack fluid) {
         for (int i = 0; i < this.getInventoryByName("config").getSizeInventory(); i++) {
-            final IAEFluidStack stack = AEFluidStack.create(ItemFluidPacket.getFluidStack(
-                    this.getInventoryByName("config").getStackInSlot(i)));
+            final IAEFluidStack stack = AEFluidStack
+                    .create(ItemFluidPacket.getFluidStack(this.getInventoryByName("config").getStackInSlot(i)));
             if (stack != null && stack.getFluidStack().equals(fluid)) {
                 return true;
             }
@@ -124,8 +126,8 @@ public class PartFluidImportBus extends FCSharedFluidBus {
 
     private boolean filterEnabled() {
         for (int i = 0; i < this.getInventoryByName("config").getSizeInventory(); i++) {
-            final IAEFluidStack stack = AEFluidStack.create(ItemFluidPacket.getFluidStack(
-                    this.getInventoryByName("config").getStackInSlot(i)));
+            final IAEFluidStack stack = AEFluidStack
+                    .create(ItemFluidPacket.getFluidStack(this.getInventoryByName("config").getStackInSlot(i)));
             if (stack != null) {
                 return true;
             }
@@ -168,8 +170,8 @@ public class PartFluidImportBus extends FCSharedFluidBus {
 
     @Override
     @SideOnly(Side.CLIENT)
-    public void renderStatic(
-            final int x, final int y, final int z, final IPartRenderHelper rh, final RenderBlocks renderer) {
+    public void renderStatic(final int x, final int y, final int z, final IPartRenderHelper rh,
+            final RenderBlocks renderer) {
         this.setRenderCache(rh.useSimplifiedRendering(x, y, z, this, this.getRenderCache()));
         rh.setTexture(
                 CableBusTextures.PartImportSides.getIcon(),

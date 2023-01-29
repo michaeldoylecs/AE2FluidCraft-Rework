@@ -1,5 +1,22 @@
 package com.glodblock.github.common.parts.base;
 
+import java.io.IOException;
+import java.util.List;
+import java.util.Objects;
+
+import net.minecraft.client.renderer.RenderBlocks;
+import net.minecraft.client.renderer.Tessellator;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.inventory.IInventory;
+import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.ChatComponentText;
+import net.minecraft.util.IIcon;
+import net.minecraft.util.MathHelper;
+import net.minecraft.util.Vec3;
+import net.minecraftforge.common.util.ForgeDirection;
+
 import appeng.api.config.*;
 import appeng.api.implementations.IPowerChannelState;
 import appeng.api.implementations.tiles.IViewCellStorage;
@@ -24,29 +41,16 @@ import appeng.tile.inventory.InvOperation;
 import appeng.util.ConfigManager;
 import appeng.util.IConfigManagerHost;
 import appeng.util.Platform;
+
 import com.glodblock.github.client.textures.FCPartsTexture;
 import com.glodblock.github.inventory.InventoryHandler;
 import com.glodblock.github.inventory.gui.GuiType;
 import com.glodblock.github.util.BlockPos;
 import com.glodblock.github.util.Util;
+
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import io.netty.buffer.ByteBuf;
-import java.io.IOException;
-import java.util.List;
-import java.util.Objects;
-import net.minecraft.client.renderer.RenderBlocks;
-import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.inventory.IInventory;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.ChatComponentText;
-import net.minecraft.util.IIcon;
-import net.minecraft.util.MathHelper;
-import net.minecraft.util.Vec3;
-import net.minecraftforge.common.util.ForgeDirection;
 
 public abstract class FCPart extends AEBasePart
         implements IPowerChannelState, ITerminalHost, IConfigManagerHost, IViewCellStorage, IAEAppEngInventory {
@@ -247,12 +251,10 @@ public abstract class FCPart extends AEBasePart
     private int blockLight(final int emit) {
         if (this.opacity < 0) {
             final TileEntity te = this.getTile();
-            this.opacity = 255
-                    - te.getWorldObj()
-                            .getBlockLightOpacity(
-                                    te.xCoord + this.getSide().offsetX,
-                                    te.yCoord + this.getSide().offsetY,
-                                    te.zCoord + this.getSide().offsetZ);
+            this.opacity = 255 - te.getWorldObj().getBlockLightOpacity(
+                    te.xCoord + this.getSide().offsetX,
+                    te.yCoord + this.getSide().offsetY,
+                    te.zCoord + this.getSide().offsetZ);
         }
         return (int) (emit * (this.opacity / 255.0f));
     }
@@ -299,12 +301,8 @@ public abstract class FCPart extends AEBasePart
     }
 
     @Override
-    public void onChangeInventory(
-            final IInventory inv,
-            final int slot,
-            final InvOperation mc,
-            final ItemStack removedStack,
-            final ItemStack newStack) {
+    public void onChangeInventory(final IInventory inv, final int slot, final InvOperation mc,
+            final ItemStack removedStack, final ItemStack newStack) {
         this.getHost().markForSave();
     }
 
@@ -358,8 +356,8 @@ public abstract class FCPart extends AEBasePart
 
     @Override
     @SideOnly(Side.CLIENT)
-    public void renderStatic(
-            final int x, final int y, final int z, final IPartRenderHelper rh, final RenderBlocks renderer) {
+    public void renderStatic(final int x, final int y, final int z, final IPartRenderHelper rh,
+            final RenderBlocks renderer) {
         this.setRenderCache(rh.useSimplifiedRendering(x, y, z, this, this.getRenderCache()));
 
         final IIcon sideTexture = CableBusTextures.PartMonitorSides.getIcon();
@@ -381,8 +379,8 @@ public abstract class FCPart extends AEBasePart
             Tessellator.instance.setBrightness(l << 20 | l << 4);
         }
 
-        renderer.uvRotateBottom = renderer.uvRotateEast = renderer.uvRotateNorth =
-                renderer.uvRotateSouth = renderer.uvRotateTop = renderer.uvRotateWest = this.getSpin();
+        renderer.uvRotateBottom = renderer.uvRotateEast = renderer.uvRotateNorth = renderer.uvRotateSouth = renderer.uvRotateTop = renderer.uvRotateWest = this
+                .getSpin();
 
         Tessellator.instance.setColorOpaque_I(this.getColor().whiteVariant);
         rh.renderFace(x, y, z, this.getFrontBright().getIcon(), ForgeDirection.SOUTH, renderer);
@@ -393,8 +391,7 @@ public abstract class FCPart extends AEBasePart
         Tessellator.instance.setColorOpaque_I(this.getColor().blackVariant);
         rh.renderFace(x, y, z, this.getFrontColored().getIcon(), ForgeDirection.SOUTH, renderer);
 
-        renderer.uvRotateBottom = renderer.uvRotateEast =
-                renderer.uvRotateNorth = renderer.uvRotateSouth = renderer.uvRotateTop = renderer.uvRotateWest = 0;
+        renderer.uvRotateBottom = renderer.uvRotateEast = renderer.uvRotateNorth = renderer.uvRotateSouth = renderer.uvRotateTop = renderer.uvRotateWest = 0;
 
         final IIcon sideStatusTexture = CableBusTextures.PartMonitorSidesStatus.getIcon();
 

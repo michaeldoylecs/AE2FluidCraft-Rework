@@ -1,10 +1,12 @@
 package com.glodblock.github.coremod;
 
-import com.glodblock.github.coremod.transform.*;
 import net.minecraft.launchwrapper.IClassTransformer;
+
 import org.objectweb.asm.ClassReader;
 import org.objectweb.asm.ClassVisitor;
 import org.objectweb.asm.ClassWriter;
+
+import com.glodblock.github.coremod.transform.*;
 
 public class FCClassTransformer implements IClassTransformer {
 

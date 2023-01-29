@@ -1,8 +1,9 @@
 package com.glodblock.github.nei.object;
 
+import java.util.List;
+
 import codechicken.nei.PositionedStack;
 import codechicken.nei.recipe.IRecipeHandler;
-import java.util.List;
 
 public interface IRecipeExtractor {
 
@@ -14,8 +15,8 @@ public interface IRecipeExtractor {
         return getInputIngredients(rawInputs);
     }
 
-    default List<OrderStack<?>> getOutputIngredients(
-            List<PositionedStack> rawOutputs, IRecipeHandler recipe, int index) {
+    default List<OrderStack<?>> getOutputIngredients(List<PositionedStack> rawOutputs, IRecipeHandler recipe,
+            int index) {
         return getOutputIngredients(rawOutputs);
     }
 }

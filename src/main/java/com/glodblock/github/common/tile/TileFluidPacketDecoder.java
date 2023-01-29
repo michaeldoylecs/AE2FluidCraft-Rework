@@ -1,5 +1,11 @@
 package com.glodblock.github.common.tile;
 
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.inventory.IInventory;
+import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraftforge.fluids.FluidStack;
+
 import appeng.api.networking.GridFlags;
 import appeng.api.networking.IGridNode;
 import appeng.api.networking.energy.IEnergyGrid;
@@ -21,12 +27,8 @@ import appeng.tile.inventory.IAEAppEngInventory;
 import appeng.tile.inventory.InvOperation;
 import appeng.util.Platform;
 import appeng.util.item.AEFluidStack;
+
 import com.glodblock.github.common.item.ItemFluidPacket;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.inventory.IInventory;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraftforge.fluids.FluidStack;
 
 public class TileFluidPacketDecoder extends AENetworkTile implements IGridTickable, IAEAppEngInventory, IInventory {
 
@@ -66,8 +68,8 @@ public class TileFluidPacketDecoder extends AENetworkTile implements IGridTickab
         }
         IAEFluidStack aeFluid = AEFluidStack.create(fluid.copy());
         IEnergyGrid energyGrid = node.getGrid().getCache(IEnergyGrid.class);
-        IMEMonitor<IAEFluidStack> fluidGrid =
-                node.getGrid().<IStorageGrid>getCache(IStorageGrid.class).getFluidInventory();
+        IMEMonitor<IAEFluidStack> fluidGrid = node.getGrid().<IStorageGrid>getCache(IStorageGrid.class)
+                .getFluidInventory();
         IAEFluidStack remaining = Platform.poweredInsert(energyGrid, fluidGrid, aeFluid, ownActionSource);
         if (remaining != null) {
             if (remaining.getStackSize() == aeFluid.getStackSize()) {
@@ -83,8 +85,8 @@ public class TileFluidPacketDecoder extends AENetworkTile implements IGridTickab
     }
 
     @Override
-    public void onChangeInventory(
-            IInventory inv, int slot, InvOperation mc, ItemStack removedStack, ItemStack newStack) {
+    public void onChangeInventory(IInventory inv, int slot, InvOperation mc, ItemStack removedStack,
+            ItemStack newStack) {
         try {
             getProxy().getTick().alertDevice(getProxy().getNode());
         } catch (GridAccessException e) {

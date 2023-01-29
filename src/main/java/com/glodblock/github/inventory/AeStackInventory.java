@@ -1,8 +1,10 @@
 package com.glodblock.github.inventory;
 
-import appeng.api.storage.data.IAEStack;
 import java.util.stream.Stream;
+
 import javax.annotation.Nullable;
+
+import appeng.api.storage.data.IAEStack;
 
 public interface AeStackInventory<T extends IAEStack<T>> extends Iterable<T> {
 

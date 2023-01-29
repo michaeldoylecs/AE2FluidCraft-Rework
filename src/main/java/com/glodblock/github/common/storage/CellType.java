@@ -1,12 +1,15 @@
 package com.glodblock.github.common.storage;
 
-import appeng.core.features.AEFeature;
 import java.util.EnumSet;
+
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumChatFormatting;
 
+import appeng.core.features.AEFeature;
+
 public enum CellType {
+
     Cell1kPart(0, AEFeature.StorageCells),
     Cell4kPart(1, AEFeature.StorageCells),
     Cell16kPart(2, AEFeature.StorageCells),

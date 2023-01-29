@@ -1,9 +1,22 @@
 package com.glodblock.github.client.gui;
 
+import net.minecraft.client.gui.GuiButton;
+import net.minecraft.client.gui.inventory.GuiContainer;
+import net.minecraft.client.renderer.texture.TextureMap;
+import net.minecraft.client.resources.I18n;
+import net.minecraft.entity.player.InventoryPlayer;
+import net.minecraft.inventory.Slot;
+import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.StatCollector;
+import net.minecraftforge.common.util.ForgeDirection;
+
+import org.lwjgl.opengl.GL11;
+
 import appeng.api.storage.data.IAEFluidStack;
 import appeng.client.gui.AEBaseGui;
 import appeng.client.gui.widgets.GuiTabButton;
 import appeng.core.localization.GuiText;
+
 import com.glodblock.github.FluidCraft;
 import com.glodblock.github.client.gui.container.ContainerFluidInterface;
 import com.glodblock.github.common.parts.PartFluidInterface;
@@ -16,16 +29,6 @@ import com.glodblock.github.loader.ItemAndBlockHolder;
 import com.glodblock.github.network.CPacketSwitchGuis;
 import com.glodblock.github.util.NameConst;
 import com.glodblock.github.util.RenderUtil;
-import net.minecraft.client.gui.GuiButton;
-import net.minecraft.client.gui.inventory.GuiContainer;
-import net.minecraft.client.renderer.texture.TextureMap;
-import net.minecraft.client.resources.I18n;
-import net.minecraft.entity.player.InventoryPlayer;
-import net.minecraft.inventory.Slot;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.StatCollector;
-import net.minecraftforge.common.util.ForgeDirection;
-import org.lwjgl.opengl.GL11;
 
 public class GuiFluidInterface extends AEBaseGui {
 
@@ -58,11 +61,8 @@ public class GuiFluidInterface extends AEBaseGui {
     @Override
     public void func_146977_a(final Slot s) {
         try {
-            GuiContainer.class
-                    .getDeclaredMethod("func_146977_a_original", Slot.class)
-                    .invoke(this, s);
-        } catch (final Exception ignore) {
-        }
+            GuiContainer.class.getDeclaredMethod("func_146977_a_original", Slot.class).invoke(this, s);
+        } catch (final Exception ignore) {}
     }
 
     @Override

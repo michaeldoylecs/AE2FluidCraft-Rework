@@ -1,17 +1,21 @@
 package com.glodblock.github.nei.recipes.extractor;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import net.minecraftforge.fluids.FluidStack;
+
 import codechicken.nei.PositionedStack;
 import codechicken.nei.recipe.IRecipeHandler;
 import codechicken.nei.recipe.TemplateRecipeHandler;
+
 import com.glodblock.github.nei.object.IRecipeExtractorLegacy;
 import com.glodblock.github.nei.object.OrderStack;
+
 import forestry.core.recipes.nei.PositionedFluidTank;
 import forestry.core.recipes.nei.RecipeHandlerBase;
 import forestry.factory.recipes.nei.NEIHandlerFabricator;
 import forestry.factory.recipes.nei.NEIHandlerSqueezer;
-import java.util.ArrayList;
-import java.util.List;
-import net.minecraftforge.fluids.FluidStack;
 
 public class ForestryRecipeExtractor implements IRecipeExtractorLegacy {
 
@@ -42,8 +46,8 @@ public class ForestryRecipeExtractor implements IRecipeExtractorLegacy {
         List<OrderStack<?>> tmp = new ArrayList<>();
         if (tRecipe.arecipes.get(index) instanceof RecipeHandlerBase.CachedBaseRecipe) {
             tmp = getInputIngredients(rawInputs);
-            List<PositionedFluidTank> tanks =
-                    ((RecipeHandlerBase.CachedBaseRecipe) tRecipe.arecipes.get(index)).getFluidTanks();
+            List<PositionedFluidTank> tanks = ((RecipeHandlerBase.CachedBaseRecipe) tRecipe.arecipes.get(index))
+                    .getFluidTanks();
             if (tanks.size() > 0 && !(handler instanceof NEIHandlerSqueezer)) {
                 FluidStack fluid = tanks.get(0).tank.getFluid();
                 if (fluid != null) {
@@ -55,15 +59,15 @@ public class ForestryRecipeExtractor implements IRecipeExtractorLegacy {
     }
 
     @Override
-    public List<OrderStack<?>> getOutputIngredients(
-            List<PositionedStack> rawOutputs, IRecipeHandler recipe, int index) {
+    public List<OrderStack<?>> getOutputIngredients(List<PositionedStack> rawOutputs, IRecipeHandler recipe,
+            int index) {
         TemplateRecipeHandler tRecipe = (TemplateRecipeHandler) recipe;
         removeGlass(rawOutputs);
         List<OrderStack<?>> tmp = new ArrayList<>();
         if (tRecipe.arecipes.get(index) instanceof RecipeHandlerBase.CachedBaseRecipe) {
             tmp = getOutputIngredients(rawOutputs);
-            List<PositionedFluidTank> tanks =
-                    ((RecipeHandlerBase.CachedBaseRecipe) tRecipe.arecipes.get(index)).getFluidTanks();
+            List<PositionedFluidTank> tanks = ((RecipeHandlerBase.CachedBaseRecipe) tRecipe.arecipes.get(index))
+                    .getFluidTanks();
             if (tanks.size() > 0 && handler instanceof NEIHandlerSqueezer) {
                 FluidStack fluid = tanks.get(0).tank.getFluid();
                 if (fluid != null) {

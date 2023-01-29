@@ -1,5 +1,21 @@
 package com.glodblock.github.client.gui;
 
+import java.awt.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiButton;
+import net.minecraft.client.gui.inventory.GuiContainer;
+import net.minecraft.entity.player.InventoryPlayer;
+import net.minecraft.inventory.Slot;
+import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.ResourceLocation;
+
+import org.lwjgl.input.Keyboard;
+
 import appeng.api.storage.data.IAEItemStack;
 import appeng.client.gui.AEBaseGui;
 import appeng.client.render.AppEngRenderItem;
@@ -10,6 +26,7 @@ import codechicken.nei.VisiblityData;
 import codechicken.nei.api.INEIGuiHandler;
 import codechicken.nei.api.TaggedInventoryArea;
 import cofh.core.render.CoFHFontRenderer;
+
 import com.glodblock.github.FluidCraft;
 import com.glodblock.github.client.gui.container.ContainerLevelMaintainer;
 import com.glodblock.github.common.tile.TileLevelMaintainer;
@@ -20,19 +37,6 @@ import com.glodblock.github.network.CPacketLevelMaintainer;
 import com.glodblock.github.util.Ae2ReflectClient;
 import com.glodblock.github.util.NameConst;
 import cpw.mods.fml.common.Optional;
-import java.awt.*;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiButton;
-import net.minecraft.client.gui.inventory.GuiContainer;
-import net.minecraft.entity.player.InventoryPlayer;
-import net.minecraft.inventory.Slot;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.ResourceLocation;
-import org.lwjgl.input.Keyboard;
 
 @Optional.Interface(modid = "NotEnoughItems", iface = "codechicken.nei.api.INEIGuiHandler")
 public class GuiLevelMaintainer extends AEBaseGui implements INEIGuiHandler {
@@ -146,8 +150,7 @@ public class GuiLevelMaintainer extends AEBaseGui implements INEIGuiHandler {
             if (stack == null) return true;
             IAEItemStack fake = stack.copy();
             if (this.component[slot.getSlotIndex()].getQty().textField.getText().matches("[0-9]+")) {
-                fake.setStackSize(Long.parseLong(
-                        this.component[slot.getSlotIndex()].getQty().textField.getText()));
+                fake.setStackSize(Long.parseLong(this.component[slot.getSlotIndex()].getQty().textField.getText()));
             } else {
                 fake.setStackSize(0);
             }
@@ -209,9 +212,7 @@ public class GuiLevelMaintainer extends AEBaseGui implements INEIGuiHandler {
     @Override
     protected void handleMouseClick(final Slot slot, final int slotIdx, final int ctrlDown, final int mouseButton) {
         if (slot instanceof SlotFluidConvertingFake && this.cont.getPlayerInv().getItemStack() != null) {
-            this.component[slot.getSlotIndex()]
-                    .getQty()
-                    .textField
+            this.component[slot.getSlotIndex()].getQty().textField
                     .setText(String.valueOf(this.cont.getPlayerInv().getItemStack().stackSize));
             return;
         }
@@ -276,6 +277,7 @@ public class GuiLevelMaintainer extends AEBaseGui implements INEIGuiHandler {
     }
 
     private class Component {
+
         public boolean isEnable = true;
         private final Widget qty;
         private final Widget batch;
@@ -285,14 +287,8 @@ public class GuiLevelMaintainer extends AEBaseGui implements INEIGuiHandler {
         private final FCGuiLineField line;
         private TileLevelMaintainer.State state;
 
-        public Component(
-                Widget qtyInput,
-                Widget batchInput,
-                GuiFCImgButton submitBtn,
-                GuiFCImgButton enableBtn,
-                GuiFCImgButton disableBtn,
-                FCGuiLineField line,
-                List buttonList) {
+        public Component(Widget qtyInput, Widget batchInput, GuiFCImgButton submitBtn, GuiFCImgButton enableBtn,
+                GuiFCImgButton disableBtn, FCGuiLineField line, List buttonList) {
             this.qty = qtyInput;
             this.batch = batchInput;
             this.enable = enableBtn;
@@ -315,8 +311,7 @@ public class GuiLevelMaintainer extends AEBaseGui implements INEIGuiHandler {
 
         private boolean send(Widget widget) {
             if (((SlotFluidConvertingFake) cont.inventorySlots.get(widget.idx)).getHasStack()) {
-                if (!widget.textField.getText().isEmpty()
-                        && widget.textField.getText().matches("^[0-9]+")) {
+                if (!widget.textField.getText().isEmpty() && widget.textField.getText().matches("^[0-9]+")) {
                     String str = widget.textField.getText().replaceAll("^(0+)", "");
                     widget.textField.setText(str.isEmpty() ? "0" : str);
                     FluidCraft.proxy.netHandler.sendToServer(
@@ -337,12 +332,12 @@ public class GuiLevelMaintainer extends AEBaseGui implements INEIGuiHandler {
                 if (this.send(this.getQty())) this.send(this.getBatch());
                 didSomething = true;
             } else if (this.enable == btn) {
-                FluidCraft.proxy.netHandler.sendToServer(
-                        new CPacketLevelMaintainer("TileLevelMaintainer.Enable", this.getIndex()));
+                FluidCraft.proxy.netHandler
+                        .sendToServer(new CPacketLevelMaintainer("TileLevelMaintainer.Enable", this.getIndex()));
                 didSomething = true;
             } else if (this.disable == btn) {
-                FluidCraft.proxy.netHandler.sendToServer(
-                        new CPacketLevelMaintainer("TileLevelMaintainer.Disable", this.getIndex()));
+                FluidCraft.proxy.netHandler
+                        .sendToServer(new CPacketLevelMaintainer("TileLevelMaintainer.Disable", this.getIndex()));
                 didSomething = true;
             }
             return didSomething;
@@ -374,23 +369,27 @@ public class GuiLevelMaintainer extends AEBaseGui implements INEIGuiHandler {
             switch (this.state) {
                 case Idling:
                     this.line.setColor(0xFF55FF55);
-                    message.add(NameConst.i18n(NameConst.TT_LEVEL_MAINTAINER_CURRENT)
-                            + NameConst.i18n(NameConst.TT_LEVEL_MAINTAINER_IDLE));
+                    message.add(
+                            NameConst.i18n(NameConst.TT_LEVEL_MAINTAINER_CURRENT)
+                                    + NameConst.i18n(NameConst.TT_LEVEL_MAINTAINER_IDLE));
                     break;
                 case Crafting:
                     this.line.setColor(0xFFFFFF55);
-                    message.add(NameConst.i18n(NameConst.TT_LEVEL_MAINTAINER_CURRENT)
-                            + NameConst.i18n(NameConst.TT_LEVEL_MAINTAINER_LINK));
+                    message.add(
+                            NameConst.i18n(NameConst.TT_LEVEL_MAINTAINER_CURRENT)
+                                    + NameConst.i18n(NameConst.TT_LEVEL_MAINTAINER_LINK));
                     break;
                 case Exporting:
                     this.line.setColor(0xFFAA00AA);
-                    message.add(NameConst.i18n(NameConst.TT_LEVEL_MAINTAINER_CURRENT)
-                            + NameConst.i18n(NameConst.TT_LEVEL_MAINTAINER_EXPORT));
+                    message.add(
+                            NameConst.i18n(NameConst.TT_LEVEL_MAINTAINER_CURRENT)
+                                    + NameConst.i18n(NameConst.TT_LEVEL_MAINTAINER_EXPORT));
                     break;
                 default:
                     this.line.setColor(0);
-                    message.add(NameConst.i18n(NameConst.TT_LEVEL_MAINTAINER_CURRENT)
-                            + NameConst.i18n(NameConst.TT_LEVEL_MAINTAINER_NONE));
+                    message.add(
+                            NameConst.i18n(NameConst.TT_LEVEL_MAINTAINER_CURRENT)
+                                    + NameConst.i18n(NameConst.TT_LEVEL_MAINTAINER_NONE));
             }
             message.add("");
             if (isShiftKeyDown()) {
@@ -421,6 +420,7 @@ public class GuiLevelMaintainer extends AEBaseGui implements INEIGuiHandler {
     }
 
     private class Widget {
+
         public final int idx;
         public final String action;
         private final FCGuiTextField textField;
@@ -440,9 +440,11 @@ public class GuiLevelMaintainer extends AEBaseGui implements INEIGuiHandler {
             if (isShiftKeyDown()) {
                 this.setTooltip(render.wrapFormattedStringToWidth(NameConst.i18n(this.tooltip), xSize / 2));
             } else {
-                this.setTooltip(render.wrapFormattedStringToWidth(
-                        NameConst.i18n(this.tooltip, "\n", false) + "\n" + NameConst.i18n(NameConst.TT_SHIFT_FOR_MORE),
-                        (int) Math.floor(xSize * 0.8)));
+                this.setTooltip(
+                        render.wrapFormattedStringToWidth(
+                                NameConst.i18n(this.tooltip, "\n", false) + "\n"
+                                        + NameConst.i18n(NameConst.TT_SHIFT_FOR_MORE),
+                                (int) Math.floor(xSize * 0.8)));
             }
             this.textField.drawTextBox();
         }

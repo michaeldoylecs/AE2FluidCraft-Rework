@@ -1,5 +1,17 @@
 package com.glodblock.github.common.item;
 
+import java.util.EnumSet;
+import java.util.List;
+
+import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.inventory.IInventory;
+import net.minecraft.item.ItemStack;
+import net.minecraft.util.EnumChatFormatting;
+import net.minecraft.util.StatCollector;
+import net.minecraft.world.World;
+import net.minecraftforge.common.util.ForgeDirection;
+
 import appeng.api.AEApi;
 import appeng.api.config.FuzzyMode;
 import appeng.api.storage.IMEInventoryHandler;
@@ -11,6 +23,7 @@ import appeng.items.contents.CellConfig;
 import appeng.items.contents.CellUpgrades;
 import appeng.items.tools.powered.powersink.AEBasePoweredItem;
 import appeng.util.Platform;
+
 import com.glodblock.github.FluidCraft;
 import com.glodblock.github.common.Config;
 import com.glodblock.github.common.storage.IFluidCellInventory;
@@ -27,19 +40,10 @@ import com.glodblock.github.util.ModAndClassUtil;
 import com.glodblock.github.util.NameConst;
 import com.glodblock.github.util.RenderUtil;
 import com.google.common.base.Optional;
+
 import cpw.mods.fml.common.registry.GameRegistry;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import java.util.EnumSet;
-import java.util.List;
-import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.inventory.IInventory;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.EnumChatFormatting;
-import net.minecraft.util.StatCollector;
-import net.minecraft.world.World;
-import net.minecraftforge.common.util.ForgeDirection;
 
 public class ItemPortableFluidCell extends AEBasePoweredItem
         implements IStorageFluidCell, IItemInventory, IRegister<ItemPortableFluidCell> {
@@ -70,28 +74,43 @@ public class ItemPortableFluidCell extends AEBasePoweredItem
 
     @SideOnly(Side.CLIENT)
     @Override
-    public void addCheckedInformation(
-            final ItemStack stack, final EntityPlayer player, final List<String> lines, final boolean displayMoreInfo) {
+    public void addCheckedInformation(final ItemStack stack, final EntityPlayer player, final List<String> lines,
+            final boolean displayMoreInfo) {
         super.addCheckedInformation(stack, player, lines, displayMoreInfo);
-        final IMEInventoryHandler<?> inventory =
-                AEApi.instance().registries().cell().getCellInventory(stack, null, StorageChannel.FLUIDS);
+        final IMEInventoryHandler<?> inventory = AEApi.instance().registries().cell()
+                .getCellInventory(stack, null, StorageChannel.FLUIDS);
         if (inventory instanceof IFluidCellInventoryHandler) {
             final IFluidCellInventoryHandler handler = (IFluidCellInventoryHandler) inventory;
             final IFluidCellInventory cellInventory = handler.getCellInv();
             if (cellInventory != null) {
-                lines.add(EnumChatFormatting.WHITE + String.valueOf(cellInventory.getUsedBytes())
-                        + EnumChatFormatting.GRAY + " " + GuiText.Of.getLocal() + " "
-                        + EnumChatFormatting.DARK_GREEN + cellInventory.getTotalBytes() + " "
-                        + EnumChatFormatting.GRAY + GuiText.BytesUsed.getLocal());
-                lines.add(EnumChatFormatting.WHITE + String.valueOf(cellInventory.getStoredFluidTypes())
-                        + EnumChatFormatting.GRAY + " " + GuiText.Of.getLocal() + " "
-                        + EnumChatFormatting.DARK_GREEN + cellInventory.getTotalFluidTypes() + " "
-                        + EnumChatFormatting.GRAY + GuiText.Types.getLocal());
+                lines.add(
+                        EnumChatFormatting.WHITE + String.valueOf(cellInventory.getUsedBytes())
+                                + EnumChatFormatting.GRAY
+                                + " "
+                                + GuiText.Of.getLocal()
+                                + " "
+                                + EnumChatFormatting.DARK_GREEN
+                                + cellInventory.getTotalBytes()
+                                + " "
+                                + EnumChatFormatting.GRAY
+                                + GuiText.BytesUsed.getLocal());
+                lines.add(
+                        EnumChatFormatting.WHITE + String.valueOf(cellInventory.getStoredFluidTypes())
+                                + EnumChatFormatting.GRAY
+                                + " "
+                                + GuiText.Of.getLocal()
+                                + " "
+                                + EnumChatFormatting.DARK_GREEN
+                                + cellInventory.getTotalFluidTypes()
+                                + " "
+                                + EnumChatFormatting.GRAY
+                                + GuiText.Types.getLocal());
             }
         }
         if (GuiScreen.isShiftKeyDown()) {
-            lines.addAll(RenderUtil.listFormattedStringToWidth(
-                    StatCollector.translateToLocalFormatted(NameConst.TT_CELL_PORTABLE)));
+            lines.addAll(
+                    RenderUtil.listFormattedStringToWidth(
+                            StatCollector.translateToLocalFormatted(NameConst.TT_CELL_PORTABLE)));
         } else {
             lines.add(StatCollector.translateToLocal(NameConst.TT_SHIFT_FOR_MORE));
         }
