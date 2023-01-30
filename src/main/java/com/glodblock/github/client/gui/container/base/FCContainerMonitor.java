@@ -32,6 +32,8 @@ import appeng.util.ConfigManager;
 import appeng.util.IConfigManagerHost;
 import appeng.util.Platform;
 
+import com.glodblock.github.inventory.item.IWirelessTerminal;
+
 public abstract class FCContainerMonitor<T extends IAEStack<T>> extends AEBaseContainer
         implements IConfigManagerHost, IConfigurableObject, IMEMonitorHandlerReceiver<T> {
 
@@ -98,6 +100,7 @@ public abstract class FCContainerMonitor<T extends IAEStack<T>> extends AEBaseCo
             this.updatePowerStatus();
             final boolean oldAccessible = this.canAccessViewCells;
             this.canAccessViewCells = this.host instanceof WirelessTerminalGuiObject
+                    || this.host instanceof IWirelessTerminal
                     || this.hasAccess(SecurityPermissions.BUILD, false);
             if (this.canAccessViewCells != oldAccessible) {
                 for (int y = 0; y < 5; y++) {
@@ -213,5 +216,9 @@ public abstract class FCContainerMonitor<T extends IAEStack<T>> extends AEBaseCo
         if (this.getGui() != null) {
             this.getGui().updateSetting(manager, settingName, newValue);
         }
+    }
+
+    public ITerminalHost getHost() {
+        return this.host;
     }
 }

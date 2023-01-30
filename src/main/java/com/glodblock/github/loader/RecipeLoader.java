@@ -128,6 +128,7 @@ public class RecipeLoader implements Runnable {
                         AE2_INTERFACE));
         GameRegistry.addShapelessRecipe(FLUID_INTERFACE.stack(), INTERFACE.stack());
         GameRegistry.addShapelessRecipe(INTERFACE.stack(), FLUID_INTERFACE.stack());
+        GameRegistry.addShapelessRecipe(WIRELESS_FLUID_TERM.stack(), AE2_TERMINAL, BUFFER.stack());
         GameRegistry
                 .addRecipe(new ShapedOreRecipe(CERTUS_QUARTZ_TANK.stack(), "GGG", "G G", "GGG", 'G', AE2_QUARTZ_GLASS));
         GameRegistry.addShapelessRecipe(FLUID_AUTO_FILLER.stack(), FLUID_TERMINAL, ENCODER);

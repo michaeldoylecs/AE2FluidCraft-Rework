@@ -32,7 +32,7 @@ public abstract class ItemGuiFactory<T> implements IGuiFactory {
         if (item == null || !(item.getItem() instanceof IItemInventory)) {
             return null;
         }
-        T inv = getInventory(((IItemInventory) item.getItem()).getInventory(item, world, x, y, z));
+        T inv = getInventory(((IItemInventory) item.getItem()).getInventory(item, world, x, y, z, player));
         if (inv == null) {
             return null;
         }
@@ -59,7 +59,7 @@ public abstract class ItemGuiFactory<T> implements IGuiFactory {
         if (item == null || !(item.getItem() instanceof IItemInventory)) {
             return null;
         }
-        T inv = getInventory(((IItemInventory) item.getItem()).getInventory(item, world, x, y, z));
+        T inv = getInventory(((IItemInventory) item.getItem()).getInventory(item, world, x, y, z, player));
         return inv != null ? createClientGui(player, inv) : null;
     }
 

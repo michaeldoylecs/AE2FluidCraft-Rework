@@ -192,7 +192,7 @@ public class ItemPortableFluidCell extends AEBasePoweredItem
     }
 
     @Override
-    public Object getInventory(ItemStack stack, World world, int x, int y, int z) {
+    public Object getInventory(ItemStack stack, World world, int x, int y, int z, EntityPlayer player) {
         return new PortableFluidCellInventory(stack, x);
     }
 

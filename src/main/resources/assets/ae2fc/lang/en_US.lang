@@ -11,6 +11,7 @@ item.part_fluid_level_emitter.name=ME Fluid Level Emitter
 item.part_fluid_storage_monitor.name=ME Fluid Storage Monitor
 item.part_fluid_conversion_monitor.name=ME Fluid Conversion Monitor
 item.portable_fluid_cell.name=Portable Fluid Cell
+item.wireless_fluid_terminal.name=Wireless Fluid Terminal
 item.fluid_packet.name=Fluid Packet
 item.fluid_storage.1.name=%s1k%s ME Fluid Storage Cell
 item.fluid_storage.4.name=%s4k%s ME Fluid Storage Cell

@@ -60,7 +60,6 @@ public class TileFluidAutoFiller extends AENetworkInvTile
     private final AppEngInternalInventory inventory = new AppEngInternalInventory(this, 1);
     private final BaseActionSource source = new MachineSource(this);
     private IItemList<IAEFluidStack> fluids = AEApi.instance().storage().createFluidList();
-    public ItemStack containerItem;
     private final Item encodedPattern = AEApi.instance().definitions().items().encodedPattern().maybeItem().orNull();
     private IAEItemStack returnStack;
     private boolean isPowered;
@@ -74,7 +73,14 @@ public class TileFluidAutoFiller extends AENetworkInvTile
         getProxy().setIdlePowerUsage(1D);
         getProxy().setFlags(GridFlags.REQUIRE_CHANNEL);
         inventory.setInventorySlotContents(0, BUCKET);
-        this.containerItem = getInventory().getStackInSlot(0);
+    }
+
+    public ItemStack getContainerItem() {
+        return getInventory().getStackInSlot(0);
+    }
+
+    public void setContainerItem(ItemStack is) {
+        getInventory().setInventorySlotContents(0, is);
     }
 
     @Override
@@ -92,8 +98,8 @@ public class TileFluidAutoFiller extends AENetworkInvTile
 
     public void updatePattern() {
         ItemStack is = inventory.getStackInSlot(0);
-        if (is == null || this.containerItem.isItemEqual(is)) return;
-        this.containerItem = is;
+        if (is == null || this.getContainerItem().isItemEqual(is)) return;
+        this.setContainerItem(is);
         postEvent();
     }
 
@@ -141,12 +147,12 @@ public class TileFluidAutoFiller extends AENetworkInvTile
         for (IAEFluidStack fluidStack : fluidStorage) {
             Fluid fluid = fluidStack.getFluid();
             if (fluid == null) continue;
-            int maxCapacity = Util.FluidUtil.getCapacity(this.containerItem, fluid);
+            int maxCapacity = Util.FluidUtil.getCapacity(this.getContainerItem(), fluid);
             if (maxCapacity == 0) continue;
             MutablePair<Integer, ItemStack> filled = Util.FluidUtil
-                    .fillStack(this.containerItem.copy(), new FluidStack(fluid, maxCapacity));
+                    .fillStack(this.getContainerItem().copy(), new FluidStack(fluid, maxCapacity));
             if (filled.right == null) continue;
-            ItemStack pattern = getPattern(this.containerItem, filled.right);
+            ItemStack pattern = getPattern(this.getContainerItem(), filled.right);
             ICraftingPatternItem patter = (ICraftingPatternItem) pattern.getItem();
             craftingTracker.addCraftingOption(this, patter.getPatternForItem(pattern, getWorldObj()));
         }

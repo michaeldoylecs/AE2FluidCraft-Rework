@@ -14,6 +14,7 @@ import appeng.container.ContainerOpenContext;
 import com.glodblock.github.inventory.InventoryHandler;
 import com.glodblock.github.inventory.gui.GuiType;
 import com.glodblock.github.util.BlockPos;
+import com.glodblock.github.util.Util;
 
 import cpw.mods.fml.common.network.simpleimpl.IMessage;
 import cpw.mods.fml.common.network.simpleimpl.IMessageHandler;
@@ -60,15 +61,25 @@ public class CPacketSwitchGuis implements IMessage {
                 return null;
             }
             TileEntity te = context.getTile();
-            if (te == null) {
-                return null;
+            if (te != null) {
+                InventoryHandler.openGui(
+                        player,
+                        player.worldObj,
+                        new BlockPos(te),
+                        Objects.requireNonNull(context.getSide()),
+                        message.guiType);
+            } else {
+                InventoryHandler.openGui(
+                        player,
+                        player.worldObj,
+                        new BlockPos(
+                                (int) player.posX,
+                                Util.GuiHelper.encodeType((int) player.posY, Util.GuiHelper.GuiType.ITEM),
+                                (int) player.posZ),
+                        Objects.requireNonNull(context.getSide()),
+                        message.guiType);
             }
-            InventoryHandler.openGui(
-                    player,
-                    player.worldObj,
-                    new BlockPos(te),
-                    Objects.requireNonNull(context.getSide()),
-                    message.guiType);
+
             return null;
         }
     }

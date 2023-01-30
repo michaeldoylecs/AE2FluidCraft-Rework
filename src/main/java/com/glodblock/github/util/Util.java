@@ -15,17 +15,25 @@ import org.apache.commons.lang3.tuple.MutablePair;
 
 import appeng.api.AEApi;
 import appeng.api.config.SecurityPermissions;
+import appeng.api.implementations.tiles.IWirelessAccessPoint;
 import appeng.api.networking.IGrid;
 import appeng.api.networking.IGridHost;
 import appeng.api.networking.IGridNode;
 import appeng.api.networking.security.ISecurityGrid;
+import appeng.api.networking.storage.IBaseMonitor;
+import appeng.api.networking.storage.IStorageGrid;
 import appeng.api.parts.IPart;
+import appeng.api.storage.StorageChannel;
 import appeng.api.storage.data.IAEFluidStack;
+import appeng.api.storage.data.IAEStack;
+import appeng.api.util.WorldCoord;
 import appeng.tile.networking.TileCableBus;
+import appeng.tile.networking.TileWireless;
 import appeng.util.item.AEFluidStack;
 
 import com.glodblock.github.common.item.ItemFluidDrop;
 import com.glodblock.github.common.item.ItemFluidPacket;
+import com.glodblock.github.common.item.ItemWirelessFluidTerminal;
 import com.glodblock.github.inventory.IAEFluidTank;
 
 import cpw.mods.fml.common.ModContainer;
@@ -33,6 +41,39 @@ import cpw.mods.fml.common.registry.GameData;
 import io.netty.buffer.ByteBuf;
 
 public final class Util {
+
+    public static IGridNode getWirelessGrid(ItemStack is, BlockPos pos, StorageChannel channel) {
+        String key = ((ItemWirelessFluidTerminal) is.getItem()).getEncryptionKey(is);
+        IGridHost securityTerminal = (IGridHost) AEApi.instance().registries().locatable()
+                .getLocatableBy(Long.parseLong(key));
+        if (securityTerminal == null) return null;
+        return securityTerminal.getGridNode(ForgeDirection.UNKNOWN);
+    }
+
+    @SuppressWarnings("unchecked")
+    public static IBaseMonitor<? extends IAEStack<? extends IAEStack<?>>> getWirelessInv(ItemStack is, BlockPos pos,
+            StorageChannel channel) {
+        IGridNode gridNode = getWirelessGrid(is, pos, channel);
+        if (gridNode == null) return null;
+        IGrid grid = gridNode.getGrid();
+        if (grid == null) return null;
+        for (IGridNode node : grid.getMachines(TileWireless.class)) {
+            IWirelessAccessPoint accessPoint = (IWirelessAccessPoint) node.getMachine();
+            WorldCoord distance = accessPoint.getLocation().subtract(pos.getX(), pos.getY(), pos.getZ());
+            int squaredDistance = distance.x * distance.x + distance.y * distance.y + distance.z * distance.z;
+            if (squaredDistance <= accessPoint.getRange() * accessPoint.getRange()) {
+                IStorageGrid gridCache = grid.getCache(IStorageGrid.class);
+                if (gridCache != null) {
+                    if (channel == StorageChannel.FLUIDS) {
+                        return gridCache.getFluidInventory();
+                    } else {
+                        return gridCache.getItemInventory();
+                    }
+                }
+            }
+        }
+        return null;
+    }
 
     public static int findItemInPlayerInvSlot(EntityPlayer player, ItemStack itemStack) {
         for (int i = 0; i < player.inventory.mainInventory.length; i++) {
@@ -214,6 +255,31 @@ public final class Util {
             else {
                 IAEFluidStack fluid = AEFluidStack.loadFluidStackFromPacket(buf);
                 list.put(id, fluid);
+            }
+        }
+    }
+
+    public static class GuiHelper {
+
+        public enum GuiType {
+            TILE,
+            ITEM
+        }
+
+        private static final int value = 1 << 30;
+
+        public static int encodeType(int y, GuiType type) {
+            if (y > (1 << 28)) {
+                throw new IllegalArgumentException("out of range");
+            }
+            return value | (type.ordinal() << 29) | y;
+        }
+
+        public static MutablePair<GuiType, Integer> decodeType(int y) {
+            if (y > (1 << 28)) {
+                return new MutablePair<>(GuiType.values()[y >> 29 & 1], y - (3 << 29 & y));
+            } else {
+                return new MutablePair<>(GuiType.TILE, y);
             }
         }
     }
