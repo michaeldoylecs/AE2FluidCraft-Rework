@@ -218,6 +218,10 @@ public final class Util {
         }
     }
 
+    public static int clamp(int value, int min, int max) {
+        return value < min ? min : (Math.min(value, max));
+    }
+
     public static class FluidUtil {
 
         public static IAEFluidStack createAEFluidStack(Fluid fluid) {

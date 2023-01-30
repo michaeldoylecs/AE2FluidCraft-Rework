@@ -28,7 +28,7 @@ import cpw.mods.fml.common.network.NetworkRegistry;
         modid = FluidCraft.MODID,
         version = FluidCraft.VERSION,
         name = FluidCraft.MODNAME,
-        dependencies = "required-after:appliedenergistics2;after:waila")
+        dependencies = "required-after:appliedenergistics2;required-after:BuildCraft|Factory;required-after:CoFHCore;after:waila")
 public class FluidCraft {
 
     public static final String MODID = "GRADLETOKEN_MODID";

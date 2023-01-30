@@ -1,11 +1,16 @@
 package com.glodblock.github.common.block;
 
+import java.util.List;
+
+import net.minecraft.block.Block;
+import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.IIcon;
+import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
@@ -13,13 +18,11 @@ import net.minecraftforge.fluids.FluidContainerRegistry;
 import net.minecraftforge.fluids.FluidStack;
 
 import appeng.api.implementations.items.IAEWrench;
-import buildcraft.api.tools.IToolWrench;
-import buildcraft.factory.BlockTank;
 
-import com.glodblock.github.FluidCraft;
 import com.glodblock.github.common.item.ItemCertusQuartzTank;
 import com.glodblock.github.common.tabs.FluidCraftingTabs;
 import com.glodblock.github.common.tile.TileCertusQuartzTank;
+import com.glodblock.github.loader.ChannelLoader;
 import com.glodblock.github.loader.IRegister;
 import com.glodblock.github.loader.ItemAndBlockHolder;
 import com.glodblock.github.util.NameConst;
@@ -28,98 +31,116 @@ import cpw.mods.fml.common.registry.GameRegistry;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
-public class BlockCertusQuartzTank extends BlockTank implements IRegister<BlockTank> {
+public class BlockCertusQuartzTank extends BaseBlockContainer implements IRegister<BlockCertusQuartzTank> {
 
-    private IIcon textureStackedSide;
+    IIcon breakIcon;
+    IIcon topIcon;
+    IIcon bottomIcon;
+    IIcon sideIcon;
+    IIcon sideMiddleIcon;
+    IIcon sideTopIcon;
+    IIcon sideBottomIcon;
 
     public BlockCertusQuartzTank() {
+        super(Material.glass);
         setBlockName(NameConst.BLOCK_CERTUS_QUARTZ_TANK);
-        setResistance(1.0F);
-        setHardness(0.5F);
+        setResistance(10.0F);
+        setHardness(2.0F);
         setBlockBounds(0.0625F, 0.0F, 0.0625F, 0.9375F, 1.0F, 0.9375F);
     }
 
-    public ItemStack getDropWithNBT(World world, int x, int y, int z) {
-        NBTTagCompound nbt = new NBTTagCompound();
-        TileEntity te = world.getTileEntity(x, y, z);
-        if (te instanceof TileCertusQuartzTank) {
-            ItemStack dropStack = new ItemStack(ItemAndBlockHolder.CERTUS_QUARTZ_TANK, 1);
-            ((TileCertusQuartzTank) te).writeToNBTWithoutCoords(nbt);
-            if (!nbt.getCompoundTag("tank").hasKey("Empty")) {
-                dropStack.setTagCompound(nbt);
-            }
+    @Override
+    public boolean canRenderInPass(int pass) {
+        return true;
+    }
 
+    @Override
+    public TileEntity createNewTileEntity(World var1, int var2) {
+        return new TileCertusQuartzTank();
+    }
+
+    public ItemStack getDropWithNBT(World world, int x, int y, int z) {
+        NBTTagCompound tileEntity = new NBTTagCompound();
+        TileEntity worldTE = world.getTileEntity(x, y, z);
+        if (worldTE instanceof TileCertusQuartzTank) {
+            ItemStack dropStack = new ItemStack(ItemAndBlockHolder.CERTUS_QUARTZ_TANK, 1);
+
+            ((TileCertusQuartzTank) worldTE).writeToNBTWithoutCoords(tileEntity);
+
+            if (!tileEntity.hasKey("Empty")) {
+                dropStack.setTagCompound(new NBTTagCompound());
+                dropStack.stackTagCompound.setTag("tileEntity", tileEntity);
+            }
             return dropStack;
+
         }
         return null;
     }
 
-    public TileEntity createNewTileEntity(World world, int metadata) {
-        return new TileCertusQuartzTank();
-    }
-
-    @SideOnly(Side.CLIENT)
-    public void registerBlockIcons(IIconRegister par1IconRegister) {
-        super.registerBlockIcons(par1IconRegister);
-        textureStackedSide = par1IconRegister.registerIcon(FluidCraft.MODID + ":certus_quartz_tank/side_stacked");
-    }
-
     @Override
-    public IIcon getIconAbsolute(IBlockAccess iblockaccess, int x, int y, int z, int side, int metadata) {
-        if (side >= 2 && (iblockaccess.getBlock(x, y - 1, z) instanceof BlockCertusQuartzTank)) {
-            return textureStackedSide;
-        } else {
-            return super.getIconAbsolute(side, metadata);
+    public IIcon getIcon(int side, int meta) {
+        switch (meta) {
+            case 1:
+                return this.sideTopIcon;
+            case 2:
+                return this.sideBottomIcon;
+            case 3:
+                return this.sideMiddleIcon;
+            default:
+                return side == 0 ? this.bottomIcon : side == 1 ? this.topIcon : this.sideIcon;
         }
     }
 
     @Override
-    public boolean onBlockActivated(World worldObj, int x, int y, int z, EntityPlayer p, int blockID, float offsetX,
-            float offsetY, float offsetZ) {
-        ItemStack current = p.inventory.getCurrentItem();
+    public ItemStack getPickBlock(MovingObjectPosition target, World world, int x, int y, int z, EntityPlayer player) {
+        return getDropWithNBT(world, x, y, z);
+    }
 
-        if (p.isSneaking() && current != null) {
-            try {
-                if (current.getItem() instanceof IToolWrench
-                        && ((IToolWrench) current.getItem()).canWrench(p, x, y, z)) {
-                    dropBlockAsItem(worldObj, x, y, z, getDropWithNBT(worldObj, x, y, z));
-                    worldObj.setBlockToAir(x, y, z);
-                    ((IToolWrench) current.getItem()).wrenchUsed(p, x, y, z);
-                    return true;
-                }
-            } catch (Throwable e) {
-                // No IToolWrench
-            }
+    @Override
+    public boolean isOpaqueCube() {
+        return false;
+    }
+
+    @Override
+    public int getLightValue(IBlockAccess world, int x, int y, int z) {
+        TileEntity tile = world.getTileEntity(x, y, z);
+        if (tile instanceof TileCertusQuartzTank) {
+            TileCertusQuartzTank tank = (TileCertusQuartzTank) tile;
+            return tank.getFluidLightLevel();
+        }
+        return super.getLightValue(world, x, y, z);
+    }
+
+    @Override
+    public boolean onBlockActivated(World worldObj, int x, int y, int z, EntityPlayer entityplayer, int blockID,
+            float offsetX, float offsetY, float offsetZ) {
+        ItemStack current = entityplayer.inventory.getCurrentItem();
+
+        if (entityplayer.isSneaking() && current != null) {
             if (current.getItem() instanceof IAEWrench
-                    && ((IAEWrench) current.getItem()).canWrench(current, p, x, y, z)) {
+                    && ((IAEWrench) current.getItem()).canWrench(current, entityplayer, x, y, z)) {
                 dropBlockAsItem(worldObj, x, y, z, getDropWithNBT(worldObj, x, y, z));
                 worldObj.setBlockToAir(x, y, z);
                 return true;
             }
         }
-
         if (current != null) {
             FluidStack liquid = FluidContainerRegistry.getFluidForFilledItem(current);
             TileCertusQuartzTank tank = (TileCertusQuartzTank) worldObj.getTileEntity(x, y, z);
 
             if (liquid != null) {
                 int amountFilled = tank.fill(ForgeDirection.UNKNOWN, liquid, true);
-
-                if (amountFilled != 0 && !p.capabilities.isCreativeMode) {
+                if (amountFilled != 0 && !entityplayer.capabilities.isCreativeMode && current.getItem() != null) {
                     if (current.stackSize > 1) {
-                        p.inventory.mainInventory[p.inventory.currentItem].stackSize -= 1;
-                        p.inventory.addItemStackToInventory(current.getItem().getContainerItem(current));
+                        entityplayer.inventory.mainInventory[entityplayer.inventory.currentItem].stackSize -= 1;
+                        entityplayer.inventory.addItemStackToInventory(current.getItem().getContainerItem(current));
                     } else {
-                        p.inventory.mainInventory[p.inventory.currentItem] = current.getItem()
+                        entityplayer.inventory.mainInventory[entityplayer.inventory.currentItem] = current.getItem()
                                 .getContainerItem(current);
                     }
                 }
-
                 return true;
-
-                // Handle empty containers
             } else {
-
                 FluidStack available = tank.getTankInfo(ForgeDirection.UNKNOWN)[0].fluid;
                 if (available != null) {
                     ItemStack filled = FluidContainerRegistry.fillFluidContainer(available, current);
@@ -128,12 +149,13 @@ public class BlockCertusQuartzTank extends BlockTank implements IRegister<BlockT
 
                     if (liquid != null) {
                         tank.drain(ForgeDirection.UNKNOWN, liquid.amount, true);
-                        if (!p.capabilities.isCreativeMode) {
+                        if (!entityplayer.capabilities.isCreativeMode) {
                             if (current.stackSize == 1) {
-                                p.inventory.mainInventory[p.inventory.currentItem] = filled;
+                                entityplayer.inventory.mainInventory[entityplayer.inventory.currentItem] = filled;
                             } else {
-                                p.inventory.mainInventory[p.inventory.currentItem].stackSize--;
-                                if (!p.inventory.addItemStackToInventory(filled)) p.entityDropItem(filled, 0);
+                                entityplayer.inventory.mainInventory[entityplayer.inventory.currentItem].stackSize--;
+                                if (!entityplayer.inventory.addItemStackToInventory(filled))
+                                    entityplayer.entityDropItem(filled, 0);
                             }
                         }
                         return true;
@@ -145,14 +167,45 @@ public class BlockCertusQuartzTank extends BlockTank implements IRegister<BlockT
     }
 
     @Override
+    public void onNeighborBlockChange(World world, int x, int y, int z, Block neighborBlock) {
+        if (!world.isRemote) {
+            ChannelLoader.sendPacketToAllPlayers(world.getTileEntity(x, y, z).getDescriptionPacket(), world);
+        }
+    }
+
+    @Override
+    @SuppressWarnings({ "rawtypes", "unchecked" })
+    @SideOnly(Side.CLIENT)
+    public void addInformation(ItemStack stack, EntityPlayer player, List list, boolean par4) {
+        if (stack != null && stack.hasTagCompound()) {
+            if (FluidStack.loadFluidStackFromNBT(stack.getTagCompound().getCompoundTag("tileEntity")) != null) list.add(
+                    FluidStack.loadFluidStackFromNBT(stack.getTagCompound().getCompoundTag("tileEntity")).amount
+                            + "mB");
+        }
+    }
+
+    @Override
+    public void registerBlockIcons(IIconRegister iconregister) {
+        String folder = NameConst.RES_KEY + "certus_quartz_tank/";
+        this.breakIcon = iconregister.registerIcon(folder + "cube");
+        this.topIcon = iconregister.registerIcon(folder + "top");
+        this.bottomIcon = iconregister.registerIcon(folder + "bottom");
+        this.sideIcon = iconregister.registerIcon(folder + "side");
+        this.sideMiddleIcon = iconregister.registerIcon(folder + "side_mid");
+        this.sideTopIcon = iconregister.registerIcon(folder + "side_top");
+        this.sideBottomIcon = iconregister.registerIcon(folder + "side_bottom");
+    }
+
+    @Override
+    public boolean renderAsNormalBlock() {
+        return false;
+    }
+
+    @Override
     public BlockCertusQuartzTank register() {
         GameRegistry.registerBlock(this, ItemCertusQuartzTank.class, NameConst.BLOCK_CERTUS_QUARTZ_TANK);
         GameRegistry.registerTileEntity(TileCertusQuartzTank.class, NameConst.BLOCK_CERTUS_QUARTZ_TANK);
         setCreativeTab(FluidCraftingTabs.INSTANCE);
         return this;
-    }
-
-    public ItemStack stack() {
-        return new ItemStack(this, 1);
     }
 }

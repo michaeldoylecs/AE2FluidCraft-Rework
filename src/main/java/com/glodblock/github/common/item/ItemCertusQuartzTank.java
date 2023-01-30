@@ -1,12 +1,7 @@
 package com.glodblock.github.common.item;
 
-import static com.glodblock.github.common.tile.TileCertusQuartzTank.CAPACITY;
-
-import java.util.List;
-
 import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
@@ -14,41 +9,24 @@ import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.IFluidContainerItem;
 
 import com.glodblock.github.common.tile.TileCertusQuartzTank;
-import com.glodblock.github.crossmod.waila.Tooltip;
 
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
+public class ItemCertusQuartzTank extends BaseItemBlockContainer implements IFluidContainerItem {
 
-public class ItemCertusQuartzTank extends ItemBlock implements IFluidContainerItem {
-
-    private final String tagKey = "tank";
-
-    private final int capacity = CAPACITY;
+    private final int capacity = 32000;
 
     public ItemCertusQuartzTank(Block block) {
         super(block);
     }
 
-    @SuppressWarnings({ "rawtypes", "unchecked" })
-    @Override
-    @SideOnly(Side.CLIENT)
-    public void addInformation(ItemStack stack, EntityPlayer player, List list, boolean par4) {
-        if (stack != null && stack.hasTagCompound()) {
-            if (FluidStack.loadFluidStackFromNBT(stack.getTagCompound().getCompoundTag(tagKey)) != null) {
-                FluidStack fs = FluidStack.loadFluidStackFromNBT(stack.getTagCompound().getCompoundTag(tagKey));
-                list.add(Tooltip.fluidFormat(fs.getFluid().getLocalizedName(fs), fs.amount));
-            }
-        }
-    }
-
     @Override
     public FluidStack drain(ItemStack container, int maxDrain, boolean doDrain) {
-        if (container.stackTagCompound == null || !container.stackTagCompound.hasKey(tagKey)
-                || container.stackTagCompound.getCompoundTag(tagKey).hasKey("Empty")) {
+        if (container.stackSize != 1 || container.stackTagCompound == null
+                || !container.stackTagCompound.hasKey("tileEntity")
+                || container.stackTagCompound.getCompoundTag("tileEntity").hasKey("Empty")) {
             return null;
         }
 
-        FluidStack stack = FluidStack.loadFluidStackFromNBT(container.stackTagCompound.getCompoundTag(tagKey));
+        FluidStack stack = FluidStack.loadFluidStackFromNBT(container.stackTagCompound.getCompoundTag("tileEntity"));
         if (stack == null) {
             return null;
         }
@@ -57,7 +35,7 @@ public class ItemCertusQuartzTank extends ItemBlock implements IFluidContainerIt
         stack.amount = Math.min(stack.amount, maxDrain);
         if (doDrain) {
             if (currentAmount == stack.amount) {
-                container.stackTagCompound.removeTag(tagKey);
+                container.stackTagCompound.removeTag("tileEntity");
 
                 if (container.stackTagCompound.hasNoTags()) {
                     container.stackTagCompound = null;
@@ -65,25 +43,26 @@ public class ItemCertusQuartzTank extends ItemBlock implements IFluidContainerIt
                 return stack;
             }
 
-            NBTTagCompound fluidTag = container.stackTagCompound.getCompoundTag(tagKey);
+            NBTTagCompound fluidTag = container.stackTagCompound.getCompoundTag("tileEntity");
             fluidTag.setInteger("Amount", currentAmount - stack.amount);
-            container.stackTagCompound.setTag(tagKey, fluidTag);
+            container.stackTagCompound.setTag("tileEntity", fluidTag);
         }
         return stack;
     }
 
     @Override
     public int fill(ItemStack container, FluidStack resource, boolean doFill) {
-        if (resource == null) {
+        if (resource == null || container.stackSize != 1) {
             return 0;
         }
 
         if (!doFill) {
-            if (container.stackTagCompound == null || !container.stackTagCompound.hasKey(tagKey)) {
+            if (container.stackTagCompound == null || !container.stackTagCompound.hasKey("tileEntity")) {
                 return Math.min(this.capacity, resource.amount);
             }
 
-            FluidStack stack = FluidStack.loadFluidStackFromNBT(container.stackTagCompound.getCompoundTag(tagKey));
+            FluidStack stack = FluidStack
+                    .loadFluidStackFromNBT(container.stackTagCompound.getCompoundTag("tileEntity"));
 
             if (stack == null) {
                 return Math.min(this.capacity, resource.amount);
@@ -100,21 +79,21 @@ public class ItemCertusQuartzTank extends ItemBlock implements IFluidContainerIt
             container.stackTagCompound = new NBTTagCompound();
         }
 
-        if (!container.stackTagCompound.hasKey(tagKey)
-                || container.stackTagCompound.getCompoundTag(tagKey).hasKey("Empty")) {
+        if (!container.stackTagCompound.hasKey("tileEntity")
+                || container.stackTagCompound.getCompoundTag("tileEntity").hasKey("Empty")) {
             NBTTagCompound fluidTag = resource.writeToNBT(new NBTTagCompound());
 
             if (this.capacity < resource.amount) {
                 fluidTag.setInteger("Amount", this.capacity);
-                container.stackTagCompound.setTag(tagKey, fluidTag);
+                container.stackTagCompound.setTag("tileEntity", fluidTag);
                 return this.capacity;
             }
 
-            container.stackTagCompound.setTag(tagKey, fluidTag);
+            container.stackTagCompound.setTag("tileEntity", fluidTag);
             return resource.amount;
         }
 
-        NBTTagCompound fluidTag = container.stackTagCompound.getCompoundTag(tagKey);
+        NBTTagCompound fluidTag = container.stackTagCompound.getCompoundTag("tileEntity");
         FluidStack stack = FluidStack.loadFluidStackFromNBT(fluidTag);
 
         if (!stack.isFluidEqual(resource)) {
@@ -129,7 +108,7 @@ public class ItemCertusQuartzTank extends ItemBlock implements IFluidContainerIt
             stack.amount = this.capacity;
         }
 
-        container.stackTagCompound.setTag(tagKey, stack.writeToNBT(fluidTag));
+        container.stackTagCompound.setTag("tileEntity", stack.writeToNBT(fluidTag));
         return filled;
     }
 
@@ -140,10 +119,10 @@ public class ItemCertusQuartzTank extends ItemBlock implements IFluidContainerIt
 
     @Override
     public FluidStack getFluid(ItemStack container) {
-        if (container.stackTagCompound == null || !container.stackTagCompound.hasKey(tagKey)) {
+        if (container.stackTagCompound == null || !container.stackTagCompound.hasKey("tileEntity")) {
             return null;
         }
-        return FluidStack.loadFluidStackFromNBT(container.stackTagCompound.getCompoundTag(tagKey));
+        return FluidStack.loadFluidStackFromNBT(container.stackTagCompound.getCompoundTag("tileEntity"));
     }
 
     @Override
@@ -159,7 +138,8 @@ public class ItemCertusQuartzTank extends ItemBlock implements IFluidContainerIt
         }
 
         if (stack != null && stack.hasTagCompound()) {
-            ((TileCertusQuartzTank) world.getTileEntity(x, y, z)).readFromNBTWithoutCoords(stack.getTagCompound());
+            ((TileCertusQuartzTank) world.getTileEntity(x, y, z))
+                    .readFromNBTWithoutCoords(stack.getTagCompound().getCompoundTag("tileEntity"));
         }
         return true;
     }
