@@ -111,14 +111,16 @@ public abstract class FCPartMonitor extends AbstractPartDisplay implements IPart
         boolean needRedraw = super.readFromStream(data);
 
         final boolean isLocked = data.readBoolean();
-        needRedraw = this.isLocked != isLocked;
+        needRedraw |= this.isLocked != isLocked;
 
         this.isLocked = isLocked;
 
         final boolean val = data.readBoolean();
         if (val) {
+            needRedraw |= this.configuredFluid == null;
             this.configuredFluid = AEFluidStack.loadFluidStackFromPacket(data);
         } else {
+            needRedraw |= this.configuredFluid != null;
             this.configuredFluid = null;
         }
 
