@@ -36,8 +36,8 @@ import com.glodblock.github.client.gui.container.ContainerItemMonitor;
 import com.glodblock.github.common.item.ItemFluidDrop;
 import com.glodblock.github.common.item.ItemFluidEncodedPattern;
 import com.glodblock.github.common.item.ItemFluidPacket;
-import com.glodblock.github.common.parts.base.FCFluidEncodeTerminal;
 import com.glodblock.github.inventory.IPatternConsumer;
+import com.glodblock.github.inventory.item.PatternTerminal;
 import com.glodblock.github.loader.ItemAndBlockHolder;
 import com.glodblock.github.util.FluidPatternDetails;
 import com.glodblock.github.util.Util;
@@ -45,7 +45,7 @@ import com.glodblock.github.util.Util;
 public abstract class FCContainerEncodeTerminal extends ContainerItemMonitor
         implements IAEAppEngInventory, IOptionalSlotHost, IContainerCraftingPacket, IPatternConsumer {
 
-    protected final FCFluidEncodeTerminal patternTerminal;
+    protected final PatternTerminal patternTerminal;
     protected final AppEngInternalInventory cOut = new AppEngInternalInventory(null, 1);
     protected final IInventory crafting;
     protected final SlotRestrictedInput patternSlotIN;
@@ -77,7 +77,7 @@ public abstract class FCContainerEncodeTerminal extends ContainerItemMonitor
 
     public FCContainerEncodeTerminal(final InventoryPlayer ip, final ITerminalHost monitorable) {
         super(ip, monitorable);
-        this.patternTerminal = (FCFluidEncodeTerminal) monitorable;
+        this.patternTerminal = (PatternTerminal) monitorable;
         this.inverted = patternTerminal.isInverted();
         final IInventory patternInv = this.patternTerminal.getInventoryByName("pattern");
         this.crafting = this.patternTerminal.getInventoryByName("crafting");
@@ -170,7 +170,7 @@ public abstract class FCContainerEncodeTerminal extends ContainerItemMonitor
         }
     }
 
-    public FCFluidEncodeTerminal getPatternTerminal() {
+    public PatternTerminal getPatternTerminal() {
         return this.patternTerminal;
     }
 
@@ -368,13 +368,11 @@ public abstract class FCContainerEncodeTerminal extends ContainerItemMonitor
             for (final ItemStack encodedPatternStack : AEApi.instance().definitions().items().encodedPattern()
                     .maybeStack(1).asSet()) {
                 output = encodedPatternStack;
-                this.patternSlotOUT.putStack(output);
             }
         } else if (output.getItem() instanceof ItemFluidEncodedPattern) {
             for (final ItemStack encodedPatternStack : AEApi.instance().definitions().items().encodedPattern()
                     .maybeStack(1).asSet()) {
                 output = encodedPatternStack;
-                this.patternSlotOUT.putStack(output);
             }
         }
 
@@ -399,6 +397,7 @@ public abstract class FCContainerEncodeTerminal extends ContainerItemMonitor
         encodedValue.setBoolean("beSubstitute", this.beSubstitute);
         encodedValue.setBoolean("prioritize", this.prioritize);
         output.setTagCompound(encodedValue);
+        this.patternSlotOUT.putStack(output);
     }
 
     protected ItemStack[] getInputs() {

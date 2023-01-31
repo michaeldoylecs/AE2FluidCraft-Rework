@@ -117,6 +117,7 @@ public class CPacketFluidPatternTermBtns implements IMessage {
                         }
                         break;
                 }
+                cpt.getPatternTerminal().saveSettings();
             } else if (Name.equals("Terminal.Cpu") && c instanceof ContainerFluidCraftConfirm) {
                 final ContainerFluidCraftConfirm qk = (ContainerFluidCraftConfirm) c;
                 qk.cycleCpu(Value.equals("Next"));

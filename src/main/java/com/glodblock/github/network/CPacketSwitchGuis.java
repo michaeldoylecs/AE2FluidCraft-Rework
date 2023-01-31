@@ -73,9 +73,9 @@ public class CPacketSwitchGuis implements IMessage {
                         player,
                         player.worldObj,
                         new BlockPos(
-                                (int) player.posX,
-                                Util.GuiHelper.encodeType((int) player.posY, Util.GuiHelper.GuiType.ITEM),
-                                (int) player.posZ),
+                                player.inventory.currentItem,
+                                Util.GuiHelper.encodeType(0, Util.GuiHelper.GuiType.ITEM),
+                                0),
                         Objects.requireNonNull(context.getSide()),
                         message.guiType);
             }

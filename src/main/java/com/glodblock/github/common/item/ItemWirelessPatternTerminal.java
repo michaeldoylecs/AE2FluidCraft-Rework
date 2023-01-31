@@ -12,25 +12,25 @@ import appeng.util.Platform;
 import com.glodblock.github.FluidCraft;
 import com.glodblock.github.common.tabs.FluidCraftingTabs;
 import com.glodblock.github.inventory.gui.GuiType;
-import com.glodblock.github.inventory.item.WirelessFluidTerminal;
+import com.glodblock.github.inventory.item.WirelessPatternTerminal;
 import com.glodblock.github.loader.IRegister;
 import com.glodblock.github.util.NameConst;
 import com.glodblock.github.util.Util;
 import cpw.mods.fml.common.registry.GameRegistry;
 
-public class ItemWirelessFluidTerminal extends ItemBaseWirelessTerminal
-        implements IRegister<ItemWirelessFluidTerminal> {
+public class ItemWirelessPatternTerminal extends ItemBaseWirelessTerminal
+        implements IRegister<ItemWirelessPatternTerminal> {
 
-    public ItemWirelessFluidTerminal() {
-        super(GuiType.WIRELESS_FLUID_TERMINAL);
+    public ItemWirelessPatternTerminal() {
+        super(GuiType.WIRELESS_FLUID_PATTERN_TERMINAL);
         AEApi.instance().registries().wireless().registerWirelessHandler(this);
-        setUnlocalizedName(NameConst.ITEM_WIRELESS_FLUID_TERMINAL);
-        setTextureName(FluidCraft.resource(NameConst.ITEM_WIRELESS_FLUID_TERMINAL).toString());
+        setUnlocalizedName(NameConst.ITEM_WIRELESS_FLUID_PATTERN_TERMINAL);
+        setTextureName(FluidCraft.resource(NameConst.ITEM_WIRELESS_FLUID_PATTERN_TERMINAL).toString());
     }
 
     @Override
-    public ItemWirelessFluidTerminal register() {
-        GameRegistry.registerItem(this, NameConst.ITEM_WIRELESS_FLUID_TERMINAL, FluidCraft.MODID);
+    public ItemWirelessPatternTerminal register() {
+        GameRegistry.registerItem(this, NameConst.ITEM_WIRELESS_FLUID_PATTERN_TERMINAL, FluidCraft.MODID);
         setCreativeTab(FluidCraftingTabs.INSTANCE);
         return this;
     }
@@ -40,12 +40,11 @@ public class ItemWirelessFluidTerminal extends ItemBaseWirelessTerminal
         try {
             IGridNode gridNode = Util.getWirelessGrid(stack);
             if (gridNode != null) {
-                return new WirelessFluidTerminal(stack, x, gridNode, player);
+                return new WirelessPatternTerminal(stack, x, gridNode, player);
             }
         } catch (Exception e) {
             if (Platform.isClient()) player.addChatMessage(PlayerMessages.OutOfRange.get());
         }
         return null;
     }
-
 }

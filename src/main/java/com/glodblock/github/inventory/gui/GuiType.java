@@ -220,6 +220,18 @@ public enum GuiType {
             return new GuiFluidPortableCell(player.inventory, inv);
         }
     }),
+    WIRELESS_FLUID_PATTERN_TERMINAL(new ItemGuiFactory<IWirelessTerminal>(IWirelessTerminal.class) {
+
+        @Override
+        protected Object createServerGui(EntityPlayer player, IWirelessTerminal inv) {
+            return new ContainerPatternPortableCell(player.inventory, inv);
+        }
+
+        @Override
+        protected Object createClientGui(EntityPlayer player, IWirelessTerminal inv) {
+            return new GuiPatternPortableCell(player.inventory, inv);
+        }
+    }),
 
     FLUID_PATTERN_TERMINAL(new PartGuiFactory<ITerminalHost>(ITerminalHost.class) {
 

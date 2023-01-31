@@ -6,6 +6,7 @@ import codechicken.nei.api.IConfigureNEI;
 import com.glodblock.github.FluidCraft;
 import com.glodblock.github.client.gui.GuiFluidPatternTerminal;
 import com.glodblock.github.client.gui.GuiFluidPatternTerminalEx;
+import com.glodblock.github.client.gui.GuiPatternPortableCell;
 import com.glodblock.github.nei.recipes.FluidRecipe;
 
 public class NEI_FC_Config implements IConfigureNEI {
@@ -15,6 +16,10 @@ public class NEI_FC_Config implements IConfigureNEI {
         API.registerNEIGuiHandler(new NEIGuiHandler());
 
         for (String identifier : FluidRecipe.getSupportRecipes()) {
+            API.registerGuiOverlayHandler(
+                    GuiPatternPortableCell.class,
+                    FluidPatternTerminalRecipeTransferHandler.INSTANCE,
+                    identifier);
             API.registerGuiOverlayHandler(
                     GuiFluidPatternTerminal.class,
                     FluidPatternTerminalRecipeTransferHandler.INSTANCE,

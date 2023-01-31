@@ -37,6 +37,7 @@ public class NameConst {
     public static final String ITEM_FLUID_STORAGE = "fluid_storage";
     public static final String ITEM_FLUID_PORTABLE_CELL = "portable_fluid_cell";
     public static final String ITEM_WIRELESS_FLUID_TERMINAL = "wireless_fluid_terminal";
+    public static final String ITEM_WIRELESS_FLUID_PATTERN_TERMINAL = "wireless_fluid_pattern_terminal";
     public static final String ITEM_FLUID_PART = "fluid_part";
 
     public static final String TT_KEY = FluidCraft.MODID + ".tooltip.";

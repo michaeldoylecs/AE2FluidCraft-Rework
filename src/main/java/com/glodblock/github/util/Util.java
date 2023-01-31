@@ -27,13 +27,13 @@ import appeng.api.storage.StorageChannel;
 import appeng.api.storage.data.IAEFluidStack;
 import appeng.api.storage.data.IAEStack;
 import appeng.api.util.WorldCoord;
+import appeng.items.tools.powered.ToolWirelessTerminal;
 import appeng.tile.networking.TileCableBus;
 import appeng.tile.networking.TileWireless;
 import appeng.util.item.AEFluidStack;
 
 import com.glodblock.github.common.item.ItemFluidDrop;
 import com.glodblock.github.common.item.ItemFluidPacket;
-import com.glodblock.github.common.item.ItemWirelessFluidTerminal;
 import com.glodblock.github.inventory.IAEFluidTank;
 
 import cpw.mods.fml.common.ModContainer;
@@ -42,24 +42,28 @@ import io.netty.buffer.ByteBuf;
 
 public final class Util {
 
-    public static IGridNode getWirelessGrid(ItemStack is, BlockPos pos, StorageChannel channel) {
-        String key = ((ItemWirelessFluidTerminal) is.getItem()).getEncryptionKey(is);
-        IGridHost securityTerminal = (IGridHost) AEApi.instance().registries().locatable()
-                .getLocatableBy(Long.parseLong(key));
-        if (securityTerminal == null) return null;
-        return securityTerminal.getGridNode(ForgeDirection.UNKNOWN);
+    public static IGridNode getWirelessGrid(ItemStack is) {
+        if (is.getItem() instanceof ToolWirelessTerminal) {
+            String key = ((ToolWirelessTerminal) is.getItem()).getEncryptionKey(is);
+            IGridHost securityTerminal = (IGridHost) AEApi.instance().registries().locatable()
+                    .getLocatableBy(Long.parseLong(key));
+            if (securityTerminal == null) return null;
+            return securityTerminal.getGridNode(ForgeDirection.UNKNOWN);
+        }
+        return null;
     }
 
     @SuppressWarnings("unchecked")
-    public static IBaseMonitor<? extends IAEStack<? extends IAEStack<?>>> getWirelessInv(ItemStack is, BlockPos pos,
-            StorageChannel channel) {
-        IGridNode gridNode = getWirelessGrid(is, pos, channel);
+    public static IBaseMonitor<? extends IAEStack<? extends IAEStack<?>>> getWirelessInv(ItemStack is,
+            EntityPlayer player, StorageChannel channel) {
+        IGridNode gridNode = getWirelessGrid(is);
         if (gridNode == null) return null;
         IGrid grid = gridNode.getGrid();
         if (grid == null) return null;
         for (IGridNode node : grid.getMachines(TileWireless.class)) {
             IWirelessAccessPoint accessPoint = (IWirelessAccessPoint) node.getMachine();
-            WorldCoord distance = accessPoint.getLocation().subtract(pos.getX(), pos.getY(), pos.getZ());
+            WorldCoord distance = accessPoint.getLocation()
+                    .subtract((int) player.posX, (int) player.posY, (int) player.posZ);
             int squaredDistance = distance.x * distance.x + distance.y * distance.y + distance.z * distance.z;
             if (squaredDistance <= accessPoint.getRange() * accessPoint.getRange()) {
                 IStorageGrid gridCache = grid.getCache(IStorageGrid.class);
@@ -269,14 +273,14 @@ public final class Util {
         private static final int value = 1 << 30;
 
         public static int encodeType(int y, GuiType type) {
-            if (y > (1 << 28)) {
+            if (Math.abs(y) > (1 << 28)) {
                 throw new IllegalArgumentException("out of range");
             }
             return value | (type.ordinal() << 29) | y;
         }
 
         public static MutablePair<GuiType, Integer> decodeType(int y) {
-            if (y > (1 << 28)) {
+            if (Math.abs(y) > (1 << 28)) {
                 return new MutablePair<>(GuiType.values()[y >> 29 & 1], y - (3 << 29 & y));
             } else {
                 return new MutablePair<>(GuiType.TILE, y);

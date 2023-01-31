@@ -26,29 +26,28 @@ import appeng.tile.inventory.InvOperation;
 import appeng.util.ConfigManager;
 import appeng.util.Platform;
 
-import com.glodblock.github.util.BlockPos;
 import com.glodblock.github.util.Util;
 
-public class WirelessTerminal extends MEMonitorHandler<IAEFluidStack> implements IWirelessTerminal {
+public class WirelessFluidTerminal extends MEMonitorHandler<IAEFluidStack> implements IWirelessTerminal {
 
     private final ItemStack target;
     private final IAEItemPowerStorage ips;
     private final EntityPlayer p;
     private final int inventorySlot;
     private final AppEngInternalInventory viewCell;
-    private final BlockPos pos;
     private final StorageChannel channel;
+    private final IGridNode grid;
 
     @SuppressWarnings("unchecked")
-    public WirelessTerminal(final ItemStack is, BlockPos pos, EntityPlayer player) {
+    public WirelessFluidTerminal(final ItemStack is, final int slot, IGridNode gridNode, EntityPlayer player) {
         super(
                 (IMEInventoryHandler<IAEFluidStack>) Objects
-                        .requireNonNull(Util.getWirelessInv(is, pos, StorageChannel.FLUIDS)));
+                        .requireNonNull(Util.getWirelessInv(is, player, StorageChannel.FLUIDS)));
         this.ips = (ToolWirelessTerminal) is.getItem();
+        this.grid = gridNode;
         this.target = is;
         this.p = player;
-        this.pos = pos;
-        this.inventorySlot = p.inventory.currentItem;
+        this.inventorySlot = slot;
         this.viewCell = new WirelessTerminalViewCells(is);
         this.channel = StorageChannel.FLUIDS;
     }
@@ -102,7 +101,7 @@ public class WirelessTerminal extends MEMonitorHandler<IAEFluidStack> implements
 
     @Override
     public IGridNode getGridNode(ForgeDirection dir) {
-        return Util.getWirelessGrid(this.target, this.pos, this.channel);
+        return this.grid;
     }
 
     @Override

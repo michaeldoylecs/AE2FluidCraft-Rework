@@ -33,6 +33,7 @@ public class ItemAndBlockHolder {
     public static ItemFluidConversionMonitor FLUID_CONVERSION_MONITOR = new ItemFluidConversionMonitor().register();
     public static ItemPortableFluidCell PORTABLE_FLUID_CELL = new ItemPortableFluidCell().register();
     public static ItemWirelessFluidTerminal WIRELESS_FLUID_TERM = new ItemWirelessFluidTerminal().register();
+    public static ItemWirelessPatternTerminal WIRELESS_PATTERN_TERM = new ItemWirelessPatternTerminal().register();
     public static ItemFluidPacket PACKET = new ItemFluidPacket().register();
     public static ItemBasicFluidStorageCell CELL1K = new ItemBasicFluidStorageCell(CellType.Cell1kPart, 1).register();
     public static ItemBasicFluidStorageCell CELL4K = new ItemBasicFluidStorageCell(CellType.Cell4kPart, 4).register();
