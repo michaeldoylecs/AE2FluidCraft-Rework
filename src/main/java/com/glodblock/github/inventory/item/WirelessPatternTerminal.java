@@ -127,7 +127,6 @@ public class WirelessPatternTerminal extends MEMonitorHandler<IAEItemStack> impl
         final ConfigManager out = new ConfigManager((manager, settingName, newValue) -> {
             final NBTTagCompound data = Platform.openNbtData(this.target);
             manager.writeToNBT(data);
-
         });
         out.registerSetting(Settings.SORT_BY, SortOrder.NAME);
         out.registerSetting(Settings.VIEW_MODE, ViewItems.ALL);

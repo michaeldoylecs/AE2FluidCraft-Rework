@@ -14,7 +14,7 @@ import net.minecraftforge.oredict.ShapelessOreRecipe;
 import com.glodblock.github.common.Config;
 import com.glodblock.github.common.item.ItemBasicFluidStorageCell;
 import com.glodblock.github.common.storage.CellType;
-import com.glodblock.github.loader.recipe.WirelessTerminal;
+import com.glodblock.github.loader.recipe.WirelessTerminalRecipe;
 import com.glodblock.github.util.ModAndClassUtil;
 
 import cpw.mods.fml.common.registry.GameRegistry;
@@ -134,8 +134,8 @@ public class RecipeLoader implements Runnable {
         GameRegistry.addShapelessRecipe(WIRELESS_FLUID_TERM.stack(), AE2_WIRELESS_TERMINAL, BUCKET);
         GameRegistry.addShapelessRecipe(WIRELESS_PATTERN_TERM.stack(), WIRELESS_FLUID_TERM, FLUID_TERMINAL);
         if (ModAndClassUtil.WCT) {
-            GameRegistry.addRecipe(new WirelessTerminal(WIRELESS_PATTERN_TERM.stack()));
-            GameRegistry.addRecipe(new WirelessTerminal(WIRELESS_FLUID_TERM.stack()));
+            GameRegistry.addRecipe(new WirelessTerminalRecipe(WIRELESS_PATTERN_TERM.stack()));
+            GameRegistry.addRecipe(new WirelessTerminalRecipe(WIRELESS_FLUID_TERM.stack()));
         }
         GameRegistry
                 .addRecipe(new ShapedOreRecipe(CERTUS_QUARTZ_TANK.stack(), "GGG", "G G", "GGG", 'G', AE2_QUARTZ_GLASS));

@@ -170,7 +170,7 @@ public enum GuiType {
         }
     }),
 
-    CRAFTING_STATUS(new PartItemGuiFactory<ITerminalHost>(ITerminalHost.class) {
+    CRAFTING_STATUS(new PartOrItemGuiFactory<ITerminalHost>(ITerminalHost.class) {
 
         @Override
         protected Object createServerGui(EntityPlayer player, ITerminalHost inv) {

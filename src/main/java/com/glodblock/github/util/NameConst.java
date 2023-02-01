@@ -76,6 +76,7 @@ public class NameConst {
     public static final String TT_CELL_PORTABLE = TT_KEY + "cell_portable";
     public static final String TT_WIRELESS = TT_KEY + "wireless.";
     public static final String TT_WIRELESS_INSTALLED = TT_WIRELESS + "installed";
+    public static final String TT_FLUID_AUTO_FILLER = TT_KEY + "fluid_auto_filler";
 
     public static final String WAILA_KEY = FluidCraft.MODID + ".waila.";
     public static final String WAILA_ENABLE = WAILA_KEY + "enable";

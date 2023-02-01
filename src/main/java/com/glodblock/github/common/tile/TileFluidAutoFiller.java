@@ -98,7 +98,7 @@ public class TileFluidAutoFiller extends AENetworkInvTile
 
     public void updatePattern() {
         ItemStack is = inventory.getStackInSlot(0);
-        if (is == null || this.getContainerItem().isItemEqual(is)) return;
+        if (is == null) return;
         this.setContainerItem(is);
         postEvent();
     }
@@ -106,6 +106,10 @@ public class TileFluidAutoFiller extends AENetworkInvTile
     @TileEvent(TileEventType.WORLD_NBT_READ)
     public void readFromNBTEvent(NBTTagCompound data) {
         inventory.readFromNBT(data, "Inv");
+        if (inventory.getStackInSlot(0) == null) {
+            inventory.setInventorySlotContents(0, BUCKET);
+        }
+        updatePattern();
     }
 
     @TileEvent(TileEventType.WORLD_NBT_WRITE)
@@ -210,8 +214,7 @@ public class TileFluidAutoFiller extends AENetworkInvTile
             BaseActionSource source) {
         if (this.getProxy().isActive() && this.getStorageGrid() != null) {
             boolean hasChanged = false;
-            IItemList<IAEFluidStack> stored = this.getStorageGrid().getFluidInventory()
-                    .getAvailableItems(AEApi.instance().storage().createFluidList());
+            IItemList<IAEFluidStack> stored = this.getStorageGrid().getFluidInventory().getStorageList();
             for (IAEFluidStack tmp : change) {
                 if (stored.findPrecise(tmp) == null || this.fluids.findPrecise(tmp) == null) {
                     hasChanged = true;

@@ -15,9 +15,9 @@ import appeng.container.ContainerOpenContext;
 import com.glodblock.github.inventory.item.IItemInventory;
 import com.glodblock.github.util.Util;
 
-public abstract class PartItemGuiFactory<T> extends PartGuiFactory<T> {
+public abstract class PartOrItemGuiFactory<T> extends PartGuiFactory<T> {
 
-    PartItemGuiFactory(Class<T> invClass) {
+    PartOrItemGuiFactory(Class<T> invClass) {
         super(invClass);
     }
 

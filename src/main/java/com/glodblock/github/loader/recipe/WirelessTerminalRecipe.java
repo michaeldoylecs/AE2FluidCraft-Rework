@@ -16,12 +16,12 @@ import appeng.util.Platform;
 
 import com.glodblock.github.common.item.ItemBaseWirelessTerminal;
 
-public class WirelessTerminal extends ShapelessRecipes {
+public class WirelessTerminalRecipe extends ShapelessRecipes {
 
     private static final ItemStack infinityBoosterCard = ItemEnum.BOOSTER_CARD.getStack();
     private final ItemStack installedTerm;
 
-    public WirelessTerminal(ItemStack term) {
+    public WirelessTerminalRecipe(ItemStack term) {
         super(term, Arrays.asList(term, infinityBoosterCard));
         this.installedTerm = installInfinityBoosterCard(term);
     }

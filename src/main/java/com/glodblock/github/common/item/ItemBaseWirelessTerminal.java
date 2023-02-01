@@ -1,6 +1,6 @@
 package com.glodblock.github.common.item;
 
-import static com.glodblock.github.loader.recipe.WirelessTerminal.getInfinityBoosterCard;
+import static com.glodblock.github.loader.recipe.WirelessTerminalRecipe.getInfinityBoosterCard;
 import static com.glodblock.github.util.Util.hasInfinityBoosterCard;
 
 import java.util.List;

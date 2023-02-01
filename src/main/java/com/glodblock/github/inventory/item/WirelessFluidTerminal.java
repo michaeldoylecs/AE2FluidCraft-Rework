@@ -32,7 +32,6 @@ public class WirelessFluidTerminal extends MEMonitorHandler<IAEFluidStack> imple
 
     private final ItemStack target;
     private final IAEItemPowerStorage ips;
-    private final EntityPlayer p;
     private final int inventorySlot;
     private final AppEngInternalInventory viewCell;
     private final StorageChannel channel;
@@ -46,7 +45,6 @@ public class WirelessFluidTerminal extends MEMonitorHandler<IAEFluidStack> imple
         this.ips = (ToolWirelessTerminal) is.getItem();
         this.grid = gridNode;
         this.target = is;
-        this.p = player;
         this.inventorySlot = slot;
         this.viewCell = new WirelessTerminalViewCells(is);
         this.channel = StorageChannel.FLUIDS;

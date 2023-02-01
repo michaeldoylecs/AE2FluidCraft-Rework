@@ -1,11 +1,14 @@
 package com.glodblock.github.common.item;
 
+import java.util.EnumSet;
+
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
 
 import appeng.api.AEApi;
 import appeng.api.networking.IGridNode;
+import appeng.core.features.AEFeature;
 import appeng.core.localization.PlayerMessages;
 import appeng.util.Platform;
 
@@ -24,6 +27,7 @@ public class ItemWirelessFluidTerminal extends ItemBaseWirelessTerminal
     public ItemWirelessFluidTerminal() {
         super(GuiType.WIRELESS_FLUID_TERMINAL);
         AEApi.instance().registries().wireless().registerWirelessHandler(this);
+        this.setFeature(EnumSet.of(AEFeature.WirelessAccessTerminal, AEFeature.PoweredTools));
         setUnlocalizedName(NameConst.ITEM_WIRELESS_FLUID_TERMINAL);
         setTextureName(FluidCraft.resource(NameConst.ITEM_WIRELESS_FLUID_TERMINAL).toString());
     }
