@@ -1,5 +1,7 @@
 package com.glodblock.github.util;
 
+import static com.glodblock.github.common.item.ItemBaseWirelessTerminal.infinityBoosterCard;
+
 import java.io.IOException;
 import java.util.Map;
 
@@ -11,19 +13,30 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.fluids.*;
 
+import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.MutablePair;
 
 import appeng.api.AEApi;
 import appeng.api.config.SecurityPermissions;
+import appeng.api.implementations.tiles.IWirelessAccessPoint;
 import appeng.api.networking.IGrid;
 import appeng.api.networking.IGridHost;
 import appeng.api.networking.IGridNode;
 import appeng.api.networking.security.ISecurityGrid;
+import appeng.api.networking.storage.IBaseMonitor;
+import appeng.api.networking.storage.IStorageGrid;
 import appeng.api.parts.IPart;
+import appeng.api.storage.StorageChannel;
 import appeng.api.storage.data.IAEFluidStack;
+import appeng.api.storage.data.IAEStack;
+import appeng.api.util.WorldCoord;
+import appeng.items.tools.powered.ToolWirelessTerminal;
 import appeng.tile.networking.TileCableBus;
+import appeng.tile.networking.TileWireless;
+import appeng.util.Platform;
 import appeng.util.item.AEFluidStack;
 
+import com.glodblock.github.common.item.ItemBaseWirelessTerminal;
 import com.glodblock.github.common.item.ItemFluidDrop;
 import com.glodblock.github.common.item.ItemFluidPacket;
 import com.glodblock.github.inventory.IAEFluidTank;
@@ -33,6 +46,62 @@ import cpw.mods.fml.common.registry.GameData;
 import io.netty.buffer.ByteBuf;
 
 public final class Util {
+
+    public static boolean hasInfinityBoosterCard(ItemStack is) {
+        if (ModAndClassUtil.WCT && is.getItem() instanceof ItemBaseWirelessTerminal) {
+            NBTTagCompound data = Platform.openNbtData(is);
+            return data.hasKey(infinityBoosterCard) && data.getBoolean(infinityBoosterCard);
+        }
+        return false;
+    }
+
+    public static IGridNode getWirelessGrid(ItemStack is) {
+        if (is.getItem() instanceof ToolWirelessTerminal) {
+            String key = ((ToolWirelessTerminal) is.getItem()).getEncryptionKey(is);
+            IGridHost securityTerminal = (IGridHost) AEApi.instance().registries().locatable()
+                    .getLocatableBy(Long.parseLong(key));
+            if (securityTerminal == null) return null;
+            return securityTerminal.getGridNode(ForgeDirection.UNKNOWN);
+        }
+        return null;
+    }
+
+    @SuppressWarnings("unchecked")
+    public static IBaseMonitor<? extends IAEStack<? extends IAEStack<?>>> getWirelessInv(ItemStack is,
+            EntityPlayer player, StorageChannel channel) {
+        IGridNode gridNode = getWirelessGrid(is);
+        if (gridNode == null) return null;
+        IGrid grid = gridNode.getGrid();
+        if (grid == null) return null;
+        boolean canConnect = false;
+        if (hasInfinityBoosterCard(is)) {
+            canConnect = true;
+        } else {
+            for (IGridNode node : grid.getMachines(TileWireless.class)) {
+                IWirelessAccessPoint accessPoint = (IWirelessAccessPoint) node.getMachine();
+                if (accessPoint.isActive() && accessPoint.getLocation().getDimension() == player.dimension) {
+                    WorldCoord distance = accessPoint.getLocation()
+                            .subtract((int) player.posX, (int) player.posY, (int) player.posZ);
+                    int squaredDistance = distance.x * distance.x + distance.y * distance.y + distance.z * distance.z;
+                    if (squaredDistance <= accessPoint.getRange() * accessPoint.getRange()) {
+                        canConnect = true;
+                        break;
+                    }
+                }
+            }
+        }
+        if (canConnect) {
+            IStorageGrid gridCache = grid.getCache(IStorageGrid.class);
+            if (gridCache != null) {
+                if (channel == StorageChannel.FLUIDS) {
+                    return gridCache.getFluidInventory();
+                } else {
+                    return gridCache.getItemInventory();
+                }
+            }
+        }
+        return null;
+    }
 
     public static int findItemInPlayerInvSlot(EntityPlayer player, ItemStack itemStack) {
         for (int i = 0; i < player.inventory.mainInventory.length; i++) {
@@ -216,6 +285,35 @@ public final class Util {
                 list.put(id, fluid);
             }
         }
+    }
+
+    public static class GuiHelper {
+
+        public enum GuiType {
+            TILE,
+            ITEM
+        }
+
+        private static final int value = 1 << 30;
+
+        public static int encodeType(int y, GuiType type) {
+            if (Math.abs(y) > (1 << 28)) {
+                throw new IllegalArgumentException("out of range");
+            }
+            return value | (type.ordinal() << 29) | y;
+        }
+
+        public static ImmutablePair<GuiType, Integer> decodeType(int y) {
+            if (Math.abs(y) > (1 << 28)) {
+                return new ImmutablePair<>(GuiType.values()[y >> 29 & 1], y - (3 << 29 & y));
+            } else {
+                return new ImmutablePair<>(GuiType.TILE, y);
+            }
+        }
+    }
+
+    public static int clamp(int value, int min, int max) {
+        return value < min ? min : (Math.min(value, max));
     }
 
     public static class FluidUtil {

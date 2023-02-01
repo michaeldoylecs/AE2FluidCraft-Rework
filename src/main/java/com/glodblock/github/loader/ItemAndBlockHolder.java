@@ -7,6 +7,8 @@ import com.glodblock.github.common.storage.CellType;
 
 public class ItemAndBlockHolder {
 
+    public static BlockCertusQuartzTank CERTUS_QUARTZ_TANK = new BlockCertusQuartzTank().register();
+    public static BlockFluidAutoFiller FLUID_AUTO_FILLER = new BlockFluidAutoFiller().register();
     public static BlockFluidDiscretizer DISCRETIZER = new BlockFluidDiscretizer().register();
     public static BlockLevelMaintainer LEVEL_MAINTAINER = new BlockLevelMaintainer().register();
     public static BlockFluidPatternEncoder ENCODER = new BlockFluidPatternEncoder().register();
@@ -30,6 +32,8 @@ public class ItemAndBlockHolder {
     public static ItemFluidStorageMonitor FLUID_STORAGE_MONITOR = new ItemFluidStorageMonitor().register();
     public static ItemFluidConversionMonitor FLUID_CONVERSION_MONITOR = new ItemFluidConversionMonitor().register();
     public static ItemPortableFluidCell PORTABLE_FLUID_CELL = new ItemPortableFluidCell().register();
+    public static ItemWirelessFluidTerminal WIRELESS_FLUID_TERM = new ItemWirelessFluidTerminal().register();
+    public static ItemWirelessPatternTerminal WIRELESS_PATTERN_TERM = new ItemWirelessPatternTerminal().register();
     public static ItemFluidPacket PACKET = new ItemFluidPacket().register();
     public static ItemBasicFluidStorageCell CELL1K = new ItemBasicFluidStorageCell(CellType.Cell1kPart, 1).register();
     public static ItemBasicFluidStorageCell CELL4K = new ItemBasicFluidStorageCell(CellType.Cell4kPart, 4).register();

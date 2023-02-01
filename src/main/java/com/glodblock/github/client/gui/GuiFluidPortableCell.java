@@ -6,6 +6,7 @@ import appeng.container.slot.AppEngSlot;
 
 import com.glodblock.github.client.gui.container.ContainerFluidPortableCell;
 import com.glodblock.github.inventory.item.IFluidPortableCell;
+import com.glodblock.github.inventory.item.IWirelessTerminal;
 
 public class GuiFluidPortableCell extends GuiFluidTerminal {
 
@@ -20,6 +21,10 @@ public class GuiFluidPortableCell extends GuiFluidTerminal {
 
     @Override
     protected int getMaxRows() {
-        return 3;
+        if (this.container.getHost() instanceof IWirelessTerminal) {
+            return super.getMaxRows();
+        } else {
+            return 3;
+        }
     }
 }

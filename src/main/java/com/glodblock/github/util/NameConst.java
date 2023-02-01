@@ -9,12 +9,14 @@ import com.glodblock.github.FluidCraft;
 
 public class NameConst {
 
+    public static final String BLOCK_CERTUS_QUARTZ_TANK = "certus_quartz_tank";
     public static final String BLOCK_FLUID_DISCRETIZER = "fluid_discretizer";
     public static final String BLOCK_FLUID_PATTERN_ENCODER = "fluid_pattern_encoder";
     public static final String BLOCK_FLUID_PACKET_DECODER = "fluid_packet_decoder";
     public static final String BLOCK_FLUID_INTERFACE = "fluid_interface";
     public static final String BLOCK_INGREDIENT_BUFFER = "ingredient_buffer";
     public static final String BLOCK_FLUID_BUFFER = "fluid_buffer";
+    public static final String BLOCK_FLUID_AUTO_FILLER = "fluid_auto_filler";
     public static final String BLOCK_LARGE_INGREDIENT_BUFFER = "large_ingredient_buffer";
     public static final String BLOCK_OC_PATTERN_EDITOR = "oc_pattern_editor";
     public static final String BLOCK_LEVEL_MAINTAINER = "level_maintainer";
@@ -34,6 +36,8 @@ public class NameConst {
     public static final String ITEM_FLUID_PACKET = "fluid_packet";
     public static final String ITEM_FLUID_STORAGE = "fluid_storage";
     public static final String ITEM_FLUID_PORTABLE_CELL = "portable_fluid_cell";
+    public static final String ITEM_WIRELESS_FLUID_TERMINAL = "wireless_fluid_terminal";
+    public static final String ITEM_WIRELESS_FLUID_PATTERN_TERMINAL = "wireless_fluid_pattern_terminal";
     public static final String ITEM_FLUID_PART = "fluid_part";
 
     public static final String TT_KEY = FluidCraft.MODID + ".tooltip.";
@@ -70,6 +74,9 @@ public class NameConst {
     public static final String TT_CELL_CONTENTS = TT_KEY + "cell_contents";
     public static final String TT_CELL_EMPTY = TT_KEY + "cell_empty";
     public static final String TT_CELL_PORTABLE = TT_KEY + "cell_portable";
+    public static final String TT_WIRELESS = TT_KEY + "wireless.";
+    public static final String TT_WIRELESS_INSTALLED = TT_WIRELESS + "installed";
+    public static final String TT_FLUID_AUTO_FILLER = TT_KEY + "fluid_auto_filler";
 
     public static final String WAILA_KEY = FluidCraft.MODID + ".waila.";
     public static final String WAILA_ENABLE = WAILA_KEY + "enable";
@@ -85,6 +92,7 @@ public class NameConst {
     public static final String GUI_LEVEL_MAINTAINER = GUI_KEY + BLOCK_LEVEL_MAINTAINER;
     public static final String GUI_FLUID_PATTERN_ENCODER = GUI_KEY + BLOCK_FLUID_PATTERN_ENCODER;
     public static final String GUI_FLUID_PACKET_DECODER = GUI_KEY + BLOCK_FLUID_PACKET_DECODER;
+    public static final String GUI_FLUID_AUTO_FILLER = GUI_KEY + BLOCK_FLUID_AUTO_FILLER;
     public static final String GUI_INGREDIENT_BUFFER = GUI_KEY + BLOCK_INGREDIENT_BUFFER;
     public static final String GUI_LARGE_INGREDIENT_BUFFER = GUI_KEY + BLOCK_LARGE_INGREDIENT_BUFFER;
     public static final String GUI_FLUID_INTERFACE = GUI_KEY + BLOCK_FLUID_INTERFACE;

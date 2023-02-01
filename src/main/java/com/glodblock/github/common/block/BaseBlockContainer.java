@@ -9,10 +9,14 @@ import net.minecraft.item.ItemStack;
 
 public abstract class BaseBlockContainer extends BlockContainer {
 
-    public BaseBlockContainer(Material p_i45386_1_) {
-        super(p_i45386_1_);
+    public BaseBlockContainer(Material material) {
+        super(material);
     }
 
     public void addInformation(ItemStack itemStack, EntityPlayer player, List<String> toolTip,
             boolean advancedToolTips) {}
+
+    public ItemStack stack() {
+        return new ItemStack(this, 1);
+    }
 }

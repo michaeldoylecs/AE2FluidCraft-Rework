@@ -22,9 +22,23 @@ import com.glodblock.github.common.parts.base.FCSharedFluidBus;
 import com.glodblock.github.common.tile.*;
 import com.glodblock.github.inventory.IDualHost;
 import com.glodblock.github.inventory.item.IFluidPortableCell;
+import com.glodblock.github.inventory.item.IWirelessTerminal;
 import com.google.common.collect.ImmutableList;
 
 public enum GuiType {
+
+    FLUID_AUTO_FILLER(new TileGuiFactory<TileFluidAutoFiller>(TileFluidAutoFiller.class) {
+
+        @Override
+        protected Object createServerGui(EntityPlayer player, TileFluidAutoFiller inv) {
+            return new ContainerFluidAutoFiller(player.inventory, inv);
+        }
+
+        @Override
+        protected Object createClientGui(EntityPlayer player, TileFluidAutoFiller inv) {
+            return new GuiFluidAutoFiller(player.inventory, inv);
+        }
+    }),
 
     FLUID_LEVEL_EMITTER(new PartGuiFactory<PartFluidLevelEmitter>(PartFluidLevelEmitter.class) {
 
@@ -156,15 +170,15 @@ public enum GuiType {
         }
     }),
 
-    CRAFTING_STATUS(new PartGuiFactory<FCPart>(FCPart.class) {
+    CRAFTING_STATUS(new PartOrItemGuiFactory<ITerminalHost>(ITerminalHost.class) {
 
         @Override
-        protected Object createServerGui(EntityPlayer player, FCPart inv) {
+        protected Object createServerGui(EntityPlayer player, ITerminalHost inv) {
             return new ContainerCraftingStatus(player.inventory, inv);
         }
 
         @Override
-        protected Object createClientGui(EntityPlayer player, FCPart inv) {
+        protected Object createClientGui(EntityPlayer player, ITerminalHost inv) {
             return new GuiFluidPatternTerminalCraftingStatus(player.inventory, inv);
         }
     }),
@@ -192,6 +206,30 @@ public enum GuiType {
         @Override
         protected Object createClientGui(EntityPlayer player, IFluidPortableCell inv) {
             return new GuiFluidPortableCell(player.inventory, inv);
+        }
+    }),
+    WIRELESS_FLUID_TERMINAL(new ItemGuiFactory<IWirelessTerminal>(IWirelessTerminal.class) {
+
+        @Override
+        protected Object createServerGui(EntityPlayer player, IWirelessTerminal inv) {
+            return new ContainerFluidPortableCell(player.inventory, inv);
+        }
+
+        @Override
+        protected Object createClientGui(EntityPlayer player, IWirelessTerminal inv) {
+            return new GuiFluidPortableCell(player.inventory, inv);
+        }
+    }),
+    WIRELESS_FLUID_PATTERN_TERMINAL(new ItemGuiFactory<IWirelessTerminal>(IWirelessTerminal.class) {
+
+        @Override
+        protected Object createServerGui(EntityPlayer player, IWirelessTerminal inv) {
+            return new ContainerPatternPortableCell(player.inventory, inv);
+        }
+
+        @Override
+        protected Object createClientGui(EntityPlayer player, IWirelessTerminal inv) {
+            return new GuiPatternPortableCell(player.inventory, inv);
         }
     }),
 

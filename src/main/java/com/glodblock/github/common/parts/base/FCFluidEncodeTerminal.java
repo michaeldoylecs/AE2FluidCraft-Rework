@@ -1,5 +1,6 @@
 package com.glodblock.github.common.parts.base;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import net.minecraft.inventory.IInventory;
@@ -9,7 +10,10 @@ import net.minecraft.nbt.NBTTagCompound;
 import appeng.api.storage.data.IAEItemStack;
 import appeng.tile.inventory.AppEngInternalInventory;
 
-public abstract class FCFluidEncodeTerminal extends FCPart {
+import com.glodblock.github.common.item.ItemFluidPacket;
+import com.glodblock.github.inventory.item.PatternTerminal;
+
+public abstract class FCFluidEncodeTerminal extends FCPart implements PatternTerminal {
 
     protected AppEngInternalInventory crafting;
     protected AppEngInternalInventory output;
@@ -153,5 +157,35 @@ public abstract class FCFluidEncodeTerminal extends FCPart {
         }
 
         return super.getInventoryByName(name);
+    }
+
+    public void sortCraftingItems() {
+        List<ItemStack> items = new ArrayList<ItemStack>();
+        List<ItemStack> fluids = new ArrayList<ItemStack>();
+        for (ItemStack is : this.crafting) {
+            if (is == null) continue;
+            if (is.getItem() instanceof ItemFluidPacket) {
+                fluids.add(is);
+            } else {
+                items.add(is);
+            }
+        }
+        if (this.prioritize) {
+            fluids.addAll(items);
+            items.clear();
+        } else {
+            items.addAll(fluids);
+            fluids.clear();
+        }
+
+        for (int i = 0; i < this.crafting.getSizeInventory(); i++) {
+            if (this.crafting.getStackInSlot(i) == null) break;
+            if (items.isEmpty()) {
+                this.crafting.setInventorySlotContents(i, fluids.get(i));
+            } else {
+                this.crafting.setInventorySlotContents(i, items.get(i));
+            }
+        }
+        saveChanges();
     }
 }

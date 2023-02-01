@@ -106,9 +106,18 @@ public class CPacketFluidPatternTermBtns implements IMessage {
                         cpt.getPatternTerminal().setActivePage(Integer.parseInt(Value));
                         break;
                     case "PatternTerminal.Prioritize":
-                        cpt.getPatternTerminal().setPrioritization(Value.equals("1"));
+                        switch (Value) {
+                            case "0":
+                            case "1":
+                                cpt.getPatternTerminal().setPrioritization(Value.equals("1"));
+                                break;
+                            case "2":
+                                cpt.getPatternTerminal().sortCraftingItems();
+                                break;
+                        }
                         break;
                 }
+                cpt.getPatternTerminal().saveSettings();
             } else if (Name.equals("Terminal.Cpu") && c instanceof ContainerFluidCraftConfirm) {
                 final ContainerFluidCraftConfirm qk = (ContainerFluidCraftConfirm) c;
                 qk.cycleCpu(Value.equals("Next"));

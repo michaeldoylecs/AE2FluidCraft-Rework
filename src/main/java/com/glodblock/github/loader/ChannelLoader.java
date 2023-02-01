@@ -1,5 +1,9 @@
 package com.glodblock.github.loader;
 
+import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.network.Packet;
+import net.minecraft.world.World;
+
 import com.glodblock.github.FluidCraft;
 import com.glodblock.github.network.*;
 import cpw.mods.fml.relauncher.Side;
@@ -46,5 +50,13 @@ public class ChannelLoader implements Runnable {
                 .registerMessage(new CPacketLevelMaintainer.Handler(), CPacketLevelMaintainer.class, id++, Side.SERVER);
         FluidCraft.proxy.netHandler
                 .registerMessage(new SPacketSetItemAmount.Handler(), SPacketSetItemAmount.class, id++, Side.CLIENT);
+    }
+
+    public static void sendPacketToAllPlayers(Packet packet, World world) {
+        for (Object player : world.playerEntities) {
+            if (player instanceof EntityPlayerMP) {
+                ((EntityPlayerMP) player).playerNetServerHandler.sendPacket(packet);
+            }
+        }
     }
 }

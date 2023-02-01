@@ -11,6 +11,8 @@ item.part_fluid_level_emitter.name=ME Fluid Level Emitter
 item.part_fluid_storage_monitor.name=ME Fluid Storage Monitor
 item.part_fluid_conversion_monitor.name=ME Fluid Conversion Monitor
 item.portable_fluid_cell.name=Portable Fluid Cell
+item.wireless_fluid_terminal.name=Wireless Fluid Terminal
+item.wireless_fluid_pattern_terminal.name=Wireless Fluid Pattern Terminal
 item.fluid_packet.name=Fluid Packet
 item.fluid_storage.1.name=%s1k%s ME Fluid Storage Cell
 item.fluid_storage.4.name=%s4k%s ME Fluid Storage Cell
@@ -39,6 +41,8 @@ tile.oc_pattern_editor.name=OC Pattern Editor
 tile.level_maintainer.name=ME Level Maintainer
 tile.fluid_buffer.name=ME Fluid Buffer
 tile.walrus.name=Walrus
+tile.fluid_auto_filler.name=ME Fluid Auto Filler
+tile.certus_quartz_tank.name=Certus Quartz Tank
 
 ae2fc.waila.speed=Speed
 ae2fc.waila.enable=Enable
@@ -50,6 +54,7 @@ ae2fc.tooltip.fluid_packet_decoder.desc=The Fluid Decoder can decode Fluid packe
 ae2fc.tooltip.discretizer.desc=When the ME Fluid Discretizer is attached to your ME System, it will represent the Fluids that are stored in your ME Fluid Storage Cells (Or Storage bus) as drops. They will be the item equivalent of fluids. Its just another way to show fluids, it won't actually convert your fluids to items.
 ae2fc.tooltip.fluid_buffer.desc=This is a high speed fluid IO
 ae2fc.tooltip.walrus.desc=GTNH is like a job
+ae2fc.tooltip.fluid_auto_filler=Creates fluid canning pattern with given container automatically.
 ae2fc.tooltip.level_maintainer.Who_Am_I=Who Am I?
 ae2fc.tooltip.level_maintainer.title=§6Request Status§r
 ae2fc.tooltip.level_maintainer.desc=Automatically keeps items and fluids in stock by requesting new crafts when needed. Has to be connected to an ME network.
@@ -80,6 +85,7 @@ ae2fc.tooltip.not_combine=Merge the same items
 ae2fc.tooltip.not_combine.hint=Disabled
 ae2fc.tooltip.combine=Merge the same items
 ae2fc.tooltip.combine.hint=Enabled
+ae2fc.tooltip.wireless.installed=Installed Card:
 
 ae2fc.tooltip.not_prio=Allow fluids to be placed first
 ae2fc.tooltip.not_prio.hint=Enabled
@@ -110,6 +116,7 @@ ae2fc.gui.part_fluid_import=ME Fluid Import Bus
 ae2fc.gui.part_fluid_export=ME Fluid Export Bus
 ae2fc.gui.part_fluid_terminal=ME Fluid Terminal
 ae2fc.gui.part_fluid_storage_bus=ME Fluid Storage Bus
+ae2fc.gui.fluid_auto_filler=ME Fluid Auto Filler
 
 error.unknown=Unknown
 

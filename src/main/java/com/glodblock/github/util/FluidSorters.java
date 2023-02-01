@@ -38,15 +38,11 @@ public class FluidSorters {
         }
     };
 
-    public static final Comparator<IAEItemStack> CONFIG_BASED_SORT_BY_NAME = new Comparator<IAEItemStack>() {
-
-        @Override
-        public int compare(final IAEItemStack o1, final IAEItemStack o2) {
-            if (getDirection() == SortDir.ASCENDING) {
-                return Platform.getItemDisplayName(o1).compareToIgnoreCase(Platform.getItemDisplayName(o2));
-            }
-            return Platform.getItemDisplayName(o2).compareToIgnoreCase(Platform.getItemDisplayName(o1));
+    public static final Comparator<IAEItemStack> CONFIG_BASED_SORT_BY_NAME = (o1, o2) -> {
+        if (getDirection() == SortDir.ASCENDING) {
+            return Platform.getItemDisplayName(o1).compareToIgnoreCase(Platform.getItemDisplayName(o2));
         }
+        return Platform.getItemDisplayName(o2).compareToIgnoreCase(Platform.getItemDisplayName(o1));
     };
     public static final Comparator<IAEItemStack> CONFIG_BASED_SORT_BY_SIZE = new Comparator<IAEItemStack>() {
 
@@ -89,33 +85,15 @@ public class FluidSorters {
     }
 
     public static int compareInt(final int a, final int b) {
-        if (a == b) {
-            return 0;
-        }
-        if (a < b) {
-            return -1;
-        }
-        return 1;
+        return Integer.compare(a, b);
     }
 
     public static int compareLong(final long a, final long b) {
-        if (a == b) {
-            return 0;
-        }
-        if (a < b) {
-            return -1;
-        }
-        return 1;
+        return Long.compare(a, b);
     }
 
     public static int compareDouble(final double a, final double b) {
-        if (a == b) {
-            return 0;
-        }
-        if (a < b) {
-            return -1;
-        }
-        return 1;
+        return Double.compare(a, b);
     }
 
     private static SortDir getDirection() {

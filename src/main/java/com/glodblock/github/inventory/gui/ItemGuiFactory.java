@@ -2,6 +2,7 @@ package com.glodblock.github.inventory.gui;
 
 import javax.annotation.Nullable;
 
+import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
@@ -32,7 +33,7 @@ public abstract class ItemGuiFactory<T> implements IGuiFactory {
         if (item == null || !(item.getItem() instanceof IItemInventory)) {
             return null;
         }
-        T inv = getInventory(((IItemInventory) item.getItem()).getInventory(item, world, x, y, z));
+        T inv = getInventory(((IItemInventory) item.getItem()).getInventory(item, world, x, y, z, player));
         if (inv == null) {
             return null;
         }
@@ -59,7 +60,10 @@ public abstract class ItemGuiFactory<T> implements IGuiFactory {
         if (item == null || !(item.getItem() instanceof IItemInventory)) {
             return null;
         }
-        T inv = getInventory(((IItemInventory) item.getItem()).getInventory(item, world, x, y, z));
+        T inv = getInventory(((IItemInventory) item.getItem()).getInventory(item, world, x, y, z, player));
+        if (inv == null && Minecraft.getMinecraft().currentScreen != null) {
+            player.closeScreen();
+        }
         return inv != null ? createClientGui(player, inv) : null;
     }
 
