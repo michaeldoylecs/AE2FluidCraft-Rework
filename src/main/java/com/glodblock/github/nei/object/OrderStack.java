@@ -14,7 +14,7 @@ import com.glodblock.github.util.Util;
 
 public class OrderStack<T> {
 
-    private final T RealStack;
+    private T RealStack;
     private final int index;
 
     public static final int ITEM = 1;
@@ -26,6 +26,10 @@ public class OrderStack<T> {
             throw new IllegalArgumentException("Trying to create a null or negative order stack!");
         this.RealStack = stack;
         this.index = order;
+    }
+
+    public void putStack(T stack) {
+        this.RealStack = stack;
     }
 
     public T getStack() {

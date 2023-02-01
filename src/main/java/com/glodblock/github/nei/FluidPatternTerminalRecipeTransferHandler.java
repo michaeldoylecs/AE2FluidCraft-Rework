@@ -35,7 +35,7 @@ public class FluidPatternTerminalRecipeTransferHandler implements IOverlayHandle
             List<OrderStack<?>> in = FluidRecipe.getPackageInputs(recipe, recipeIndex, priority);
             List<OrderStack<?>> out = FluidRecipe.getPackageOutputs(recipe, recipeIndex, !notUseOther(recipe));
             boolean craft = shouldCraft(recipe);
-            FluidCraft.proxy.netHandler.sendToServer(new CPacketTransferRecipe(in, out, craft));
+            FluidCraft.proxy.netHandler.sendToServer(new CPacketTransferRecipe(in, out, craft, shift));
         }
     }
 

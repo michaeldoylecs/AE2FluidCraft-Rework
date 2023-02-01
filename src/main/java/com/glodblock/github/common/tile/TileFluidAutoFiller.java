@@ -109,7 +109,6 @@ public class TileFluidAutoFiller extends AENetworkInvTile
         if (inventory.getStackInSlot(0) == null) {
             inventory.setInventorySlotContents(0, BUCKET);
         }
-        updatePattern();
     }
 
     @TileEvent(TileEventType.WORLD_NBT_WRITE)

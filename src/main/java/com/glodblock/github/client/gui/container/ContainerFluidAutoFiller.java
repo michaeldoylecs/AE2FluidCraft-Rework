@@ -25,12 +25,14 @@ public class ContainerFluidAutoFiller extends AEBaseContainer {
             MutablePair<Boolean, ItemStack> result = ContainerFluidAutoFiller.isItemValid(is);
             if (result.left) {
                 if (super.getHasStack()) super.clearStack();
+                hasChange = true;
                 super.putStack(result.right);
             }
         }
     }
 
     private final TileFluidAutoFiller tile;
+    private static boolean hasChange;
 
     public ContainerFluidAutoFiller(InventoryPlayer ipl, TileFluidAutoFiller tile) {
         super(ipl, tile);
@@ -54,6 +56,9 @@ public class ContainerFluidAutoFiller extends AEBaseContainer {
     @Override
     public void detectAndSendChanges() {
         super.detectAndSendChanges();
-        tile.updatePattern();
+        if (hasChange) {
+            tile.updatePattern();
+            hasChange = false;
+        }
     }
 }
