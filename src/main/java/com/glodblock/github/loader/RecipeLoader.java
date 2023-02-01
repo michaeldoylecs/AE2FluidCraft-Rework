@@ -14,6 +14,7 @@ import net.minecraftforge.oredict.ShapelessOreRecipe;
 import com.glodblock.github.common.Config;
 import com.glodblock.github.common.item.ItemBasicFluidStorageCell;
 import com.glodblock.github.common.storage.CellType;
+import com.glodblock.github.loader.recipe.WirelessTerminal;
 import com.glodblock.github.util.ModAndClassUtil;
 
 import cpw.mods.fml.common.registry.GameRegistry;
@@ -93,6 +94,8 @@ public class RecipeLoader implements Runnable {
             GameRegistry.findItem("appliedenergistics2", "item.ItemMultiMaterial"),
             1,
             54);
+    public static final ItemStack AE2_WIRELESS_TERMINAL = GameRegistry
+            .findItemStack("appliedenergistics2", "item.ToolWirelessTerminal", 1);
     public static final ItemStack AE2_ME_CHEST = GameRegistry
             .findItemStack("appliedenergistics2", "tile.BlockChest", 1);
     public static final ItemStack AE2_ENERGY_CELL = GameRegistry
@@ -128,7 +131,12 @@ public class RecipeLoader implements Runnable {
                         AE2_INTERFACE));
         GameRegistry.addShapelessRecipe(FLUID_INTERFACE.stack(), INTERFACE.stack());
         GameRegistry.addShapelessRecipe(INTERFACE.stack(), FLUID_INTERFACE.stack());
-        GameRegistry.addShapelessRecipe(WIRELESS_FLUID_TERM.stack(), AE2_TERMINAL, BUFFER.stack());
+        GameRegistry.addShapelessRecipe(WIRELESS_FLUID_TERM.stack(), AE2_WIRELESS_TERMINAL, BUCKET);
+        GameRegistry.addShapelessRecipe(WIRELESS_PATTERN_TERM.stack(), WIRELESS_FLUID_TERM, FLUID_TERMINAL);
+        if (ModAndClassUtil.WCT) {
+            GameRegistry.addRecipe(new WirelessTerminal(WIRELESS_PATTERN_TERM.stack()));
+            GameRegistry.addRecipe(new WirelessTerminal(WIRELESS_FLUID_TERM.stack()));
+        }
         GameRegistry
                 .addRecipe(new ShapedOreRecipe(CERTUS_QUARTZ_TANK.stack(), "GGG", "G G", "GGG", 'G', AE2_QUARTZ_GLASS));
         GameRegistry.addShapelessRecipe(FLUID_AUTO_FILLER.stack(), FLUID_TERMINAL, ENCODER);

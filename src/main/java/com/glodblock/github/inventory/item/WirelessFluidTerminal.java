@@ -52,6 +52,10 @@ public class WirelessFluidTerminal extends MEMonitorHandler<IAEFluidStack> imple
         this.channel = StorageChannel.FLUIDS;
     }
 
+    public StorageChannel getChannel() {
+        return this.channel;
+    }
+
     @Override
     public ItemStack getItemStack() {
         return this.target;

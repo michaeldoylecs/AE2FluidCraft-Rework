@@ -84,6 +84,7 @@ ae2fc.tooltip.not_combine=Merge the same items
 ae2fc.tooltip.not_combine.hint=Disabled
 ae2fc.tooltip.combine=Merge the same items
 ae2fc.tooltip.combine.hint=Enabled
+ae2fc.tooltip.wireless.installed=Installed Card:
 
 ae2fc.tooltip.not_prio=Allow fluids to be placed first
 ae2fc.tooltip.not_prio.hint=Enabled

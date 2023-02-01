@@ -7,7 +7,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 
-import org.apache.commons.lang3.tuple.MutablePair;
+import org.apache.commons.lang3.tuple.ImmutablePair;
 
 import appeng.container.AEBaseContainer;
 import appeng.container.ContainerOpenContext;
@@ -29,15 +29,15 @@ public abstract class PartItemGuiFactory<T> extends PartGuiFactory<T> {
     @Nullable
     @Override
     public Object createServerGui(EntityPlayer player, World world, int x, int y, int z, ForgeDirection face) {
-        MutablePair<Util.GuiHelper.GuiType, Integer> result = Util.GuiHelper.decodeType(y);
+        ImmutablePair<Util.GuiHelper.GuiType, Integer> result = Util.GuiHelper.decodeType(y);
 
-        if (result.left == Util.GuiHelper.GuiType.ITEM) {
+        if (result.getLeft() == Util.GuiHelper.GuiType.ITEM) {
             ItemStack item = player.getHeldItem();
             if (item == null || !(item.getItem() instanceof IItemInventory)) {
                 return null;
             }
             T inv = getItemInventory(
-                    ((IItemInventory) item.getItem()).getInventory(item, world, x, result.right, z, player));
+                    ((IItemInventory) item.getItem()).getInventory(item, world, x, result.getRight(), z, player));
             if (inv == null) {
                 return null;
             }
@@ -53,7 +53,7 @@ public abstract class PartItemGuiFactory<T> extends PartGuiFactory<T> {
             }
             return gui;
         } else {
-            return super.createServerGui(player, world, x, result.right, z, face);
+            return super.createServerGui(player, world, x, result.getRight(), z, face);
         }
 
     }
@@ -61,17 +61,17 @@ public abstract class PartItemGuiFactory<T> extends PartGuiFactory<T> {
     @Nullable
     @Override
     public Object createClientGui(EntityPlayer player, World world, int x, int y, int z, ForgeDirection face) {
-        MutablePair<Util.GuiHelper.GuiType, Integer> result = Util.GuiHelper.decodeType(y);
+        ImmutablePair<Util.GuiHelper.GuiType, Integer> result = Util.GuiHelper.decodeType(y);
         if (result.left == Util.GuiHelper.GuiType.ITEM) {
             ItemStack item = player.getHeldItem();
             if (item == null || !(item.getItem() instanceof IItemInventory)) {
                 return null;
             }
             T inv = getItemInventory(
-                    ((IItemInventory) item.getItem()).getInventory(item, world, x, result.right, z, player));
+                    ((IItemInventory) item.getItem()).getInventory(item, world, x, result.getRight(), z, player));
             return inv != null ? createClientGui(player, inv) : null;
         } else {
-            return super.createClientGui(player, world, x, result.right, z, face);
+            return super.createClientGui(player, world, x, result.getRight(), z, face);
         }
 
     }

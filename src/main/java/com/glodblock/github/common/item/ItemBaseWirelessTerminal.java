@@ -1,9 +1,15 @@
 package com.glodblock.github.common.item;
 
+import static com.glodblock.github.loader.recipe.WirelessTerminal.getInfinityBoosterCard;
+import static com.glodblock.github.util.Util.hasInfinityBoosterCard;
+
+import java.util.List;
 import java.util.Optional;
 
+import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 
@@ -18,10 +24,15 @@ import com.glodblock.github.inventory.InventoryHandler;
 import com.glodblock.github.inventory.gui.GuiType;
 import com.glodblock.github.inventory.item.IItemInventory;
 import com.glodblock.github.util.BlockPos;
+import com.glodblock.github.util.NameConst;
+
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 
 public class ItemBaseWirelessTerminal extends ToolWirelessTerminal implements IItemInventory {
 
     protected GuiType type;
+    public static String infinityBoosterCard = "infinityBoosterCard";
 
     public ItemBaseWirelessTerminal(GuiType t) {
         super();
@@ -30,6 +41,7 @@ public class ItemBaseWirelessTerminal extends ToolWirelessTerminal implements II
 
     @Override
     public ItemStack onItemRightClick(final ItemStack item, final World w, final EntityPlayer player) {
+        if (player.isSneaking()) return removeInfinityBoosterCard(player, item);
         IWirelessTermRegistry term = AEApi.instance().registries().wireless();
         if (!term.isWirelessTerminal(item)) {
             player.addChatMessage(PlayerMessages.DeviceNotWirelessTerminal.get());
@@ -61,6 +73,31 @@ public class ItemBaseWirelessTerminal extends ToolWirelessTerminal implements II
         return item;
     }
 
+    private ItemStack removeInfinityBoosterCard(final EntityPlayer player, ItemStack is) {
+        if (hasInfinityBoosterCard(is)) {
+            if (!player.inventory.addItemStackToInventory(getInfinityBoosterCard())) {
+                player.entityDropItem(getInfinityBoosterCard(), 0);
+            }
+            is.getTagCompound().setBoolean(infinityBoosterCard, false);
+        }
+        return is;
+    }
+
+    @SideOnly(Side.CLIENT)
+    @Override
+    public void addCheckedInformation(ItemStack stack, EntityPlayer player, List<String> lines,
+            boolean displayMoreInfo) {
+        super.addCheckedInformation(stack, player, lines, displayMoreInfo);
+        if (GuiScreen.isCtrlKeyDown()) {
+            lines.add(NameConst.i18n(NameConst.TT_WIRELESS_INSTALLED));
+            if (hasInfinityBoosterCard(stack)) {
+                lines.add("  " + EnumChatFormatting.GOLD + getInfinityBoosterCard().getDisplayName());
+            }
+        } else {
+            lines.add(NameConst.i18n(NameConst.TT_CTRL_FOR_MORE));
+        }
+    }
+
     @Override
     public boolean canHandle(final ItemStack is) {
         return is.getItem() == this;
@@ -82,4 +119,5 @@ public class ItemBaseWirelessTerminal extends ToolWirelessTerminal implements II
     public GuiType guiGuiType() {
         return this.type;
     }
+
 }

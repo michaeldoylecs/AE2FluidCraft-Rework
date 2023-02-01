@@ -84,6 +84,7 @@ ae2fc.tooltip.not_combine=合并输出相同物品
 ae2fc.tooltip.not_combine.hint=禁用
 ae2fc.tooltip.combine=合并输出相同物品
 ae2fc.tooltip.combine.hint=启用
+ae2fc.tooltip.wireless.installed=已安装的卡:
 
 ae2fc.tooltip.not_prio=优先放置流体
 ae2fc.tooltip.not_prio.hint=启用

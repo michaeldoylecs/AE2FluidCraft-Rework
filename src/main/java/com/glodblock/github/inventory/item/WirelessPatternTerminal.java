@@ -72,6 +72,10 @@ public class WirelessPatternTerminal extends MEMonitorHandler<IAEItemStack> impl
         this.output = new ItemBiggerAppEngInventory(is, "output", 3);
     }
 
+    public StorageChannel getChannel() {
+        return this.channel;
+    }
+
     @Override
     public ItemStack getItemStack() {
         return this.target;
