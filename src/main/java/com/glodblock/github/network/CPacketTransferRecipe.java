@@ -11,6 +11,12 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.fluids.FluidStack;
 
+import appeng.api.AEApi;
+import appeng.api.config.FuzzyMode;
+import appeng.api.storage.ITerminalHost;
+import appeng.api.storage.data.IAEItemStack;
+import appeng.api.storage.data.IItemList;
+
 import com.glodblock.github.client.gui.container.base.FCContainerEncodeTerminal;
 import com.glodblock.github.common.item.ItemFluidPacket;
 import com.glodblock.github.nei.NEIUtils;
@@ -28,13 +34,19 @@ public class CPacketTransferRecipe implements IMessage {
     private List<OrderStack<?>> outputs;
     private boolean isCraft;
     private static final int MAX_INDEX = 32;
+    private boolean shift;
 
     public CPacketTransferRecipe() {}
 
     public CPacketTransferRecipe(List<OrderStack<?>> IN, List<OrderStack<?>> OUT, boolean craft) {
+        this(IN, OUT, craft, false);
+    }
+
+    public CPacketTransferRecipe(List<OrderStack<?>> IN, List<OrderStack<?>> OUT, boolean craft, boolean shift) {
         this.inputs = IN;
         this.outputs = OUT;
         this.isCraft = craft;
+        this.shift = shift;
     }
 
     // I should use GZIP to compress the message, but i'm too lazy.
@@ -42,6 +54,7 @@ public class CPacketTransferRecipe implements IMessage {
     @Override
     public void toBytes(ByteBuf buf) {
         buf.writeBoolean(isCraft);
+        buf.writeBoolean(shift);
         NBTTagCompound nbt_m = new NBTTagCompound();
         NBTTagCompound nbt_i = new NBTTagCompound();
         NBTTagCompound nbt_o = new NBTTagCompound();
@@ -59,6 +72,7 @@ public class CPacketTransferRecipe implements IMessage {
     @Override
     public void fromBytes(ByteBuf buf) {
         isCraft = buf.readBoolean();
+        shift = buf.readBoolean();
         inputs = new LinkedList<>();
         outputs = new LinkedList<>();
         NBTTagCompound nbt_m = ByteBufUtils.readTag(buf);
@@ -78,10 +92,19 @@ public class CPacketTransferRecipe implements IMessage {
 
         @Nullable
         @Override
+        @SuppressWarnings("unchecked")
         public IMessage onMessage(CPacketTransferRecipe message, MessageContext ctx) {
             Container c = ctx.getServerHandler().playerEntity.openContainer;
             if (c instanceof FCContainerEncodeTerminal) {
                 FCContainerEncodeTerminal cf = (FCContainerEncodeTerminal) c;
+                ITerminalHost host = cf.getHost();
+                IItemList<IAEItemStack> storageList;
+                if (host != null) {
+                    storageList = host.getItemInventory().getStorageList();
+                } else {
+                    storageList = AEApi.instance().storage().createItemList();
+                }
+
                 boolean combine = cf.combine;
                 cf.getPatternTerminal().setCraftingRecipe(message.isCraft);
                 IInventory inputSlot = cf.getInventoryByName("crafting");
@@ -100,6 +123,22 @@ public class CPacketTransferRecipe implements IMessage {
                     }
                     message.inputs = NEIUtils.clearNull(message.inputs);
                     message.outputs = NEIUtils.clearNull(message.outputs);
+                }
+                // using exists item to fill slot
+                if (message.shift && !storageList.isEmpty()) {
+                    for (OrderStack stack : message.inputs) {
+                        if (stack.getStack() instanceof FluidStack) continue;
+                        ItemStack is = (ItemStack) stack.getStack();
+                        IAEItemStack iaeItemStack = AEApi.instance().storage().createItemStack(is);
+                        if (storageList.findPrecise(iaeItemStack) == null) {
+                            for (IAEItemStack tmp : storageList.findFuzzy(iaeItemStack, FuzzyMode.IGNORE_ALL)) {
+                                ItemStack substitute = tmp.getItemStack().copy();
+                                substitute.stackSize = is.stackSize;
+                                stack.putStack(substitute);
+                                break;
+                            }
+                        }
+                    }
                 }
                 transferPack(message.inputs, inputSlot);
                 transferPack(message.outputs, outputSlot);
