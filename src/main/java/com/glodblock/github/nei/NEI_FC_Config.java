@@ -14,7 +14,7 @@ public class NEI_FC_Config implements IConfigureNEI {
     @Override
     public void loadConfig() {
         API.registerNEIGuiHandler(new NEIGuiHandler());
-
+        API.addSearchProvider(new NEIItemFilter());
         for (String identifier : FluidRecipe.getSupportRecipes()) {
             API.registerGuiOverlayHandler(
                     GuiPatternPortableCell.class,
