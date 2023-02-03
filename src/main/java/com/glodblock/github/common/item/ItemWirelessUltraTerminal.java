@@ -1,0 +1,52 @@
+package com.glodblock.github.common.item;
+
+import appeng.api.AEApi;
+import appeng.api.networking.IGridNode;
+import appeng.core.features.AEFeature;
+import appeng.core.localization.PlayerMessages;
+import appeng.util.Platform;
+import com.glodblock.github.FluidCraft;
+import com.glodblock.github.common.tabs.FluidCraftingTabs;
+import com.glodblock.github.inventory.gui.GuiType;
+import com.glodblock.github.inventory.item.WirelessFluidTerminal;
+import com.glodblock.github.loader.IRegister;
+import com.glodblock.github.util.NameConst;
+import com.glodblock.github.util.Util;
+import cpw.mods.fml.common.registry.GameRegistry;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.ItemStack;
+import net.minecraft.world.World;
+
+import java.util.EnumSet;
+
+public class ItemWirelessUltraTerminal extends ItemBaseWirelessTerminal
+    implements IRegister<ItemWirelessUltraTerminal> {
+
+    public ItemWirelessUltraTerminal() {
+        super(GuiType.WIRELESS_ESSENTIA_TERMINAL);
+        AEApi.instance().registries().wireless().registerWirelessHandler(this);
+        this.setFeature(EnumSet.of(AEFeature.WirelessAccessTerminal, AEFeature.PoweredTools));
+        setUnlocalizedName(NameConst.ITEM_WIRELESS_ULTRA_TERMINAL);
+        setTextureName(FluidCraft.resource(NameConst.ITEM_WIRELESS_ULTRA_TERMINAL).toString());
+    }
+
+    @Override
+    public ItemWirelessUltraTerminal register() {
+        GameRegistry.registerItem(this, NameConst.ITEM_WIRELESS_ULTRA_TERMINAL, FluidCraft.MODID);
+        setCreativeTab(FluidCraftingTabs.INSTANCE);
+        return this;
+    }
+
+    @Override
+    public Object getInventory(ItemStack stack, World world, int x, int y, int z, EntityPlayer player) {
+        try {
+            IGridNode gridNode = Util.getWirelessGrid(stack);
+            if (gridNode != null) {
+                return new WirelessFluidTerminal(stack, x, gridNode, player);
+            }
+        } catch (Exception e) {
+            if (Platform.isClient()) player.addChatMessage(PlayerMessages.OutOfRange.get());
+        }
+        return null;
+    }
+}

@@ -88,6 +88,9 @@ public class PartFluidPatternTerminal extends FCFluidEncodeTerminal {
                 }
             }
         }
+        if (inv == this.crafting) {
+            this.fixCraftingRecipes();
+        }
         this.getHost().markForSave();
     }
 

@@ -98,6 +98,12 @@ public class SPacketFluidUpdate implements IMessage {
                 } else {
                     ((GuiFluidTerminal) gs).update(null);
                 }
+            } else if (gs instanceof GuiEssentiaTerminal) {
+                if (message.itemStack != null) {
+                    ((GuiEssentiaTerminal) gs).update(message.itemStack.getItemStack());
+                } else {
+                    ((GuiEssentiaTerminal) gs).update(null);
+                }
             } else if (gs instanceof GuiFluidStorageBus) {
                 for (Map.Entry<Integer, IAEFluidStack> e : message.list.entrySet())
                     ((GuiFluidStorageBus) gs).update(e.getKey(), e.getValue());

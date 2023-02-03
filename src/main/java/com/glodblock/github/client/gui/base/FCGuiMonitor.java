@@ -375,7 +375,6 @@ public abstract class FCGuiMonitor<T extends IAEStack<T>> extends AEBaseMEGui
     }
 
     @Override
-    @SuppressWarnings("unchecked")
     protected void handleMouseClick(final Slot slot, final int slotIdx, final int ctrlDown, final int mouseButton) {
         final EntityPlayer player = Minecraft.getMinecraft().thePlayer;
         if (mouseButton == 3) {

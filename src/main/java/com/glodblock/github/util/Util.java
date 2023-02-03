@@ -440,7 +440,7 @@ public final class Util {
         public static MutablePair<Integer, ItemStack> fillStack(ItemStack itemStack, FluidStack fluid) {
             if (itemStack == null || itemStack.stackSize != 1) return null;
             Item item = itemStack.getItem();
-            // If its a fluid container item instance
+            // If it's a fluid container item instance
             if (item instanceof IFluidContainerItem) {
                 // Call the fill method on it.
                 int filled = ((IFluidContainerItem) item).fill(itemStack, fluid, true);
