@@ -46,7 +46,7 @@ public class FluidCraft {
     @Mod.EventHandler
     public static void preInit(FMLPreInitializationEvent event) {
         Config.run();
-        (new ChannelLoader()).run();
+        ChannelLoader.INSTANCE.run();
         proxy.preInit(event);
     }
 
@@ -70,8 +70,9 @@ public class FluidCraft {
         ItemAndBlockHolder.loadSetting();
 
         if (!Config.removeRecipe) {
-            (new RecipeLoader()).run();
+            RecipeLoader.INSTANCE.run();
         }
+        RecipeLoader.runWCTRecipe();
 
         if (ModAndClassUtil.isV2) {
             CalculatorV2PluginLoader.installCalculatorV2Plugins();

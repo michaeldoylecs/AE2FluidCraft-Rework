@@ -22,6 +22,8 @@ import extracells.registries.ItemEnum;
 
 public class RecipeLoader implements Runnable {
 
+    public static final RecipeLoader INSTANCE = new RecipeLoader();
+
     public static final ItemStack AE2_INTERFACE = GameRegistry
             .findItemStack("appliedenergistics2", "tile.BlockInterface", 1);
     public static final ItemStack AE2_PROCESS_ENG = new ItemStack(
@@ -133,10 +135,6 @@ public class RecipeLoader implements Runnable {
         GameRegistry.addShapelessRecipe(INTERFACE.stack(), FLUID_INTERFACE.stack());
         GameRegistry.addShapelessRecipe(WIRELESS_FLUID_TERM.stack(), AE2_WIRELESS_TERMINAL, BUCKET);
         GameRegistry.addShapelessRecipe(WIRELESS_PATTERN_TERM.stack(), WIRELESS_FLUID_TERM, FLUID_TERMINAL);
-        if (ModAndClassUtil.WCT) {
-            GameRegistry.addRecipe(new WirelessTerminalRecipe(WIRELESS_PATTERN_TERM.stack()));
-            GameRegistry.addRecipe(new WirelessTerminalRecipe(WIRELESS_FLUID_TERM.stack()));
-        }
         GameRegistry
                 .addRecipe(new ShapedOreRecipe(CERTUS_QUARTZ_TANK.stack(), "GGG", "G G", "GGG", 'G', AE2_QUARTZ_GLASS));
         GameRegistry.addShapelessRecipe(FLUID_AUTO_FILLER.stack(), FLUID_TERMINAL, ENCODER);
@@ -449,6 +447,13 @@ public class RecipeLoader implements Runnable {
                             BUCKET,
                             'P',
                             AE2_BLANK_PATTERN));
+        }
+    }
+
+    public static void runWCTRecipe() {
+        if (ModAndClassUtil.WCT) {
+            GameRegistry.addRecipe(new WirelessTerminalRecipe(WIRELESS_PATTERN_TERM.stack()));
+            GameRegistry.addRecipe(new WirelessTerminalRecipe(WIRELESS_FLUID_TERM.stack()));
         }
     }
 }

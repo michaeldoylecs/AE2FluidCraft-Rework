@@ -10,6 +10,8 @@ import cpw.mods.fml.relauncher.Side;
 
 public class ChannelLoader implements Runnable {
 
+    public static final ChannelLoader INSTANCE = new ChannelLoader();
+
     @Override
     @SuppressWarnings("all")
     public void run() {
