@@ -1,7 +1,5 @@
 package com.glodblock.github.client.gui;
 
-import com.glodblock.github.common.item.ItemWirelessUltraTerminal;
-import com.glodblock.github.inventory.item.IWirelessTerminal;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.item.ItemStack;
@@ -10,11 +8,13 @@ import appeng.api.storage.ITerminalHost;
 import appeng.client.gui.implementations.GuiCraftingStatus;
 import appeng.client.gui.widgets.GuiTabButton;
 
+import com.glodblock.github.common.item.ItemWirelessUltraTerminal;
 import com.glodblock.github.common.parts.PartFluidPatternTerminal;
 import com.glodblock.github.common.parts.PartFluidPatternTerminalEx;
 import com.glodblock.github.common.parts.PartFluidTerminal;
 import com.glodblock.github.inventory.InventoryHandler;
 import com.glodblock.github.inventory.gui.GuiType;
+import com.glodblock.github.inventory.item.IWirelessTerminal;
 import com.glodblock.github.inventory.item.WirelessFluidTerminalInventory;
 import com.glodblock.github.inventory.item.WirelessPatternTerminalInventory;
 import com.glodblock.github.loader.ItemAndBlockHolder;
@@ -56,8 +56,8 @@ public class GuiFluidPatternTerminalCraftingStatus extends GuiCraftingStatus {
             else if (host instanceof PartFluidPatternTerminalEx)
                 InventoryHandler.switchGui(GuiType.FLUID_PATTERN_TERMINAL_EX);
             else if (host instanceof PartFluidTerminal) InventoryHandler.switchGui(GuiType.FLUID_TERMINAL);
-            else if (host instanceof IWirelessTerminal && ((IWirelessTerminal) host).isUniversal(host))
-                InventoryHandler.switchGui(ItemWirelessUltraTerminal.readMode(((IWirelessTerminal) host).getItemStack()));
+            else if (host instanceof IWirelessTerminal && ((IWirelessTerminal) host).isUniversal(host)) InventoryHandler
+                    .switchGui(ItemWirelessUltraTerminal.readMode(((IWirelessTerminal) host).getItemStack()));
             else if (host instanceof WirelessFluidTerminalInventory)
                 InventoryHandler.switchGui(GuiType.WIRELESS_FLUID_TERMINAL);
             else if (host instanceof WirelessPatternTerminalInventory)

@@ -69,18 +69,18 @@ public class CPacketPatternValueSet implements IMessage {
                         final TileEntity te = context.getTile();
                         if (te != null) {
                             InventoryHandler.openGui(
-                                player,
-                                player.worldObj,
-                                new BlockPos(te),
-                                Objects.requireNonNull(context.getSide()),
-                                message.originGui);
+                                    player,
+                                    player.worldObj,
+                                    new BlockPos(te),
+                                    Objects.requireNonNull(context.getSide()),
+                                    message.originGui);
                         } else {
                             InventoryHandler.openGui(
-                                player,
-                                player.worldObj,
-                                new BlockPos(player.inventory.currentItem, 0 , 0),
-                                Objects.requireNonNull(context.getSide()),
-                                message.originGui);
+                                    player,
+                                    player.worldObj,
+                                    new BlockPos(player.inventory.currentItem, 0, 0),
+                                    Objects.requireNonNull(context.getSide()),
+                                    message.originGui);
                         }
                         if (player.openContainer instanceof FCContainerEncodeTerminal) {
                             Slot slot = player.openContainer.getSlot(message.valueIndex);

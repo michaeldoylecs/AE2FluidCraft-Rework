@@ -5,7 +5,6 @@ import java.util.Objects;
 
 import javax.annotation.Nullable;
 
-import com.glodblock.github.util.Util;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.util.ForgeDirection;
@@ -24,6 +23,7 @@ import com.glodblock.github.common.item.ItemFluidPacket;
 import com.glodblock.github.inventory.InventoryHandler;
 import com.glodblock.github.inventory.gui.GuiType;
 import com.glodblock.github.util.BlockPos;
+import com.glodblock.github.util.Util;
 
 import cpw.mods.fml.common.network.simpleimpl.IMessage;
 import cpw.mods.fml.common.network.simpleimpl.IMessageHandler;
@@ -100,18 +100,21 @@ public class CPacketInventoryAction implements IMessage {
                         final TileEntity te = context.getTile();
                         if (te != null) {
                             InventoryHandler.openGui(
-                                sender,
-                                te.getWorldObj(),
-                                new BlockPos(te),
-                                Objects.requireNonNull(baseContainer.getOpenContext().getSide()),
-                                GuiType.FLUID_CRAFTING_AMOUNT);
+                                    sender,
+                                    te.getWorldObj(),
+                                    new BlockPos(te),
+                                    Objects.requireNonNull(baseContainer.getOpenContext().getSide()),
+                                    GuiType.FLUID_CRAFTING_AMOUNT);
                         } else {
                             InventoryHandler.openGui(
-                                sender,
-                                sender.worldObj,
-                                new BlockPos(sender.inventory.currentItem, Util.GuiHelper.encodeType(0, Util.GuiHelper.GuiType.ITEM), 0),
-                                ForgeDirection.UNKNOWN,
-                                GuiType.FLUID_CRAFTING_AMOUNT);
+                                    sender,
+                                    sender.worldObj,
+                                    new BlockPos(
+                                            sender.inventory.currentItem,
+                                            Util.GuiHelper.encodeType(0, Util.GuiHelper.GuiType.ITEM),
+                                            0),
+                                    ForgeDirection.UNKNOWN,
+                                    GuiType.FLUID_CRAFTING_AMOUNT);
                         }
                         if (sender.openContainer instanceof ContainerCraftAmount) {
                             final ContainerCraftAmount cca = (ContainerCraftAmount) sender.openContainer;
@@ -128,18 +131,21 @@ public class CPacketInventoryAction implements IMessage {
                         final TileEntity te = context.getTile();
                         if (te != null) {
                             InventoryHandler.openGui(
-                                sender,
-                                te.getWorldObj(),
-                                new BlockPos(te),
-                                Objects.requireNonNull(baseContainer.getOpenContext().getSide()),
-                                GuiType.PATTERN_VALUE_SET);
+                                    sender,
+                                    te.getWorldObj(),
+                                    new BlockPos(te),
+                                    Objects.requireNonNull(baseContainer.getOpenContext().getSide()),
+                                    GuiType.PATTERN_VALUE_SET);
                         } else {
                             InventoryHandler.openGui(
-                                sender,
-                                sender.worldObj,
-                                new BlockPos(sender.inventory.currentItem, Util.GuiHelper.encodeType(0, Util.GuiHelper.GuiType.ITEM), 0),
-                                ForgeDirection.UNKNOWN,
-                                GuiType.PATTERN_VALUE_SET);
+                                    sender,
+                                    sender.worldObj,
+                                    new BlockPos(
+                                            sender.inventory.currentItem,
+                                            Util.GuiHelper.encodeType(0, Util.GuiHelper.GuiType.ITEM),
+                                            0),
+                                    ForgeDirection.UNKNOWN,
+                                    GuiType.PATTERN_VALUE_SET);
                         }
                         int amt = (int) message.stack.getStackSize();
                         if (message.stack.getItem() instanceof ItemFluidPacket) {

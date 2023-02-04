@@ -4,8 +4,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
-import com.glodblock.github.inventory.InventoryHandler;
-import com.glodblock.github.inventory.gui.GuiType;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
@@ -24,6 +22,8 @@ import com.glodblock.github.client.me.EssentiaRepo;
 import com.glodblock.github.common.item.ItemFluidDrop;
 import com.glodblock.github.crossmod.thaumcraft.AspectRender;
 import com.glodblock.github.crossmod.thaumcraft.AspectUtil;
+import com.glodblock.github.inventory.InventoryHandler;
+import com.glodblock.github.inventory.gui.GuiType;
 import com.glodblock.github.inventory.item.IWirelessTerminal;
 import com.glodblock.github.network.CPacketFluidUpdate;
 import com.glodblock.github.util.Ae2ReflectClient;

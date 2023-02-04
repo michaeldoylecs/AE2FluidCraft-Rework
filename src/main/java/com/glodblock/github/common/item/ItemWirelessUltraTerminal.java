@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.EnumSet;
 import java.util.List;
 
-import com.glodblock.github.util.ModAndClassUtil;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -24,6 +23,7 @@ import com.glodblock.github.inventory.item.WirelessCraftingTerminalInventory;
 import com.glodblock.github.inventory.item.WirelessFluidTerminalInventory;
 import com.glodblock.github.inventory.item.WirelessPatternTerminalInventory;
 import com.glodblock.github.loader.IRegister;
+import com.glodblock.github.util.ModAndClassUtil;
 import com.glodblock.github.util.NameConst;
 import com.glodblock.github.util.Util;
 
@@ -69,11 +69,7 @@ public class ItemWirelessUltraTerminal extends ItemBaseWirelessTerminal
 
     @Override
     public String getItemStackDisplayName(ItemStack stack) {
-        return StatCollector.translateToLocalFormatted(
-            "item.wireless_ultra_terminal." +
-                guiGuiType(stack) +
-                ".name"
-        );
+        return StatCollector.translateToLocalFormatted("item.wireless_ultra_terminal." + guiGuiType(stack) + ".name");
     }
 
     @Override
