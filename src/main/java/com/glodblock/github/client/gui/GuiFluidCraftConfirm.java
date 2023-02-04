@@ -3,6 +3,9 @@ package com.glodblock.github.client.gui;
 import java.text.NumberFormat;
 import java.util.*;
 
+import com.glodblock.github.common.item.ItemWirelessUltraTerminal;
+import com.glodblock.github.inventory.item.IWirelessTerminal;
+import com.glodblock.github.inventory.item.WirelessPatternTerminalInventory;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.item.ItemStack;
@@ -62,9 +65,12 @@ public class GuiFluidCraftConfirm extends AEBaseGui {
 
         if (te instanceof PartFluidPatternTerminal) {
             this.OriginalGui = GuiType.FLUID_PATTERN_TERMINAL;
-        }
-        if (te instanceof PartFluidPatternTerminalEx) {
+        } else if (te instanceof PartFluidPatternTerminalEx) {
             this.OriginalGui = GuiType.FLUID_PATTERN_TERMINAL_EX;
+        } else if (te instanceof IWirelessTerminal && ((IWirelessTerminal) te).isUniversal(te)) {
+            this.OriginalGui = ItemWirelessUltraTerminal.readMode(((IWirelessTerminal) te).getItemStack());
+        } else if (te instanceof WirelessPatternTerminalInventory) {
+            this.OriginalGui = GuiType.FLUID_TERMINAL;
         }
     }
 

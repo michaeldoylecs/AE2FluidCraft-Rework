@@ -1,5 +1,7 @@
 package com.glodblock.github.client.gui;
 
+import com.glodblock.github.common.item.ItemWirelessUltraTerminal;
+import com.glodblock.github.inventory.item.IWirelessTerminal;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.item.ItemStack;
@@ -36,12 +38,13 @@ public class GuiFluidPatternTerminalCraftingStatus extends GuiCraftingStatus {
             Ae2ReflectClient.rewriteIcon(this, new ItemStack(ItemAndBlockHolder.FLUID_TERMINAL_EX, 1));
         else if (host instanceof PartFluidTerminal) {
             Ae2ReflectClient.rewriteIcon(this, new ItemStack(ItemAndBlockHolder.FLUID_TERM, 1));
+        } else if (host instanceof IWirelessTerminal && ((IWirelessTerminal) host).isUniversal(host)) {
+            Ae2ReflectClient.rewriteIcon(this, new ItemStack(ItemAndBlockHolder.WIRELESS_ULTRA_TERM, 1));
         } else if (host instanceof WirelessFluidTerminalInventory) {
             Ae2ReflectClient.rewriteIcon(this, new ItemStack(ItemAndBlockHolder.WIRELESS_FLUID_TERM, 1));
         } else if (host instanceof WirelessPatternTerminalInventory) {
             Ae2ReflectClient.rewriteIcon(this, new ItemStack(ItemAndBlockHolder.WIRELESS_PATTERN_TERM, 1));
         }
-
         super.initGui();
         originalGuiBtn = Ae2ReflectClient.getOriginalGuiButton(this);
     }
@@ -53,6 +56,8 @@ public class GuiFluidPatternTerminalCraftingStatus extends GuiCraftingStatus {
             else if (host instanceof PartFluidPatternTerminalEx)
                 InventoryHandler.switchGui(GuiType.FLUID_PATTERN_TERMINAL_EX);
             else if (host instanceof PartFluidTerminal) InventoryHandler.switchGui(GuiType.FLUID_TERMINAL);
+            else if (host instanceof IWirelessTerminal && ((IWirelessTerminal) host).isUniversal(host))
+                InventoryHandler.switchGui(ItemWirelessUltraTerminal.readMode(((IWirelessTerminal) host).getItemStack()));
             else if (host instanceof WirelessFluidTerminalInventory)
                 InventoryHandler.switchGui(GuiType.WIRELESS_FLUID_TERMINAL);
             else if (host instanceof WirelessPatternTerminalInventory)

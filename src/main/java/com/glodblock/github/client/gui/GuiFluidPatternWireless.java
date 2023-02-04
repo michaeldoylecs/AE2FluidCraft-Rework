@@ -9,5 +9,4 @@ public class GuiFluidPatternWireless extends GuiFluidPatternTerminal {
     public GuiFluidPatternWireless(InventoryPlayer inventoryPlayer, IWirelessTerminal te) {
         super(inventoryPlayer, te);
     }
-
 }

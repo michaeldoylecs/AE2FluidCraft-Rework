@@ -4,6 +4,9 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
+import com.glodblock.github.inventory.InventoryHandler;
+import com.glodblock.github.inventory.gui.GuiType;
+import net.minecraft.client.gui.GuiButton;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.Slot;
@@ -88,6 +91,15 @@ public class GuiEssentiaTerminal extends GuiFluidMonitor {
             return;
         }
         super.handleMouseClick(slot, slotIdx, ctrlDown, mouseButton);
+    }
+
+    @Override
+    protected void actionPerformed(final GuiButton btn) {
+        if (btn == craftingStatusBtn) {
+            InventoryHandler.switchGui(GuiType.CRAFTING_STATUS);
+        } else {
+            super.actionPerformed(btn);
+        }
     }
 
     public void update(ItemStack itemStack) {

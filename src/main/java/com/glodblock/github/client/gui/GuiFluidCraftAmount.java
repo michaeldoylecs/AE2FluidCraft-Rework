@@ -1,5 +1,10 @@
 package com.glodblock.github.client.gui;
 
+import com.glodblock.github.common.item.ItemWirelessUltraTerminal;
+import com.glodblock.github.inventory.item.IWirelessTerminal;
+import com.glodblock.github.inventory.item.WirelessFluidTerminalInventory;
+import com.glodblock.github.inventory.item.WirelessPatternTerminalInventory;
+import com.glodblock.github.util.Ae2ReflectClient;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.item.ItemStack;
@@ -64,13 +69,17 @@ public class GuiFluidCraftAmount extends FCGuiAmount {
         if (target instanceof PartFluidPatternTerminal) {
             this.myIcon = new ItemStack(ItemAndBlockHolder.FLUID_TERMINAL, 1);
             this.originalGui = GuiType.FLUID_PATTERN_TERMINAL;
-        }
-        if (target instanceof PartFluidPatternTerminalEx) {
+        } else if (target instanceof PartFluidPatternTerminalEx) {
             this.myIcon = new ItemStack(ItemAndBlockHolder.FLUID_TERMINAL_EX, 1);
             this.originalGui = GuiType.FLUID_PATTERN_TERMINAL_EX;
-        }
-        if (target instanceof PartFluidTerminal) {
+        } else if (target instanceof PartFluidTerminal) {
             this.myIcon = new ItemStack(ItemAndBlockHolder.FLUID_TERM, 1);
+            this.originalGui = GuiType.FLUID_TERMINAL;
+        } else if (target instanceof IWirelessTerminal && ((IWirelessTerminal) target).isUniversal(target)) {
+            this.myIcon = new ItemStack(ItemAndBlockHolder.WIRELESS_ULTRA_TERM, 1);
+            this.originalGui = ItemWirelessUltraTerminal.readMode(((IWirelessTerminal) target).getItemStack());
+        } else if (target instanceof WirelessPatternTerminalInventory) {
+            this.myIcon = new ItemStack(ItemAndBlockHolder.WIRELESS_PATTERN_TERM, 1);
             this.originalGui = GuiType.FLUID_TERMINAL;
         }
     }

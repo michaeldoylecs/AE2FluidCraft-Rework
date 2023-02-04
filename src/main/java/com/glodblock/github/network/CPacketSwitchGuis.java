@@ -79,7 +79,6 @@ public class CPacketSwitchGuis implements IMessage {
                         Objects.requireNonNull(context.getSide()),
                         message.guiType);
             }
-
             return null;
         }
     }

@@ -122,6 +122,11 @@ public class WirelessFluidTerminalInventory extends MEMonitorHandler<IAEFluidSta
     }
 
     @Override
+    public IGridNode getActionableNode() {
+        return this.grid;
+    }
+
+    @Override
     public void onChangeInventory(IInventory inv, int slot, InvOperation mc, ItemStack removedStack,
             ItemStack newStack) {}
 }

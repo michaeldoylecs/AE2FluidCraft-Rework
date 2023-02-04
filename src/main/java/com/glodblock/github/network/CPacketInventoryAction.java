@@ -5,8 +5,10 @@ import java.util.Objects;
 
 import javax.annotation.Nullable;
 
+import com.glodblock.github.util.Util;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.fluids.FluidStack;
 
 import appeng.api.storage.data.IAEItemStack;
@@ -96,12 +98,21 @@ public class CPacketInventoryAction implements IMessage {
                     final ContainerOpenContext context = baseContainer.getOpenContext();
                     if (context != null) {
                         final TileEntity te = context.getTile();
-                        InventoryHandler.openGui(
+                        if (te != null) {
+                            InventoryHandler.openGui(
                                 sender,
                                 te.getWorldObj(),
                                 new BlockPos(te),
                                 Objects.requireNonNull(baseContainer.getOpenContext().getSide()),
                                 GuiType.FLUID_CRAFTING_AMOUNT);
+                        } else {
+                            InventoryHandler.openGui(
+                                sender,
+                                sender.worldObj,
+                                new BlockPos(sender.inventory.currentItem, Util.GuiHelper.encodeType(0, Util.GuiHelper.GuiType.ITEM), 0),
+                                ForgeDirection.UNKNOWN,
+                                GuiType.FLUID_CRAFTING_AMOUNT);
+                        }
                         if (sender.openContainer instanceof ContainerCraftAmount) {
                             final ContainerCraftAmount cca = (ContainerCraftAmount) sender.openContainer;
                             if (baseContainer.getTargetStack() != null) {
@@ -115,12 +126,21 @@ public class CPacketInventoryAction implements IMessage {
                     final ContainerOpenContext context = baseContainer.getOpenContext();
                     if (context != null && message.stack != null) {
                         final TileEntity te = context.getTile();
-                        InventoryHandler.openGui(
+                        if (te != null) {
+                            InventoryHandler.openGui(
                                 sender,
                                 te.getWorldObj(),
                                 new BlockPos(te),
                                 Objects.requireNonNull(baseContainer.getOpenContext().getSide()),
                                 GuiType.PATTERN_VALUE_SET);
+                        } else {
+                            InventoryHandler.openGui(
+                                sender,
+                                sender.worldObj,
+                                new BlockPos(sender.inventory.currentItem, Util.GuiHelper.encodeType(0, Util.GuiHelper.GuiType.ITEM), 0),
+                                ForgeDirection.UNKNOWN,
+                                GuiType.PATTERN_VALUE_SET);
+                        }
                         int amt = (int) message.stack.getStackSize();
                         if (message.stack.getItem() instanceof ItemFluidPacket) {
                             FluidStack fluid = ItemFluidPacket.getFluidStack(message.stack);

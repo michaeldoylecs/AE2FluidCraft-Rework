@@ -311,4 +311,9 @@ public class WirelessPatternTerminalInventory extends MEMonitorHandler<IAEItemSt
         this.writeToNBT();
     }
 
+    @Override
+    public IGridNode getActionableNode() {
+        return this.grid;
+    }
+
 }

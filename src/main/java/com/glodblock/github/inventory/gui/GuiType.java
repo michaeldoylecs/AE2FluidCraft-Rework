@@ -313,15 +313,28 @@ public enum GuiType {
         }
     }),
 
-    FLUID_CRAFTING_AMOUNT(new PartGuiFactory<FCPart>(FCPart.class) {
+    FLUID_CRAFTING_CONFIRM_ITEM(new ItemGuiFactory<IWirelessTerminal>(IWirelessTerminal.class) {
 
         @Override
-        protected Object createServerGui(EntityPlayer player, FCPart inv) {
+        protected Object createServerGui(EntityPlayer player, IWirelessTerminal inv) {
+            return new ContainerFluidCraftConfirm(player.inventory, inv);
+        }
+
+        @Override
+        protected Object createClientGui(EntityPlayer player, IWirelessTerminal inv) {
+            return new GuiFluidCraftConfirm(player.inventory, inv);
+        }
+    }),
+
+    FLUID_CRAFTING_AMOUNT(new PartOrItemGuiFactory<ITerminalHost>(ITerminalHost.class) {
+
+        @Override
+        protected Object createServerGui(EntityPlayer player, ITerminalHost inv) {
             return new ContainerCraftAmount(player.inventory, inv);
         }
 
         @Override
-        protected Object createClientGui(EntityPlayer player, FCPart inv) {
+        protected Object createClientGui(EntityPlayer player, ITerminalHost inv) {
             return new GuiFluidCraftAmount(player.inventory, inv);
         }
     }),
@@ -339,15 +352,15 @@ public enum GuiType {
         }
     }),
 
-    PATTERN_VALUE_SET(new PartGuiFactory<FCPart>(FCPart.class) {
+    PATTERN_VALUE_SET(new PartOrItemGuiFactory<ITerminalHost>(ITerminalHost.class) {
 
         @Override
-        protected Object createServerGui(EntityPlayer player, FCPart inv) {
+        protected Object createServerGui(EntityPlayer player, ITerminalHost inv) {
             return new ContainerPatternValueAmount(player.inventory, inv);
         }
 
         @Override
-        protected Object createClientGui(EntityPlayer player, FCPart inv) {
+        protected Object createClientGui(EntityPlayer player, ITerminalHost inv) {
             return new GuiPatternValueAmount(player.inventory, inv);
         }
     });

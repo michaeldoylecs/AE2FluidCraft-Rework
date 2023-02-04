@@ -54,8 +54,8 @@ public class WirelessCraftingTerminalInventory extends MEMonitorHandler<IAEItemS
         this.inventorySlot = slot;
         this.viewCell = new WirelessTerminalViewCells(is);
         this.channel = StorageChannel.ITEMS;
-        this.crafting = new ItemBiggerAppEngInventory(is, "crafting", 9);
-        this.output = new ItemBiggerAppEngInventory(is, "output", 3);
+        this.crafting = new ItemBiggerAppEngInventory(is, "crafting_c", 9);
+        this.output = new ItemBiggerAppEngInventory(is, "output_c", 3);
     }
 
     public StorageChannel getChannel() {
@@ -148,4 +148,8 @@ public class WirelessCraftingTerminalInventory extends MEMonitorHandler<IAEItemS
         return null;
     }
 
+    @Override
+    public IGridNode getActionableNode() {
+        return this.grid;
+    }
 }

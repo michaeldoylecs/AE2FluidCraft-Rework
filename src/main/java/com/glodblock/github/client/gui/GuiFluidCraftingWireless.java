@@ -1,5 +1,7 @@
 package com.glodblock.github.client.gui;
 
+import com.glodblock.github.inventory.InventoryHandler;
+import com.glodblock.github.inventory.gui.GuiType;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.Container;
@@ -29,18 +31,22 @@ public class GuiFluidCraftingWireless extends GuiItemMonitor {
 
     @Override
     protected void actionPerformed(final GuiButton btn) {
-        super.actionPerformed(btn);
-        if (this.clearBtn == btn) {
-            Slot s = null;
-            final Container c = this.inventorySlots;
-            for (final Object j : c.inventorySlots) {
-                if (j instanceof SlotCraftingMatrix) {
-                    s = (Slot) j;
+        if (btn == craftingStatusBtn) {
+            InventoryHandler.switchGui(GuiType.CRAFTING_STATUS);
+        } else {
+            super.actionPerformed(btn);
+            if (this.clearBtn == btn) {
+                Slot s = null;
+                final Container c = this.inventorySlots;
+                for (final Object j : c.inventorySlots) {
+                    if (j instanceof SlotCraftingMatrix) {
+                        s = (Slot) j;
+                    }
                 }
-            }
-            if (s != null) {
-                final PacketInventoryAction p = new PacketInventoryAction(InventoryAction.MOVE_REGION, s.slotNumber, 0);
-                NetworkHandler.instance.sendToServer(p);
+                if (s != null) {
+                    final PacketInventoryAction p = new PacketInventoryAction(InventoryAction.MOVE_REGION, s.slotNumber, 0);
+                    NetworkHandler.instance.sendToServer(p);
+                }
             }
         }
     }

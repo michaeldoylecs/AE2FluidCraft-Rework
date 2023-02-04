@@ -78,6 +78,7 @@ public abstract class FCGuiMonitor<T extends IAEStack<T>> extends AEBaseMEGui
     protected int rows = 0;
     protected int maxRows = Integer.MAX_VALUE;
     protected int standardSize;
+    protected int offsetY;
     protected GuiImgButton ViewBox;
     protected GuiImgButton SortByBox;
     protected GuiImgButton SortDirBox;
@@ -200,60 +201,60 @@ public abstract class FCGuiMonitor<T extends IAEStack<T>> extends AEBaseMEGui
         final int unusedSpace = this.height - this.ySize;
         this.guiTop = (int) Math.floor(unusedSpace / (unusedSpace < 0 ? 3.8f : 2.0f));
 
-        int offset = this.guiTop + 8;
+        this.offsetY = this.guiTop + 8;
 
         if (this.customSortOrder) {
             this.buttonList.add(
                     this.SortByBox = new GuiImgButton(
                             this.guiLeft - 18,
-                            offset,
+                            this.offsetY,
                             Settings.SORT_BY,
                             this.configSrc.getSetting(Settings.SORT_BY)));
-            offset += 20;
+            this.offsetY += 20;
         }
         if (this.showViewBtn) {
             this.buttonList.add(
                     this.ViewBox = new GuiImgButton(
                             this.guiLeft - 18,
-                            offset,
+                            this.offsetY,
                             Settings.VIEW_MODE,
                             this.configSrc.getSetting(Settings.VIEW_MODE)));
-            offset += 20;
+            this.offsetY += 20;
         }
 
         this.buttonList.add(
                 this.SortDirBox = new GuiImgButton(
                         this.guiLeft - 18,
-                        offset,
+                        this.offsetY,
                         Settings.SORT_DIRECTION,
                         this.configSrc.getSetting(Settings.SORT_DIRECTION)));
-        offset += 20;
+        this.offsetY += 20;
 
         this.buttonList.add(
                 this.searchBoxSettings = new GuiImgButton(
                         this.guiLeft - 18,
-                        offset,
+                        this.offsetY,
                         Settings.SEARCH_MODE,
                         AEConfig.instance.settings.getSetting(Settings.SEARCH_MODE)));
-        offset += 20;
+        this.offsetY += 20;
 
         if (ModAndClassUtil.isSaveText) {
             this.buttonList.add(
                     this.searchStringSave = new GuiImgButton(
                             this.guiLeft - 18,
-                            offset,
+                            this.offsetY,
                             Settings.SAVE_SEARCH,
                             AEConfig.instance.preserveSearchBar ? YesNo.YES : YesNo.NO));
-            offset += 20;
+            this.offsetY += 20;
         }
 
         this.buttonList.add(
                 this.terminalStyleBox = new GuiImgButton(
                         this.guiLeft - 18,
-                        offset,
+                        this.offsetY,
                         Settings.TERMINAL_STYLE,
                         AEConfig.instance.settings.getSetting(Settings.TERMINAL_STYLE)));
-        offset += 20;
+        this.offsetY += 20;
 
         this.searchField = new FCGuiTextField(
                 this.fontRendererObj,
@@ -274,9 +275,10 @@ public abstract class FCGuiMonitor<T extends IAEStack<T>> extends AEBaseMEGui
                 this.buttonList.add(
                         this.craftingStatusImgBtn = new GuiImgButton(
                                 this.guiLeft - 18,
-                                offset,
+                                this.offsetY,
                                 Settings.CRAFTING_STATUS,
                                 AEConfig.instance.settings.getSetting(Settings.CRAFTING_STATUS)));
+                this.offsetY += 20;
             } else {
                 this.buttonList.add(
                         this.craftingStatusBtn = new GuiTabButton(
