@@ -19,6 +19,15 @@ public class ItemBiggerAppEngInventory extends BiggerAppEngInventory {
 
     @Override
     public void markDirty() {
+        boolean isCraft = Platform.openNbtData(is).getBoolean("craftingMode");
+        if (isCraft) {
+            for (int x = 0; x < this.getSizeInventory(); x++) {
+                final ItemStack is = this.getStackInSlot(x);
+                if (is != null) {
+                    is.stackSize = 1;
+                }
+            }
+        }
         this.writeToNBT(Platform.openNbtData(is), this.name);
     }
 

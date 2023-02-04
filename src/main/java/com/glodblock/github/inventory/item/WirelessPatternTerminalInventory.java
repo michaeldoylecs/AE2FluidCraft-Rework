@@ -169,9 +169,7 @@ public class WirelessPatternTerminalInventory extends MEMonitorHandler<IAEItemSt
     @Override
     public void onChangeInventory(IInventory inv, int slot, InvOperation mc, ItemStack removedStack,
             ItemStack newStack) {
-        if (inv == this.crafting) {
-            this.fixCraftingRecipes();
-        }
+        // NO-OP
     }
 
     private void fixCraftingRecipes() {
