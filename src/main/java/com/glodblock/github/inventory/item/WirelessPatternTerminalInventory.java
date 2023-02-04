@@ -169,7 +169,20 @@ public class WirelessPatternTerminalInventory extends MEMonitorHandler<IAEItemSt
     @Override
     public void onChangeInventory(IInventory inv, int slot, InvOperation mc, ItemStack removedStack,
             ItemStack newStack) {
-        // NO-OP
+        if (inv == this.crafting) {
+            this.fixCraftingRecipes();
+        }
+    }
+
+    private void fixCraftingRecipes() {
+        if (this.craftingMode) {
+            for (int x = 0; x < this.crafting.getSizeInventory(); x++) {
+                final ItemStack is = this.crafting.getStackInSlot(x);
+                if (is != null) {
+                    is.stackSize = 1;
+                }
+            }
+        }
     }
 
     @Override
@@ -233,6 +246,7 @@ public class WirelessPatternTerminalInventory extends MEMonitorHandler<IAEItemSt
     @Override
     public void setCraftingRecipe(boolean craftingMode) {
         this.craftingMode = craftingMode;
+        this.fixCraftingRecipes();
     }
 
     @Override

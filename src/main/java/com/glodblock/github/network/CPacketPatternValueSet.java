@@ -2,6 +2,7 @@ package com.glodblock.github.network;
 
 import java.util.Objects;
 
+import com.glodblock.github.inventory.gui.PartOrItemGuiFactory;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
@@ -74,11 +75,18 @@ public class CPacketPatternValueSet implements IMessage {
                                 new BlockPos(te),
                                 Objects.requireNonNull(context.getSide()),
                                 message.originGui);
+                        } else if (message.originGui.guiFactory instanceof PartOrItemGuiFactory) {
+                            InventoryHandler.openGui(
+                                player,
+                                player.worldObj,
+                                new BlockPos(player.inventory.currentItem, Util.GuiHelper.encodeType(0, Util.GuiHelper.GuiType.ITEM), 0),
+                                Objects.requireNonNull(context.getSide()),
+                                message.originGui);
                         } else {
                             InventoryHandler.openGui(
                                 player,
                                 player.worldObj,
-                                new BlockPos(player.inventory.currentItem, 0 , 0),
+                                new BlockPos(player.inventory.currentItem, 0, 0),
                                 Objects.requireNonNull(context.getSide()),
                                 message.originGui);
                         }
