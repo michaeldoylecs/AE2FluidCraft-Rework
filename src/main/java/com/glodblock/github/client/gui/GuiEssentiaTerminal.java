@@ -1,9 +1,20 @@
 package com.glodblock.github.client.gui;
 
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Objects;
+
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.InventoryPlayer;
+import net.minecraft.inventory.Slot;
+import net.minecraft.item.ItemStack;
+import net.minecraftforge.fluids.FluidStack;
+
 import appeng.api.storage.data.IAEFluidStack;
 import appeng.api.storage.data.IAEItemStack;
 import appeng.client.me.SlotME;
 import appeng.client.render.AppEngRenderItem;
+
 import com.glodblock.github.FluidCraft;
 import com.glodblock.github.client.gui.container.ContainerEssentiaMonitor;
 import com.glodblock.github.client.me.EssentiaRepo;
@@ -13,15 +24,6 @@ import com.glodblock.github.crossmod.thaumcraft.AspectUtil;
 import com.glodblock.github.inventory.item.IWirelessTerminal;
 import com.glodblock.github.network.CPacketFluidUpdate;
 import com.glodblock.github.util.Ae2ReflectClient;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.InventoryPlayer;
-import net.minecraft.inventory.Slot;
-import net.minecraft.item.ItemStack;
-import net.minecraftforge.fluids.FluidStack;
-
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Objects;
 
 public class GuiEssentiaTerminal extends GuiFluidMonitor {
 
@@ -51,15 +53,21 @@ public class GuiEssentiaTerminal extends GuiFluidMonitor {
             IAEItemStack stack = ((SlotME) slot).getAEStack();
             if (stack == null) return true;
             FluidStack fluidStack = ItemFluidDrop.getFluidStack(slot.getStack());
-            AspectRender.drawAspect(this.player, slot.xDisplayPosition, slot.yDisplayPosition, this.zLevel, AspectUtil.getAspectFromGas(fluidStack), fluidStack.amount);
+            AspectRender.drawAspect(
+                    this.player,
+                    slot.xDisplayPosition,
+                    slot.yDisplayPosition,
+                    this.zLevel,
+                    AspectUtil.getAspectFromGas(fluidStack),
+                    fluidStack.amount);
             IAEItemStack gas = stack.copy().setStackSize(stack.getStackSize() / AspectUtil.R);
             stackSizeRenderer.setAeStack(gas);
             stackSizeRenderer.renderItemOverlayIntoGUI(
-                fontRendererObj,
-                mc.getTextureManager(),
-                gas.getItemStack(),
-                slot.xDisplayPosition,
-                slot.yDisplayPosition);
+                    fontRendererObj,
+                    mc.getTextureManager(),
+                    gas.getItemStack(),
+                    slot.xDisplayPosition,
+                    slot.yDisplayPosition);
             return false;
         }
         return true;

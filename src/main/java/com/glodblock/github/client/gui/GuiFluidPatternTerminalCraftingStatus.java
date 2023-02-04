@@ -13,8 +13,8 @@ import com.glodblock.github.common.parts.PartFluidPatternTerminalEx;
 import com.glodblock.github.common.parts.PartFluidTerminal;
 import com.glodblock.github.inventory.InventoryHandler;
 import com.glodblock.github.inventory.gui.GuiType;
-import com.glodblock.github.inventory.item.WirelessFluidTerminal;
-import com.glodblock.github.inventory.item.WirelessPatternTerminal;
+import com.glodblock.github.inventory.item.WirelessFluidTerminalInventory;
+import com.glodblock.github.inventory.item.WirelessPatternTerminalInventory;
 import com.glodblock.github.loader.ItemAndBlockHolder;
 import com.glodblock.github.util.Ae2ReflectClient;
 
@@ -36,9 +36,9 @@ public class GuiFluidPatternTerminalCraftingStatus extends GuiCraftingStatus {
             Ae2ReflectClient.rewriteIcon(this, new ItemStack(ItemAndBlockHolder.FLUID_TERMINAL_EX, 1));
         else if (host instanceof PartFluidTerminal) {
             Ae2ReflectClient.rewriteIcon(this, new ItemStack(ItemAndBlockHolder.FLUID_TERM, 1));
-        } else if (host instanceof WirelessFluidTerminal) {
+        } else if (host instanceof WirelessFluidTerminalInventory) {
             Ae2ReflectClient.rewriteIcon(this, new ItemStack(ItemAndBlockHolder.WIRELESS_FLUID_TERM, 1));
-        } else if (host instanceof WirelessPatternTerminal) {
+        } else if (host instanceof WirelessPatternTerminalInventory) {
             Ae2ReflectClient.rewriteIcon(this, new ItemStack(ItemAndBlockHolder.WIRELESS_PATTERN_TERM, 1));
         }
 
@@ -53,8 +53,9 @@ public class GuiFluidPatternTerminalCraftingStatus extends GuiCraftingStatus {
             else if (host instanceof PartFluidPatternTerminalEx)
                 InventoryHandler.switchGui(GuiType.FLUID_PATTERN_TERMINAL_EX);
             else if (host instanceof PartFluidTerminal) InventoryHandler.switchGui(GuiType.FLUID_TERMINAL);
-            else if (host instanceof WirelessFluidTerminal) InventoryHandler.switchGui(GuiType.WIRELESS_FLUID_TERMINAL);
-            else if (host instanceof WirelessPatternTerminal)
+            else if (host instanceof WirelessFluidTerminalInventory)
+                InventoryHandler.switchGui(GuiType.WIRELESS_FLUID_TERMINAL);
+            else if (host instanceof WirelessPatternTerminalInventory)
                 InventoryHandler.switchGui(GuiType.WIRELESS_FLUID_PATTERN_TERMINAL);
         } else {
             super.actionPerformed(btn);

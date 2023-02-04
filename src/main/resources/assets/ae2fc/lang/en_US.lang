@@ -86,6 +86,14 @@ ae2fc.tooltip.not_combine=Merge the same items
 ae2fc.tooltip.not_combine.hint=Disabled
 ae2fc.tooltip.combine=Merge the same items
 ae2fc.tooltip.combine.hint=Enabled
+ae2fc.tooltip.fluid_terminal_w=Fluid Terminal
+ae2fc.tooltip.fluid_terminal_w.hint=Switch to Fluid Terminal
+ae2fc.tooltip.craft_terminal_w=Crafting Terminal
+ae2fc.tooltip.craft_terminal_w.hint=Switch to Crafting Terminal
+ae2fc.tooltip.pattern_terminal_w=Pattern Terminal
+ae2fc.tooltip.pattern_terminal_w.hint=Switch to Pattern Terminal
+ae2fc.tooltip.essentia_terminal_w=Essentia Terminal
+ae2fc.tooltip.essentia_terminal_w.hint=Switch to Essentia Terminal
 ae2fc.tooltip.wireless.installed=Installed Card:
 
 ae2fc.tooltip.not_prio=Allow fluids to be placed first

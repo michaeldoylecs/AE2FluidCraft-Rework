@@ -1,22 +1,23 @@
 package com.glodblock.github.crossmod.thaumcraft;
 
-import appeng.api.storage.data.IAEFluidStack;
-import appeng.util.item.AEFluidStack;
+import java.util.Objects;
+
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fluids.FluidStack;
+
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.MutablePair;
+
 import thaumcraft.api.aspects.Aspect;
-import thaumcraft.api.aspects.AspectList;
 import thaumcraft.api.aspects.IEssentiaContainerItem;
 import thaumcraft.common.Thaumcraft;
 import thaumicenergistics.api.storage.IAspectStack;
 import thaumicenergistics.common.fluids.GaseousEssentia;
 import thaumicenergistics.common.integration.tc.EssentiaItemContainerHelper;
 import thaumicenergistics.common.storage.AspectStack;
-
-import java.util.Objects;
+import appeng.api.storage.data.IAEFluidStack;
+import appeng.util.item.AEFluidStack;
 
 public class AspectUtil {
 
@@ -62,14 +63,15 @@ public class AspectUtil {
     }
 
     public static FluidStack getGasFromAspect(IAspectStack aspectStack) {
-        if (aspectStack == null || aspectStack.isEmpty())
-            return null;
-        return new FluidStack(GaseousEssentia.getGasFromAspect(aspectStack.getAspect()), (int) aspectStack.getStackSize() * R);
+        if (aspectStack == null || aspectStack.isEmpty()) return null;
+        return new FluidStack(
+                GaseousEssentia.getGasFromAspect(aspectStack.getAspect()),
+                (int) aspectStack.getStackSize() * R);
     }
 
     public static boolean isEssentiaContainer(ItemStack stack) {
         return HELPER.getItemType(stack) != EssentiaItemContainerHelper.AspectItemType.Invalid
-            && HELPER.getItemType(stack) != EssentiaItemContainerHelper.AspectItemType.ItemAspect;
+                && HELPER.getItemType(stack) != EssentiaItemContainerHelper.AspectItemType.ItemAspect;
     }
 
     public static AEFluidStack getAEGasFromContainer(ItemStack stack) {
@@ -110,7 +112,8 @@ public class AspectUtil {
             }
             int cap = HELPER.getContainerCapacity(itemStack);
             int tryFill = Math.min(cap, amount);
-            ImmutablePair<Integer, ItemStack> result = HELPER.injectIntoContainer(itemStack, new AspectStack(aspect, tryFill));
+            ImmutablePair<Integer, ItemStack> result = HELPER
+                    .injectIntoContainer(itemStack, new AspectStack(aspect, tryFill));
             return result != null ? new MutablePair<>(result.left * R, result.right) : null;
         }
         return null;
@@ -126,7 +129,8 @@ public class AspectUtil {
             if (contents == null || !Objects.equals(contents.getAspect(), aspect)) {
                 drained = 0;
             } else {
-                ImmutablePair<Integer, ItemStack> result = HELPER.extractFromContainer(itemStack, new AspectStack(aspect, amount));
+                ImmutablePair<Integer, ItemStack> result = HELPER
+                        .extractFromContainer(itemStack, new AspectStack(aspect, amount));
                 drained = result == null ? 0 : result.left;
                 stack = result == null ? null : result.right;
             }

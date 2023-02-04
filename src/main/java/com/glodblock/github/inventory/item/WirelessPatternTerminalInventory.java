@@ -33,11 +33,11 @@ import com.glodblock.github.inventory.ItemBiggerAppEngInventory;
 import com.glodblock.github.inventory.WirelessFluidPatternTerminalPatterns;
 import com.glodblock.github.util.Util;
 
-public class WirelessPatternTerminal extends MEMonitorHandler<IAEItemStack> implements IWirelessPatternTerminal {
+public class WirelessPatternTerminalInventory extends MEMonitorHandler<IAEItemStack>
+        implements IWirelessPatternTerminal {
 
     private final ItemStack target;
     private final IAEItemPowerStorage ips;
-    private final EntityPlayer p;
     private final int inventorySlot;
     private final AppEngInternalInventory viewCell;
     private final StorageChannel channel;
@@ -56,14 +56,14 @@ public class WirelessPatternTerminal extends MEMonitorHandler<IAEItemStack> impl
     protected int activePage = 0;
 
     @SuppressWarnings("unchecked")
-    public WirelessPatternTerminal(final ItemStack is, final int slot, IGridNode gridNode, EntityPlayer player) {
+    public WirelessPatternTerminalInventory(final ItemStack is, final int slot, IGridNode gridNode,
+            EntityPlayer player) {
         super(
                 (IMEInventoryHandler<IAEItemStack>) Objects
                         .requireNonNull(Util.getWirelessInv(is, player, StorageChannel.ITEMS)));
         this.ips = (ToolWirelessTerminal) is.getItem();
         this.grid = gridNode;
         this.target = is;
-        this.p = player;
         this.inventorySlot = slot;
         this.viewCell = new WirelessTerminalViewCells(is);
         this.channel = StorageChannel.ITEMS;
@@ -163,12 +163,14 @@ public class WirelessPatternTerminal extends MEMonitorHandler<IAEItemStack> impl
 
     @Override
     public void saveChanges() {
-
+        // NO-OP
     }
 
     @Override
     public void onChangeInventory(IInventory inv, int slot, InvOperation mc, ItemStack removedStack,
-            ItemStack newStack) {}
+            ItemStack newStack) {
+        // NO-OP
+    }
 
     @Override
     public boolean isInverted() {

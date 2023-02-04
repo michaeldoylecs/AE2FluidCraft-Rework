@@ -28,7 +28,7 @@ import appeng.util.Platform;
 
 import com.glodblock.github.util.Util;
 
-public class WirelessFluidTerminal extends MEMonitorHandler<IAEFluidStack> implements IWirelessTerminal {
+public class WirelessFluidTerminalInventory extends MEMonitorHandler<IAEFluidStack> implements IWirelessTerminal {
 
     private final ItemStack target;
     private final IAEItemPowerStorage ips;
@@ -38,7 +38,7 @@ public class WirelessFluidTerminal extends MEMonitorHandler<IAEFluidStack> imple
     private final IGridNode grid;
 
     @SuppressWarnings("unchecked")
-    public WirelessFluidTerminal(final ItemStack is, final int slot, IGridNode gridNode, EntityPlayer player) {
+    public WirelessFluidTerminalInventory(final ItemStack is, final int slot, IGridNode gridNode, EntityPlayer player) {
         super(
                 (IMEInventoryHandler<IAEFluidStack>) Objects
                         .requireNonNull(Util.getWirelessInv(is, player, StorageChannel.FLUIDS)));

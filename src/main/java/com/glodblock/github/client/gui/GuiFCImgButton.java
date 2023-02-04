@@ -50,6 +50,10 @@ public class GuiFCImgButton extends GuiButton implements ITooltip {
             this.registerApp(4, "SUBMIT", "SUBMIT", "submit");
             this.registerApp(6, "DISABLE", "DISABLE", "disable");
             this.registerApp(7, "ENABLE", "ENABLE", "enable");
+            this.registerApp(10, "FLUID_TEM", "YES", "fluid_terminal_w");
+            this.registerApp(11, "CRAFT_TEM", "YES", "craft_terminal_w");
+            this.registerApp(12, "PATTERN_TEM", "YES", "pattern_terminal_w");
+            this.registerApp(13, "ESSENTIA_TEM", "YES", "essentia_terminal_w");
         }
     }
 
@@ -61,7 +65,8 @@ public class GuiFCImgButton extends GuiButton implements ITooltip {
         } else {
             a.displayValue = StatCollector.translateToLocal(prefix + title + ".hint");
         }
-        a.index = iconIndex;
+        a.index = iconIndex % 10;
+        a.page = iconIndex / 10;
         appearances.put(new EnumPair(setting, val), a);
     }
 
@@ -79,6 +84,17 @@ public class GuiFCImgButton extends GuiButton implements ITooltip {
             return app.index;
         }
         return 8;
+    }
+
+    private int getIconPage() {
+        if (this.buttonSetting != null && this.currentValue != null) {
+            final ButtonAppearance app = appearances.get(new EnumPair(this.buttonSetting, this.currentValue));
+            if (app == null) {
+                return 0;
+            }
+            return app.page;
+        }
+        return 0;
     }
 
     public String getSetting() {
@@ -184,6 +200,7 @@ public class GuiFCImgButton extends GuiButton implements ITooltip {
     public void drawButton(final Minecraft par1Minecraft, final int par2, final int par3) {
         if (this.visible) {
             final int iconIndex = this.getIconIndex();
+            final int iconPage = this.getIconPage();
 
             if (this.halfSize) {
                 this.width = 8;
@@ -199,7 +216,7 @@ public class GuiFCImgButton extends GuiButton implements ITooltip {
                     GL11.glColor4f(0.5f, 0.5f, 0.5f, 1.0f);
                 }
 
-                par1Minecraft.renderEngine.bindTexture(FluidCraft.resource("textures/gui/states.png"));
+                par1Minecraft.renderEngine.bindTexture(FluidCraft.resource("textures/gui/states" + iconPage + ".png"));
                 this.field_146123_n = par2 >= this.xPosition && par3 >= this.yPosition
                         && par2 < this.xPosition + this.width
                         && par3 < this.yPosition + this.height;
@@ -235,7 +252,7 @@ public class GuiFCImgButton extends GuiButton implements ITooltip {
                     GL11.glColor4f(0.5f, 0.5f, 0.5f, 1.0f);
                 }
 
-                par1Minecraft.renderEngine.bindTexture(FluidCraft.resource("textures/gui/states.png"));
+                par1Minecraft.renderEngine.bindTexture(FluidCraft.resource("textures/gui/states" + iconPage + ".png"));
                 this.field_146123_n = par2 >= this.xPosition && par3 >= this.yPosition
                         && par2 < this.xPosition + this.width
                         && par3 < this.yPosition + this.height;
@@ -296,6 +313,7 @@ public class GuiFCImgButton extends GuiButton implements ITooltip {
     private static class ButtonAppearance {
 
         public int index;
+        public int page;
         public String displayName;
         public String displayValue;
     }

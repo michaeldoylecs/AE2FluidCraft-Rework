@@ -1,14 +1,10 @@
 package com.glodblock.github.inventory.item;
 
-import net.minecraft.inventory.IInventory;
-
 import appeng.api.storage.data.IAEItemStack;
 
-public interface PatternTerminal {
+public interface IItemPatternTerminal extends IItemTerminal {
 
     boolean isInverted();
-
-    IInventory getInventoryByName(final String name);
 
     boolean canBeSubstitute();
 
@@ -39,6 +35,4 @@ public interface PatternTerminal {
     boolean isCraftingRecipe();
 
     void sortCraftingItems();
-
-    default void saveSettings() {}
 }

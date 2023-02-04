@@ -1,16 +1,21 @@
 package com.glodblock.github.crossmod.thaumcraft;
 
-import com.glodblock.github.util.RenderUtil;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ResourceLocation;
+
 import org.lwjgl.opengl.GL11;
+
 import thaumcraft.api.aspects.Aspect;
 import thaumcraft.client.lib.UtilsFX;
 
+import com.glodblock.github.util.RenderUtil;
+
 public class AspectRender {
 
-    public static final ResourceLocation UNKNOWN_TEXTURE = new ResourceLocation("thaumcraft", "textures/aspects/_unknown.png");
+    public static final ResourceLocation UNKNOWN_TEXTURE = new ResourceLocation(
+            "thaumcraft",
+            "textures/aspects/_unknown.png");
 
     public static void drawAspect(EntityPlayer player, int posX, int posY, float zLevel, Aspect aspect, long amount) {
         if (aspect == null || amount <= 0) {
