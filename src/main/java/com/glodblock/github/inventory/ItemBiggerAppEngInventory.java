@@ -5,6 +5,8 @@ import net.minecraft.item.ItemStack;
 import appeng.tile.inventory.BiggerAppEngInventory;
 import appeng.util.Platform;
 
+import com.glodblock.github.inventory.gui.GuiType;
+
 public class ItemBiggerAppEngInventory extends BiggerAppEngInventory {
 
     private final ItemStack is;
@@ -20,7 +22,9 @@ public class ItemBiggerAppEngInventory extends BiggerAppEngInventory {
     @Override
     public void markDirty() {
         boolean isCraft = Platform.openNbtData(is).getBoolean("craftingMode");
-        if (isCraft) {
+        boolean isCraftingTerm = Platform.openNbtData(is).getString("mode_main")
+                .equals(GuiType.WIRELESS_CRAFTING_TERMINAL.toString());
+        if (!isCraftingTerm && isCraft) {
             for (int x = 0; x < this.getSizeInventory(); x++) {
                 final ItemStack is = this.getStackInSlot(x);
                 if (is != null) {
