@@ -2,7 +2,6 @@ package com.glodblock.github.network;
 
 import java.util.Objects;
 
-import com.glodblock.github.inventory.gui.PartOrItemGuiFactory;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
@@ -18,6 +17,7 @@ import com.glodblock.github.client.gui.container.base.FCContainerEncodeTerminal;
 import com.glodblock.github.common.item.ItemFluidPacket;
 import com.glodblock.github.inventory.InventoryHandler;
 import com.glodblock.github.inventory.gui.GuiType;
+import com.glodblock.github.inventory.gui.PartOrItemGuiFactory;
 import com.glodblock.github.util.BlockPos;
 import com.glodblock.github.util.Util;
 
@@ -70,25 +70,28 @@ public class CPacketPatternValueSet implements IMessage {
                         final TileEntity te = context.getTile();
                         if (te != null) {
                             InventoryHandler.openGui(
-                                player,
-                                player.worldObj,
-                                new BlockPos(te),
-                                Objects.requireNonNull(context.getSide()),
-                                message.originGui);
+                                    player,
+                                    player.worldObj,
+                                    new BlockPos(te),
+                                    Objects.requireNonNull(context.getSide()),
+                                    message.originGui);
                         } else if (message.originGui.guiFactory instanceof PartOrItemGuiFactory) {
                             InventoryHandler.openGui(
-                                player,
-                                player.worldObj,
-                                new BlockPos(player.inventory.currentItem, Util.GuiHelper.encodeType(0, Util.GuiHelper.GuiType.ITEM), 0),
-                                Objects.requireNonNull(context.getSide()),
-                                message.originGui);
+                                    player,
+                                    player.worldObj,
+                                    new BlockPos(
+                                            player.inventory.currentItem,
+                                            Util.GuiHelper.encodeType(0, Util.GuiHelper.GuiType.ITEM),
+                                            0),
+                                    Objects.requireNonNull(context.getSide()),
+                                    message.originGui);
                         } else {
                             InventoryHandler.openGui(
-                                player,
-                                player.worldObj,
-                                new BlockPos(player.inventory.currentItem, 0, 0),
-                                Objects.requireNonNull(context.getSide()),
-                                message.originGui);
+                                    player,
+                                    player.worldObj,
+                                    new BlockPos(player.inventory.currentItem, 0, 0),
+                                    Objects.requireNonNull(context.getSide()),
+                                    message.originGui);
                         }
                         if (player.openContainer instanceof FCContainerEncodeTerminal) {
                             Slot slot = player.openContainer.getSlot(message.valueIndex);

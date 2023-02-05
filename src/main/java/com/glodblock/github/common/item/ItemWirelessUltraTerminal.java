@@ -93,7 +93,12 @@ public class ItemWirelessUltraTerminal extends ItemBaseWirelessTerminal
                 }
                 if (gui == GuiType.WIRELESS_CRAFTING_TERMINAL) {
                     return new WirelessCraftingTerminalInventory(stack, x, gridNode, player);
+                } else if (ModAndClassUtil.ThE && gui == GuiType.WIRELESS_ESSENTIA_TERMINAL) {
+                    return new WirelessFluidTerminalInventory(stack, x, gridNode, player);
+                } else if (gui == GuiType.WIRELESS_FLUID_TERMINAL) {
+                    return new WirelessFluidTerminalInventory(stack, x, gridNode, player);
                 } else {
+                    this.setMode(GuiType.WIRELESS_FLUID_TERMINAL, stack); // set as default mode
                     return new WirelessFluidTerminalInventory(stack, x, gridNode, player);
                 }
             }

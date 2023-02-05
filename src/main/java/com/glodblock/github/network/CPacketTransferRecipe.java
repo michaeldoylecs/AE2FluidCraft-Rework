@@ -12,11 +12,14 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.fluids.FluidStack;
 
 import appeng.api.AEApi;
+import appeng.api.config.Actionable;
 import appeng.api.config.FuzzyMode;
 import appeng.api.storage.ITerminalHost;
 import appeng.api.storage.data.IAEItemStack;
 import appeng.api.storage.data.IItemList;
 
+import com.glodblock.github.client.gui.container.ContainerCraftingWireless;
+import com.glodblock.github.client.gui.container.ContainerItemMonitor;
 import com.glodblock.github.client.gui.container.base.FCContainerEncodeTerminal;
 import com.glodblock.github.common.item.ItemFluidPacket;
 import com.glodblock.github.nei.NEIUtils;
@@ -95,9 +98,8 @@ public class CPacketTransferRecipe implements IMessage {
         @SuppressWarnings("unchecked")
         public IMessage onMessage(CPacketTransferRecipe message, MessageContext ctx) {
             Container c = ctx.getServerHandler().playerEntity.openContainer;
-            if (c instanceof FCContainerEncodeTerminal) {
-                FCContainerEncodeTerminal cf = (FCContainerEncodeTerminal) c;
-                ITerminalHost host = cf.getHost();
+            if (c instanceof ContainerItemMonitor) {
+                ITerminalHost host = ((ContainerItemMonitor) c).getHost();
                 IItemList<IAEItemStack> storageList;
                 if (host != null) {
                     storageList = host.getItemInventory().getStorageList();
@@ -105,46 +107,85 @@ public class CPacketTransferRecipe implements IMessage {
                     storageList = AEApi.instance().storage().createItemList();
                 }
 
-                boolean combine = cf.combine;
-                cf.getPatternTerminal().setCraftingRecipe(message.isCraft);
-                IInventory inputSlot = cf.getInventoryByName("crafting");
-                IInventory outputSlot = cf.getInventoryByName("output");
-                for (int i = 0; i < inputSlot.getSizeInventory(); i++) {
-                    inputSlot.setInventorySlotContents(i, null);
-                }
-                for (int i = 0; i < outputSlot.getSizeInventory(); i++) {
-                    outputSlot.setInventorySlotContents(i, null);
-                }
+                if (c instanceof ContainerCraftingWireless && host != null) {
+                    // crafting terminal only
+                    ContainerCraftingWireless cf = (ContainerCraftingWireless) c;
 
-                if (!message.isCraft) {
-                    if (combine) {
-                        message.inputs = NEIUtils.compress(message.inputs);
-                        message.outputs = NEIUtils.compress(message.outputs);
+                    IInventory inputSlot = cf.getInventoryByName("crafting");
+
+                    if (!storageList.isEmpty()) {
+                        int i = 0;
+                        for (OrderStack stack : message.inputs) {
+                            if (inputSlot.getStackInSlot(i) == null) {
+                                ItemStack is = (ItemStack) stack.getStack();
+                                IAEItemStack iaeItemStack = AEApi.instance().storage().createItemStack(is);
+                                IAEItemStack storedItem = storageList.findPrecise(iaeItemStack);
+                                if (storedItem == null) {
+                                    for (IAEItemStack tmp : storageList.findFuzzy(iaeItemStack, FuzzyMode.IGNORE_ALL)) {
+                                        tmp.setStackSize(is.stackSize);
+                                        ItemStack substitute = tmp.getItemStack().copy();
+                                        inputSlot.setInventorySlotContents(i, substitute);
+                                        host.getItemInventory()
+                                                .extractItems(tmp, Actionable.MODULATE, cf.getActionSource());
+                                        break;
+                                    }
+                                } else {
+                                    host.getItemInventory()
+                                            .extractItems(iaeItemStack, Actionable.MODULATE, cf.getActionSource());
+                                    inputSlot.setInventorySlotContents(i, is);
+                                }
+                            }
+                            i++;
+                        }
                     }
-                    message.inputs = NEIUtils.clearNull(message.inputs);
-                    message.outputs = NEIUtils.clearNull(message.outputs);
-                }
-                // using exists item to fill slot
-                if (message.shift && !storageList.isEmpty()) {
-                    for (OrderStack stack : message.inputs) {
-                        if (stack.getStack() instanceof FluidStack) continue;
-                        ItemStack is = (ItemStack) stack.getStack();
-                        IAEItemStack iaeItemStack = AEApi.instance().storage().createItemStack(is);
-                        if (storageList.findPrecise(iaeItemStack) == null) {
-                            for (IAEItemStack tmp : storageList.findFuzzy(iaeItemStack, FuzzyMode.IGNORE_ALL)) {
-                                ItemStack substitute = tmp.getItemStack().copy();
-                                substitute.stackSize = is.stackSize;
-                                stack.putStack(substitute);
-                                break;
+                    c.onCraftMatrixChanged(inputSlot);
+
+                } else if (c instanceof FCContainerEncodeTerminal) {
+                    // pattern terminal only
+                    FCContainerEncodeTerminal cf = (FCContainerEncodeTerminal) c;
+
+                    boolean combine = cf.combine;
+                    cf.getPatternTerminal().setCraftingRecipe(message.isCraft);
+                    IInventory inputSlot = cf.getInventoryByName("crafting");
+                    IInventory outputSlot = cf.getInventoryByName("output");
+                    for (int i = 0; i < inputSlot.getSizeInventory(); i++) {
+                        inputSlot.setInventorySlotContents(i, null);
+                    }
+                    for (int i = 0; i < outputSlot.getSizeInventory(); i++) {
+                        outputSlot.setInventorySlotContents(i, null);
+                    }
+
+                    if (!message.isCraft) {
+                        if (combine) {
+                            message.inputs = NEIUtils.compress(message.inputs);
+                            message.outputs = NEIUtils.compress(message.outputs);
+                        }
+                        message.inputs = NEIUtils.clearNull(message.inputs);
+                        message.outputs = NEIUtils.clearNull(message.outputs);
+                    }
+                    // using exists item to fill slot
+                    if (message.shift && !storageList.isEmpty()) {
+                        for (OrderStack stack : message.inputs) {
+                            if (stack.getStack() instanceof FluidStack) continue;
+                            ItemStack is = (ItemStack) stack.getStack();
+                            IAEItemStack iaeItemStack = AEApi.instance().storage().createItemStack(is);
+                            if (storageList.findPrecise(iaeItemStack) == null) {
+                                for (IAEItemStack tmp : storageList.findFuzzy(iaeItemStack, FuzzyMode.IGNORE_ALL)) {
+                                    ItemStack substitute = tmp.getItemStack().copy();
+                                    substitute.stackSize = is.stackSize;
+                                    stack.putStack(substitute);
+                                    break;
+                                }
                             }
                         }
                     }
+                    transferPack(message.inputs, inputSlot);
+                    transferPack(message.outputs, outputSlot);
+                    c.onCraftMatrixChanged(inputSlot);
+                    c.onCraftMatrixChanged(outputSlot);
                 }
-                transferPack(message.inputs, inputSlot);
-                transferPack(message.outputs, outputSlot);
-                c.onCraftMatrixChanged(inputSlot);
-                c.onCraftMatrixChanged(outputSlot);
             }
+
             return null;
         }
 
