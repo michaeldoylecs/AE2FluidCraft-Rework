@@ -172,25 +172,5 @@ public class CPacketTransferRecipe implements IMessage {
                 }
             }
         }
-
-        private boolean clearCraftingTable(AEBaseContainer c, EntityPlayerMP player) {
-            Slot s = null;
-            for (final Object j : c.inventorySlots) {
-                if (j instanceof SlotCraftingMatrix) {
-                    s = (Slot) j;
-                }
-            }
-            if (s != null) {
-                c.doAction(player, InventoryAction.MOVE_REGION, s.slotNumber, 0);
-            }
-            for (final Object j : c.inventorySlots) {
-                if (j instanceof SlotCraftingMatrix) {
-                    if (((SlotCraftingMatrix) j).getHasStack()) {
-                        return false;
-                    }
-                }
-            }
-            return true;
-        }
     }
 }
