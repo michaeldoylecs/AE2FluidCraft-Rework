@@ -19,7 +19,7 @@ public class NEI_FC_Config implements IConfigureNEI {
         for (String identifier : FluidRecipe.getSupportRecipes()) {
             API.registerGuiOverlayHandler(
                     GuiFluidCraftingWireless.class,
-                    FluidPatternTerminalRecipeTransferHandler.INSTANCE,
+                    FluidCraftingTransferHandler.INSTANCE,
                     identifier);
             API.registerGuiOverlayHandler(
                     GuiFluidPatternWireless.class,

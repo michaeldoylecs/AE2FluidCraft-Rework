@@ -5,20 +5,23 @@ import java.util.List;
 
 import javax.annotation.Nullable;
 
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.IInventory;
+import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.fluids.FluidStack;
 
 import appeng.api.AEApi;
-import appeng.api.config.Actionable;
 import appeng.api.config.FuzzyMode;
 import appeng.api.storage.ITerminalHost;
 import appeng.api.storage.data.IAEItemStack;
 import appeng.api.storage.data.IItemList;
+import appeng.container.AEBaseContainer;
+import appeng.container.slot.SlotCraftingMatrix;
+import appeng.helpers.InventoryAction;
 
-import com.glodblock.github.client.gui.container.ContainerCraftingWireless;
 import com.glodblock.github.client.gui.container.ContainerItemMonitor;
 import com.glodblock.github.client.gui.container.base.FCContainerEncodeTerminal;
 import com.glodblock.github.common.item.ItemFluidPacket;
@@ -106,41 +109,7 @@ public class CPacketTransferRecipe implements IMessage {
                 } else {
                     storageList = AEApi.instance().storage().createItemList();
                 }
-
-                if (c instanceof ContainerCraftingWireless && host != null) {
-                    // crafting terminal only
-                    ContainerCraftingWireless cf = (ContainerCraftingWireless) c;
-
-                    IInventory inputSlot = cf.getInventoryByName("crafting");
-
-                    if (!storageList.isEmpty()) {
-                        int i = 0;
-                        for (OrderStack stack : message.inputs) {
-                            if (inputSlot.getStackInSlot(i) == null) {
-                                ItemStack is = (ItemStack) stack.getStack();
-                                IAEItemStack iaeItemStack = AEApi.instance().storage().createItemStack(is);
-                                IAEItemStack storedItem = storageList.findPrecise(iaeItemStack);
-                                if (storedItem == null) {
-                                    for (IAEItemStack tmp : storageList.findFuzzy(iaeItemStack, FuzzyMode.IGNORE_ALL)) {
-                                        tmp.setStackSize(is.stackSize);
-                                        ItemStack substitute = tmp.getItemStack().copy();
-                                        inputSlot.setInventorySlotContents(i, substitute);
-                                        host.getItemInventory()
-                                                .extractItems(tmp, Actionable.MODULATE, cf.getActionSource());
-                                        break;
-                                    }
-                                } else {
-                                    host.getItemInventory()
-                                            .extractItems(iaeItemStack, Actionable.MODULATE, cf.getActionSource());
-                                    inputSlot.setInventorySlotContents(i, is);
-                                }
-                            }
-                            i++;
-                        }
-                    }
-                    c.onCraftMatrixChanged(inputSlot);
-
-                } else if (c instanceof FCContainerEncodeTerminal) {
+                if (c instanceof FCContainerEncodeTerminal) {
                     // pattern terminal only
                     FCContainerEncodeTerminal cf = (FCContainerEncodeTerminal) c;
 
@@ -202,6 +171,26 @@ public class CPacketTransferRecipe implements IMessage {
                     if (index < inv.getSizeInventory()) inv.setInventorySlotContents(index, stack1);
                 }
             }
+        }
+
+        private boolean clearCraftingTable(AEBaseContainer c, EntityPlayerMP player) {
+            Slot s = null;
+            for (final Object j : c.inventorySlots) {
+                if (j instanceof SlotCraftingMatrix) {
+                    s = (Slot) j;
+                }
+            }
+            if (s != null) {
+                c.doAction(player, InventoryAction.MOVE_REGION, s.slotNumber, 0);
+            }
+            for (final Object j : c.inventorySlots) {
+                if (j instanceof SlotCraftingMatrix) {
+                    if (((SlotCraftingMatrix) j).getHasStack()) {
+                        return false;
+                    }
+                }
+            }
+            return true;
         }
     }
 }

@@ -346,48 +346,28 @@ public abstract class FCGuiMonitor<T extends IAEStack<T>> extends AEBaseMEGui
         if (drawSwitchGuiBtn) drawSwitchGuiBtns();
     }
 
+    @SuppressWarnings("unchecked")
     private void drawSwitchGuiBtns() {
         if (!(this instanceof GuiFluidCraftingWireless)) {
             this.buttonList.add(
-                    this.CraftingTerminal = new GuiFCImgButton(
-                            this.guiLeft - 18,
-                            this.offsetY,
-                            "CRAFT_TEM",
-                            "YES",
-                            false));
+                    this.CraftingTerminal = new GuiFCImgButton(this.guiLeft - 18, this.offsetY, "CRAFT_TEM", "YES"));
             this.offsetY += 20;
         }
         if (!(this instanceof GuiFluidPatternWireless)) {
             this.buttonList.add(
-                    this.PatternTerminal = new GuiFCImgButton(
-                            this.guiLeft - 18,
-                            this.offsetY,
-                            "PATTERN_TEM",
-                            "YES",
-                            false));
+                    this.PatternTerminal = new GuiFCImgButton(this.guiLeft - 18, this.offsetY, "PATTERN_TEM", "YES"));
             this.offsetY += 20;
         }
         if (!(this instanceof GuiFluidPortableCell)) {
-            this.buttonList.add(
-                    this.FluidTerminal = new GuiFCImgButton(
-                            this.guiLeft - 18,
-                            this.offsetY,
-                            "FLUID_TEM",
-                            "YES",
-                            false));
+            this.buttonList
+                    .add(this.FluidTerminal = new GuiFCImgButton(this.guiLeft - 18, this.offsetY, "FLUID_TEM", "YES"));
             this.offsetY += 20;
         }
         if (ModAndClassUtil.ThE && !(this instanceof GuiEssentiaTerminal)) {
             this.buttonList.add(
-                    this.EssentiaTerminal = new GuiFCImgButton(
-                            this.guiLeft - 18,
-                            this.offsetY,
-                            "ESSENTIA_TEM",
-                            "YES",
-                            false));
+                    this.EssentiaTerminal = new GuiFCImgButton(this.guiLeft - 18, this.offsetY, "ESSENTIA_TEM", "YES"));
             this.offsetY += 20;
         }
-
     }
 
     public void setSearchString(String memoryText, boolean updateView) {
