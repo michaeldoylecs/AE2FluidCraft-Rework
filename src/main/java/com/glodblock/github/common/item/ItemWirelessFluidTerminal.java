@@ -15,7 +15,7 @@ import appeng.util.Platform;
 import com.glodblock.github.FluidCraft;
 import com.glodblock.github.common.tabs.FluidCraftingTabs;
 import com.glodblock.github.inventory.gui.GuiType;
-import com.glodblock.github.inventory.item.WirelessFluidTerminal;
+import com.glodblock.github.inventory.item.WirelessFluidTerminalInventory;
 import com.glodblock.github.loader.IRegister;
 import com.glodblock.github.util.NameConst;
 import com.glodblock.github.util.Util;
@@ -44,7 +44,7 @@ public class ItemWirelessFluidTerminal extends ItemBaseWirelessTerminal
         try {
             IGridNode gridNode = Util.getWirelessGrid(stack);
             if (gridNode != null) {
-                return new WirelessFluidTerminal(stack, x, gridNode, player);
+                return new WirelessFluidTerminalInventory(stack, x, gridNode, player);
             }
         } catch (Exception e) {
             if (Platform.isClient()) player.addChatMessage(PlayerMessages.OutOfRange.get());

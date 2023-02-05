@@ -23,10 +23,13 @@ import appeng.util.Platform;
 
 import com.glodblock.github.FluidCraft;
 import com.glodblock.github.client.gui.container.ContainerFluidCraftConfirm;
+import com.glodblock.github.common.item.ItemWirelessUltraTerminal;
 import com.glodblock.github.common.parts.PartFluidPatternTerminal;
 import com.glodblock.github.common.parts.PartFluidPatternTerminalEx;
 import com.glodblock.github.coremod.hooker.CoreModHooks;
 import com.glodblock.github.inventory.gui.GuiType;
+import com.glodblock.github.inventory.item.IWirelessTerminal;
+import com.glodblock.github.inventory.item.WirelessPatternTerminalInventory;
 import com.glodblock.github.network.CPacketFluidPatternTermBtns;
 import com.glodblock.github.network.CPacketSwitchGuis;
 import com.glodblock.github.util.ModAndClassUtil;
@@ -62,9 +65,12 @@ public class GuiFluidCraftConfirm extends AEBaseGui {
 
         if (te instanceof PartFluidPatternTerminal) {
             this.OriginalGui = GuiType.FLUID_PATTERN_TERMINAL;
-        }
-        if (te instanceof PartFluidPatternTerminalEx) {
+        } else if (te instanceof PartFluidPatternTerminalEx) {
             this.OriginalGui = GuiType.FLUID_PATTERN_TERMINAL_EX;
+        } else if (te instanceof IWirelessTerminal && ((IWirelessTerminal) te).isUniversal(te)) {
+            this.OriginalGui = ItemWirelessUltraTerminal.readMode(((IWirelessTerminal) te).getItemStack());
+        } else if (te instanceof WirelessPatternTerminalInventory) {
+            this.OriginalGui = GuiType.FLUID_TERMINAL;
         }
     }
 

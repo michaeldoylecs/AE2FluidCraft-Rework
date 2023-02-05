@@ -37,7 +37,7 @@ import com.glodblock.github.common.item.ItemFluidDrop;
 import com.glodblock.github.common.item.ItemFluidEncodedPattern;
 import com.glodblock.github.common.item.ItemFluidPacket;
 import com.glodblock.github.inventory.IPatternConsumer;
-import com.glodblock.github.inventory.item.PatternTerminal;
+import com.glodblock.github.inventory.item.IItemPatternTerminal;
 import com.glodblock.github.loader.ItemAndBlockHolder;
 import com.glodblock.github.util.FluidPatternDetails;
 import com.glodblock.github.util.Util;
@@ -45,7 +45,7 @@ import com.glodblock.github.util.Util;
 public abstract class FCContainerEncodeTerminal extends ContainerItemMonitor
         implements IAEAppEngInventory, IOptionalSlotHost, IContainerCraftingPacket, IPatternConsumer {
 
-    protected final PatternTerminal patternTerminal;
+    protected final IItemPatternTerminal patternTerminal;
     protected final AppEngInternalInventory cOut = new AppEngInternalInventory(null, 1);
     protected final IInventory crafting;
     protected final SlotRestrictedInput patternSlotIN;
@@ -77,7 +77,7 @@ public abstract class FCContainerEncodeTerminal extends ContainerItemMonitor
 
     public FCContainerEncodeTerminal(final InventoryPlayer ip, final ITerminalHost monitorable) {
         super(ip, monitorable);
-        this.patternTerminal = (PatternTerminal) monitorable;
+        this.patternTerminal = (IItemPatternTerminal) monitorable;
         this.inverted = patternTerminal.isInverted();
         final IInventory patternInv = this.patternTerminal.getInventoryByName("pattern");
         this.crafting = this.patternTerminal.getInventoryByName("crafting");
@@ -170,7 +170,7 @@ public abstract class FCContainerEncodeTerminal extends ContainerItemMonitor
         }
     }
 
-    public PatternTerminal getPatternTerminal() {
+    public IItemPatternTerminal getPatternTerminal() {
         return this.patternTerminal;
     }
 

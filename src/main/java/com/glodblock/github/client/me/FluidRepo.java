@@ -39,8 +39,8 @@ import cpw.mods.fml.relauncher.ReflectionHelper;
 public class FluidRepo extends ItemRepo {
 
     private final IItemList<IAEItemStack> list = AEApi.instance().storage().createItemList();
-    private final ArrayList<IAEItemStack> view = new ArrayList<IAEItemStack>();
-    private final ArrayList<ItemStack> dsp = new ArrayList<ItemStack>();
+    protected final ArrayList<IAEItemStack> view = new ArrayList<>();
+    protected final ArrayList<ItemStack> dsp = new ArrayList<>();
     private final IScrollSource src;
     private final ISortSource sortSrc;
 
@@ -182,7 +182,7 @@ public class FluidRepo extends ItemRepo {
     private void updateNEI(final String filter) {
         try {
             if (this.NEIWord == null || !this.NEIWord.equals(filter)) {
-                final Class c = ReflectionHelper
+                final Class<?> c = ReflectionHelper
                         .getClass(this.getClass().getClassLoader(), "codechicken.nei.LayoutManager");
                 final Field fldSearchField = c.getField("searchField");
                 final Object searchField = fldSearchField.get(c);

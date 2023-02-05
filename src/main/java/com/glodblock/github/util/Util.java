@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.util.Map;
 
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -17,6 +18,8 @@ import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.MutablePair;
 
 import appeng.api.AEApi;
+import appeng.api.config.Actionable;
+import appeng.api.config.PowerMultiplier;
 import appeng.api.config.SecurityPermissions;
 import appeng.api.implementations.tiles.IWirelessAccessPoint;
 import appeng.api.networking.IGrid;
@@ -30,6 +33,7 @@ import appeng.api.storage.StorageChannel;
 import appeng.api.storage.data.IAEFluidStack;
 import appeng.api.storage.data.IAEStack;
 import appeng.api.util.WorldCoord;
+import appeng.container.AEBaseContainer;
 import appeng.items.tools.powered.ToolWirelessTerminal;
 import appeng.tile.networking.TileCableBus;
 import appeng.tile.networking.TileWireless;
@@ -40,12 +44,39 @@ import com.glodblock.github.common.item.ItemBaseWirelessTerminal;
 import com.glodblock.github.common.item.ItemFluidDrop;
 import com.glodblock.github.common.item.ItemFluidPacket;
 import com.glodblock.github.inventory.IAEFluidTank;
+import com.glodblock.github.inventory.item.IFluidPortableCell;
 
 import cpw.mods.fml.common.ModContainer;
 import cpw.mods.fml.common.registry.GameData;
 import io.netty.buffer.ByteBuf;
 
 public final class Util {
+
+    public static int drainItemPower(AEBaseContainer c, InventoryPlayer ip, int slot, int ticks, double pm,
+            IFluidPortableCell wt) {
+        final ItemStack currentItem = slot < 0 ? ip.getCurrentItem() : ip.getStackInSlot(slot);
+        if (wt != null) {
+            if (currentItem != wt.getItemStack()) {
+                if (currentItem != null) {
+                    if (Platform.isSameItem(wt.getItemStack(), currentItem)) {
+                        ip.setInventorySlotContents(ip.currentItem, wt.getItemStack());
+                    } else {
+                        c.setValidContainer(false);
+                    }
+                } else {
+                    c.setValidContainer(false);
+                }
+            }
+        } else {
+            c.setValidContainer(false);
+        }
+        ticks++;
+        if (ticks > 10 && wt != null) {
+            wt.extractAEPower(pm * ticks, Actionable.MODULATE, PowerMultiplier.CONFIG);
+            ticks = 0;
+        }
+        return ticks;
+    }
 
     public static boolean hasInfinityBoosterCard(ItemStack is) {
         if (ModAndClassUtil.WCT && is.getItem() instanceof ItemBaseWirelessTerminal) {
@@ -66,7 +97,6 @@ public final class Util {
         return null;
     }
 
-    @SuppressWarnings("unchecked")
     public static IBaseMonitor<? extends IAEStack<? extends IAEStack<?>>> getWirelessInv(ItemStack is,
             EntityPlayer player, StorageChannel channel) {
         IGridNode gridNode = getWirelessGrid(is);
@@ -440,7 +470,7 @@ public final class Util {
         public static MutablePair<Integer, ItemStack> fillStack(ItemStack itemStack, FluidStack fluid) {
             if (itemStack == null || itemStack.stackSize != 1) return null;
             Item item = itemStack.getItem();
-            // If its a fluid container item instance
+            // If it's a fluid container item instance
             if (item instanceof IFluidContainerItem) {
                 // Call the fill method on it.
                 int filled = ((IFluidContainerItem) item).fill(itemStack, fluid, true);

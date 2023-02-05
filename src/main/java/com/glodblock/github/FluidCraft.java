@@ -28,7 +28,7 @@ import cpw.mods.fml.common.network.NetworkRegistry;
         modid = FluidCraft.MODID,
         version = FluidCraft.VERSION,
         name = FluidCraft.MODNAME,
-        dependencies = "required-after:appliedenergistics2;required-after:CoFHCore;after:waila")
+        dependencies = "required-after:appliedenergistics2;required-after:CoFHCore;after:waila;after:thaumicenergistics;after:ae2wct")
 public class FluidCraft {
 
     public static final String MODID = "GRADLETOKEN_MODID";
@@ -72,7 +72,7 @@ public class FluidCraft {
         if (!Config.removeRecipe) {
             RecipeLoader.INSTANCE.run();
         }
-        RecipeLoader.runWCTRecipe();
+        RecipeLoader.runTerminalRecipe();
 
         if (ModAndClassUtil.isV2) {
             CalculatorV2PluginLoader.installCalculatorV2Plugins();

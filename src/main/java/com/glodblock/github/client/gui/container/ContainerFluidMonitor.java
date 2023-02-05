@@ -50,7 +50,7 @@ import com.glodblock.github.util.Util;
 
 public class ContainerFluidMonitor extends FCContainerMonitor<IAEFluidStack> {
 
-    private final IItemList<IAEFluidStack> fluids = AEApi.instance().storage().createFluidList();
+    protected final IItemList<IAEFluidStack> fluids = AEApi.instance().storage().createFluidList();
 
     public ContainerFluidMonitor(final InventoryPlayer ip, final ITerminalHost monitorable) {
         this(ip, monitorable, true);
@@ -109,7 +109,7 @@ public class ContainerFluidMonitor extends FCContainerMonitor<IAEFluidStack> {
 
     @Override
     public ItemStack transferStackInSlot(final EntityPlayer p, final int idx) {
-        if (Platform.isClient()) {
+        if (Platform.isClient() && !isEssentiaMode()) {
             Slot clickSlot = (Slot) this.inventorySlots.get(idx);
             if ((clickSlot instanceof SlotPlayerInv || clickSlot instanceof SlotPlayerHotBar) && clickSlot.getHasStack()
                     && Util.FluidUtil.isFluidContainer(clickSlot.getStack())) {
@@ -183,7 +183,7 @@ public class ContainerFluidMonitor extends FCContainerMonitor<IAEFluidStack> {
         }
     }
 
-    private void dropItem(ItemStack is) {
+    protected void dropItem(ItemStack is) {
         if (is == null || is.stackSize <= 0) return;
         ItemStack itemStack = is.copy();
         int i = itemStack.getMaxStackSize();
@@ -204,7 +204,7 @@ public class ContainerFluidMonitor extends FCContainerMonitor<IAEFluidStack> {
         }
     }
 
-    private void dropItem(ItemStack itemStack, int stackSize) {
+    protected void dropItem(ItemStack itemStack, int stackSize) {
         if (itemStack == null || itemStack.stackSize <= 0) return;
         ItemStack is = itemStack.copy();
         is.stackSize = stackSize;
@@ -313,5 +313,9 @@ public class ContainerFluidMonitor extends FCContainerMonitor<IAEFluidStack> {
             }
         }
         this.detectAndSendChanges();
+    }
+
+    protected boolean isEssentiaMode() {
+        return false;
     }
 }

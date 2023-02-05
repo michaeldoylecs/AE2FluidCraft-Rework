@@ -11,6 +11,7 @@ import net.minecraft.tileentity.TileEntity;
 import appeng.container.AEBaseContainer;
 import appeng.container.ContainerOpenContext;
 
+import com.glodblock.github.common.item.ItemWirelessUltraTerminal;
 import com.glodblock.github.inventory.InventoryHandler;
 import com.glodblock.github.inventory.gui.GuiType;
 import com.glodblock.github.util.BlockPos;
@@ -24,9 +25,15 @@ import io.netty.buffer.ByteBuf;
 public class CPacketSwitchGuis implements IMessage {
 
     private GuiType guiType;
+    private boolean switchTerminal;
 
     public CPacketSwitchGuis(GuiType guiType) {
+        this(guiType, false);
+    }
+
+    public CPacketSwitchGuis(GuiType guiType, boolean switchTerminal) {
         this.guiType = guiType;
+        this.switchTerminal = switchTerminal;
     }
 
     public CPacketSwitchGuis() {
@@ -36,11 +43,13 @@ public class CPacketSwitchGuis implements IMessage {
     @Override
     public void fromBytes(ByteBuf byteBuf) {
         guiType = GuiType.getByOrdinal(byteBuf.readByte());
+        switchTerminal = byteBuf.readBoolean();
     }
 
     @Override
     public void toBytes(ByteBuf byteBuf) {
         byteBuf.writeByte(guiType != null ? guiType.ordinal() : 0);
+        byteBuf.writeBoolean(this.switchTerminal);
     }
 
     public static class Handler implements IMessageHandler<CPacketSwitchGuis, IMessage> {
@@ -51,36 +60,44 @@ public class CPacketSwitchGuis implements IMessage {
             if (message.guiType == null) {
                 return null;
             }
+
             EntityPlayerMP player = ctx.getServerHandler().playerEntity;
             Container cont = player.openContainer;
-            if (!(cont instanceof AEBaseContainer)) {
+
+            // switch terminal
+            if (message.switchTerminal) {
+                ItemWirelessUltraTerminal.switchTerminal(player, message.guiType);
                 return null;
-            }
-            ContainerOpenContext context = ((AEBaseContainer) cont).getOpenContext();
-            if (context == null) {
-                return null;
-            }
-            TileEntity te = context.getTile();
-            if (te != null) {
-                InventoryHandler.openGui(
-                        player,
-                        player.worldObj,
-                        new BlockPos(te),
-                        Objects.requireNonNull(context.getSide()),
-                        message.guiType);
-            } else {
-                InventoryHandler.openGui(
-                        player,
-                        player.worldObj,
-                        new BlockPos(
-                                player.inventory.currentItem,
-                                Util.GuiHelper.encodeType(0, Util.GuiHelper.GuiType.ITEM),
-                                0),
-                        Objects.requireNonNull(context.getSide()),
-                        message.guiType);
             }
 
+            // open new terminal
+            if (cont instanceof AEBaseContainer) {
+                ContainerOpenContext context = ((AEBaseContainer) cont).getOpenContext();
+                if (context == null) {
+                    return null;
+                }
+                TileEntity te = context.getTile();
+                if (te != null) {
+                    InventoryHandler.openGui(
+                            player,
+                            player.worldObj,
+                            new BlockPos(te),
+                            Objects.requireNonNull(context.getSide()),
+                            message.guiType);
+                } else {
+                    InventoryHandler.openGui(
+                            player,
+                            player.worldObj,
+                            new BlockPos(
+                                    player.inventory.currentItem,
+                                    Util.GuiHelper.encodeType(0, Util.GuiHelper.GuiType.ITEM),
+                                    0),
+                            Objects.requireNonNull(context.getSide()),
+                            message.guiType);
+                }
+            }
             return null;
         }
     }
+
 }

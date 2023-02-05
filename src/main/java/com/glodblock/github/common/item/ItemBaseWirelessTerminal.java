@@ -4,7 +4,6 @@ import static com.glodblock.github.loader.recipe.WirelessTerminalRecipe.getInfin
 import static com.glodblock.github.util.Util.hasInfinityBoosterCard;
 
 import java.util.List;
-import java.util.Optional;
 
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.entity.player.EntityPlayer;
@@ -36,7 +35,7 @@ public class ItemBaseWirelessTerminal extends ToolWirelessTerminal implements II
 
     public ItemBaseWirelessTerminal(GuiType t) {
         super();
-        this.type = Optional.of(t).get();
+        this.type = t;
     }
 
     @Override
@@ -65,7 +64,7 @@ public class ItemBaseWirelessTerminal extends ToolWirelessTerminal implements II
                     w,
                     new BlockPos(player.inventory.currentItem, 0, 0),
                     ForgeDirection.UNKNOWN,
-                    this.type);
+                    this.guiGuiType(item));
         } else {
             player.addChatMessage(PlayerMessages.DeviceNotPowered.get());
         }
@@ -112,11 +111,7 @@ public class ItemBaseWirelessTerminal extends ToolWirelessTerminal implements II
         return null;
     }
 
-    public void setGuiType(GuiType type) {
-        this.type = type;
-    }
-
-    public GuiType guiGuiType() {
+    public GuiType guiGuiType(ItemStack stack) {
         return this.type;
     }
 

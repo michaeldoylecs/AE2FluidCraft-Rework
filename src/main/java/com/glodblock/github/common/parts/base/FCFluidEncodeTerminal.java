@@ -11,9 +11,9 @@ import appeng.api.storage.data.IAEItemStack;
 import appeng.tile.inventory.AppEngInternalInventory;
 
 import com.glodblock.github.common.item.ItemFluidPacket;
-import com.glodblock.github.inventory.item.PatternTerminal;
+import com.glodblock.github.inventory.item.IItemPatternTerminal;
 
-public abstract class FCFluidEncodeTerminal extends FCPart implements PatternTerminal {
+public abstract class FCFluidEncodeTerminal extends FCPart implements IItemPatternTerminal {
 
     protected AppEngInternalInventory crafting;
     protected AppEngInternalInventory output;
@@ -71,62 +71,77 @@ public abstract class FCFluidEncodeTerminal extends FCPart implements PatternTer
         this.crafting.writeToNBT(data, "craftingGrid");
     }
 
+    @Override
     public boolean shouldCombine() {
         return this.combine;
     }
 
+    @Override
     public void setCombineMode(boolean shouldCombine) {
         this.combine = shouldCombine;
     }
 
+    @Override
     public boolean isSubstitution() {
         return this.substitute;
     }
 
+    @Override
     public boolean isPrioritize() {
         return this.prioritize;
     }
 
+    @Override
     public void setBeSubstitute(boolean canBeSubstitute) {
         this.beSubstitute = canBeSubstitute;
     }
 
+    @Override
     public boolean canBeSubstitute() {
         return this.beSubstitute;
     }
 
+    @Override
     public void setSubstitution(boolean canSubstitute) {
         this.substitute = canSubstitute;
     }
 
+    @Override
     public void setPrioritization(boolean canPrioritize) {
         this.prioritize = canPrioritize;
     }
 
+    @Override
     public boolean isInverted() {
         return inverted;
     }
 
+    @Override
     public void setInverted(boolean inverted) {
         this.inverted = inverted;
     }
 
+    @Override
     public int getActivePage() {
         return this.activePage;
     }
 
+    @Override
     public void setActivePage(int activePage) {
         this.activePage = activePage;
     }
 
+    @Override
     public void setCraftingRecipe(final boolean craftingMode) {
         this.craftingMode = craftingMode;
     }
 
+    @Override
     public boolean isCraftingRecipe() {
         return this.craftingMode;
     }
 
+    @Override
     public void onChangeCrafting(IAEItemStack[] newCrafting, IAEItemStack[] newOutput) {
         IInventory crafting = this.getInventoryByName("crafting");
         IInventory output = this.getInventoryByName("output");
@@ -159,6 +174,7 @@ public abstract class FCFluidEncodeTerminal extends FCPart implements PatternTer
         return super.getInventoryByName(name);
     }
 
+    @Override
     public void sortCraftingItems() {
         List<ItemStack> items = new ArrayList<ItemStack>();
         List<ItemStack> fluids = new ArrayList<ItemStack>();

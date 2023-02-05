@@ -49,8 +49,10 @@ import codechicken.nei.LayoutManager;
 import codechicken.nei.util.TextHistory;
 
 import com.glodblock.github.FluidCraft;
-import com.glodblock.github.client.gui.FCGuiTextField;
+import com.glodblock.github.client.gui.*;
 import com.glodblock.github.client.gui.container.base.FCContainerMonitor;
+import com.glodblock.github.common.item.ItemWirelessUltraTerminal;
+import com.glodblock.github.inventory.gui.GuiType;
 import com.glodblock.github.network.CPacketInventoryAction;
 import com.glodblock.github.util.Ae2ReflectClient;
 import com.glodblock.github.util.ModAndClassUtil;
@@ -78,12 +80,18 @@ public abstract class FCGuiMonitor<T extends IAEStack<T>> extends AEBaseMEGui
     protected int rows = 0;
     protected int maxRows = Integer.MAX_VALUE;
     protected int standardSize;
+    protected int offsetY;
     protected GuiImgButton ViewBox;
     protected GuiImgButton SortByBox;
     protected GuiImgButton SortDirBox;
     protected GuiImgButton searchBoxSettings;
     protected GuiImgButton terminalStyleBox;
     protected GuiImgButton searchStringSave;
+    protected GuiFCImgButton FluidTerminal;
+    protected GuiFCImgButton CraftingTerminal;
+    protected GuiFCImgButton PatternTerminal;
+    protected GuiFCImgButton EssentiaTerminal;
+    protected boolean drawSwitchGuiBtn;
 
     @SuppressWarnings("unchecked")
     public FCGuiMonitor(final InventoryPlayer inventoryPlayer, final ITerminalHost te, final FCContainerMonitor<T> c) {
@@ -96,6 +104,9 @@ public abstract class FCGuiMonitor<T extends IAEStack<T>> extends AEBaseMEGui
         this.configSrc = ((IConfigurableObject) this.inventorySlots).getConfigManager();
         (this.monitorableContainer = (FCContainerMonitor<T>) this.inventorySlots).setGui(this);
         this.viewCell = te instanceof IViewCellStorage;
+        if (inventoryPlayer.getCurrentItem() != null
+                && inventoryPlayer.getCurrentItem().getItem() instanceof ItemWirelessUltraTerminal)
+            this.drawSwitchGuiBtn = true;
     }
 
     public abstract void postUpdate(final List<T> list);
@@ -113,7 +124,17 @@ public abstract class FCGuiMonitor<T extends IAEStack<T>> extends AEBaseMEGui
         if (btn == this.craftingStatusBtn || btn == this.craftingStatusImgBtn) {
             NetworkHandler.instance.sendToServer(new PacketSwitchGuis(GuiBridge.GUI_CRAFTING_STATUS));
         }
-
+        if (btn instanceof GuiFCImgButton) {
+            if (btn == this.FluidTerminal) {
+                ItemWirelessUltraTerminal.switchTerminal(this.mc.thePlayer, GuiType.WIRELESS_FLUID_TERMINAL);
+            } else if (btn == this.CraftingTerminal) {
+                ItemWirelessUltraTerminal.switchTerminal(this.mc.thePlayer, GuiType.WIRELESS_CRAFTING_TERMINAL);
+            } else if (btn == this.EssentiaTerminal) {
+                ItemWirelessUltraTerminal.switchTerminal(this.mc.thePlayer, GuiType.WIRELESS_ESSENTIA_TERMINAL);
+            } else if (btn == this.PatternTerminal) {
+                ItemWirelessUltraTerminal.switchTerminal(this.mc.thePlayer, GuiType.WIRELESS_FLUID_PATTERN_TERMINAL);
+            }
+        }
         if (btn instanceof GuiImgButton) {
             final boolean backwards = Mouse.isButtonDown(1);
             final GuiImgButton iBtn = (GuiImgButton) btn;
@@ -200,60 +221,60 @@ public abstract class FCGuiMonitor<T extends IAEStack<T>> extends AEBaseMEGui
         final int unusedSpace = this.height - this.ySize;
         this.guiTop = (int) Math.floor(unusedSpace / (unusedSpace < 0 ? 3.8f : 2.0f));
 
-        int offset = this.guiTop + 8;
+        this.offsetY = this.guiTop + 8;
 
         if (this.customSortOrder) {
             this.buttonList.add(
                     this.SortByBox = new GuiImgButton(
                             this.guiLeft - 18,
-                            offset,
+                            this.offsetY,
                             Settings.SORT_BY,
                             this.configSrc.getSetting(Settings.SORT_BY)));
-            offset += 20;
+            this.offsetY += 20;
         }
         if (this.showViewBtn) {
             this.buttonList.add(
                     this.ViewBox = new GuiImgButton(
                             this.guiLeft - 18,
-                            offset,
+                            this.offsetY,
                             Settings.VIEW_MODE,
                             this.configSrc.getSetting(Settings.VIEW_MODE)));
-            offset += 20;
+            this.offsetY += 20;
         }
 
         this.buttonList.add(
                 this.SortDirBox = new GuiImgButton(
                         this.guiLeft - 18,
-                        offset,
+                        this.offsetY,
                         Settings.SORT_DIRECTION,
                         this.configSrc.getSetting(Settings.SORT_DIRECTION)));
-        offset += 20;
+        this.offsetY += 20;
 
         this.buttonList.add(
                 this.searchBoxSettings = new GuiImgButton(
                         this.guiLeft - 18,
-                        offset,
+                        this.offsetY,
                         Settings.SEARCH_MODE,
                         AEConfig.instance.settings.getSetting(Settings.SEARCH_MODE)));
-        offset += 20;
+        this.offsetY += 20;
 
         if (ModAndClassUtil.isSaveText) {
             this.buttonList.add(
                     this.searchStringSave = new GuiImgButton(
                             this.guiLeft - 18,
-                            offset,
+                            this.offsetY,
                             Settings.SAVE_SEARCH,
                             AEConfig.instance.preserveSearchBar ? YesNo.YES : YesNo.NO));
-            offset += 20;
+            this.offsetY += 20;
         }
 
         this.buttonList.add(
                 this.terminalStyleBox = new GuiImgButton(
                         this.guiLeft - 18,
-                        offset,
+                        this.offsetY,
                         Settings.TERMINAL_STYLE,
                         AEConfig.instance.settings.getSetting(Settings.TERMINAL_STYLE)));
-        offset += 20;
+        this.offsetY += 20;
 
         this.searchField = new FCGuiTextField(
                 this.fontRendererObj,
@@ -274,9 +295,10 @@ public abstract class FCGuiMonitor<T extends IAEStack<T>> extends AEBaseMEGui
                 this.buttonList.add(
                         this.craftingStatusImgBtn = new GuiImgButton(
                                 this.guiLeft - 18,
-                                offset,
+                                this.offsetY,
                                 Settings.CRAFTING_STATUS,
                                 AEConfig.instance.settings.getSetting(Settings.CRAFTING_STATUS)));
+                this.offsetY += 20;
             } else {
                 this.buttonList.add(
                         this.craftingStatusBtn = new GuiTabButton(
@@ -321,6 +343,31 @@ public abstract class FCGuiMonitor<T extends IAEStack<T>> extends AEBaseMEGui
 
         craftingGridOffsetX -= 25;
         craftingGridOffsetY -= 6;
+        if (drawSwitchGuiBtn) drawSwitchGuiBtns();
+    }
+
+    @SuppressWarnings("unchecked")
+    private void drawSwitchGuiBtns() {
+        if (!(this instanceof GuiFluidCraftingWireless)) {
+            this.buttonList.add(
+                    this.CraftingTerminal = new GuiFCImgButton(this.guiLeft - 18, this.offsetY, "CRAFT_TEM", "YES"));
+            this.offsetY += 20;
+        }
+        if (!(this instanceof GuiFluidPatternWireless)) {
+            this.buttonList.add(
+                    this.PatternTerminal = new GuiFCImgButton(this.guiLeft - 18, this.offsetY, "PATTERN_TEM", "YES"));
+            this.offsetY += 20;
+        }
+        if (!(this instanceof GuiFluidPortableCell)) {
+            this.buttonList
+                    .add(this.FluidTerminal = new GuiFCImgButton(this.guiLeft - 18, this.offsetY, "FLUID_TEM", "YES"));
+            this.offsetY += 20;
+        }
+        if (ModAndClassUtil.ThE && !(this instanceof GuiEssentiaTerminal)) {
+            this.buttonList.add(
+                    this.EssentiaTerminal = new GuiFCImgButton(this.guiLeft - 18, this.offsetY, "ESSENTIA_TEM", "YES"));
+            this.offsetY += 20;
+        }
     }
 
     public void setSearchString(String memoryText, boolean updateView) {
@@ -375,7 +422,6 @@ public abstract class FCGuiMonitor<T extends IAEStack<T>> extends AEBaseMEGui
     }
 
     @Override
-    @SuppressWarnings("unchecked")
     protected void handleMouseClick(final Slot slot, final int slotIdx, final int ctrlDown, final int mouseButton) {
         final EntityPlayer player = Minecraft.getMinecraft().thePlayer;
         if (mouseButton == 3) {

@@ -37,6 +37,7 @@ public class NameConst {
     public static final String ITEM_FLUID_STORAGE = "fluid_storage";
     public static final String ITEM_FLUID_PORTABLE_CELL = "portable_fluid_cell";
     public static final String ITEM_WIRELESS_FLUID_TERMINAL = "wireless_fluid_terminal";
+    public static final String ITEM_WIRELESS_ULTRA_TERMINAL = "wireless_ultra_terminal";
     public static final String ITEM_WIRELESS_FLUID_PATTERN_TERMINAL = "wireless_fluid_pattern_terminal";
     public static final String ITEM_FLUID_PART = "fluid_part";
 
@@ -77,6 +78,7 @@ public class NameConst {
     public static final String TT_WIRELESS = TT_KEY + "wireless.";
     public static final String TT_WIRELESS_INSTALLED = TT_WIRELESS + "installed";
     public static final String TT_FLUID_AUTO_FILLER = TT_KEY + "fluid_auto_filler";
+    public static final String TT_ULTRA_TERMINAL = TT_KEY + "ultra_terminal";
 
     public static final String WAILA_KEY = FluidCraft.MODID + ".waila.";
     public static final String WAILA_ENABLE = WAILA_KEY + "enable";

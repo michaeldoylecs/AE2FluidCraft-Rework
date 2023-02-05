@@ -10,10 +10,13 @@ import appeng.core.localization.GuiText;
 
 import com.glodblock.github.FluidCraft;
 import com.glodblock.github.client.gui.base.FCGuiAmount;
+import com.glodblock.github.common.item.ItemWirelessUltraTerminal;
 import com.glodblock.github.common.parts.PartFluidPatternTerminal;
 import com.glodblock.github.common.parts.PartFluidPatternTerminalEx;
 import com.glodblock.github.common.parts.PartFluidTerminal;
 import com.glodblock.github.inventory.gui.GuiType;
+import com.glodblock.github.inventory.item.IWirelessTerminal;
+import com.glodblock.github.inventory.item.WirelessPatternTerminalInventory;
 import com.glodblock.github.loader.ItemAndBlockHolder;
 import com.glodblock.github.network.CPacketCraftRequest;
 
@@ -64,13 +67,17 @@ public class GuiFluidCraftAmount extends FCGuiAmount {
         if (target instanceof PartFluidPatternTerminal) {
             this.myIcon = new ItemStack(ItemAndBlockHolder.FLUID_TERMINAL, 1);
             this.originalGui = GuiType.FLUID_PATTERN_TERMINAL;
-        }
-        if (target instanceof PartFluidPatternTerminalEx) {
+        } else if (target instanceof PartFluidPatternTerminalEx) {
             this.myIcon = new ItemStack(ItemAndBlockHolder.FLUID_TERMINAL_EX, 1);
             this.originalGui = GuiType.FLUID_PATTERN_TERMINAL_EX;
-        }
-        if (target instanceof PartFluidTerminal) {
+        } else if (target instanceof PartFluidTerminal) {
             this.myIcon = new ItemStack(ItemAndBlockHolder.FLUID_TERM, 1);
+            this.originalGui = GuiType.FLUID_TERMINAL;
+        } else if (target instanceof IWirelessTerminal && ((IWirelessTerminal) target).isUniversal(target)) {
+            this.myIcon = new ItemStack(ItemAndBlockHolder.WIRELESS_ULTRA_TERM, 1);
+            this.originalGui = ItemWirelessUltraTerminal.readMode(((IWirelessTerminal) target).getItemStack());
+        } else if (target instanceof WirelessPatternTerminalInventory) {
+            this.myIcon = new ItemStack(ItemAndBlockHolder.WIRELESS_PATTERN_TERM, 1);
             this.originalGui = GuiType.FLUID_TERMINAL;
         }
     }
