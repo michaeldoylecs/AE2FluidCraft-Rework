@@ -172,6 +172,17 @@ public class WirelessPatternTerminalInventory extends MEMonitorHandler<IAEItemSt
         // NO-OP
     }
 
+    private void fixCraftingRecipes() {
+        if (this.craftingMode) {
+            for (int x = 0; x < this.crafting.getSizeInventory(); x++) {
+                final ItemStack is = this.crafting.getStackInSlot(x);
+                if (is != null) {
+                    is.stackSize = 1;
+                }
+            }
+        }
+    }
+
     @Override
     public boolean isInverted() {
         return this.inverted;
@@ -233,6 +244,7 @@ public class WirelessPatternTerminalInventory extends MEMonitorHandler<IAEItemSt
     @Override
     public void setCraftingRecipe(boolean craftingMode) {
         this.craftingMode = craftingMode;
+        this.fixCraftingRecipes();
     }
 
     @Override
