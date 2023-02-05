@@ -1,7 +1,5 @@
 package com.glodblock.github.client.gui;
 
-import com.glodblock.github.inventory.InventoryHandler;
-import com.glodblock.github.inventory.gui.GuiType;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.Container;
@@ -18,6 +16,8 @@ import appeng.core.sync.packets.PacketInventoryAction;
 import appeng.helpers.InventoryAction;
 
 import com.glodblock.github.client.gui.container.ContainerCraftingWireless;
+import com.glodblock.github.inventory.InventoryHandler;
+import com.glodblock.github.inventory.gui.GuiType;
 import com.glodblock.github.inventory.item.IWirelessTerminal;
 
 public class GuiFluidCraftingWireless extends GuiItemMonitor {
@@ -44,7 +44,10 @@ public class GuiFluidCraftingWireless extends GuiItemMonitor {
                     }
                 }
                 if (s != null) {
-                    final PacketInventoryAction p = new PacketInventoryAction(InventoryAction.MOVE_REGION, s.slotNumber, 0);
+                    final PacketInventoryAction p = new PacketInventoryAction(
+                            InventoryAction.MOVE_REGION,
+                            s.slotNumber,
+                            0);
                     NetworkHandler.instance.sendToServer(p);
                 }
             }

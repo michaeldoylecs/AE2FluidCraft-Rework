@@ -92,18 +92,18 @@ public class CPacketCraftRequest implements IMessage {
                             final TileEntity te = context.getTile();
                             if (te != null) {
                                 InventoryHandler.openGui(
-                                    player,
-                                    player.worldObj,
-                                    new BlockPos(te),
-                                    Objects.requireNonNull(context.getSide()),
-                                    GuiType.FLUID_CRAFTING_CONFIRM);
+                                        player,
+                                        player.worldObj,
+                                        new BlockPos(te),
+                                        Objects.requireNonNull(context.getSide()),
+                                        GuiType.FLUID_CRAFTING_CONFIRM);
                             } else {
                                 InventoryHandler.openGui(
-                                    player,
-                                    player.worldObj,
-                                    new BlockPos(player.inventory.currentItem, 0, 0),
-                                    Objects.requireNonNull(context.getSide()),
-                                    GuiType.FLUID_CRAFTING_CONFIRM_ITEM);
+                                        player,
+                                        player.worldObj,
+                                        new BlockPos(player.inventory.currentItem, 0, 0),
+                                        Objects.requireNonNull(context.getSide()),
+                                        GuiType.FLUID_CRAFTING_CONFIRM_ITEM);
                             }
 
                             if (player.openContainer instanceof ContainerFluidCraftConfirm) {
