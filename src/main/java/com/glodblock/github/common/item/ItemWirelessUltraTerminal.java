@@ -1,5 +1,7 @@
 package com.glodblock.github.common.item;
 
+import static net.minecraft.client.gui.GuiScreen.isShiftKeyDown;
+
 import java.util.ArrayList;
 import java.util.EnumSet;
 import java.util.List;
@@ -9,6 +11,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.StatCollector;
 import net.minecraft.world.World;
+import net.minecraftforge.common.util.ForgeDirection;
 
 import appeng.api.AEApi;
 import appeng.api.networking.IGridNode;
@@ -18,11 +21,14 @@ import appeng.util.Platform;
 
 import com.glodblock.github.FluidCraft;
 import com.glodblock.github.common.tabs.FluidCraftingTabs;
+import com.glodblock.github.inventory.InventoryHandler;
 import com.glodblock.github.inventory.gui.GuiType;
 import com.glodblock.github.inventory.item.WirelessCraftingTerminalInventory;
 import com.glodblock.github.inventory.item.WirelessFluidTerminalInventory;
 import com.glodblock.github.inventory.item.WirelessPatternTerminalInventory;
 import com.glodblock.github.loader.IRegister;
+import com.glodblock.github.network.CPacketSwitchGuis;
+import com.glodblock.github.util.BlockPos;
 import com.glodblock.github.util.ModAndClassUtil;
 import com.glodblock.github.util.NameConst;
 import com.glodblock.github.util.Util;
@@ -63,8 +69,12 @@ public class ItemWirelessUltraTerminal extends ItemBaseWirelessTerminal
     public void addCheckedInformation(ItemStack stack, EntityPlayer player, List<String> lines,
             boolean displayMoreInfo) {
         super.addCheckedInformation(stack, player, lines, displayMoreInfo);
-        lines.add(StatCollector.translateToLocal(NameConst.TT_ULTRA_TERMINAL));
-        lines.add(StatCollector.translateToLocal(NameConst.TT_ULTRA_TERMINAL + "." + guiGuiType(stack)));
+        if (isShiftKeyDown()) {
+            lines.add(StatCollector.translateToLocal(NameConst.TT_ULTRA_TERMINAL));
+            lines.add(StatCollector.translateToLocal(NameConst.TT_ULTRA_TERMINAL + "." + guiGuiType(stack)));
+        } else {
+            lines.add(NameConst.i18n(NameConst.TT_SHIFT_FOR_MORE));
+        }
     }
 
     @Override
@@ -134,6 +144,31 @@ public class ItemWirelessUltraTerminal extends ItemBaseWirelessTerminal
     public void setMode(String mode, ItemStack stack) {
         NBTTagCompound data = Platform.openNbtData(stack);
         data.setString(MODE, mode);
+    }
+
+    public void setMode(GuiType mode, ItemStack stack) {
+        this.setMode(mode.toString(), stack);
+    }
+
+    public static void switchTerminal(EntityPlayer player, GuiType guiType) {
+        if (player.inventory.getCurrentItem().getItem() instanceof ItemWirelessUltraTerminal) {
+            ((ItemWirelessUltraTerminal) player.inventory.getCurrentItem().getItem())
+                    .setMode(guiType, player.inventory.getCurrentItem());
+        }
+        if (Platform.isClient()) {
+            player.closeScreen();
+            FluidCraft.proxy.netHandler.sendToServer(new CPacketSwitchGuis(guiType, true));
+        } else {
+            InventoryHandler.openGui(
+                    player,
+                    player.worldObj,
+                    new BlockPos(
+                            player.inventory.currentItem,
+                            Util.GuiHelper.encodeType(0, Util.GuiHelper.GuiType.ITEM),
+                            0),
+                    ForgeDirection.UNKNOWN,
+                    guiType);
+        }
     }
 
     @Override

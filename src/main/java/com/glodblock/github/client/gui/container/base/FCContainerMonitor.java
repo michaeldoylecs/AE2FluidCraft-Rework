@@ -79,19 +79,21 @@ public abstract class FCContainerMonitor<T extends IAEStack<T>> extends AEBaseCo
             if (isInvalid()) {
                 this.setValidContainer(false);
             }
-            for (final Settings set : this.serverCM.getSettings()) {
-                final Enum<?> sideLocal = this.serverCM.getSetting(set);
-                final Enum<?> sideRemote = this.clientCM.getSetting(set);
+            if (this.serverCM != null) {
+                for (final Settings set : this.serverCM.getSettings()) {
+                    final Enum<?> sideLocal = this.serverCM.getSetting(set);
+                    final Enum<?> sideRemote = this.clientCM.getSetting(set);
 
-                if (sideLocal != sideRemote) {
-                    this.clientCM.putSetting(set, sideLocal);
-                    for (final Object crafter : this.crafters) {
-                        try {
-                            NetworkHandler.instance.sendTo(
-                                    new PacketValueConfig(set.name(), sideLocal.name()),
-                                    (EntityPlayerMP) crafter);
-                        } catch (final IOException e) {
-                            AELog.debug(e);
+                    if (sideLocal != sideRemote) {
+                        this.clientCM.putSetting(set, sideLocal);
+                        for (final Object crafter : this.crafters) {
+                            try {
+                                NetworkHandler.instance.sendTo(
+                                        new PacketValueConfig(set.name(), sideLocal.name()),
+                                        (EntityPlayerMP) crafter);
+                            } catch (final IOException e) {
+                                AELog.debug(e);
+                            }
                         }
                     }
                 }
