@@ -4,6 +4,9 @@ import static com.glodblock.github.loader.ItemAndBlockHolder.*;
 import static net.minecraft.init.Blocks.redstone_torch;
 import static net.minecraft.init.Items.fish;
 
+import java.util.Arrays;
+import java.util.Objects;
+
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
@@ -102,6 +105,10 @@ public class RecipeLoader implements Runnable {
             .findItemStack("appliedenergistics2", "tile.BlockChest", 1);
     public static final ItemStack AE2_ENERGY_CELL = GameRegistry
             .findItemStack("appliedenergistics2", "tile.BlockEnergyCell", 1);
+    public static final ItemStack THE_WIRELESS_TERM = GameRegistry
+            .findItemStack("thaumicenergistics", "wireless.essentia.terminal", 1);
+    private static final ItemStack WCT_WIRELESS_TERM = GameRegistry
+            .findItemStack("ae2wct", "wirelessCraftingTerminal", 1);
     public static final ItemStack BUCKET = new ItemStack(Items.bucket, 1);
     public static final ItemStack IRON_BAR = new ItemStack(Blocks.iron_bars, 1);
 
@@ -450,10 +457,18 @@ public class RecipeLoader implements Runnable {
         }
     }
 
-    public static void runWCTRecipe() {
+    public static void runTerminalRecipe() {
         if (ModAndClassUtil.WCT) {
             GameRegistry.addRecipe(new WirelessTerminalRecipe(WIRELESS_PATTERN_TERM.stack()));
             GameRegistry.addRecipe(new WirelessTerminalRecipe(WIRELESS_FLUID_TERM.stack()));
+            GameRegistry.addRecipe(new WirelessTerminalRecipe(WIRELESS_ULTRA_TERM.stack()));
         }
+
+        ItemStack[] term = { AE2_WIRELESS_TERMINAL, WIRELESS_FLUID_TERM.stack(), WIRELESS_PATTERN_TERM.stack(),
+                THE_WIRELESS_TERM, WCT_WIRELESS_TERM };
+        GameRegistry.addShapelessRecipe(
+                WIRELESS_ULTRA_TERM.stack(),
+                Arrays.stream(term).filter(Objects::nonNull).toArray());
+
     }
 }

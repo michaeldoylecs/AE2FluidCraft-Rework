@@ -104,7 +104,8 @@ public abstract class FCGuiMonitor<T extends IAEStack<T>> extends AEBaseMEGui
         this.configSrc = ((IConfigurableObject) this.inventorySlots).getConfigManager();
         (this.monitorableContainer = (FCContainerMonitor<T>) this.inventorySlots).setGui(this);
         this.viewCell = te instanceof IViewCellStorage;
-        if (inventoryPlayer.getCurrentItem().getItem() instanceof ItemWirelessUltraTerminal)
+        if (inventoryPlayer.getCurrentItem() != null
+                && inventoryPlayer.getCurrentItem().getItem() instanceof ItemWirelessUltraTerminal)
             this.drawSwitchGuiBtn = true;
     }
 
@@ -376,7 +377,7 @@ public abstract class FCGuiMonitor<T extends IAEStack<T>> extends AEBaseMEGui
                             false));
             this.offsetY += 20;
         }
-        if (!(this instanceof GuiEssentiaTerminal)) {
+        if (ModAndClassUtil.ThE && !(this instanceof GuiEssentiaTerminal)) {
             this.buttonList.add(
                     this.EssentiaTerminal = new GuiFCImgButton(
                             this.guiLeft - 18,
