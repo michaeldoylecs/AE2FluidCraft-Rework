@@ -5,10 +5,8 @@ import java.util.List;
 
 import javax.annotation.Nullable;
 
-import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.IInventory;
-import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.fluids.FluidStack;
@@ -18,9 +16,6 @@ import appeng.api.config.FuzzyMode;
 import appeng.api.storage.ITerminalHost;
 import appeng.api.storage.data.IAEItemStack;
 import appeng.api.storage.data.IItemList;
-import appeng.container.AEBaseContainer;
-import appeng.container.slot.SlotCraftingMatrix;
-import appeng.helpers.InventoryAction;
 
 import com.glodblock.github.client.gui.container.ContainerItemMonitor;
 import com.glodblock.github.client.gui.container.base.FCContainerEncodeTerminal;
