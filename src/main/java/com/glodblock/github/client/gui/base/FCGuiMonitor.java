@@ -91,7 +91,7 @@ public abstract class FCGuiMonitor<T extends IAEStack<T>> extends AEBaseMEGui
     protected GuiFCImgButton CraftingTerminal;
     protected GuiFCImgButton PatternTerminal;
     protected GuiFCImgButton EssentiaTerminal;
-    protected boolean drawSwitchGuiIcon = true;
+    protected boolean drawSwitchGuiBtn;
 
     @SuppressWarnings("unchecked")
     public FCGuiMonitor(final InventoryPlayer inventoryPlayer, final ITerminalHost te, final FCContainerMonitor<T> c) {
@@ -104,6 +104,8 @@ public abstract class FCGuiMonitor<T extends IAEStack<T>> extends AEBaseMEGui
         this.configSrc = ((IConfigurableObject) this.inventorySlots).getConfigManager();
         (this.monitorableContainer = (FCContainerMonitor<T>) this.inventorySlots).setGui(this);
         this.viewCell = te instanceof IViewCellStorage;
+        if (inventoryPlayer.getCurrentItem().getItem() instanceof ItemWirelessUltraTerminal)
+            this.drawSwitchGuiBtn = true;
     }
 
     public abstract void postUpdate(final List<T> list);
@@ -340,52 +342,51 @@ public abstract class FCGuiMonitor<T extends IAEStack<T>> extends AEBaseMEGui
 
         craftingGridOffsetX -= 25;
         craftingGridOffsetY -= 6;
-        if (drawSwitchGuiIcon) drawSwitchGuiBtn();
+        if (drawSwitchGuiBtn) drawSwitchGuiBtns();
     }
 
-    private void drawSwitchGuiBtn() {
-        if (this.mc.thePlayer.inventory.getCurrentItem().getItem() instanceof ItemWirelessUltraTerminal) {
-            if (!(this instanceof GuiFluidCraftingWireless)) {
-                this.buttonList.add(
-                        this.CraftingTerminal = new GuiFCImgButton(
-                                this.guiLeft - 18,
-                                this.offsetY,
-                                "CRAFT_TEM",
-                                "YES",
-                                false));
-                this.offsetY += 20;
-            }
-            if (!(this instanceof GuiFluidPatternWireless)) {
-                this.buttonList.add(
-                        this.PatternTerminal = new GuiFCImgButton(
-                                this.guiLeft - 18,
-                                this.offsetY,
-                                "PATTERN_TEM",
-                                "YES",
-                                false));
-                this.offsetY += 20;
-            }
-            if (!(this instanceof GuiFluidPortableCell)) {
-                this.buttonList.add(
-                        this.FluidTerminal = new GuiFCImgButton(
-                                this.guiLeft - 18,
-                                this.offsetY,
-                                "FLUID_TEM",
-                                "YES",
-                                false));
-                this.offsetY += 20;
-            }
-            if (!(this instanceof GuiEssentiaTerminal)) {
-                this.buttonList.add(
-                        this.EssentiaTerminal = new GuiFCImgButton(
-                                this.guiLeft - 18,
-                                this.offsetY,
-                                "ESSENTIA_TEM",
-                                "YES",
-                                false));
-                this.offsetY += 20;
-            }
+    private void drawSwitchGuiBtns() {
+        if (!(this instanceof GuiFluidCraftingWireless)) {
+            this.buttonList.add(
+                    this.CraftingTerminal = new GuiFCImgButton(
+                            this.guiLeft - 18,
+                            this.offsetY,
+                            "CRAFT_TEM",
+                            "YES",
+                            false));
+            this.offsetY += 20;
         }
+        if (!(this instanceof GuiFluidPatternWireless)) {
+            this.buttonList.add(
+                    this.PatternTerminal = new GuiFCImgButton(
+                            this.guiLeft - 18,
+                            this.offsetY,
+                            "PATTERN_TEM",
+                            "YES",
+                            false));
+            this.offsetY += 20;
+        }
+        if (!(this instanceof GuiFluidPortableCell)) {
+            this.buttonList.add(
+                    this.FluidTerminal = new GuiFCImgButton(
+                            this.guiLeft - 18,
+                            this.offsetY,
+                            "FLUID_TEM",
+                            "YES",
+                            false));
+            this.offsetY += 20;
+        }
+        if (!(this instanceof GuiEssentiaTerminal)) {
+            this.buttonList.add(
+                    this.EssentiaTerminal = new GuiFCImgButton(
+                            this.guiLeft - 18,
+                            this.offsetY,
+                            "ESSENTIA_TEM",
+                            "YES",
+                            false));
+            this.offsetY += 20;
+        }
+
     }
 
     public void setSearchString(String memoryText, boolean updateView) {
