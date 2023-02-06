@@ -56,6 +56,7 @@ import com.glodblock.github.inventory.gui.GuiType;
 import com.glodblock.github.network.CPacketInventoryAction;
 import com.glodblock.github.util.Ae2ReflectClient;
 import com.glodblock.github.util.ModAndClassUtil;
+import com.glodblock.github.util.Util;
 
 public abstract class FCGuiMonitor<T extends IAEStack<T>> extends AEBaseMEGui
         implements ISortSource, IConfigManagerHost, IDropToFillTextField {
@@ -343,7 +344,10 @@ public abstract class FCGuiMonitor<T extends IAEStack<T>> extends AEBaseMEGui
 
         craftingGridOffsetX -= 25;
         craftingGridOffsetY -= 6;
-        if (drawSwitchGuiBtn) drawSwitchGuiBtns();
+        if (drawSwitchGuiBtn) {
+            drawSwitchGuiBtns();
+            Util.MouseHandler.loadMousePos();
+        }
     }
 
     @SuppressWarnings("unchecked")
@@ -597,6 +601,7 @@ public abstract class FCGuiMonitor<T extends IAEStack<T>> extends AEBaseMEGui
         super.onGuiClosed();
         Keyboard.enableRepeatEvents(false);
         memoryText = this.searchField.getText();
+        Util.MouseHandler.saveMousePos();
     }
 
     public void bindTextureBack(final String file) {
