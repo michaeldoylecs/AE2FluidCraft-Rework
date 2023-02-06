@@ -87,7 +87,12 @@ public class ItemWirelessUltraTerminal extends ItemBaseWirelessTerminal
         try {
             IGridNode gridNode = Util.getWirelessGrid(stack);
             if (gridNode != null) {
-                GuiType gui = readMode(stack);
+                final GuiType gui;
+                if (Util.GuiHelper.decodeType(y).getLeft() == Util.GuiHelper.GuiType.ITEM && z > 0) {
+                    gui = getGuis().get(Util.GuiHelper.decodeType(y).getRight());
+                } else {
+                    gui = readMode(stack);
+                }
                 if (gui == GuiType.WIRELESS_FLUID_PATTERN_TERMINAL) {
                     return new WirelessPatternTerminalInventory(stack, x, gridNode, player);
                 }
@@ -161,7 +166,6 @@ public class ItemWirelessUltraTerminal extends ItemBaseWirelessTerminal
                     .setMode(guiType, player.inventory.getCurrentItem());
         }
         if (Platform.isClient()) {
-            player.closeScreen();
             FluidCraft.proxy.netHandler.sendToServer(new CPacketSwitchGuis(guiType, true));
         } else {
             InventoryHandler.openGui(
@@ -169,11 +173,17 @@ public class ItemWirelessUltraTerminal extends ItemBaseWirelessTerminal
                     player.worldObj,
                     new BlockPos(
                             player.inventory.currentItem,
-                            Util.GuiHelper.encodeType(0, Util.GuiHelper.GuiType.ITEM),
-                            0),
+                            Util.GuiHelper.encodeType(
+                                    guis.indexOf(GuiType.valueOf(guiType.toString())),
+                                    Util.GuiHelper.GuiType.ITEM),
+                            1),
                     ForgeDirection.UNKNOWN,
                     guiType);
         }
+    }
+
+    public static List<GuiType> getGuis() {
+        return guis;
     }
 
     @Override
