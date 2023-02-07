@@ -25,6 +25,7 @@ import com.glodblock.github.inventory.InventoryHandler;
 import com.glodblock.github.inventory.gui.GuiType;
 import com.glodblock.github.inventory.item.WirelessCraftingTerminalInventory;
 import com.glodblock.github.inventory.item.WirelessFluidTerminalInventory;
+import com.glodblock.github.inventory.item.WirelessInterfaceTerminalInventory;
 import com.glodblock.github.inventory.item.WirelessPatternTerminalInventory;
 import com.glodblock.github.loader.IRegister;
 import com.glodblock.github.network.CPacketSwitchGuis;
@@ -52,6 +53,7 @@ public class ItemWirelessUltraTerminal extends ItemBaseWirelessTerminal
         guis.add(GuiType.WIRELESS_CRAFTING_TERMINAL);
         guis.add(GuiType.WIRELESS_FLUID_PATTERN_TERMINAL);
         guis.add(GuiType.WIRELESS_FLUID_TERMINAL);
+        guis.add(GuiType.WIRELESS_INTERFACE_TERMINAL);
         if (ModAndClassUtil.ThE) {
             guis.add(GuiType.WIRELESS_ESSENTIA_TERMINAL);
         }
@@ -102,6 +104,8 @@ public class ItemWirelessUltraTerminal extends ItemBaseWirelessTerminal
                     return new WirelessFluidTerminalInventory(stack, x, gridNode, player);
                 } else if (gui == GuiType.WIRELESS_FLUID_TERMINAL) {
                     return new WirelessFluidTerminalInventory(stack, x, gridNode, player);
+                } else if (gui == GuiType.WIRELESS_INTERFACE_TERMINAL) {
+                    return new WirelessInterfaceTerminalInventory(stack, x, gridNode, player);
                 } else {
                     this.setMode(GuiType.WIRELESS_FLUID_TERMINAL, stack); // set as default mode
                     return new WirelessFluidTerminalInventory(stack, x, gridNode, player);

@@ -13,10 +13,12 @@ item.part_fluid_conversion_monitor.name=ME流体交换监控器
 item.portable_fluid_cell.name=便携流体单元
 item.wireless_fluid_terminal.name=无线流体终端
 item.wireless_fluid_pattern_terminal.name=无线样板终端
+item.wireless_interface_terminal.name=无线接口终端
 item.wireless_ultra_terminal.WIRELESS_CRAFTING_TERMINAL.name=无线ME通用终端 - 合成
 item.wireless_ultra_terminal.WIRELESS_FLUID_PATTERN_TERMINAL.name=无线ME通用终端 - 样板
 item.wireless_ultra_terminal.WIRELESS_FLUID_TERMINAL.name=无线ME通用终端 - 流体
 item.wireless_ultra_terminal.WIRELESS_ESSENTIA_TERMINAL.name=无线ME通用终端 - 源质
+item.wireless_ultra_terminal.WIRELESS_INTERFACE_TERMINAL.name=无线ME通用终端 - 接口
 item.fluid_packet.name=流体封包
 item.fluid_storage.1.name=%s1k%s-ME流体存储元件
 item.fluid_storage.4.name=%s4k%s-ME流体存储元件
@@ -98,6 +100,7 @@ ae2fc.tooltip.fluid_terminal_w=流体终端
 ae2fc.tooltip.craft_terminal_w=合成终端
 ae2fc.tooltip.pattern_terminal_w=样板终端
 ae2fc.tooltip.essentia_terminal_w=源质终端
+ae2fc.tooltip.interface_terminal_w=接口终端
 ae2fc.tooltip.wireless.installed=已安装的卡:
 
 ae2fc.tooltip.not_prio=优先放置流体
@@ -134,3 +137,6 @@ ae2fc.gui.fluid_auto_filler=ME流体自动装填器
 error.unknown=未知流体
 
 itemGroup.ae2fc=AE2流体合成套件重置
+
+
+

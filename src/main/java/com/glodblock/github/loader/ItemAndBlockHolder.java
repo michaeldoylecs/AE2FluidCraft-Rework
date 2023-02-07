@@ -35,6 +35,8 @@ public class ItemAndBlockHolder {
     public static ItemWirelessFluidTerminal WIRELESS_FLUID_TERM = new ItemWirelessFluidTerminal().register();
     public static ItemWirelessUltraTerminal WIRELESS_ULTRA_TERM = new ItemWirelessUltraTerminal().register();
     public static ItemWirelessPatternTerminal WIRELESS_PATTERN_TERM = new ItemWirelessPatternTerminal().register();
+    public static ItemWirelessInterfaceTerminal WIRELESS_INTERFACE_TERM = new ItemWirelessInterfaceTerminal()
+            .register();
     public static ItemFluidPacket PACKET = new ItemFluidPacket().register();
     public static ItemBasicFluidStorageCell CELL1K = new ItemBasicFluidStorageCell(CellType.Cell1kPart, 1).register();
     public static ItemBasicFluidStorageCell CELL4K = new ItemBasicFluidStorageCell(CellType.Cell4kPart, 4).register();

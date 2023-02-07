@@ -5,9 +5,12 @@ import java.util.Set;
 
 import javax.annotation.Nullable;
 
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.inventory.InventoryCrafting;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.fluids.FluidStack;
@@ -29,6 +32,7 @@ import appeng.tile.misc.TileInterface;
 import appeng.util.InventoryAdaptor;
 
 import com.glodblock.github.client.gui.GuiFluidCraftConfirm;
+import com.glodblock.github.client.gui.GuiInterfaceTerminalWireless;
 import com.glodblock.github.common.item.ItemFluidDrop;
 import com.glodblock.github.common.item.ItemFluidPacket;
 import com.glodblock.github.common.parts.PartFluidInterface;
@@ -187,5 +191,12 @@ public class CoreModHooks {
             return ((GuiFluidCraftConfirm) gui).getHoveredStack() == null;
         }
         return true;
+    }
+
+    public static void clientPacketData(NBTTagCompound data) {
+        GuiScreen gs = Minecraft.getMinecraft().currentScreen;
+        if (gs instanceof GuiInterfaceTerminalWireless) {
+            ((GuiInterfaceTerminalWireless) gs).postUpdate(data);
+        }
     }
 }
