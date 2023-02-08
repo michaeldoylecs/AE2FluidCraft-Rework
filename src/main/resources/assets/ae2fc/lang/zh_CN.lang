@@ -80,6 +80,7 @@ ae2fc.tooltip.ultra_terminal.WIRELESS_CRAFTING_TERMINAL=模式: 合成
 ae2fc.tooltip.ultra_terminal.WIRELESS_FLUID_PATTERN_TERMINAL=模式: 样板
 ae2fc.tooltip.ultra_terminal.WIRELESS_FLUID_TERMINAL=模式: 流体
 ae2fc.tooltip.ultra_terminal.WIRELESS_ESSENTIA_TERMINAL=模式: 源质
+ae2fc.tooltip.ultra_terminal.WIRELESS_INTERFACE_TERMINAL=模式: 接口
 ae2fc.tooltip.ultra_terminal=Shift右击切换模式。
 
 ae2fc.tooltip.cell_contents=内含流体:

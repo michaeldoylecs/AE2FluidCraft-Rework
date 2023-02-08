@@ -80,6 +80,7 @@ ae2fc.tooltip.ultra_terminal.WIRELESS_CRAFTING_TERMINAL=Mode: Crafting Terminal
 ae2fc.tooltip.ultra_terminal.WIRELESS_FLUID_PATTERN_TERMINAL=Mode: Pattern Terminal
 ae2fc.tooltip.ultra_terminal.WIRELESS_FLUID_TERMINAL=Mode: Fluid Terminal
 ae2fc.tooltip.ultra_terminal.WIRELESS_ESSENTIA_TERMINAL=Mode: Essentia Terminal
+ae2fc.tooltip.ultra_terminal.WIRELESS_INTERFACE_TERMINAL=Mode: Interface Terminal
 ae2fc.tooltip.ultra_terminal=Right click + sneaking to switch mode.
 
 ae2fc.tooltip.cell_contents=Contains Fluid:
