@@ -52,6 +52,9 @@ public abstract class FCBaseMEGui extends AEBaseMEGui {
     @SuppressWarnings("unchecked")
     protected void drawSwitchGuiBtns() {
         if (!drawSwitchGuiBtn) return;
+        if (!termBtns.isEmpty()) {
+            this.termBtns.clear();
+        }
         if (!(this instanceof GuiFluidCraftingWireless)) {
             this.buttonList.add(
                     this.CraftingTerminal = new GuiFCImgButton(
