@@ -10,9 +10,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.common.util.ForgeDirection;
 
-import appeng.api.config.Settings;
-import appeng.api.config.Upgrades;
-import appeng.api.config.YesNo;
+import appeng.api.config.*;
 import appeng.api.networking.IGrid;
 import appeng.api.networking.IGridNode;
 import appeng.api.networking.security.IActionHost;
@@ -23,6 +21,7 @@ import appeng.helpers.DualityInterface;
 import appeng.helpers.IInterfaceHost;
 import appeng.helpers.InventoryAction;
 import appeng.items.misc.ItemEncodedPattern;
+import appeng.parts.AEBasePart;
 import appeng.parts.misc.PartInterface;
 import appeng.parts.p2p.PartP2PInterface;
 import appeng.tile.inventory.AppEngInternalInventory;
@@ -311,6 +310,7 @@ public class ContainerInterfaceWireless extends AEBaseContainer {
             tag.setInteger("y", inv.Y);
             tag.setInteger("z", inv.Z);
             tag.setInteger("dim", inv.dim);
+            tag.setInteger("side", inv.side.ordinal());
         }
 
         for (int x = 0; x < length; x++) {
@@ -343,6 +343,7 @@ public class ContainerInterfaceWireless extends AEBaseContainer {
         private final int Y;
         private final int Z;
         private final int dim;
+        private final ForgeDirection side;
 
         public InvTracker(final DualityInterface dual, final IInventory patterns, final String unlocalizedName,
                 int offset, int size) {
@@ -355,6 +356,11 @@ public class ContainerInterfaceWireless extends AEBaseContainer {
             Y = dual.getLocation().y;
             Z = dual.getLocation().z;
             dim = dual.getLocation().getDimension();
+            if (dual.getHost() instanceof AEBasePart) {
+                side = ((AEBasePart) dual.getHost()).getSide();
+            } else {
+                side = ForgeDirection.UNKNOWN;
+            }
         }
     }
 
