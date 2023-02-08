@@ -110,6 +110,7 @@ ae2fc.tooltip.prio.hint=Disabled
 ae2fc.tooltip.submit=Submit
 ae2fc.tooltip.enable=Enabled
 ae2fc.tooltip.disable=Disabled
+ae2fc.tooltip.edit=Edit
 
 ae2fc.gui.part_fluid_pattern_terminal=Fluid Pattern Terminal
 ae2fc.gui.part_fluid_pattern_terminal_ex=Fluid Processing Pattern Terminal

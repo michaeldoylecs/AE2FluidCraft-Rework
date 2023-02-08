@@ -8,6 +8,7 @@ import javax.annotation.Nullable;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.inventory.GuiContainer;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.InventoryCrafting;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -31,15 +32,20 @@ import appeng.parts.misc.PartInterface;
 import appeng.tile.misc.TileInterface;
 import appeng.util.InventoryAdaptor;
 
+import com.glodblock.github.FluidCraft;
 import com.glodblock.github.client.gui.GuiFluidCraftConfirm;
 import com.glodblock.github.client.gui.GuiInterfaceTerminalWireless;
 import com.glodblock.github.common.item.ItemFluidDrop;
 import com.glodblock.github.common.item.ItemFluidPacket;
+import com.glodblock.github.common.item.ItemWirelessInterfaceTerminal;
+import com.glodblock.github.common.item.ItemWirelessUltraTerminal;
 import com.glodblock.github.common.parts.PartFluidInterface;
 import com.glodblock.github.common.tile.TileFluidInterface;
 import com.glodblock.github.inventory.FluidConvertingInventoryAdaptor;
 import com.glodblock.github.inventory.FluidConvertingInventoryCrafting;
+import com.glodblock.github.inventory.gui.GuiType;
 import com.glodblock.github.loader.ItemAndBlockHolder;
+import com.glodblock.github.network.CPacketSwitchGuis;
 import com.glodblock.github.util.Ae2Reflect;
 import com.glodblock.github.util.SetBackedMachineSet;
 import com.google.common.collect.Sets;
@@ -197,6 +203,14 @@ public class CoreModHooks {
         GuiScreen gs = Minecraft.getMinecraft().currentScreen;
         if (gs instanceof GuiInterfaceTerminalWireless) {
             ((GuiInterfaceTerminalWireless) gs).postUpdate(data);
+        }
+    }
+
+    public static void reopenInterfaceTerminal() {
+        EntityPlayer p = Minecraft.getMinecraft().thePlayer;
+        ItemStack c = p.getCurrentEquippedItem();
+        if (c.getItem() instanceof ItemWirelessInterfaceTerminal || c.getItem() instanceof ItemWirelessUltraTerminal) {
+            FluidCraft.proxy.netHandler.sendToServer(new CPacketSwitchGuis(GuiType.WIRELESS_INTERFACE_TERMINAL, true));
         }
     }
 }
