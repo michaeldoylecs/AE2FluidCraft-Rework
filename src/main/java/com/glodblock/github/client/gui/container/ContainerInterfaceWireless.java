@@ -10,9 +10,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.common.util.ForgeDirection;
 
-import appeng.api.config.Settings;
-import appeng.api.config.Upgrades;
-import appeng.api.config.YesNo;
+import appeng.api.config.*;
 import appeng.api.networking.IGrid;
 import appeng.api.networking.IGridNode;
 import appeng.api.networking.security.IActionHost;
@@ -23,6 +21,7 @@ import appeng.helpers.DualityInterface;
 import appeng.helpers.IInterfaceHost;
 import appeng.helpers.InventoryAction;
 import appeng.items.misc.ItemEncodedPattern;
+import appeng.parts.AEBasePart;
 import appeng.parts.misc.PartInterface;
 import appeng.parts.p2p.PartP2PInterface;
 import appeng.tile.inventory.AppEngInternalInventory;
@@ -36,7 +35,9 @@ import appeng.util.inv.WrapperInvSlot;
 
 import com.glodblock.github.common.parts.PartFluidInterface;
 import com.glodblock.github.common.tile.TileFluidInterface;
+import com.glodblock.github.inventory.item.IWirelessInterfaceTerminal;
 import com.glodblock.github.inventory.item.IWirelessTerminal;
+import com.glodblock.github.util.Util;
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
 
@@ -49,15 +50,22 @@ public class ContainerInterfaceWireless extends AEBaseContainer {
 
     private final Multimap<IInterfaceHost, ContainerInterfaceWireless.InvTracker> diList = HashMultimap.create();
     private final Map<Long, ContainerInterfaceWireless.InvTracker> byId = new HashMap<Long, ContainerInterfaceWireless.InvTracker>();
+    private final IWirelessInterfaceTerminal it;
     // private final Map<Long, InvTracker> byId = new HashMap<>();
     private IGrid grid;
     private NBTTagCompound data = new NBTTagCompound();
+    private int ticks;
+    private final int slot;
+    private double powerMultiplier = 0.5;
 
-    public ContainerInterfaceWireless(final InventoryPlayer ip, final IWirelessTerminal anchor) {
-        super(ip, anchor);
-
+    public ContainerInterfaceWireless(final InventoryPlayer ip, final IWirelessTerminal monitorable) {
+        super(ip, monitorable);
+        this.it = (IWirelessInterfaceTerminal) monitorable;
+        final int slotIndex = monitorable.getInventorySlot();
+        this.lockPlayerInventorySlot(slotIndex);
+        this.slot = slotIndex;
         if (Platform.isServer()) {
-            this.grid = anchor.getActionableNode().getGrid();
+            this.grid = monitorable.getActionableNode().getGrid();
         }
 
         this.bindPlayerInventory(ip, 14, 0);
@@ -73,12 +81,17 @@ public class ContainerInterfaceWireless extends AEBaseContainer {
         return union;
     }
 
+    private double getPowerMultiplier() {
+        return this.powerMultiplier;
+    }
+
     @Override
     public void detectAndSendChanges() {
         if (Platform.isClient()) {
             return;
         }
-
+        this.ticks = Util
+                .drainItemPower(this, this.getPlayerInv(), this.slot, this.ticks, this.getPowerMultiplier(), this.it);
         super.detectAndSendChanges();
 
         if (this.grid == null) {
@@ -311,6 +324,7 @@ public class ContainerInterfaceWireless extends AEBaseContainer {
             tag.setInteger("y", inv.Y);
             tag.setInteger("z", inv.Z);
             tag.setInteger("dim", inv.dim);
+            tag.setInteger("side", inv.side.ordinal());
         }
 
         for (int x = 0; x < length; x++) {
@@ -343,6 +357,7 @@ public class ContainerInterfaceWireless extends AEBaseContainer {
         private final int Y;
         private final int Z;
         private final int dim;
+        private final ForgeDirection side;
 
         public InvTracker(final DualityInterface dual, final IInventory patterns, final String unlocalizedName,
                 int offset, int size) {
@@ -355,6 +370,11 @@ public class ContainerInterfaceWireless extends AEBaseContainer {
             Y = dual.getLocation().y;
             Z = dual.getLocation().z;
             dim = dual.getLocation().getDimension();
+            if (dual.getHost() instanceof AEBasePart) {
+                side = ((AEBasePart) dual.getHost()).getSide();
+            } else {
+                side = ForgeDirection.UNKNOWN;
+            }
         }
     }
 

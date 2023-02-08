@@ -110,6 +110,7 @@ ae2fc.tooltip.prio.hint=禁用
 ae2fc.tooltip.submit=提交
 ae2fc.tooltip.enable=启用
 ae2fc.tooltip.disable=禁用
+ae2fc.tooltip.edit=编辑
 
 ae2fc.gui.part_fluid_pattern_terminal=ME流体样板终端
 ae2fc.gui.part_fluid_pattern_terminal_ex=ME增广流体样板终端

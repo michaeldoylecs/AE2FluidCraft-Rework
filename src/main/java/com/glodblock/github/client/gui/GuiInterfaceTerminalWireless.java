@@ -9,6 +9,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.util.ChatComponentTranslation;
 import net.minecraft.world.World;
+import net.minecraftforge.common.util.ForgeDirection;
 
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.GL11;
@@ -39,9 +40,11 @@ import appeng.integration.IntegrationRegistry;
 import appeng.integration.IntegrationType;
 import appeng.util.Platform;
 
+import com.glodblock.github.FluidCraft;
 import com.glodblock.github.client.gui.base.FCBaseMEGui;
 import com.glodblock.github.client.gui.container.ContainerInterfaceWireless;
 import com.glodblock.github.inventory.item.IWirelessTerminal;
+import com.glodblock.github.network.CPacketRenamer;
 import com.glodblock.github.util.ModAndClassUtil;
 import com.google.common.collect.HashMultimap;
 
@@ -53,7 +56,7 @@ public class GuiInterfaceTerminalWireless extends FCBaseMEGui implements IDropTo
 
     private final HashMap<Long, ClientDCInternalInv> byId = new HashMap<>();
     private final HashMultimap<String, ClientDCInternalInv> byName = HashMultimap.create();
-    private final HashMap<ClientDCInternalInv, DimensionalCoord> blockPosHashMap = new HashMap<>();
+    private final HashMap<ClientDCInternalInv, DimensionalCoordSide> blockPosHashMap = new HashMap<>();
     private final HashMap<GuiButton, ClientDCInternalInv> guiButtonHashMap = new HashMap<>();
     private final ArrayList<String> names = new ArrayList<>();
     private final ArrayList<Object> lines = new ArrayList<>();
@@ -310,8 +313,14 @@ public class GuiInterfaceTerminalWireless extends FCBaseMEGui implements IDropTo
                         guiTop + offset + 1,
                         Settings.ACTIONS,
                         ActionItems.HIGHLIGHT_INTERFACE);
+                GuiFCImgButton editButton = new GuiFCImgButton(guiLeft + 4, guiTop + offset + 1, "EDIT", "YES");
                 guiButtonHashMap.put(guiButton, inv);
-                buttonList.add(guiButton);
+                guiButtonHashMap.put(editButton, inv);
+                if (isShiftKeyDown()) {
+                    buttonList.add(editButton);
+                } else {
+                    buttonList.add(guiButton);
+                }
             }
 
             offset += 18;
@@ -336,28 +345,34 @@ public class GuiInterfaceTerminalWireless extends FCBaseMEGui implements IDropTo
     @Override
     protected void actionPerformed(final GuiButton btn) {
         if (guiButtonHashMap.containsKey(btn)) {
-            DimensionalCoord blockPos = blockPosHashMap.get(guiButtonHashMap.get(btn));
-            WorldCoord blockPos2 = new WorldCoord(
-                    (int) mc.thePlayer.posX,
-                    (int) mc.thePlayer.posY,
-                    (int) mc.thePlayer.posZ);
-            if (mc.theWorld.provider.dimensionId != blockPos.getDimension()) {
-                mc.thePlayer.addChatMessage(
-                        new ChatComponentTranslation(
-                                PlayerMessages.InterfaceInOtherDim.getName(),
-                                blockPos.getDimension()));
+            DimensionalCoordSide blockPos = blockPosHashMap.get(guiButtonHashMap.get(btn));
+            if (btn instanceof GuiFCImgButton) {
+                FluidCraft.proxy.netHandler.sendToServer(
+                        new CPacketRenamer(blockPos.x, blockPos.y, blockPos.z, blockPos.getDimension(), blockPos.side));
             } else {
-                BlockPosHighlighter.highlightBlock(
-                        blockPos,
-                        System.currentTimeMillis() + 500 * WorldCoord.getTaxicabDistance(blockPos, blockPos2));
-                mc.thePlayer.addChatMessage(
-                        new ChatComponentTranslation(
-                                PlayerMessages.InterfaceHighlighted.getName(),
-                                blockPos.x,
-                                blockPos.y,
-                                blockPos.z));
+
+                WorldCoord blockPos2 = new WorldCoord(
+                        (int) mc.thePlayer.posX,
+                        (int) mc.thePlayer.posY,
+                        (int) mc.thePlayer.posZ);
+                if (mc.theWorld.provider.dimensionId != blockPos.getDimension()) {
+                    mc.thePlayer.addChatMessage(
+                            new ChatComponentTranslation(
+                                    PlayerMessages.InterfaceInOtherDim.getName(),
+                                    blockPos.getDimension()));
+                } else {
+                    BlockPosHighlighter.highlightBlock(
+                            blockPos,
+                            System.currentTimeMillis() + 500 * WorldCoord.getTaxicabDistance(blockPos, blockPos2));
+                    mc.thePlayer.addChatMessage(
+                            new ChatComponentTranslation(
+                                    PlayerMessages.InterfaceHighlighted.getName(),
+                                    blockPos.x,
+                                    blockPos.y,
+                                    blockPos.z));
+                }
+                mc.thePlayer.closeScreen();
             }
-            mc.thePlayer.closeScreen();
         } else if (btn == guiButtonHideFull) {
             AEConfig.instance.showOnlyInterfacesWithFreeSlotsInInterfaceTerminal = !AEConfig.instance.showOnlyInterfacesWithFreeSlotsInInterfaceTerminal;
             this.refreshList();
@@ -473,6 +488,17 @@ public class GuiInterfaceTerminalWireless extends FCBaseMEGui implements IDropTo
         return false;
     }
 
+    private static class DimensionalCoordSide extends DimensionalCoord {
+
+        private ForgeDirection side = ForgeDirection.UNKNOWN;
+
+        public DimensionalCoordSide(final int _x, final int _y, final int _z, final int _dim, ForgeDirection side) {
+            super(_x, _y, _z, _dim);
+            this.side = side;
+        }
+
+    }
+
     public void postUpdate(final NBTTagCompound in) {
         if (in.getBoolean("clear")) {
             this.byId.clear();
@@ -491,7 +517,8 @@ public class GuiInterfaceTerminalWireless extends FCBaseMEGui implements IDropTo
                     int Y = invData.getInteger("y");
                     int Z = invData.getInteger("z");
                     int dim = invData.getInteger("dim");
-                    blockPosHashMap.put(current, new DimensionalCoord(X, Y, Z, dim));
+                    ForgeDirection side = ForgeDirection.getOrientation(invData.getInteger("side"));
+                    blockPosHashMap.put(current, new DimensionalCoordSide(X, Y, Z, dim, side));
 
                     for (int x = 0; x < current.getInventory().getSizeInventory(); x++) {
                         final String which = Integer.toString(x);

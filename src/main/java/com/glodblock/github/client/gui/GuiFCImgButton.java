@@ -48,6 +48,7 @@ public class GuiFCImgButton extends GuiButton implements ITooltip {
             this.registerApp(2, "FORCE_PRIO", "DO_PRIO", "prio");
             this.registerApp(3, "NOT_PRIO", "DONT_PRIO", "not_prio");
             this.registerApp(4, "SUBMIT", "SUBMIT", "submit");
+            this.registerApp(5, "EDIT", "YES", "edit");
             this.registerApp(6, "DISABLE", "DISABLE", "disable");
             this.registerApp(7, "ENABLE", "ENABLE", "enable");
             this.registerApp(10, "FLUID_TEM", "YES", "fluid_terminal_w");
