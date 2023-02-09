@@ -23,10 +23,7 @@ import com.glodblock.github.FluidCraft;
 import com.glodblock.github.common.tabs.FluidCraftingTabs;
 import com.glodblock.github.inventory.InventoryHandler;
 import com.glodblock.github.inventory.gui.GuiType;
-import com.glodblock.github.inventory.item.WirelessCraftingTerminalInventory;
-import com.glodblock.github.inventory.item.WirelessFluidTerminalInventory;
-import com.glodblock.github.inventory.item.WirelessInterfaceTerminalInventory;
-import com.glodblock.github.inventory.item.WirelessPatternTerminalInventory;
+import com.glodblock.github.inventory.item.*;
 import com.glodblock.github.loader.IRegister;
 import com.glodblock.github.network.CPacketSwitchGuis;
 import com.glodblock.github.util.BlockPos;
@@ -52,6 +49,7 @@ public class ItemWirelessUltraTerminal extends ItemBaseWirelessTerminal
         setTextureName(FluidCraft.resource(NameConst.ITEM_WIRELESS_ULTRA_TERMINAL).toString());
         guis.add(GuiType.WIRELESS_CRAFTING_TERMINAL);
         guis.add(GuiType.WIRELESS_FLUID_PATTERN_TERMINAL);
+        guis.add(GuiType.WIRELESS_FLUID_PATTERN_TERMINAL_EX);
         guis.add(GuiType.WIRELESS_FLUID_TERMINAL);
         guis.add(GuiType.WIRELESS_INTERFACE_TERMINAL);
         if (ModAndClassUtil.ThE) {
@@ -97,8 +95,7 @@ public class ItemWirelessUltraTerminal extends ItemBaseWirelessTerminal
                 }
                 if (gui == GuiType.WIRELESS_FLUID_PATTERN_TERMINAL) {
                     return new WirelessPatternTerminalInventory(stack, x, gridNode, player);
-                }
-                if (gui == GuiType.WIRELESS_CRAFTING_TERMINAL) {
+                } else if (gui == GuiType.WIRELESS_CRAFTING_TERMINAL) {
                     return new WirelessCraftingTerminalInventory(stack, x, gridNode, player);
                 } else if (ModAndClassUtil.ThE && gui == GuiType.WIRELESS_ESSENTIA_TERMINAL) {
                     return new WirelessFluidTerminalInventory(stack, x, gridNode, player);
@@ -106,6 +103,8 @@ public class ItemWirelessUltraTerminal extends ItemBaseWirelessTerminal
                     return new WirelessFluidTerminalInventory(stack, x, gridNode, player);
                 } else if (gui == GuiType.WIRELESS_INTERFACE_TERMINAL) {
                     return new WirelessInterfaceTerminalInventory(stack, x, gridNode, player);
+                } else if (gui == GuiType.WIRELESS_FLUID_PATTERN_TERMINAL_EX) {
+                    return new WirelessPatternTerminalExInventory(stack, x, gridNode, player);
                 } else {
                     this.setMode(GuiType.WIRELESS_FLUID_TERMINAL, stack); // set as default mode
                     return new WirelessFluidTerminalInventory(stack, x, gridNode, player);

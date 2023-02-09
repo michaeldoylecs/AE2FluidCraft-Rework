@@ -19,6 +19,7 @@ item.wireless_ultra_terminal.WIRELESS_FLUID_PATTERN_TERMINAL.name=Universal Wire
 item.wireless_ultra_terminal.WIRELESS_FLUID_TERMINAL.name=Universal Wireless Terminal - Fluid
 item.wireless_ultra_terminal.WIRELESS_ESSENTIA_TERMINAL.name=Universal Wireless Terminal - Essentia
 item.wireless_ultra_terminal.WIRELESS_INTERFACE_TERMINAL.name=Universal Wireless Terminal - Interface
+item.wireless_ultra_terminal.WIRELESS_FLUID_PATTERN_TERMINAL_EX.name=Universal Wireless Terminal - Processing Pattern
 item.fluid_packet.name=Fluid Packet
 item.fluid_storage.1.name=%s1k%s ME Fluid Storage Cell
 item.fluid_storage.4.name=%s4k%s ME Fluid Storage Cell
@@ -81,6 +82,7 @@ ae2fc.tooltip.ultra_terminal.WIRELESS_FLUID_PATTERN_TERMINAL=Mode: Pattern Termi
 ae2fc.tooltip.ultra_terminal.WIRELESS_FLUID_TERMINAL=Mode: Fluid Terminal
 ae2fc.tooltip.ultra_terminal.WIRELESS_ESSENTIA_TERMINAL=Mode: Essentia Terminal
 ae2fc.tooltip.ultra_terminal.WIRELESS_INTERFACE_TERMINAL=Mode: Interface Terminal
+ae2fc.tooltip.ultra_terminal.WIRELESS_FLUID_PATTERN_TERMINAL_EX=Mode: Processing Pattern Terminal
 ae2fc.tooltip.ultra_terminal=Right click + sneaking to switch mode.
 
 ae2fc.tooltip.cell_contents=Contains Fluid:
@@ -102,6 +104,7 @@ ae2fc.tooltip.craft_terminal_w=Crafting Terminal
 ae2fc.tooltip.pattern_terminal_w=Pattern Terminal
 ae2fc.tooltip.essentia_terminal_w=Essentia Terminal
 ae2fc.tooltip.interface_terminal_w=Interface Terminal
+ae2fc.tooltip.pattern_terminal_ex_w=Processing Pattern Terminal
 ae2fc.tooltip.wireless.installed=Installed Card:
 
 ae2fc.tooltip.not_prio=Allow fluids to be placed first
