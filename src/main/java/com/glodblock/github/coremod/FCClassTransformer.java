@@ -37,6 +37,12 @@ public class FCClassTransformer implements IClassTransformer {
             case "appeng.core.features.registries.ExternalStorageRegistry":
                 tform = ExternalStorageRegistryTransformer.INSTANCE;
                 break;
+            case "appeng.core.sync.packets.PacketCompressedNBT":
+                tform = PacketCompressedNBTTransformer.INSTANCE;
+                break;
+            case "appeng.client.gui.implementations.GuiRenamer":
+                tform = GuiRenamerTransformer.INSTANCE;
+                break;
             default:
                 return code;
         }

@@ -25,6 +25,7 @@ import com.glodblock.github.inventory.InventoryHandler;
 import com.glodblock.github.inventory.gui.GuiType;
 import com.glodblock.github.inventory.item.WirelessCraftingTerminalInventory;
 import com.glodblock.github.inventory.item.WirelessFluidTerminalInventory;
+import com.glodblock.github.inventory.item.WirelessInterfaceTerminalInventory;
 import com.glodblock.github.inventory.item.WirelessPatternTerminalInventory;
 import com.glodblock.github.loader.IRegister;
 import com.glodblock.github.network.CPacketSwitchGuis;
@@ -52,6 +53,7 @@ public class ItemWirelessUltraTerminal extends ItemBaseWirelessTerminal
         guis.add(GuiType.WIRELESS_CRAFTING_TERMINAL);
         guis.add(GuiType.WIRELESS_FLUID_PATTERN_TERMINAL);
         guis.add(GuiType.WIRELESS_FLUID_TERMINAL);
+        guis.add(GuiType.WIRELESS_INTERFACE_TERMINAL);
         if (ModAndClassUtil.ThE) {
             guis.add(GuiType.WIRELESS_ESSENTIA_TERMINAL);
         }
@@ -87,7 +89,12 @@ public class ItemWirelessUltraTerminal extends ItemBaseWirelessTerminal
         try {
             IGridNode gridNode = Util.getWirelessGrid(stack);
             if (gridNode != null) {
-                GuiType gui = readMode(stack);
+                final GuiType gui;
+                if (Util.GuiHelper.decodeType(y).getLeft() == Util.GuiHelper.GuiType.ITEM && z > 0) {
+                    gui = getGuis().get(Util.GuiHelper.decodeType(y).getRight());
+                } else {
+                    gui = readMode(stack);
+                }
                 if (gui == GuiType.WIRELESS_FLUID_PATTERN_TERMINAL) {
                     return new WirelessPatternTerminalInventory(stack, x, gridNode, player);
                 }
@@ -97,6 +104,8 @@ public class ItemWirelessUltraTerminal extends ItemBaseWirelessTerminal
                     return new WirelessFluidTerminalInventory(stack, x, gridNode, player);
                 } else if (gui == GuiType.WIRELESS_FLUID_TERMINAL) {
                     return new WirelessFluidTerminalInventory(stack, x, gridNode, player);
+                } else if (gui == GuiType.WIRELESS_INTERFACE_TERMINAL) {
+                    return new WirelessInterfaceTerminalInventory(stack, x, gridNode, player);
                 } else {
                     this.setMode(GuiType.WIRELESS_FLUID_TERMINAL, stack); // set as default mode
                     return new WirelessFluidTerminalInventory(stack, x, gridNode, player);
@@ -161,7 +170,6 @@ public class ItemWirelessUltraTerminal extends ItemBaseWirelessTerminal
                     .setMode(guiType, player.inventory.getCurrentItem());
         }
         if (Platform.isClient()) {
-            player.closeScreen();
             FluidCraft.proxy.netHandler.sendToServer(new CPacketSwitchGuis(guiType, true));
         } else {
             InventoryHandler.openGui(
@@ -169,11 +177,17 @@ public class ItemWirelessUltraTerminal extends ItemBaseWirelessTerminal
                     player.worldObj,
                     new BlockPos(
                             player.inventory.currentItem,
-                            Util.GuiHelper.encodeType(0, Util.GuiHelper.GuiType.ITEM),
-                            0),
+                            Util.GuiHelper.encodeType(
+                                    guis.indexOf(GuiType.valueOf(guiType.toString())),
+                                    Util.GuiHelper.GuiType.ITEM),
+                            1),
                     ForgeDirection.UNKNOWN,
                     guiType);
         }
+    }
+
+    public static List<GuiType> getGuis() {
+        return guis;
     }
 
     @Override

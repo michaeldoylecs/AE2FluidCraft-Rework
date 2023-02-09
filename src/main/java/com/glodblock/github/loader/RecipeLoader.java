@@ -142,6 +142,7 @@ public class RecipeLoader implements Runnable {
         GameRegistry.addShapelessRecipe(INTERFACE.stack(), FLUID_INTERFACE.stack());
         GameRegistry.addShapelessRecipe(WIRELESS_FLUID_TERM.stack(), AE2_WIRELESS_TERMINAL, BUCKET);
         GameRegistry.addShapelessRecipe(WIRELESS_PATTERN_TERM.stack(), WIRELESS_FLUID_TERM, FLUID_TERMINAL);
+        GameRegistry.addShapelessRecipe(WIRELESS_INTERFACE_TERM.stack(), AE2_WIRELESS_TERMINAL, AE2_INTERFACE);
         GameRegistry
                 .addRecipe(new ShapedOreRecipe(CERTUS_QUARTZ_TANK.stack(), "GGG", "G G", "GGG", 'G', AE2_QUARTZ_GLASS));
         GameRegistry.addShapelessRecipe(FLUID_AUTO_FILLER.stack(), FLUID_TERMINAL, ENCODER);
@@ -462,10 +463,11 @@ public class RecipeLoader implements Runnable {
             GameRegistry.addRecipe(new WirelessTerminalRecipe(WIRELESS_PATTERN_TERM.stack()));
             GameRegistry.addRecipe(new WirelessTerminalRecipe(WIRELESS_FLUID_TERM.stack()));
             GameRegistry.addRecipe(new WirelessTerminalRecipe(WIRELESS_ULTRA_TERM.stack()));
+            GameRegistry.addRecipe(new WirelessTerminalRecipe(WIRELESS_INTERFACE_TERM.stack()));
         }
 
         ItemStack[] term = { AE2_WIRELESS_TERMINAL, WIRELESS_FLUID_TERM.stack(), WIRELESS_PATTERN_TERM.stack(),
-                THE_WIRELESS_TERM, WCT_WIRELESS_TERM };
+                WIRELESS_INTERFACE_TERM.stack(), THE_WIRELESS_TERM, WCT_WIRELESS_TERM };
         GameRegistry.addShapelessRecipe(
                 WIRELESS_ULTRA_TERM.stack(),
                 Arrays.stream(term).filter(Objects::nonNull).toArray());

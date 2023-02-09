@@ -16,6 +16,7 @@ import net.minecraftforge.fluids.*;
 
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.MutablePair;
+import org.lwjgl.input.Mouse;
 
 import appeng.api.AEApi;
 import appeng.api.config.Actionable;
@@ -51,6 +52,25 @@ import cpw.mods.fml.common.registry.GameData;
 import io.netty.buffer.ByteBuf;
 
 public final class Util {
+
+    public static class MouseHandler {
+
+        private static int mouse_x = 0;
+        private static int mouse_y = 0;
+
+        public static void saveMousePos() {
+            mouse_x = Mouse.getX();
+            mouse_y = Mouse.getY();
+        }
+
+        public static void loadMousePos() {
+            if (mouse_x != 0 && mouse_y != 0) {
+                Mouse.setCursorPosition(mouse_x, mouse_y);
+                mouse_y = 0;
+                mouse_x = 0;
+            }
+        }
+    }
 
     public static int drainItemPower(AEBaseContainer c, InventoryPlayer ip, int slot, int ticks, double pm,
             IFluidPortableCell wt) {
