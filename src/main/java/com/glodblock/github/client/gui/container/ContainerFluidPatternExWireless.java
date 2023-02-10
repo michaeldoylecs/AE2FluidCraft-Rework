@@ -4,9 +4,9 @@ import net.minecraft.entity.player.InventoryPlayer;
 
 import com.glodblock.github.inventory.item.IWirelessTerminal;
 
-public class ContainerFluidPatternWireless extends ContainerFluidPatternTerminal {
+public class ContainerFluidPatternExWireless extends ContainerFluidPatternTerminalEx {
 
-    public ContainerFluidPatternWireless(InventoryPlayer ip, IWirelessTerminal monitorable) {
+    public ContainerFluidPatternExWireless(InventoryPlayer ip, IWirelessTerminal monitorable) {
         super(ip, monitorable);
     }
 

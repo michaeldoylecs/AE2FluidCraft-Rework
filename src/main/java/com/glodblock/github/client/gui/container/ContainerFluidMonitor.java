@@ -318,4 +318,9 @@ public class ContainerFluidMonitor extends FCContainerMonitor<IAEFluidStack> {
     protected boolean isEssentiaMode() {
         return false;
     }
+
+    @Override
+    protected boolean isWirelessTerminal() {
+        return false;
+    }
 }

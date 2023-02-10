@@ -22,6 +22,7 @@ public abstract class FCBaseMEGui extends AEBaseMEGui {
     protected GuiFCImgButton PatternTerminal;
     protected GuiFCImgButton EssentiaTerminal;
     protected GuiFCImgButton InterfaceTerminal;
+    protected GuiFCImgButton PatternTerminaleEx;
     protected List<GuiFCImgButton> termBtns = new ArrayList<>();
     protected boolean drawSwitchGuiBtn;
 
@@ -75,6 +76,16 @@ public abstract class FCBaseMEGui extends AEBaseMEGui {
             this.setOffsetY(this.getOffsetY() + 20);
             termBtns.add(this.PatternTerminal);
         }
+        if (!(this instanceof GuiFluidPatternExWireless)) {
+            this.buttonList.add(
+                    this.PatternTerminaleEx = new GuiFCImgButton(
+                            this.guiLeft - 18,
+                            this.getOffsetY(),
+                            "PATTERN_EX_TEM",
+                            "YES"));
+            this.setOffsetY(this.getOffsetY() + 20);
+            termBtns.add(this.PatternTerminaleEx);
+        }
         if (!(this instanceof GuiFluidPortableCell)) {
             this.buttonList.add(
                     this.FluidTerminal = new GuiFCImgButton(this.guiLeft - 18, this.getOffsetY(), "FLUID_TEM", "YES"));
@@ -121,6 +132,8 @@ public abstract class FCBaseMEGui extends AEBaseMEGui {
                 ItemWirelessUltraTerminal.switchTerminal(this.mc.thePlayer, GuiType.WIRELESS_FLUID_PATTERN_TERMINAL);
             } else if (btn == this.InterfaceTerminal) {
                 ItemWirelessUltraTerminal.switchTerminal(this.mc.thePlayer, GuiType.WIRELESS_INTERFACE_TERMINAL);
+            } else if (btn == this.PatternTerminaleEx) {
+                ItemWirelessUltraTerminal.switchTerminal(this.mc.thePlayer, GuiType.WIRELESS_FLUID_PATTERN_TERMINAL_EX);
             }
         }
         super.actionPerformed(btn);

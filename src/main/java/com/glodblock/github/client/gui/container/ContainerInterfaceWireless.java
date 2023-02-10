@@ -14,7 +14,6 @@ import appeng.api.config.*;
 import appeng.api.networking.IGrid;
 import appeng.api.networking.IGridNode;
 import appeng.api.networking.security.IActionHost;
-import appeng.container.AEBaseContainer;
 import appeng.core.sync.network.NetworkHandler;
 import appeng.core.sync.packets.PacketCompressedNBT;
 import appeng.helpers.DualityInterface;
@@ -33,15 +32,14 @@ import appeng.util.inv.AdaptorPlayerHand;
 import appeng.util.inv.ItemSlot;
 import appeng.util.inv.WrapperInvSlot;
 
+import com.glodblock.github.client.gui.container.base.FCBaseContainer;
 import com.glodblock.github.common.parts.PartFluidInterface;
 import com.glodblock.github.common.tile.TileFluidInterface;
-import com.glodblock.github.inventory.item.IWirelessInterfaceTerminal;
 import com.glodblock.github.inventory.item.IWirelessTerminal;
-import com.glodblock.github.util.Util;
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
 
-public class ContainerInterfaceWireless extends AEBaseContainer {
+public class ContainerInterfaceWireless extends FCBaseContainer {
 
     /**
      * this stuff is all server side..
@@ -50,20 +48,12 @@ public class ContainerInterfaceWireless extends AEBaseContainer {
 
     private final Multimap<IInterfaceHost, ContainerInterfaceWireless.InvTracker> diList = HashMultimap.create();
     private final Map<Long, ContainerInterfaceWireless.InvTracker> byId = new HashMap<Long, ContainerInterfaceWireless.InvTracker>();
-    private final IWirelessInterfaceTerminal it;
     // private final Map<Long, InvTracker> byId = new HashMap<>();
     private IGrid grid;
     private NBTTagCompound data = new NBTTagCompound();
-    private int ticks;
-    private final int slot;
-    private double powerMultiplier = 0.5;
 
     public ContainerInterfaceWireless(final InventoryPlayer ip, final IWirelessTerminal monitorable) {
         super(ip, monitorable);
-        this.it = (IWirelessInterfaceTerminal) monitorable;
-        final int slotIndex = monitorable.getInventorySlot();
-        this.lockPlayerInventorySlot(slotIndex);
-        this.slot = slotIndex;
         if (Platform.isServer()) {
             this.grid = monitorable.getActionableNode().getGrid();
         }
@@ -81,17 +71,11 @@ public class ContainerInterfaceWireless extends AEBaseContainer {
         return union;
     }
 
-    private double getPowerMultiplier() {
-        return this.powerMultiplier;
-    }
-
     @Override
     public void detectAndSendChanges() {
         if (Platform.isClient()) {
             return;
         }
-        this.ticks = Util
-                .drainItemPower(this, this.getPlayerInv(), this.slot, this.ticks, this.getPowerMultiplier(), this.it);
         super.detectAndSendChanges();
 
         if (this.grid == null) {
@@ -298,6 +282,11 @@ public class ContainerInterfaceWireless extends AEBaseContainer {
             this.byId.put(inv.which, inv);
             this.addItems(data, inv, 0, inv.client.getSizeInventory());
         }
+    }
+
+    @Override
+    protected boolean isWirelessTerminal() {
+        return true;
     }
 
     private boolean isDifferent(final ItemStack a, final ItemStack b) {

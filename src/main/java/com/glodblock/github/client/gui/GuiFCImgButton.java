@@ -56,6 +56,7 @@ public class GuiFCImgButton extends GuiButton implements ITooltip {
             this.registerApp(12, "PATTERN_TEM", "YES", "pattern_terminal_w");
             this.registerApp(13, "ESSENTIA_TEM", "YES", "essentia_terminal_w");
             this.registerApp(14, "INTERFACE_TEM", "YES", "interface_terminal_w");
+            this.registerApp(15, "PATTERN_EX_TEM", "YES", "pattern_terminal_ex_w");
         }
     }
 

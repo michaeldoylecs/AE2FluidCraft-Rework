@@ -4,10 +4,7 @@ import codechicken.nei.api.API;
 import codechicken.nei.api.IConfigureNEI;
 
 import com.glodblock.github.FluidCraft;
-import com.glodblock.github.client.gui.GuiFluidCraftingWireless;
-import com.glodblock.github.client.gui.GuiFluidPatternTerminal;
-import com.glodblock.github.client.gui.GuiFluidPatternTerminalEx;
-import com.glodblock.github.client.gui.GuiFluidPatternWireless;
+import com.glodblock.github.client.gui.*;
 import com.glodblock.github.nei.recipes.FluidRecipe;
 
 public class NEI_FC_Config implements IConfigureNEI {
@@ -23,6 +20,10 @@ public class NEI_FC_Config implements IConfigureNEI {
                     identifier);
             API.registerGuiOverlayHandler(
                     GuiFluidPatternWireless.class,
+                    FluidPatternTerminalRecipeTransferHandler.INSTANCE,
+                    identifier);
+            API.registerGuiOverlayHandler(
+                    GuiFluidPatternExWireless.class,
                     FluidPatternTerminalRecipeTransferHandler.INSTANCE,
                     identifier);
             API.registerGuiOverlayHandler(
