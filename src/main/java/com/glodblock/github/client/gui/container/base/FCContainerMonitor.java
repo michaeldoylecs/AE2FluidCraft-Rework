@@ -9,19 +9,16 @@ import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.ICrafting;
 import net.minecraft.item.ItemStack;
-import net.minecraft.tileentity.TileEntity;
 
 import appeng.api.config.*;
 import appeng.api.networking.IGridNode;
 import appeng.api.networking.energy.IEnergyGrid;
-import appeng.api.parts.IPart;
 import appeng.api.storage.IMEMonitor;
 import appeng.api.storage.IMEMonitorHandlerReceiver;
 import appeng.api.storage.ITerminalHost;
 import appeng.api.storage.data.IAEStack;
 import appeng.api.util.IConfigManager;
 import appeng.api.util.IConfigurableObject;
-import appeng.container.AEBaseContainer;
 import appeng.container.guisync.GuiSync;
 import appeng.container.slot.SlotRestrictedInput;
 import appeng.core.AELog;
@@ -34,7 +31,7 @@ import appeng.util.Platform;
 
 import com.glodblock.github.inventory.item.IWirelessTerminal;
 
-public abstract class FCContainerMonitor<T extends IAEStack<T>> extends AEBaseContainer
+public abstract class FCContainerMonitor<T extends IAEStack<T>> extends FCBaseContainer
         implements IConfigManagerHost, IConfigurableObject, IMEMonitorHandlerReceiver<T> {
 
     protected final SlotRestrictedInput[] cellView = new SlotRestrictedInput[5];
@@ -58,10 +55,7 @@ public abstract class FCContainerMonitor<T extends IAEStack<T>> extends AEBaseCo
 
     protected FCContainerMonitor(final InventoryPlayer ip, final ITerminalHost monitorable,
             final boolean bindInventory) {
-        super(
-                ip,
-                monitorable instanceof TileEntity ? (TileEntity) monitorable : null,
-                monitorable instanceof IPart ? (IPart) monitorable : null);
+        super(ip, monitorable);
         this.host = monitorable;
         this.clientCM = new ConfigManager(this);
         this.clientCM.registerSetting(Settings.SORT_BY, SortOrder.NAME);

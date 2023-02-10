@@ -16,7 +16,6 @@ import appeng.tile.inventory.InvOperation;
 
 import com.glodblock.github.inventory.item.IWirelessCraftTerminal;
 import com.glodblock.github.inventory.item.IWirelessTerminal;
-import com.glodblock.github.util.Util;
 
 public class ContainerCraftingWireless extends ContainerItemMonitor
         implements IAEAppEngInventory, IContainerCraftingPacket {
@@ -24,16 +23,10 @@ public class ContainerCraftingWireless extends ContainerItemMonitor
     private final IWirelessCraftTerminal it;
     private final SlotCraftingMatrix[] craftingSlots = new SlotCraftingMatrix[9];
     private final SlotCraftingTerm outputSlot;
-    private final int slot;
-    private int ticks = 0;
-    private double powerMultiplier = 0.5;
 
     public ContainerCraftingWireless(final InventoryPlayer ip, final IWirelessTerminal monitorable) {
         super(ip, monitorable, false);
         this.it = (IWirelessCraftTerminal) monitorable;
-        final int slotIndex = monitorable.getInventorySlot();
-        this.lockPlayerInventorySlot(slotIndex);
-        this.slot = slotIndex;
         final IInventory crafting = this.it.getInventoryByName("crafting");
         for (int y = 0; y < 3; y++) {
             for (int x = 0; x < 3; x++) {
@@ -63,14 +56,9 @@ public class ContainerCraftingWireless extends ContainerItemMonitor
         this.onCraftMatrixChanged(crafting);
     }
 
-    public void detectAndSendChanges() {
-        this.ticks = Util
-                .drainItemPower(this, this.getPlayerInv(), this.slot, this.ticks, this.getPowerMultiplier(), this.it);
-        super.detectAndSendChanges();
-    }
-
-    private double getPowerMultiplier() {
-        return this.powerMultiplier;
+    @Override
+    protected boolean isWirelessTerminal() {
+        return true;
     }
 
     @Override

@@ -150,4 +150,9 @@ public class ContainerItemMonitor extends FCContainerMonitor<IAEItemStack> {
             this.items.add(is);
         }
     }
+
+    @Override
+    protected boolean isWirelessTerminal() {
+        return false;
+    }
 }
