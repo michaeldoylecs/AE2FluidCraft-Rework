@@ -21,6 +21,7 @@ item.wireless_ultra_terminal.WIRELESS_ESSENTIA_TERMINAL.name=无线ME通用终�
 item.wireless_ultra_terminal.WIRELESS_INTERFACE_TERMINAL.name=无线ME通用终端 - 接口
 item.wireless_ultra_terminal.WIRELESS_FLUID_PATTERN_TERMINAL_EX.name=无线ME通用终端 - 增广样板
 item.fluid_packet.name=流体封包
+item.creative_fluid_storage.name=创造ME流体存储元件
 item.fluid_storage.1.name=%s1k%s-ME流体存储元件
 item.fluid_storage.4.name=%s4k%s-ME流体存储元件
 item.fluid_storage.16.name=%s16k%s-ME流体存储元件

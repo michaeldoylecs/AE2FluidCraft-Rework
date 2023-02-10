@@ -91,6 +91,10 @@ public class RecipeLoader implements Runnable {
             GameRegistry.findItem("appliedenergistics2", "item.ItemMultiPart"),
             1,
             380);
+    public static final ItemStack AE2_INTERFACE_TERMINAL = new ItemStack(
+            GameRegistry.findItem("appliedenergistics2", "item.ItemMultiPart"),
+            1,
+            480);
     public static final ItemStack AE2_CRAFTING_CP_UNIT = new ItemStack(
             GameRegistry.findItem("appliedenergistics2", "tile.BlockCraftingUnit"),
             1,
@@ -142,7 +146,7 @@ public class RecipeLoader implements Runnable {
         GameRegistry.addShapelessRecipe(INTERFACE.stack(), FLUID_INTERFACE.stack());
         GameRegistry.addShapelessRecipe(WIRELESS_FLUID_TERM.stack(), AE2_WIRELESS_TERMINAL, BUCKET);
         GameRegistry.addShapelessRecipe(WIRELESS_PATTERN_TERM.stack(), WIRELESS_FLUID_TERM, FLUID_TERMINAL);
-        GameRegistry.addShapelessRecipe(WIRELESS_INTERFACE_TERM.stack(), AE2_WIRELESS_TERMINAL, AE2_INTERFACE);
+        GameRegistry.addShapelessRecipe(WIRELESS_INTERFACE_TERM.stack(), AE2_WIRELESS_TERMINAL, AE2_INTERFACE_TERMINAL);
         GameRegistry
                 .addRecipe(new ShapedOreRecipe(CERTUS_QUARTZ_TANK.stack(), "GGG", "G G", "GGG", 'G', AE2_QUARTZ_GLASS));
         GameRegistry.addShapelessRecipe(FLUID_AUTO_FILLER.stack(), FLUID_TERMINAL, ENCODER);

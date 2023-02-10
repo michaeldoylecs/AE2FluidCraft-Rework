@@ -52,6 +52,7 @@ public class ItemAndBlockHolder {
             .register();
     public static ItemBasicFluidStorageCell CELL16384K = new ItemBasicFluidStorageCell(CellType.Cell16384kPart, 16384)
             .register();
+    public static ItemCreativeFluidStorageCell CREATIVE_CELL = new ItemCreativeFluidStorageCell().register();
     public static ItemBasicFluidStoragePart CELL_PART = new ItemBasicFluidStoragePart().register();
 
     public static void loadSetting() {
