@@ -22,21 +22,23 @@ import appeng.api.storage.data.IItemList;
 import appeng.util.Platform;
 import appeng.util.item.AEFluidStack;
 
+import com.glodblock.github.common.item.ItemCreativeFluidStorageCell;
+
 public class FluidCellInventory implements IFluidCellInventory {
 
     private static final String FLUID_TYPE_TAG = "ft";
     private static final String FLUID_COUNT_TAG = "fc";
     private static final String FLUID_SLOT = "#";
     private static final String FLUID_SLOT_COUNT = "@";
-    private IStorageFluidCell cellType;
+    protected IStorageFluidCell cellType;
     private static String[] fluidSlots;
     private static String[] fluidSlotCount;
-    private final ItemStack cellItem;
+    protected final ItemStack cellItem;
     private final ISaveProvider container;
     private final int MAX_TYPE = 63;
     private long storedFluidCount;
     private short storedFluids;
-    private IItemList<IAEFluidStack> cellFluids;
+    protected IItemList<IAEFluidStack> cellFluids;
     private final NBTTagCompound tagCompound;
     public static final int singleByteAmount = 256 * 8;
 
@@ -76,7 +78,11 @@ public class FluidCellInventory implements IFluidCellInventory {
 
     public static IMEInventoryHandler<IAEFluidStack> getCell(final ItemStack o, final ISaveProvider container2) {
         try {
-            return new FluidCellInventoryHandler(new FluidCellInventory(o, container2));
+            if (o.getItem() instanceof ItemCreativeFluidStorageCell) {
+                return new FluidCellInventoryHandler(new CreativeFluidCellInventory(o, container2));
+            } else {
+                return new FluidCellInventoryHandler(new FluidCellInventory(o, container2));
+            }
         } catch (final AppEngException e) {
             return null;
         }
@@ -185,7 +191,7 @@ public class FluidCellInventory implements IFluidCellInventory {
         return 3;
     }
 
-    private void loadCellFluids() {
+    protected void loadCellFluids() {
         if (this.cellFluids == null) {
             this.cellFluids = AEApi.instance().storage().createFluidList();
         }
@@ -203,7 +209,7 @@ public class FluidCellInventory implements IFluidCellInventory {
         }
     }
 
-    private IItemList<IAEFluidStack> getCellFluids() {
+    protected IItemList<IAEFluidStack> getCellFluids() {
         if (this.cellFluids == null) {
             this.loadCellFluids();
         }
