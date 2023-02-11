@@ -7,7 +7,7 @@ import appeng.api.storage.data.IAEFluidStack;
 
 public interface IStorageFluidCell extends ICellWorkbenchItem {
 
-    int getBytes(ItemStack cellItem);
+    long getBytes(ItemStack cellItem);
 
     int getBytesPerType(ItemStack cellItem);
 
