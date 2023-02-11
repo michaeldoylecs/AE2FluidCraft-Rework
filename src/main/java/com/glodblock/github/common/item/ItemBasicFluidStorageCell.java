@@ -1,5 +1,6 @@
 package com.glodblock.github.common.item;
 
+import java.text.NumberFormat;
 import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.List;
@@ -56,14 +57,14 @@ public class ItemBasicFluidStorageCell extends AEBaseItem
         implements IStorageFluidCell, IRegister<ItemBasicFluidStorageCell> {
 
     private final CellType component;
-    private final int totalBytes;
+    private final long totalBytes;
     private final int perType;
     private final double idleDrain;
     private final ReadableNumberConverter format = ReadableNumberConverter.INSTANCE;
     private static final HashMap<Integer, IIcon> icon = new HashMap<>();
 
     @SuppressWarnings("Guava")
-    public ItemBasicFluidStorageCell(final CellType whichCell, final int kilobytes) {
+    public ItemBasicFluidStorageCell(final CellType whichCell, final long kilobytes) {
         super(Optional.of(kilobytes + "k"));
         setUnlocalizedName(NameConst.ITEM_FLUID_STORAGE + kilobytes);
         this.setFeature(EnumSet.of(AEFeature.StorageCells));
@@ -104,6 +105,14 @@ public class ItemBasicFluidStorageCell extends AEBaseItem
                 this.idleDrain = 4.0;
                 this.perType = 8;
                 break;
+            case Cell131072kPart:
+                this.idleDrain = 4.5;
+                this.perType = 8;
+                break;
+            case Cell554160890921312kPart:
+                this.idleDrain = 5.0;
+                this.perType = 8;
+                break;
             default:
                 this.idleDrain = 0.0;
                 this.perType = 8;
@@ -126,7 +135,7 @@ public class ItemBasicFluidStorageCell extends AEBaseItem
     @SideOnly(Side.CLIENT)
     public void registerIcons(IIconRegister iconRegister) {
         icon.put(
-                this.totalBytes / 1024,
+                (int) (this.totalBytes / 1024),
                 iconRegister
                         .registerIcon(NameConst.RES_KEY + NameConst.ITEM_FLUID_STORAGE + "." + this.totalBytes / 1024));
     }
@@ -134,7 +143,7 @@ public class ItemBasicFluidStorageCell extends AEBaseItem
     @Override
     @SideOnly(Side.CLIENT)
     public IIcon getIconFromDamage(int meta) {
-        int id = this.totalBytes / 1024;
+        int id = (int) (this.totalBytes / 1024);
         return icon.get(id);
     }
 
@@ -156,7 +165,7 @@ public class ItemBasicFluidStorageCell extends AEBaseItem
                                 + GuiText.Of.getLocal()
                                 + " "
                                 + EnumChatFormatting.DARK_GREEN
-                                + cellInventory.getTotalBytes()
+                                + NumberFormat.getInstance().format(cellInventory.getTotalBytes())
                                 + " "
                                 + EnumChatFormatting.GRAY
                                 + GuiText.BytesUsed.getLocal());
@@ -210,7 +219,7 @@ public class ItemBasicFluidStorageCell extends AEBaseItem
     }
 
     @Override
-    public int getBytes(final ItemStack cellItem) {
+    public long getBytes(final ItemStack cellItem) {
         return this.totalBytes;
     }
 

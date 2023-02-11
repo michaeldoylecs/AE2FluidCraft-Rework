@@ -52,6 +52,12 @@ public class ItemAndBlockHolder {
             .register();
     public static ItemBasicFluidStorageCell CELL16384K = new ItemBasicFluidStorageCell(CellType.Cell16384kPart, 16384)
             .register();
+    public static ItemBasicFluidStorageCell CELL131072K = new ItemBasicFluidStorageCell(
+            CellType.Cell131072kPart,
+            131072).register();
+    public static ItemBasicFluidStorageCell CELL554160890921312K = new ItemBasicFluidStorageCell(
+            CellType.Cell554160890921312kPart,
+            554160890921312L).register();
     public static ItemCreativeFluidStorageCell CREATIVE_CELL = new ItemCreativeFluidStorageCell().register();
     public static ItemBasicFluidStoragePart CELL_PART = new ItemBasicFluidStoragePart().register();
 

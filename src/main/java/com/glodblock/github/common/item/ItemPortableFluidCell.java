@@ -117,7 +117,7 @@ public class ItemPortableFluidCell extends AEBasePoweredItem
     }
 
     @Override
-    public int getBytes(final ItemStack cellItem) {
+    public long getBytes(final ItemStack cellItem) {
         return 256;
     }
 

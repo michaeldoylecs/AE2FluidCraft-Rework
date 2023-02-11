@@ -1,5 +1,6 @@
 package com.glodblock.github.loader;
 
+import static com.glodblock.github.common.storage.CellType.Cell16384kPart;
 import static com.glodblock.github.loader.ItemAndBlockHolder.*;
 import static net.minecraft.init.Blocks.redstone_torch;
 import static net.minecraft.init.Items.fish;
@@ -109,6 +110,12 @@ public class RecipeLoader implements Runnable {
             .findItemStack("appliedenergistics2", "tile.BlockChest", 1);
     public static final ItemStack AE2_ENERGY_CELL = GameRegistry
             .findItemStack("appliedenergistics2", "tile.BlockEnergyCell", 1);
+    public static final ItemStack AE2_MATTER_CONDENSER = GameRegistry
+            .findItemStack("appliedenergistics2", "tile.BlockCondenser", 1);
+    public static final ItemStack AE2_QUANTUM_RING = GameRegistry
+            .findItemStack("appliedenergistics2", "tile.BlockQuantumRing", 1);
+    public static final ItemStack AE2_DENSE_ENERGY_CELL = GameRegistry
+            .findItemStack("appliedenergistics2", "tile.BlockDenseEnergyCell", 1);
     public static final ItemStack THE_WIRELESS_TERM = GameRegistry
             .findItemStack("thaumicenergistics", "wireless.essentia.terminal", 1);
     private static final ItemStack WCT_WIRELESS_TERM = GameRegistry
@@ -392,7 +399,28 @@ public class RecipeLoader implements Runnable {
 
             ItemBasicFluidStorageCell[] cells = new ItemBasicFluidStorageCell[] { CELL1K, CELL4K, CELL16K, CELL64K,
                     CELL256K, CELL1024K, CELL4096K, CELL16384K };
-
+            GameRegistry.addRecipe(
+                    new ShapedOreRecipe(
+                            CELL131072K.stack(),
+                            "RCR",
+                            "CEC",
+                            "RCR",
+                            'C',
+                            Cell16384kPart.stack(1),
+                            'E',
+                            AE2_DENSE_ENERGY_CELL,
+                            'R',
+                            AE2_QUANTUM_RING));
+            GameRegistry.addRecipe(
+                    new ShapedOreRecipe(
+                            CELL554160890921312K.stack(),
+                            "CCC",
+                            "CMC",
+                            "CCC",
+                            'C',
+                            CELL131072K,
+                            'M',
+                            AE2_MATTER_CONDENSER));
             for (ItemBasicFluidStorageCell cell : cells) {
                 GameRegistry.addRecipe(
                         new ShapedOreRecipe(

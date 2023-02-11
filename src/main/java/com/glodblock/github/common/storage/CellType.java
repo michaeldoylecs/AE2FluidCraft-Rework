@@ -17,7 +17,9 @@ public enum CellType {
     Cell256kPart(4, AEFeature.StorageCells),
     Cell1024kPart(5, AEFeature.StorageCells),
     Cell4096kPart(6, AEFeature.StorageCells),
-    Cell16384kPart(7, AEFeature.StorageCells);
+    Cell16384kPart(7, AEFeature.StorageCells),
+    Cell131072kPart(8, AEFeature.StorageCells),
+    Cell554160890921312kPart(9, AEFeature.StorageCells);
 
     private final EnumSet<AEFeature> features;
     private int damageValue;
@@ -74,6 +76,10 @@ public enum CellType {
                 return EnumChatFormatting.RED;
             case Cell16384kPart:
                 return EnumChatFormatting.DARK_PURPLE;
+            case Cell131072kPart:
+                return EnumChatFormatting.DARK_GRAY;
+            case Cell554160890921312kPart:
+                return EnumChatFormatting.DARK_RED;
         }
         return EnumChatFormatting.WHITE;
     }
