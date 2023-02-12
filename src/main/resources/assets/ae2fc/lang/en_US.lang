@@ -40,6 +40,8 @@ item.fluid_part.4.name=%s256k%s ME Fluid Storage Component
 item.fluid_part.5.name=%s1024k%s ME Fluid Storage Component
 item.fluid_part.6.name=%s4096k%s ME Fluid Storage Component
 item.fluid_part.7.name=%s16384k%s ME Fluid Storage Component
+item.fluid_storage_housing.0.name=ME Fluid Storage Housing
+item.fluid_storage_housing.1.name=ME Advanced Fluid Storage Housing
 
 tile.fluid_discretizer.name=Fluid Discretizer
 tile.fluid_pattern_encoder.name=Fluid Pattern Encoder

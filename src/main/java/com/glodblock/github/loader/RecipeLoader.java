@@ -66,10 +66,6 @@ public class RecipeLoader implements Runnable {
             .findItemStack("appliedenergistics2", "tile.BlockQuartzGlass", 1);
     public static final ItemStack AE2_LAMP_GLASS = GameRegistry
             .findItemStack("appliedenergistics2", "tile.BlockQuartzLamp", 1);
-    public static final ItemStack AE2_CELL_HOUSING = new ItemStack(
-            GameRegistry.findItem("appliedenergistics2", "item.ItemMultiMaterial"),
-            1,
-            39);
     public static final ItemStack AE2_CELL_1K = new ItemStack(
             GameRegistry.findItem("appliedenergistics2", "item.ItemMultiMaterial"),
             1,
@@ -422,22 +418,63 @@ public class RecipeLoader implements Runnable {
                             'M',
                             AE2_MATTER_CONDENSER));
             for (ItemBasicFluidStorageCell cell : cells) {
-                GameRegistry.addRecipe(
-                        new ShapedOreRecipe(
-                                cell,
-                                "GDG",
-                                "DCD",
-                                "III",
-                                'D',
-                                "dustRedstone",
-                                'G',
-                                AE2_QUARTZ_GLASS,
-                                'C',
-                                cell.getComponent(),
-                                'I',
-                                "ingotIron"));
-                GameRegistry.addRecipe(new ShapelessOreRecipe(cell, AE2_CELL_HOUSING, cell.getComponent()));
+                if (cell.getHousing().getItemDamage() == 0) {
+                    GameRegistry.addRecipe(
+                            new ShapedOreRecipe(
+                                    cell,
+                                    "GDG",
+                                    "DCD",
+                                    "III",
+                                    'D',
+                                    "dyeRed",
+                                    'G',
+                                    AE2_QUARTZ_GLASS,
+                                    'C',
+                                    cell.getComponent(),
+                                    'I',
+                                    "ingotIron"));
+                } else if (cell.getHousing().getItemDamage() == 1) {
+                    GameRegistry.addRecipe(
+                            new ShapedOreRecipe(
+                                    cell,
+                                    "GDG",
+                                    "DCD",
+                                    "III",
+                                    'D',
+                                    "dustRedstone",
+                                    'G',
+                                    AE2_QUARTZ_GLASS,
+                                    'C',
+                                    cell.getComponent(),
+                                    'I',
+                                    "gemDiamond"));
+                }
+                GameRegistry.addRecipe(new ShapelessOreRecipe(cell, cell.getHousing(), cell.getComponent()));
             }
+            GameRegistry.addRecipe(
+                    new ShapedOreRecipe(
+                            CELL_HOUSING.stack(1, 0),
+                            "GDG",
+                            "D D",
+                            "III",
+                            'D',
+                            "dyeRed",
+                            'G',
+                            AE2_QUARTZ_GLASS,
+                            'I',
+                            "ingotIron"));
+            GameRegistry.addRecipe(
+                    new ShapedOreRecipe(
+                            CELL_HOUSING.stack(1, 1),
+                            "GDG",
+                            "D D",
+                            "III",
+                            'D',
+                            "dustRedstone",
+                            'G',
+                            AE2_QUARTZ_GLASS,
+                            'I',
+                            "gemDiamond"));
         }
 
         if (Config.fluidIOBus) {

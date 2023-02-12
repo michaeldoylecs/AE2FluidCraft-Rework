@@ -67,6 +67,7 @@ public class ItemAndBlockHolder {
             5).register();
     public static ItemCreativeFluidStorageCell CREATIVE_CELL = new ItemCreativeFluidStorageCell().register();
     public static ItemBasicFluidStoragePart CELL_PART = new ItemBasicFluidStoragePart().register();
+    public static ItemFluidStorageHousing CELL_HOUSING = new ItemFluidStorageHousing().register();
 
     public static void loadSetting() {
         if (!Config.fluidCells) return;
@@ -78,5 +79,13 @@ public class ItemAndBlockHolder {
         CellType.Cell1024kPart.setItemInstance(CELL_PART);
         CellType.Cell4096kPart.setItemInstance(CELL_PART);
         CellType.Cell16384kPart.setItemInstance(CELL_PART);
+        CellType.Cell1kPart.setHousingValue(0);
+        CellType.Cell4kPart.setHousingValue(0);
+        CellType.Cell16kPart.setHousingValue(0);
+        CellType.Cell64kPart.setHousingValue(0);
+        CellType.Cell256kPart.setHousingValue(1);
+        CellType.Cell1024kPart.setHousingValue(1);
+        CellType.Cell4096kPart.setHousingValue(1);
+        CellType.Cell16384kPart.setHousingValue(1);
     }
 }

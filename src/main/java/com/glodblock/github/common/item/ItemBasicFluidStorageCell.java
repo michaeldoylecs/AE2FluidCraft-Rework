@@ -52,6 +52,10 @@ public class ItemBasicFluidStorageCell extends FCBaseItemCell
         return component.stack(1);
     }
 
+    public ItemStack getHousing() {
+        return component.getHousing(1);
+    }
+
     @Override
     public String getItemStackDisplayName(ItemStack stack) {
         return StatCollector.translateToLocalFormatted(
@@ -114,12 +118,9 @@ public class ItemBasicFluidStorageCell extends FCBaseItemCell
                     }
 
                     // drop empty storage cell case
-                    for (final ItemStack storageCellStack : AEApi.instance().definitions().materials()
-                            .emptyStorageCell().maybeStack(1).asSet()) {
-                        final ItemStack extraA = ia.addItems(storageCellStack);
-                        if (extraA != null) {
-                            player.dropPlayerItemWithRandomChoice(extraA, false);
-                        }
+                    final ItemStack extraA = ia.addItems(this.component.getHousing(1));
+                    if (extraA != null) {
+                        player.dropPlayerItemWithRandomChoice(this.component.getHousing(1), false);
                     }
                     if (player.inventoryContainer != null) {
                         player.inventoryContainer.detectAndSendChanges();
@@ -140,9 +141,8 @@ public class ItemBasicFluidStorageCell extends FCBaseItemCell
 
     @Override
     public ItemStack getContainerItem(final ItemStack itemStack) {
-        for (final ItemStack stack : AEApi.instance().definitions().materials().emptyStorageCell().maybeStack(1)
-                .asSet()) {
-            return stack;
+        if (this.getHousing() != null) {
+            return this.getHousing();
         }
         throw new MissingDefinition("Tried to use empty storage cells while basic storage cells are defined.");
     }

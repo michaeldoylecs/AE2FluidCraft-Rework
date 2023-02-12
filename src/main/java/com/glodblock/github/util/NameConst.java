@@ -44,6 +44,7 @@ public class NameConst {
     public static final String ITEM_WIRELESS_ULTRA_TERMINAL = "wireless_ultra_terminal";
     public static final String ITEM_WIRELESS_FLUID_PATTERN_TERMINAL = "wireless_fluid_pattern_terminal";
     public static final String ITEM_FLUID_PART = "fluid_part";
+    public static final String ITEM_FLUID_STORAGE_HOUSING = "fluid_storage_housing";
 
     public static final String TT_KEY = FluidCraft.MODID + ".tooltip.";
     public static final String TT_FLUID_TERMINAL = TT_KEY + "fluid_terminal";
