@@ -8,8 +8,6 @@ import net.minecraft.util.EnumChatFormatting;
 
 import appeng.core.features.AEFeature;
 
-import com.glodblock.github.loader.ItemAndBlockHolder;
-
 public enum CellType {
 
     Cell1kPart(0, AEFeature.StorageCells),
@@ -24,7 +22,6 @@ public enum CellType {
     private final EnumSet<AEFeature> features;
     private int damageValue;
     private Item itemInstance;
-    private int housingValue;
 
     CellType(final int metaValue, final AEFeature part) {
         this.setDamageValue(metaValue);
@@ -39,24 +36,12 @@ public enum CellType {
         this.damageValue = damageValue;
     }
 
-    public int getHousingValue() {
-        return this.housingValue;
-    }
-
-    public void setHousingValue(final int housingValue) {
-        this.housingValue = housingValue;
-    }
-
     EnumSet<AEFeature> getFeature() {
         return this.features;
     }
 
     public ItemStack stack(final int size) {
         return new ItemStack(this.getItemInstance(), size, this.getDamageValue());
-    }
-
-    public ItemStack getHousing(final int size) {
-        return new ItemStack(ItemAndBlockHolder.CELL_HOUSING, size, this.getHousingValue());
     }
 
     public Item getItemInstance() {

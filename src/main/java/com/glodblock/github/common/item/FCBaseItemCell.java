@@ -6,22 +6,28 @@ import java.util.List;
 
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.StatCollector;
+import net.minecraft.world.World;
+import net.minecraftforge.common.util.ForgeDirection;
 
 import appeng.api.AEApi;
 import appeng.api.config.FuzzyMode;
 import appeng.api.config.IncludeExclude;
+import appeng.api.implementations.items.IUpgradeModule;
 import appeng.api.storage.IMEInventoryHandler;
 import appeng.api.storage.StorageChannel;
 import appeng.api.storage.data.IAEFluidStack;
+import appeng.api.storage.data.IItemList;
 import appeng.core.features.AEFeature;
 import appeng.core.localization.GuiText;
 import appeng.items.AEBaseItem;
 import appeng.items.contents.CellConfig;
 import appeng.items.contents.CellUpgrades;
+import appeng.util.InventoryAdaptor;
 import appeng.util.Platform;
 import appeng.util.ReadableNumberConverter;
 
@@ -30,74 +36,43 @@ import com.glodblock.github.common.storage.CellType;
 import com.glodblock.github.common.storage.IFluidCellInventory;
 import com.glodblock.github.common.storage.IFluidCellInventoryHandler;
 import com.glodblock.github.common.storage.IStorageFluidCell;
+import com.glodblock.github.loader.ItemAndBlockHolder;
 import com.glodblock.github.util.ModAndClassUtil;
 import com.glodblock.github.util.NameConst;
 import com.google.common.base.Optional;
 
 public abstract class FCBaseItemCell extends AEBaseItem implements IStorageFluidCell {
 
-    protected final CellType component;
-    protected final long totalBytes;
-    protected final int perType;
-    protected final double idleDrain;
+    protected CellType component;
+    protected long totalBytes;
+    protected int perType;
+    protected double idleDrain;
+    protected int maxType = 1;
     private final ReadableNumberConverter format = ReadableNumberConverter.INSTANCE;
 
     @SuppressWarnings("Guava")
-    public FCBaseItemCell(long bytes, int perType, double drain) {
+    public FCBaseItemCell(long bytes, int perType, int totalType, double drain) {
         super(Optional.of(bytes / 1024 + "k"));
         this.setFeature(EnumSet.of(AEFeature.StorageCells));
         this.setMaxStackSize(1);
         this.totalBytes = bytes;
         this.perType = perType;
         this.idleDrain = drain;
+        this.maxType = totalType;
         this.component = null;
     }
 
-    @SuppressWarnings("Guava")
-    public FCBaseItemCell(final CellType whichCell, final long kilobytes) {
-        super(Optional.of(kilobytes + "k"));
-        this.setFeature(EnumSet.of(AEFeature.StorageCells));
-        this.setMaxStackSize(1);
-        this.totalBytes = kilobytes * 1024;
-        this.component = whichCell;
+    @SuppressWarnings("all")
+    public FCBaseItemCell(final Optional<String> subName) {
+        super(subName);
+    }
 
-        switch (this.component) {
-            case Cell1kPart:
-                this.idleDrain = 0.5;
-                this.perType = 8;
-                break;
-            case Cell4kPart:
-                this.idleDrain = 1.0;
-                this.perType = 8;
-                break;
-            case Cell16kPart:
-                this.idleDrain = 1.5;
-                this.perType = 8;
-                break;
-            case Cell64kPart:
-                this.idleDrain = 2.0;
-                this.perType = 8;
-                break;
-            case Cell256kPart:
-                this.idleDrain = 2.5;
-                this.perType = 8;
-                break;
-            case Cell1024kPart:
-                this.idleDrain = 3.0;
-                this.perType = 8;
-                break;
-            case Cell4096kPart:
-                this.idleDrain = 3.5;
-                this.perType = 8;
-                break;
-            case Cell16384kPart:
-                this.idleDrain = 4.0;
-                this.perType = 8;
-                break;
-            default:
-                this.idleDrain = 0.0;
-                this.perType = 8;
-        }
+    public ItemStack getHousing() {
+        return ItemAndBlockHolder.CELL_HOUSING.stack();
+    }
+
+    public ItemStack getComponent() {
+        return component.stack(1);
     }
 
     @Override
@@ -206,7 +181,7 @@ public abstract class FCBaseItemCell extends AEBaseItem implements IStorageFluid
 
     @Override
     public int getTotalTypes(final ItemStack cellItem) {
-        return 1;
+        return this.maxType;
     }
 
     @Override
@@ -237,6 +212,52 @@ public abstract class FCBaseItemCell extends AEBaseItem implements IStorageFluid
     @Override
     public void setFuzzyMode(ItemStack is, FuzzyMode fzMode) {
         Platform.openNbtData(is).setString("FuzzyMode", fzMode.name());
+    }
+
+    @SuppressWarnings("unchecked")
+    protected boolean disassembleDrive(final ItemStack stack, final World world, final EntityPlayer player) {
+        if (player.isSneaking()) {
+            if (Platform.isClient()) {
+                return false;
+            }
+            final InventoryPlayer playerInventory = player.inventory;
+            final IMEInventoryHandler<?> inv = AEApi.instance().registries().cell()
+                    .getCellInventory(stack, null, StorageChannel.FLUIDS);
+            if (inv != null && playerInventory.getCurrentItem() == stack) {
+                final InventoryAdaptor ia = InventoryAdaptor.getAdaptor(player, ForgeDirection.UNKNOWN);
+                final IItemList<IAEFluidStack> list = inv.getAvailableItems(StorageChannel.FLUIDS.createList());
+                if (list.isEmpty() && ia != null) {
+                    playerInventory.setInventorySlotContents(playerInventory.currentItem, null);
+
+                    // drop core
+                    final ItemStack extraB = ia.addItems(this.component.stack(1));
+                    if (extraB != null) {
+                        player.dropPlayerItemWithRandomChoice(extraB, false);
+                    }
+
+                    // drop upgrades
+                    final IInventory upgradesInventory = this.getUpgradesInventory(stack);
+                    for (int upgradeIndex = 0; upgradeIndex < upgradesInventory.getSizeInventory(); upgradeIndex++) {
+                        final ItemStack upgradeStack = upgradesInventory.getStackInSlot(upgradeIndex);
+                        final ItemStack leftStack = ia.addItems(upgradeStack);
+                        if (leftStack != null && upgradeStack.getItem() instanceof IUpgradeModule) {
+                            player.dropPlayerItemWithRandomChoice(upgradeStack, false);
+                        }
+                    }
+
+                    // drop empty storage cell case
+                    final ItemStack extraA = ia.addItems(this.getHousing());
+                    if (extraA != null) {
+                        player.dropPlayerItemWithRandomChoice(this.getHousing(), false);
+                    }
+                    if (player.inventoryContainer != null) {
+                        player.inventoryContainer.detectAndSendChanges();
+                    }
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 
     public ItemStack stack(int size) {

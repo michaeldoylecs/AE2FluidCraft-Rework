@@ -16,8 +16,8 @@ public class ItemFluidExtremeStorageCell extends FCBaseItemCell
 
     private final String name;
 
-    public ItemFluidExtremeStorageCell(String name, long bytes, int perType, double drain) {
-        super(bytes, perType, drain);
+    public ItemFluidExtremeStorageCell(String name, long bytes, int perType, int totalTypes, double drain) {
+        super(bytes, perType, totalTypes, drain);
         setUnlocalizedName(name);
         this.name = name;
         setTextureName(FluidCraft.resource(name).toString());

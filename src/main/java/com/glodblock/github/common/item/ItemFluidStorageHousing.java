@@ -21,7 +21,7 @@ import cpw.mods.fml.relauncher.SideOnly;
 
 public class ItemFluidStorageHousing extends FCBaseItem {
 
-    public static final int types = 2;
+    public static final int types = 4;
     private static final HashMap<Integer, IIcon> icon = new HashMap<>();
 
     public ItemFluidStorageHousing() {

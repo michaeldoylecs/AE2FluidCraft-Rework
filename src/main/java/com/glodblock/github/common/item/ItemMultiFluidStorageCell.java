@@ -30,21 +30,22 @@ import cpw.mods.fml.common.registry.GameRegistry;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
-public class ItemBasicFluidStorageCell extends FCBaseItemCell
-        implements IStorageFluidCell, IRegister<ItemBasicFluidStorageCell> {
+public class ItemMultiFluidStorageCell extends FCBaseItemCell
+        implements IStorageFluidCell, IRegister<ItemMultiFluidStorageCell> {
 
     private static final HashMap<Integer, IIcon> icon = new HashMap<>();
     private final int housingValue;
 
     @SuppressWarnings("Guava")
-    public ItemBasicFluidStorageCell(final CellType whichCell, final int housingValue, final long kilobytes) {
+    public ItemMultiFluidStorageCell(final CellType whichCell, final int housingValue, final long kilobytes) {
         super(Optional.of(kilobytes + "k"));
         this.setFeature(EnumSet.of(AEFeature.StorageCells));
         this.setMaxStackSize(1);
         this.totalBytes = kilobytes * 1024;
         this.component = whichCell;
         this.housingValue = housingValue;
-        setUnlocalizedName(NameConst.ITEM_FLUID_STORAGE + kilobytes);
+        this.maxType = 5;
+        setUnlocalizedName(NameConst.ITEM_MULTI_FLUID_STORAGE + kilobytes);
 
         switch (this.component) {
             case Cell1kPart:
@@ -53,31 +54,31 @@ public class ItemBasicFluidStorageCell extends FCBaseItemCell
                 break;
             case Cell4kPart:
                 this.idleDrain = 1.0;
-                this.perType = 8;
+                this.perType = 32;
                 break;
             case Cell16kPart:
                 this.idleDrain = 1.5;
-                this.perType = 8;
+                this.perType = 128;
                 break;
             case Cell64kPart:
                 this.idleDrain = 2.0;
-                this.perType = 8;
+                this.perType = 512;
                 break;
             case Cell256kPart:
                 this.idleDrain = 2.5;
-                this.perType = 8;
+                this.perType = 2048;
                 break;
             case Cell1024kPart:
                 this.idleDrain = 3.0;
-                this.perType = 8;
+                this.perType = 8192;
                 break;
             case Cell4096kPart:
                 this.idleDrain = 3.5;
-                this.perType = 8;
+                this.perType = 32768;
                 break;
             case Cell16384kPart:
                 this.idleDrain = 4.0;
-                this.perType = 8;
+                this.perType = 131072;
                 break;
             default:
                 this.idleDrain = 0.0;
@@ -93,7 +94,7 @@ public class ItemBasicFluidStorageCell extends FCBaseItemCell
     @Override
     public String getItemStackDisplayName(ItemStack stack) {
         return StatCollector.translateToLocalFormatted(
-                "item.fluid_storage." + this.totalBytes / 1024 + ".name",
+                "item.multi_fluid_storage." + this.totalBytes / 1024 + ".name",
                 CellType.getTypeColor(this.component),
                 EnumChatFormatting.RESET);
     }
@@ -103,8 +104,8 @@ public class ItemBasicFluidStorageCell extends FCBaseItemCell
     public void registerIcons(IIconRegister iconRegister) {
         icon.put(
                 (int) (this.totalBytes / 1024),
-                iconRegister
-                        .registerIcon(NameConst.RES_KEY + NameConst.ITEM_FLUID_STORAGE + "." + this.totalBytes / 1024));
+                iconRegister.registerIcon(
+                        NameConst.RES_KEY + NameConst.ITEM_MULTI_FLUID_STORAGE + "." + this.totalBytes / 1024));
     }
 
     @Override
@@ -128,6 +129,11 @@ public class ItemBasicFluidStorageCell extends FCBaseItemCell
     }
 
     @Override
+    public boolean hasContainerItem(final ItemStack stack) {
+        return AEConfig.instance.isFeatureEnabled(AEFeature.EnableDisassemblyCrafting);
+    }
+
+    @Override
     public ItemStack getContainerItem(final ItemStack itemStack) {
         if (this.getHousing() != null) {
             return this.getHousing();
@@ -136,14 +142,9 @@ public class ItemBasicFluidStorageCell extends FCBaseItemCell
     }
 
     @Override
-    public boolean hasContainerItem(final ItemStack stack) {
-        return AEConfig.instance.isFeatureEnabled(AEFeature.EnableDisassemblyCrafting);
-    }
-
-    @Override
-    public ItemBasicFluidStorageCell register() {
+    public ItemMultiFluidStorageCell register() {
         if (!Config.fluidCells) return null;
-        GameRegistry.registerItem(this, NameConst.ITEM_FLUID_STORAGE + this.totalBytes / 1024, FluidCraft.MODID);
+        GameRegistry.registerItem(this, NameConst.ITEM_MULTI_FLUID_STORAGE + this.totalBytes / 1024, FluidCraft.MODID);
         setCreativeTab(FluidCraftingTabs.INSTANCE);
         return this;
     }

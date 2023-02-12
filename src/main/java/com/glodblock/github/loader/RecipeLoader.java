@@ -2,6 +2,7 @@ package com.glodblock.github.loader;
 
 import static com.glodblock.github.common.storage.CellType.Cell16384kPart;
 import static com.glodblock.github.loader.ItemAndBlockHolder.*;
+import static com.glodblock.github.loader.ItemAndBlockHolder.CELL4KM;
 import static net.minecraft.init.Blocks.redstone_torch;
 import static net.minecraft.init.Items.fish;
 
@@ -16,7 +17,7 @@ import net.minecraftforge.oredict.ShapedOreRecipe;
 import net.minecraftforge.oredict.ShapelessOreRecipe;
 
 import com.glodblock.github.common.Config;
-import com.glodblock.github.common.item.ItemBasicFluidStorageCell;
+import com.glodblock.github.common.item.FCBaseItemCell;
 import com.glodblock.github.common.storage.CellType;
 import com.glodblock.github.loader.recipe.WirelessTerminalRecipe;
 import com.glodblock.github.util.ModAndClassUtil;
@@ -393,8 +394,9 @@ public class RecipeLoader implements Runnable {
                             'G',
                             AE2_LAMP_GLASS));
 
-            ItemBasicFluidStorageCell[] cells = new ItemBasicFluidStorageCell[] { CELL1K, CELL4K, CELL16K, CELL64K,
-                    CELL256K, CELL1024K, CELL4096K, CELL16384K };
+            FCBaseItemCell[] cells = new FCBaseItemCell[] { CELL1K, CELL4K, CELL16K, CELL64K, CELL256K, CELL1024K,
+                    CELL4096K, CELL16384K, CELL1KM, CELL4KM, CELL16KM, CELL64KM, CELL256KM, CELL1024KM, CELL4096KM,
+                    CELL16384KM };
             GameRegistry.addRecipe(
                     new ShapedOreRecipe(
                             QUANTUM_CELL.stack(),
@@ -417,7 +419,7 @@ public class RecipeLoader implements Runnable {
                             QUANTUM_CELL,
                             'M',
                             AE2_MATTER_CONDENSER));
-            for (ItemBasicFluidStorageCell cell : cells) {
+            for (FCBaseItemCell cell : cells) {
                 if (cell.getHousing().getItemDamage() == 0) {
                     GameRegistry.addRecipe(
                             new ShapedOreRecipe(
@@ -443,7 +445,37 @@ public class RecipeLoader implements Runnable {
                                     'D',
                                     "dustRedstone",
                                     'G',
+                                    AE2_LAMP_GLASS,
+                                    'C',
+                                    cell.getComponent(),
+                                    'I',
+                                    "gemDiamond"));
+                } else if (cell.getHousing().getItemDamage() == 2) {
+                    GameRegistry.addRecipe(
+                            new ShapedOreRecipe(
+                                    cell,
+                                    "GDG",
+                                    "DCD",
+                                    "III",
+                                    'D',
+                                    "dyeBlue",
+                                    'G',
                                     AE2_QUARTZ_GLASS,
+                                    'C',
+                                    cell.getComponent(),
+                                    'I',
+                                    "ingotIron"));
+                } else if (cell.getHousing().getItemDamage() == 3) {
+                    GameRegistry.addRecipe(
+                            new ShapedOreRecipe(
+                                    cell,
+                                    "GDG",
+                                    "DCD",
+                                    "III",
+                                    'D',
+                                    "dustGlowstone",
+                                    'G',
+                                    AE2_LAMP_GLASS,
                                     'C',
                                     cell.getComponent(),
                                     'I',
@@ -472,7 +504,31 @@ public class RecipeLoader implements Runnable {
                             'D',
                             "dustRedstone",
                             'G',
+                            AE2_LAMP_GLASS,
+                            'I',
+                            "gemDiamond"));
+            GameRegistry.addRecipe(
+                    new ShapedOreRecipe(
+                            CELL_HOUSING.stack(1, 2),
+                            "GDG",
+                            "D D",
+                            "III",
+                            'D',
+                            "dyeBlue",
+                            'G',
                             AE2_QUARTZ_GLASS,
+                            'I',
+                            "ingotIron"));
+            GameRegistry.addRecipe(
+                    new ShapedOreRecipe(
+                            CELL_HOUSING.stack(1, 3),
+                            "GDG",
+                            "D D",
+                            "III",
+                            'D',
+                            "dustGlowstone",
+                            'G',
+                            AE2_LAMP_GLASS,
                             'I',
                             "gemDiamond"));
         }
