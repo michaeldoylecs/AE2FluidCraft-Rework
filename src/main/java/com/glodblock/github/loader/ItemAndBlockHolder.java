@@ -1,9 +1,12 @@
 package com.glodblock.github.loader;
 
+import static com.glodblock.github.common.storage.FluidCellInventory.singleByteAmount;
+
 import com.glodblock.github.common.Config;
 import com.glodblock.github.common.block.*;
 import com.glodblock.github.common.item.*;
 import com.glodblock.github.common.storage.CellType;
+import com.glodblock.github.util.NameConst;
 
 public class ItemAndBlockHolder {
 
@@ -52,6 +55,16 @@ public class ItemAndBlockHolder {
             .register();
     public static ItemBasicFluidStorageCell CELL16384K = new ItemBasicFluidStorageCell(CellType.Cell16384kPart, 16384)
             .register();
+    public static ItemFluidExtremeStorageCell QUANTUM_CELL = new ItemFluidExtremeStorageCell(
+            NameConst.ITEM_QUANTUM_FLUID_STORAGE,
+            Integer.MAX_VALUE / 16,
+            8,
+            4.5).register();
+    public static ItemFluidExtremeStorageCell SINGULARITY_CELL = new ItemFluidExtremeStorageCell(
+            NameConst.ITEM_SINGULARITY_FLUID_STORAGE,
+            Long.MAX_VALUE / (singleByteAmount * 2),
+            8,
+            5).register();
     public static ItemCreativeFluidStorageCell CREATIVE_CELL = new ItemCreativeFluidStorageCell().register();
     public static ItemBasicFluidStoragePart CELL_PART = new ItemBasicFluidStoragePart().register();
 

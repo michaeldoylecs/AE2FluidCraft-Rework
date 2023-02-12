@@ -15,16 +15,10 @@ import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.GL11;
 
 import appeng.api.AEApi;
-import appeng.api.config.ActionItems;
-import appeng.api.config.Settings;
-import appeng.api.config.TerminalStyle;
-import appeng.api.config.YesNo;
+import appeng.api.config.*;
 import appeng.api.util.DimensionalCoord;
 import appeng.api.util.WorldCoord;
-import appeng.client.gui.widgets.GuiImgButton;
-import appeng.client.gui.widgets.GuiScrollbar;
-import appeng.client.gui.widgets.IDropToFillTextField;
-import appeng.client.gui.widgets.MEGuiTextField;
+import appeng.client.gui.widgets.*;
 import appeng.client.me.ClientDCInternalInv;
 import appeng.client.me.SlotDisconnected;
 import appeng.client.render.BlockPosHighlighter;
@@ -43,6 +37,8 @@ import appeng.util.Platform;
 import com.glodblock.github.FluidCraft;
 import com.glodblock.github.client.gui.base.FCBaseMEGui;
 import com.glodblock.github.client.gui.container.ContainerInterfaceWireless;
+import com.glodblock.github.inventory.InventoryHandler;
+import com.glodblock.github.inventory.gui.GuiType;
 import com.glodblock.github.inventory.item.IWirelessTerminal;
 import com.glodblock.github.network.CPacketRenamer;
 import com.glodblock.github.util.ModAndClassUtil;
@@ -78,6 +74,7 @@ public class GuiInterfaceTerminalWireless extends FCBaseMEGui implements IDropTo
     private boolean refreshList = false;
     protected static boolean onlyMolecularAssemblers = false;
     protected static boolean onlyBrokenRecipes = false;
+    protected GuiTabButton craftingStatusBtn;
 
     // private final IConfigManager configSrc;
     private int rows = 3;
@@ -179,6 +176,14 @@ public class GuiInterfaceTerminalWireless extends FCBaseMEGui implements IDropTo
 
         terminalStyleBox.xPosition = guiLeft - 18;
         terminalStyleBox.yPosition = guiTop + 8;
+        this.buttonList.add(
+                this.craftingStatusBtn = new GuiTabButton(
+                        this.guiLeft + this.xSize - 24,
+                        this.guiTop - 4,
+                        2 + 11 * 16,
+                        GuiText.CraftingStatus.getLocal(),
+                        itemRender));
+        this.craftingStatusBtn.setHideEdge(13); // GuiTabButton implementation //
 
         if (ModAndClassUtil.isSearchBar && (AEConfig.instance.preserveSearchBar || this.isSubGui())) {
             setSearchString();
@@ -296,6 +301,7 @@ public class GuiInterfaceTerminalWireless extends FCBaseMEGui implements IDropTo
 
         buttonList.add(terminalStyleBox);
         buttonList.add(searchStringSave);
+        buttonList.add(craftingStatusBtn);
         addSwitchGuiBtns();
 
         int offset = 51;
@@ -391,6 +397,8 @@ public class GuiInterfaceTerminalWireless extends FCBaseMEGui implements IDropTo
             AEConfig.instance.settings.putSetting(Settings.SAVE_SEARCH, next);
             this.searchStringSave.set(next);
 
+        } else if (btn == craftingStatusBtn) {
+            InventoryHandler.switchGui(GuiType.CRAFTING_STATUS);
         } else if (btn instanceof GuiImgButton) {
             final GuiImgButton iBtn = (GuiImgButton) btn;
             if (iBtn.getSetting() != Settings.ACTIONS) {

@@ -1,10 +1,7 @@
 package com.glodblock.github.common.item;
 
-import java.util.EnumSet;
 import java.util.HashMap;
-import java.util.List;
 
-import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
@@ -18,8 +15,6 @@ import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.event.ForgeEventFactory;
 
 import appeng.api.AEApi;
-import appeng.api.config.FuzzyMode;
-import appeng.api.config.IncludeExclude;
 import appeng.api.exceptions.MissingDefinition;
 import appeng.api.implementations.items.IUpgradeModule;
 import appeng.api.storage.IMEInventoryHandler;
@@ -28,86 +23,29 @@ import appeng.api.storage.data.IAEFluidStack;
 import appeng.api.storage.data.IItemList;
 import appeng.core.AEConfig;
 import appeng.core.features.AEFeature;
-import appeng.core.localization.GuiText;
-import appeng.items.AEBaseItem;
-import appeng.items.contents.CellConfig;
-import appeng.items.contents.CellUpgrades;
 import appeng.util.InventoryAdaptor;
 import appeng.util.Platform;
-import appeng.util.ReadableNumberConverter;
 
 import com.glodblock.github.FluidCraft;
 import com.glodblock.github.common.Config;
 import com.glodblock.github.common.storage.CellType;
-import com.glodblock.github.common.storage.IFluidCellInventory;
-import com.glodblock.github.common.storage.IFluidCellInventoryHandler;
 import com.glodblock.github.common.storage.IStorageFluidCell;
 import com.glodblock.github.common.tabs.FluidCraftingTabs;
 import com.glodblock.github.loader.IRegister;
-import com.glodblock.github.util.ModAndClassUtil;
 import com.glodblock.github.util.NameConst;
-import com.google.common.base.Optional;
 
 import cpw.mods.fml.common.registry.GameRegistry;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
-public class ItemBasicFluidStorageCell extends AEBaseItem
+public class ItemBasicFluidStorageCell extends FCBaseItemCell
         implements IStorageFluidCell, IRegister<ItemBasicFluidStorageCell> {
 
-    private final CellType component;
-    private final int totalBytes;
-    private final int perType;
-    private final double idleDrain;
-    private final ReadableNumberConverter format = ReadableNumberConverter.INSTANCE;
     private static final HashMap<Integer, IIcon> icon = new HashMap<>();
 
-    @SuppressWarnings("Guava")
-    public ItemBasicFluidStorageCell(final CellType whichCell, final int kilobytes) {
-        super(Optional.of(kilobytes + "k"));
+    public ItemBasicFluidStorageCell(final CellType whichCell, final long kilobytes) {
+        super(whichCell, kilobytes);
         setUnlocalizedName(NameConst.ITEM_FLUID_STORAGE + kilobytes);
-        this.setFeature(EnumSet.of(AEFeature.StorageCells));
-        this.setMaxStackSize(1);
-        this.totalBytes = kilobytes * 1024;
-        this.component = whichCell;
-
-        switch (this.component) {
-            case Cell1kPart:
-                this.idleDrain = 0.5;
-                this.perType = 8;
-                break;
-            case Cell4kPart:
-                this.idleDrain = 1.0;
-                this.perType = 8;
-                break;
-            case Cell16kPart:
-                this.idleDrain = 1.5;
-                this.perType = 8;
-                break;
-            case Cell64kPart:
-                this.idleDrain = 2.0;
-                this.perType = 8;
-                break;
-            case Cell256kPart:
-                this.idleDrain = 2.5;
-                this.perType = 8;
-                break;
-            case Cell1024kPart:
-                this.idleDrain = 3.0;
-                this.perType = 8;
-                break;
-            case Cell4096kPart:
-                this.idleDrain = 3.5;
-                this.perType = 8;
-                break;
-            case Cell16384kPart:
-                this.idleDrain = 4.0;
-                this.perType = 8;
-                break;
-            default:
-                this.idleDrain = 0.0;
-                this.perType = 8;
-        }
     }
 
     public ItemStack getComponent() {
@@ -126,7 +64,7 @@ public class ItemBasicFluidStorageCell extends AEBaseItem
     @SideOnly(Side.CLIENT)
     public void registerIcons(IIconRegister iconRegister) {
         icon.put(
-                this.totalBytes / 1024,
+                (int) (this.totalBytes / 1024),
                 iconRegister
                         .registerIcon(NameConst.RES_KEY + NameConst.ITEM_FLUID_STORAGE + "." + this.totalBytes / 1024));
     }
@@ -134,147 +72,8 @@ public class ItemBasicFluidStorageCell extends AEBaseItem
     @Override
     @SideOnly(Side.CLIENT)
     public IIcon getIconFromDamage(int meta) {
-        int id = this.totalBytes / 1024;
+        int id = (int) (this.totalBytes / 1024);
         return icon.get(id);
-    }
-
-    @Override
-    public void addCheckedInformation(final ItemStack stack, final EntityPlayer player, final List<String> lines,
-            final boolean displayMoreInfo) {
-        final IMEInventoryHandler<?> inventory = AEApi.instance().registries().cell()
-                .getCellInventory(stack, null, StorageChannel.FLUIDS);
-
-        if (inventory instanceof IFluidCellInventoryHandler) {
-            final IFluidCellInventoryHandler handler = (IFluidCellInventoryHandler) inventory;
-            final IFluidCellInventory cellInventory = handler.getCellInv();
-
-            if (cellInventory != null) {
-                lines.add(
-                        EnumChatFormatting.WHITE + String.valueOf(cellInventory.getUsedBytes())
-                                + EnumChatFormatting.GRAY
-                                + " "
-                                + GuiText.Of.getLocal()
-                                + " "
-                                + EnumChatFormatting.DARK_GREEN
-                                + cellInventory.getTotalBytes()
-                                + " "
-                                + EnumChatFormatting.GRAY
-                                + GuiText.BytesUsed.getLocal());
-                lines.add(
-                        EnumChatFormatting.WHITE + String.valueOf(cellInventory.getStoredFluidTypes())
-                                + EnumChatFormatting.GRAY
-                                + " "
-                                + GuiText.Of.getLocal()
-                                + " "
-                                + EnumChatFormatting.DARK_GREEN
-                                + cellInventory.getTotalFluidTypes()
-                                + " "
-                                + EnumChatFormatting.GRAY
-                                + GuiText.Types.getLocal());
-
-                if (GuiScreen.isCtrlKeyDown()) {
-                    if (cellInventory.getStoredFluidTypes() > 0) {
-                        lines.add(StatCollector.translateToLocal(NameConst.TT_CELL_CONTENTS));
-                        for (IAEFluidStack fluid : cellInventory.getContents()) {
-                            if (fluid != null) {
-                                lines.add(
-                                        String.format(
-                                                "  %s x%s mB",
-                                                fluid.getFluidStack().getLocalizedName(),
-                                                format.toWideReadableForm(fluid.getStackSize())));
-                            }
-                        }
-                    } else {
-                        lines.add(StatCollector.translateToLocal(NameConst.TT_CELL_EMPTY));
-                    }
-                } else {
-                    lines.add(StatCollector.translateToLocal(NameConst.TT_CTRL_FOR_MORE));
-                }
-
-                if (handler.isPreformatted()) {
-                    final String list = (handler.getIncludeExcludeMode() == IncludeExclude.WHITELIST ? GuiText.Included
-                            : GuiText.Excluded).getLocal();
-                    lines.add(GuiText.Partitioned.getLocal() + " - " + list + ' ' + GuiText.Precise.getLocal());
-
-                    if (GuiScreen.isShiftKeyDown()) {
-                        lines.add(GuiText.Filter.getLocal() + ": ");
-                        for (IAEFluidStack aeFluidStack : handler.getPartitionInv()) {
-                            if (aeFluidStack != null) lines.add("  " + aeFluidStack.getFluidStack().getLocalizedName());
-                        }
-                    } else {
-                        lines.add(StatCollector.translateToLocal(NameConst.TT_SHIFT_FOR_MORE));
-                    }
-                }
-            }
-        }
-    }
-
-    @Override
-    public int getBytes(final ItemStack cellItem) {
-        return this.totalBytes;
-    }
-
-    @Override
-    public int getBytesPerType(final ItemStack cellItem) {
-        return this.perType;
-    }
-
-    @Override
-    public boolean isBlackListed(ItemStack cellItem, IAEFluidStack requestedAddition) {
-        if (Config.blacklistEssentiaGas && ModAndClassUtil.ThE && requestedAddition != null) {
-            return ModAndClassUtil.essentiaGas.isInstance(requestedAddition.getFluid());
-        }
-        return false;
-    }
-
-    @Override
-    public int getTotalTypes(final ItemStack cellItem) {
-        return 1;
-    }
-
-    @Override
-    public boolean storableInStorageCell() {
-        return false;
-    }
-
-    @Override
-    public boolean isStorageCell(final ItemStack i) {
-        return true;
-    }
-
-    @Override
-    public double getIdleDrain() {
-        return this.idleDrain;
-    }
-
-    @Override
-    public boolean isEditable(final ItemStack is) {
-        return true;
-    }
-
-    @Override
-    public IInventory getUpgradesInventory(final ItemStack is) {
-        return new CellUpgrades(is, 0);
-    }
-
-    @Override
-    public IInventory getConfigInventory(final ItemStack is) {
-        return new CellConfig(is);
-    }
-
-    @Override
-    public FuzzyMode getFuzzyMode(final ItemStack is) {
-        final String fz = Platform.openNbtData(is).getString("FuzzyMode");
-        try {
-            return FuzzyMode.valueOf(fz);
-        } catch (final Throwable t) {
-            return FuzzyMode.IGNORE_ALL;
-        }
-    }
-
-    @Override
-    public void setFuzzyMode(final ItemStack is, final FuzzyMode fzMode) {
-        Platform.openNbtData(is).setString("FuzzyMode", fzMode.name());
     }
 
     @Override
@@ -359,13 +158,5 @@ public class ItemBasicFluidStorageCell extends AEBaseItem
         GameRegistry.registerItem(this, NameConst.ITEM_FLUID_STORAGE + this.totalBytes / 1024, FluidCraft.MODID);
         setCreativeTab(FluidCraftingTabs.INSTANCE);
         return this;
-    }
-
-    public ItemStack stack(int size) {
-        return new ItemStack(this, size);
-    }
-
-    public ItemStack stack() {
-        return new ItemStack(this, 1);
     }
 }

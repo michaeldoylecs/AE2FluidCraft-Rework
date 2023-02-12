@@ -16,6 +16,7 @@ import com.glodblock.github.inventory.InventoryHandler;
 import com.glodblock.github.inventory.gui.GuiType;
 import com.glodblock.github.inventory.item.IWirelessTerminal;
 import com.glodblock.github.inventory.item.WirelessFluidTerminalInventory;
+import com.glodblock.github.inventory.item.WirelessInterfaceTerminalInventory;
 import com.glodblock.github.inventory.item.WirelessPatternTerminalInventory;
 import com.glodblock.github.loader.ItemAndBlockHolder;
 import com.glodblock.github.util.Ae2ReflectClient;
@@ -44,6 +45,8 @@ public class GuiFluidPatternTerminalCraftingStatus extends GuiCraftingStatus {
             Ae2ReflectClient.rewriteIcon(this, new ItemStack(ItemAndBlockHolder.WIRELESS_FLUID_TERM, 1));
         } else if (host instanceof WirelessPatternTerminalInventory) {
             Ae2ReflectClient.rewriteIcon(this, new ItemStack(ItemAndBlockHolder.WIRELESS_PATTERN_TERM, 1));
+        } else if (host instanceof WirelessInterfaceTerminalInventory) {
+            Ae2ReflectClient.rewriteIcon(this, new ItemStack(ItemAndBlockHolder.WIRELESS_INTERFACE_TERM, 1));
         }
         super.initGui();
         originalGuiBtn = Ae2ReflectClient.getOriginalGuiButton(this);
@@ -62,6 +65,8 @@ public class GuiFluidPatternTerminalCraftingStatus extends GuiCraftingStatus {
                 InventoryHandler.switchGui(GuiType.WIRELESS_FLUID_TERMINAL);
             else if (host instanceof WirelessPatternTerminalInventory)
                 InventoryHandler.switchGui(GuiType.WIRELESS_FLUID_PATTERN_TERMINAL);
+            else if (host instanceof WirelessInterfaceTerminalInventory)
+                InventoryHandler.switchGui(GuiType.WIRELESS_INTERFACE_TERMINAL);
         } else {
             super.actionPerformed(btn);
         }

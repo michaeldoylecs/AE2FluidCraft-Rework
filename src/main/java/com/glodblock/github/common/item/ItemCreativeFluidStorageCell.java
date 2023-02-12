@@ -43,7 +43,7 @@ public class ItemCreativeFluidStorageCell extends AEBaseItem
     }
 
     @Override
-    public int getBytes(ItemStack cellItem) {
+    public long getBytes(ItemStack cellItem) {
         return 0;
     }
 
