@@ -35,6 +35,7 @@ public class NameConst {
     public static final String ITEM_PART_FLUID_LEVEL_EMITTER = "part_fluid_level_emitter";
     public static final String ITEM_FLUID_PACKET = "fluid_packet";
     public static final String ITEM_FLUID_STORAGE = "fluid_storage";
+    public static final String ITEM_MULTI_FLUID_STORAGE = "multi_fluid_storage";
     public static final String ITEM_QUANTUM_FLUID_STORAGE = ITEM_FLUID_STORAGE + ".quantum";
     public static final String ITEM_SINGULARITY_FLUID_STORAGE = ITEM_FLUID_STORAGE + ".singularity";
     public static final String ITEM_CREATIVE_FLUID_STORAGE = "creative_" + ITEM_FLUID_STORAGE;
@@ -44,6 +45,7 @@ public class NameConst {
     public static final String ITEM_WIRELESS_ULTRA_TERMINAL = "wireless_ultra_terminal";
     public static final String ITEM_WIRELESS_FLUID_PATTERN_TERMINAL = "wireless_fluid_pattern_terminal";
     public static final String ITEM_FLUID_PART = "fluid_part";
+    public static final String ITEM_FLUID_STORAGE_HOUSING = "fluid_storage_housing";
 
     public static final String TT_KEY = FluidCraft.MODID + ".tooltip.";
     public static final String TT_FLUID_TERMINAL = TT_KEY + "fluid_terminal";

@@ -41,32 +41,57 @@ public class ItemAndBlockHolder {
     public static ItemWirelessInterfaceTerminal WIRELESS_INTERFACE_TERM = new ItemWirelessInterfaceTerminal()
             .register();
     public static ItemFluidPacket PACKET = new ItemFluidPacket().register();
-    public static ItemBasicFluidStorageCell CELL1K = new ItemBasicFluidStorageCell(CellType.Cell1kPart, 1).register();
-    public static ItemBasicFluidStorageCell CELL4K = new ItemBasicFluidStorageCell(CellType.Cell4kPart, 4).register();
-    public static ItemBasicFluidStorageCell CELL16K = new ItemBasicFluidStorageCell(CellType.Cell16kPart, 16)
+    public static ItemBasicFluidStorageCell CELL1K = new ItemBasicFluidStorageCell(CellType.Cell1kPart, 0, 1)
             .register();
-    public static ItemBasicFluidStorageCell CELL64K = new ItemBasicFluidStorageCell(CellType.Cell64kPart, 64)
+    public static ItemBasicFluidStorageCell CELL4K = new ItemBasicFluidStorageCell(CellType.Cell4kPart, 0, 4)
             .register();
-    public static ItemBasicFluidStorageCell CELL256K = new ItemBasicFluidStorageCell(CellType.Cell256kPart, 256)
+    public static ItemBasicFluidStorageCell CELL16K = new ItemBasicFluidStorageCell(CellType.Cell16kPart, 0, 16)
             .register();
-    public static ItemBasicFluidStorageCell CELL1024K = new ItemBasicFluidStorageCell(CellType.Cell1024kPart, 1024)
+    public static ItemBasicFluidStorageCell CELL64K = new ItemBasicFluidStorageCell(CellType.Cell64kPart, 0, 64)
             .register();
-    public static ItemBasicFluidStorageCell CELL4096K = new ItemBasicFluidStorageCell(CellType.Cell4096kPart, 4096)
+    public static ItemBasicFluidStorageCell CELL256K = new ItemBasicFluidStorageCell(CellType.Cell256kPart, 1, 256)
             .register();
-    public static ItemBasicFluidStorageCell CELL16384K = new ItemBasicFluidStorageCell(CellType.Cell16384kPart, 16384)
+    public static ItemBasicFluidStorageCell CELL1024K = new ItemBasicFluidStorageCell(CellType.Cell1024kPart, 1, 1024)
             .register();
+    public static ItemBasicFluidStorageCell CELL4096K = new ItemBasicFluidStorageCell(CellType.Cell4096kPart, 1, 4096)
+            .register();
+    public static ItemBasicFluidStorageCell CELL16384K = new ItemBasicFluidStorageCell(
+            CellType.Cell16384kPart,
+            1,
+            16384).register();
+    public static ItemMultiFluidStorageCell CELL1KM = new ItemMultiFluidStorageCell(CellType.Cell1kPart, 2, 1)
+            .register();
+    public static ItemMultiFluidStorageCell CELL4KM = new ItemMultiFluidStorageCell(CellType.Cell4kPart, 2, 4)
+            .register();
+    public static ItemMultiFluidStorageCell CELL16KM = new ItemMultiFluidStorageCell(CellType.Cell16kPart, 2, 16)
+            .register();
+    public static ItemMultiFluidStorageCell CELL64KM = new ItemMultiFluidStorageCell(CellType.Cell64kPart, 2, 64)
+            .register();
+    public static ItemMultiFluidStorageCell CELL256KM = new ItemMultiFluidStorageCell(CellType.Cell256kPart, 3, 256)
+            .register();
+    public static ItemMultiFluidStorageCell CELL1024KM = new ItemMultiFluidStorageCell(CellType.Cell1024kPart, 3, 1024)
+            .register();
+    public static ItemMultiFluidStorageCell CELL4096KM = new ItemMultiFluidStorageCell(CellType.Cell4096kPart, 3, 4096)
+            .register();
+    public static ItemMultiFluidStorageCell CELL16384KM = new ItemMultiFluidStorageCell(
+            CellType.Cell16384kPart,
+            3,
+            16384).register();
     public static ItemFluidExtremeStorageCell QUANTUM_CELL = new ItemFluidExtremeStorageCell(
             NameConst.ITEM_QUANTUM_FLUID_STORAGE,
             Integer.MAX_VALUE / 16,
             8,
+            5,
             4.5).register();
     public static ItemFluidExtremeStorageCell SINGULARITY_CELL = new ItemFluidExtremeStorageCell(
             NameConst.ITEM_SINGULARITY_FLUID_STORAGE,
             Long.MAX_VALUE / (singleByteAmount * 2),
             8,
+            1,
             5).register();
     public static ItemCreativeFluidStorageCell CREATIVE_CELL = new ItemCreativeFluidStorageCell().register();
     public static ItemBasicFluidStoragePart CELL_PART = new ItemBasicFluidStoragePart().register();
+    public static ItemFluidStorageHousing CELL_HOUSING = new ItemFluidStorageHousing().register();
 
     public static void loadSetting() {
         if (!Config.fluidCells) return;

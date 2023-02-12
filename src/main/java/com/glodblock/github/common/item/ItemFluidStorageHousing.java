@@ -7,13 +7,11 @@ import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.IIcon;
 import net.minecraft.util.StatCollector;
 
 import com.glodblock.github.FluidCraft;
 import com.glodblock.github.common.Config;
-import com.glodblock.github.common.storage.CellType;
 import com.glodblock.github.common.tabs.FluidCraftingTabs;
 import com.glodblock.github.util.NameConst;
 
@@ -21,15 +19,15 @@ import cpw.mods.fml.common.registry.GameRegistry;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
-public class ItemBasicFluidStoragePart extends FCBaseItem {
+public class ItemFluidStorageHousing extends FCBaseItem {
 
-    public static final int types = 8;
+    public static final int types = 4;
     private static final HashMap<Integer, IIcon> icon = new HashMap<>();
 
-    public ItemBasicFluidStoragePart() {
+    public ItemFluidStorageHousing() {
         super();
         setHasSubtypes(true);
-        setUnlocalizedName(NameConst.ITEM_FLUID_PART);
+        setUnlocalizedName(NameConst.ITEM_FLUID_STORAGE_HOUSING);
     }
 
     @Override
@@ -44,17 +42,14 @@ public class ItemBasicFluidStoragePart extends FCBaseItem {
     @Override
     public String getItemStackDisplayName(ItemStack stack) {
         int meta = stack.getItemDamage();
-        return StatCollector.translateToLocalFormatted(
-                "item.fluid_part." + meta + ".name",
-                CellType.getTypeColor(meta),
-                EnumChatFormatting.RESET);
+        return StatCollector.translateToLocalFormatted("item.fluid_storage_housing." + meta + ".name");
     }
 
     @Override
     @SideOnly(Side.CLIENT)
     public void registerIcons(IIconRegister iconRegister) {
         for (int i = 0; i < types; i++) {
-            icon.put(i, iconRegister.registerIcon(NameConst.RES_KEY + NameConst.ITEM_FLUID_PART + "." + i));
+            icon.put(i, iconRegister.registerIcon(NameConst.RES_KEY + NameConst.ITEM_FLUID_STORAGE_HOUSING + "." + i));
         }
     }
 
@@ -65,10 +60,11 @@ public class ItemBasicFluidStoragePart extends FCBaseItem {
     }
 
     @Override
-    public ItemBasicFluidStoragePart register() {
+    public ItemFluidStorageHousing register() {
         if (!Config.fluidCells) return null;
-        GameRegistry.registerItem(this, NameConst.ITEM_FLUID_PART, FluidCraft.MODID);
+        GameRegistry.registerItem(this, NameConst.ITEM_FLUID_STORAGE_HOUSING, FluidCraft.MODID);
         setCreativeTab(FluidCraftingTabs.INSTANCE);
         return this;
     }
+
 }
