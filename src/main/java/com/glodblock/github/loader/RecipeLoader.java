@@ -401,7 +401,7 @@ public class RecipeLoader implements Runnable {
                     CELL256K, CELL1024K, CELL4096K, CELL16384K };
             GameRegistry.addRecipe(
                     new ShapedOreRecipe(
-                            CELL131072K.stack(),
+                            QUANTUM_CELL.stack(),
                             "RCR",
                             "CEC",
                             "RCR",
@@ -413,12 +413,12 @@ public class RecipeLoader implements Runnable {
                             AE2_QUANTUM_RING));
             GameRegistry.addRecipe(
                     new ShapedOreRecipe(
-                            CELL554160890921312K.stack(),
+                            SINGULARITY_CELL.stack(),
                             "CCC",
                             "CMC",
                             "CCC",
                             'C',
-                            CELL131072K,
+                            QUANTUM_CELL,
                             'M',
                             AE2_MATTER_CONDENSER));
             for (ItemBasicFluidStorageCell cell : cells) {
