@@ -48,7 +48,7 @@ public class GuiRenamerTransformer extends FCClassTransformer.ClassMapper {
             if (owner.equals("net/minecraft/client/entity/EntityClientPlayerMP") && name.equals("closeScreen")) {
                 super.visitMethodInsn(
                         Opcodes.INVOKESTATIC,
-                        "com/glodblock/github/coremod/hooker/CoreModHooks",
+                        "com/glodblock/github/coremod/hooker/CoreModHooksClient",
                         "reopenInterfaceTerminal",
                         "()V",
                         false);

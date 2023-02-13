@@ -51,7 +51,7 @@ public class PacketCompressedNBTTransformer extends FCClassTransformer.ClassMapp
                     "Lnet/minecraft/nbt/NBTTagCompound;");
             super.visitMethodInsn(
                     Opcodes.INVOKESTATIC,
-                    "com/glodblock/github/coremod/hooker/CoreModHooks",
+                    "com/glodblock/github/coremod/hooker/CoreModHooksClient",
                     "clientPacketData",
                     "(Lnet/minecraft/nbt/NBTTagCompound;)V",
                     false);
