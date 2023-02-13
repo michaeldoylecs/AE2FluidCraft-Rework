@@ -46,9 +46,9 @@ public class NEIItemFilter implements SearchField.ISearchProvider {
                     final IFluidCellInventory cellInventory = handler.getCellInv();
                     if (cellInventory != null) {
                         for (IAEFluidStack fluid : cellInventory.getContents()) {
-                            if (fluid != null) {
-                                return pattern.matcher(fluid.getFluidStack().getLocalizedName().toLowerCase()).find();
-                            }
+                            boolean result = pattern.matcher(fluid.getFluidStack().getLocalizedName().toLowerCase())
+                                    .find();
+                            if (result) return true;
                         }
 
                     }
