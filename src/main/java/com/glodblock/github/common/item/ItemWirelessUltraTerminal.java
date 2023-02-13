@@ -86,32 +86,30 @@ public class ItemWirelessUltraTerminal extends ItemBaseWirelessTerminal
     public Object getInventory(ItemStack stack, World world, int x, int y, int z, EntityPlayer player) {
         try {
             IGridNode gridNode = Util.getWirelessGrid(stack);
-            if (gridNode != null) {
-                final GuiType gui;
-                if (Util.GuiHelper.decodeType(y).getLeft() == Util.GuiHelper.GuiType.ITEM && z > 0) {
-                    gui = getGuis().get(Util.GuiHelper.decodeType(y).getRight());
-                } else {
-                    gui = readMode(stack);
-                }
-                if (gui == GuiType.WIRELESS_FLUID_PATTERN_TERMINAL) {
-                    return new WirelessPatternTerminalInventory(stack, x, gridNode, player);
-                } else if (gui == GuiType.WIRELESS_CRAFTING_TERMINAL) {
-                    return new WirelessCraftingTerminalInventory(stack, x, gridNode, player);
-                } else if (ModAndClassUtil.ThE && gui == GuiType.WIRELESS_ESSENTIA_TERMINAL) {
-                    return new WirelessFluidTerminalInventory(stack, x, gridNode, player);
-                } else if (gui == GuiType.WIRELESS_FLUID_TERMINAL) {
-                    return new WirelessFluidTerminalInventory(stack, x, gridNode, player);
-                } else if (gui == GuiType.WIRELESS_INTERFACE_TERMINAL) {
-                    return new WirelessInterfaceTerminalInventory(stack, x, gridNode, player);
-                } else if (gui == GuiType.WIRELESS_FLUID_PATTERN_TERMINAL_EX) {
-                    return new WirelessPatternTerminalExInventory(stack, x, gridNode, player);
-                } else {
-                    this.setMode(GuiType.WIRELESS_FLUID_TERMINAL, stack); // set as default mode
-                    return new WirelessFluidTerminalInventory(stack, x, gridNode, player);
-                }
+            final GuiType gui;
+            if (Util.GuiHelper.decodeType(y).getLeft() == Util.GuiHelper.GuiType.ITEM && z > 0) {
+                gui = getGuis().get(Util.GuiHelper.decodeType(y).getRight());
+            } else {
+                gui = readMode(stack);
+            }
+            if (gui == GuiType.WIRELESS_FLUID_PATTERN_TERMINAL) {
+                return new WirelessPatternTerminalInventory(stack, x, gridNode, player);
+            } else if (gui == GuiType.WIRELESS_CRAFTING_TERMINAL) {
+                return new WirelessCraftingTerminalInventory(stack, x, gridNode, player);
+            } else if (ModAndClassUtil.ThE && gui == GuiType.WIRELESS_ESSENTIA_TERMINAL) {
+                return new WirelessFluidTerminalInventory(stack, x, gridNode, player);
+            } else if (gui == GuiType.WIRELESS_FLUID_TERMINAL) {
+                return new WirelessFluidTerminalInventory(stack, x, gridNode, player);
+            } else if (gui == GuiType.WIRELESS_INTERFACE_TERMINAL) {
+                return new WirelessInterfaceTerminalInventory(stack, x, gridNode, player);
+            } else if (gui == GuiType.WIRELESS_FLUID_PATTERN_TERMINAL_EX) {
+                return new WirelessPatternTerminalExInventory(stack, x, gridNode, player);
+            } else {
+                this.setMode(GuiType.WIRELESS_FLUID_TERMINAL, stack); // set as default mode
+                return new WirelessFluidTerminalInventory(stack, x, gridNode, player);
             }
         } catch (Exception e) {
-            if (Platform.isClient()) player.addChatMessage(PlayerMessages.OutOfRange.get());
+            player.addChatMessage(PlayerMessages.OutOfRange.get());
         }
         return null;
     }

@@ -10,7 +10,6 @@ import appeng.api.AEApi;
 import appeng.api.networking.IGridNode;
 import appeng.core.features.AEFeature;
 import appeng.core.localization.PlayerMessages;
-import appeng.util.Platform;
 
 import com.glodblock.github.FluidCraft;
 import com.glodblock.github.common.tabs.FluidCraftingTabs;
@@ -43,11 +42,9 @@ public class ItemWirelessPatternTerminal extends ItemBaseWirelessTerminal
     public Object getInventory(ItemStack stack, World world, int x, int y, int z, EntityPlayer player) {
         try {
             IGridNode gridNode = Util.getWirelessGrid(stack);
-            if (gridNode != null) {
-                return new WirelessPatternTerminalInventory(stack, x, gridNode, player);
-            }
+            return new WirelessPatternTerminalInventory(stack, x, gridNode, player);
         } catch (Exception e) {
-            if (Platform.isClient()) player.addChatMessage(PlayerMessages.OutOfRange.get());
+            player.addChatMessage(PlayerMessages.OutOfRange.get());
         }
         return null;
     }

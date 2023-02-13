@@ -27,15 +27,15 @@ import appeng.api.networking.IGrid;
 import appeng.api.networking.IGridHost;
 import appeng.api.networking.IGridNode;
 import appeng.api.networking.security.ISecurityGrid;
-import appeng.api.networking.storage.IBaseMonitor;
 import appeng.api.networking.storage.IStorageGrid;
 import appeng.api.parts.IPart;
+import appeng.api.storage.IMEInventoryHandler;
 import appeng.api.storage.StorageChannel;
 import appeng.api.storage.data.IAEFluidStack;
-import appeng.api.storage.data.IAEStack;
 import appeng.api.util.WorldCoord;
 import appeng.container.AEBaseContainer;
 import appeng.items.tools.powered.ToolWirelessTerminal;
+import appeng.me.storage.NullInventory;
 import appeng.tile.networking.TileCableBus;
 import appeng.tile.networking.TileWireless;
 import appeng.util.Platform;
@@ -117,12 +117,11 @@ public final class Util {
         return null;
     }
 
-    public static IBaseMonitor<? extends IAEStack<? extends IAEStack<?>>> getWirelessInv(ItemStack is,
-            EntityPlayer player, StorageChannel channel) {
+    public static IMEInventoryHandler<?> getWirelessInv(ItemStack is, EntityPlayer player, StorageChannel channel) {
         IGridNode gridNode = getWirelessGrid(is);
-        if (gridNode == null) return null;
+        if (gridNode == null) return new NullInventory<>();
         IGrid grid = gridNode.getGrid();
-        if (grid == null) return null;
+        if (grid == null) return new NullInventory<>();
         boolean canConnect = false;
         if (hasInfinityBoosterCard(is)) {
             canConnect = true;
@@ -150,7 +149,7 @@ public final class Util {
                 }
             }
         }
-        return null;
+        return new NullInventory<>();
     }
 
     public static int findItemInPlayerInvSlot(EntityPlayer player, ItemStack itemStack) {

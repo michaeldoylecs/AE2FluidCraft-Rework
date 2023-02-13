@@ -6,6 +6,8 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 
+import appeng.util.Platform;
+
 import com.glodblock.github.FluidCraft;
 import com.glodblock.github.inventory.gui.GuiType;
 import com.glodblock.github.network.CPacketSwitchGuis;
@@ -22,6 +24,9 @@ public class InventoryHandler implements IGuiHandler {
     }
 
     public static void openGui(EntityPlayer player, World world, BlockPos pos, ForgeDirection face, GuiType guiType) {
+        if (Platform.isClient()) {
+            return;
+        }
         player.openGui(
                 FluidCraft.INSTANCE,
                 (guiType.ordinal() << 3) | face.ordinal(),
