@@ -11,8 +11,10 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.ICrafting;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.world.World;
+import net.minecraftforge.common.util.ForgeDirection;
 
 import appeng.api.AEApi;
 import appeng.api.config.Actionable;
@@ -37,10 +39,12 @@ import appeng.core.AELog;
 import appeng.util.Platform;
 
 import com.glodblock.github.FluidCraft;
+import com.glodblock.github.common.item.ItemBaseWirelessTerminal;
 import com.glodblock.github.common.parts.PartFluidPatternTerminal;
 import com.glodblock.github.common.parts.PartFluidPatternTerminalEx;
 import com.glodblock.github.inventory.InventoryHandler;
 import com.glodblock.github.inventory.gui.GuiType;
+import com.glodblock.github.inventory.item.IWirelessTerminal;
 import com.glodblock.github.network.SPacketMEInventoryUpdate;
 import com.glodblock.github.util.Ae2Reflect;
 import com.glodblock.github.util.BlockPos;
@@ -269,6 +273,12 @@ public class ContainerFluidCraftConfirm extends AEBaseContainer {
         if (ah instanceof PartFluidPatternTerminalEx) {
             originalGui = GuiType.FLUID_PATTERN_TERMINAL_EX;
         }
+        if (ah instanceof IWirelessTerminal) {
+            ItemStack terminal = ((IWirelessTerminal) ah).getItemStack();
+            if (terminal.getItem() instanceof ItemBaseWirelessTerminal) {
+                originalGui = ((ItemBaseWirelessTerminal) terminal.getItem()).guiGuiType(terminal);
+            }
+        }
 
         if (this.result != null && !this.isSimulation() && getGrid() != null) {
             final ICraftingGrid cc = this.getGrid().getCache(ICraftingGrid.class);
@@ -279,13 +289,22 @@ public class ContainerFluidCraftConfirm extends AEBaseContainer {
                     true,
                     this.getActionSrc());
             this.setAutoStart(false);
-            if (g != null && originalGui != null && this.getOpenContext() != null) {
-                InventoryHandler.openGui(
-                        this.getInventoryPlayer().player,
-                        getWorld(),
-                        new BlockPos(this.getOpenContext().getTile()),
-                        Objects.requireNonNull(this.getOpenContext().getSide()),
-                        originalGui);
+            if (g != null && originalGui != null) {
+                if (ah instanceof IWirelessTerminal) {
+                    InventoryHandler.openGui(
+                            this.getInventoryPlayer().player,
+                            getWorld(),
+                            new BlockPos(this.getPlayerInv().currentItem, 0, 0),
+                            ForgeDirection.UNKNOWN,
+                            originalGui);
+                } else if (this.getOpenContext() != null) {
+                    InventoryHandler.openGui(
+                            this.getInventoryPlayer().player,
+                            getWorld(),
+                            new BlockPos(this.getOpenContext().getTile()),
+                            Objects.requireNonNull(this.getOpenContext().getSide()),
+                            originalGui);
+                }
             }
         }
     }
