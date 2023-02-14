@@ -135,10 +135,12 @@ public class CPacketTransferRecipe implements IMessage {
                             IAEItemStack iaeItemStack = AEApi.instance().storage().createItemStack(is);
                             if (storageList.findPrecise(iaeItemStack) == null) {
                                 for (IAEItemStack tmp : storageList.findFuzzy(iaeItemStack, FuzzyMode.IGNORE_ALL)) {
-                                    ItemStack substitute = tmp.getItemStack().copy();
-                                    substitute.stackSize = is.stackSize;
-                                    stack.putStack(substitute);
-                                    break;
+                                    if (iaeItemStack.sameOre(tmp)) {
+                                        ItemStack substitute = tmp.getItemStack().copy();
+                                        substitute.stackSize = is.stackSize;
+                                        stack.putStack(substitute);
+                                        break;
+                                    }
                                 }
                             }
                         }
