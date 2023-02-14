@@ -4,6 +4,7 @@ import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.StatCollector;
 import net.minecraft.world.World;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.IFluidContainerItem;
@@ -16,6 +17,15 @@ public class ItemCertusQuartzTank extends BaseItemBlockContainer implements IFlu
 
     public ItemCertusQuartzTank(Block block) {
         super(block);
+    }
+
+    @Override
+    public String getItemStackDisplayName(ItemStack stack) {
+        FluidStack fluid = getFluid(stack);
+        if (fluid == null) {
+            return StatCollector.translateToLocal("tile.certus_quartz_tank_empty.name");
+        }
+        return StatCollector.translateToLocalFormatted("tile.certus_quartz_tank.name", fluid.getLocalizedName());
     }
 
     @Override
