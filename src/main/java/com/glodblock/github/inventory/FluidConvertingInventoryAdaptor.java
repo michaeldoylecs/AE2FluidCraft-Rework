@@ -164,15 +164,53 @@ public class FluidConvertingInventoryAdaptor extends InventoryAdaptor {
 
     @Override
     public boolean containsItems() {
-        if (invFluids == null && invItems == null) {
+        if (!this.onmi) {
+            return checkItemFluids(this.invFluids, this.invItems, this.side);
+        }
+        boolean result;
+        for (ForgeDirection dir : ForgeDirection.values()) {
+            result = checkItemFluids(this.getSideFluid(dir), this.getSideItem(dir), dir);
+            if (result) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public boolean hasSlots() {
+        return (invFluids != null && invFluids.getTankInfo(side).length > 0) || (invItems != null);
+    }
+
+    @Override
+    public Iterator<ItemSlot> iterator() {
+        return new SlotIterator(
+                invFluids != null ? invFluids.getTankInfo(side) : new FluidTankInfo[0],
+                invItems != null ? invItems.iterator() : Collections.emptyIterator());
+    }
+
+    private IFluidHandler getSideFluid(ForgeDirection direction) {
+        TileEntity te = this.posInterface.getOffSet(direction).getTileEntity();
+        if (te instanceof IFluidHandler) {
+            return (IFluidHandler) te;
+        }
+        return null;
+    }
+
+    private InventoryAdaptor getSideItem(ForgeDirection direction) {
+        TileEntity te = this.posInterface.getOffSet(direction).getTileEntity();
+        return InventoryAdaptor.getAdaptor(te, direction);
+    }
+
+    private boolean checkItemFluids(IFluidHandler tank, InventoryAdaptor inv, ForgeDirection direction) {
+        if (tank == null && inv == null) {
             // If this entity doesn't have fluid or item inventory, we just view it as full of things.
             return true;
         }
-        if (invFluids != null && invFluids.getTankInfo(this.side) != null) {
+        if (tank != null && tank.getTankInfo(direction) != null) {
             List<FluidTankInfo[]> tankInfos = new LinkedList<>();
-            if (Util.getPart(invFluids, this.side) instanceof PartP2PLiquids) {
+            if (Util.getPart(tank, direction) instanceof PartP2PLiquids) {
                 // read other ends of p2p for blocking mode
-                PartP2PLiquids invFluidsP2P = (PartP2PLiquids) Util.getPart(invFluids, this.side);
+                PartP2PLiquids invFluidsP2P = (PartP2PLiquids) Util.getPart(tank, direction);
                 try {
                     Iterator<PartP2PLiquids> it = invFluidsP2P.getOutputs().iterator();
                     boolean checkedInput = false;
@@ -191,35 +229,22 @@ public class FluidConvertingInventoryAdaptor extends InventoryAdaptor {
                     }
                 } catch (GridAccessException ignore) {}
             } else {
-                tankInfos.add(invFluids.getTankInfo(this.side));
+                tankInfos.add(tank.getTankInfo(direction));
             }
             boolean hasTank = false;
             for (FluidTankInfo[] tankInfoArray : tankInfos) {
-                for (FluidTankInfo tank : tankInfoArray) {
+                for (FluidTankInfo tankInfo : tankInfoArray) {
                     hasTank = true;
-                    FluidStack fluid = tank.fluid;
+                    FluidStack fluid = tankInfo.fluid;
                     if (fluid != null && fluid.amount > 0) {
                         return true;
                     }
                 }
             }
-            if (!hasTank && invItems == null) {
-                // If this entity doesn't have fluid or item inventory, we just view it as full of things.
-                return true;
-            }
+            // If this entity doesn't have fluid or item inventory, we just view it as full of things.
+            return !hasTank && inv == null;
         }
-        return invItems != null && invItems.containsItems();
-    }
-
-    public boolean hasSlots() {
-        return (invFluids != null && invFluids.getTankInfo(side).length > 0) || (invItems != null);
-    }
-
-    @Override
-    public Iterator<ItemSlot> iterator() {
-        return new SlotIterator(
-                invFluids != null ? invFluids.getTankInfo(side) : new FluidTankInfo[0],
-                invItems != null ? invItems.iterator() : Collections.emptyIterator());
+        return inv != null && inv.containsItems();
     }
 
     private static class SlotIterator implements Iterator<ItemSlot> {
