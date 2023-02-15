@@ -13,7 +13,6 @@ import com.glodblock.github.client.gui.*;
 import com.glodblock.github.common.item.ItemWirelessUltraTerminal;
 import com.glodblock.github.inventory.gui.GuiType;
 import com.glodblock.github.util.ModAndClassUtil;
-import com.glodblock.github.util.Util;
 
 public abstract class FCBaseMEGui extends AEBaseMEGui {
 
@@ -36,13 +35,11 @@ public abstract class FCBaseMEGui extends AEBaseMEGui {
     @Override
     public void onGuiClosed() {
         super.onGuiClosed();
-        Util.MouseHandler.saveMousePos();
     }
 
     protected void initGuiDone() {
         if (drawSwitchGuiBtn) {
             drawSwitchGuiBtns();
-            Util.MouseHandler.loadMousePos();
         }
     }
 

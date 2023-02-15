@@ -11,8 +11,10 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.common.util.ForgeDirection;
 
 import appeng.api.config.*;
+import appeng.api.implementations.ICraftingPatternItem;
 import appeng.api.implementations.items.IAEItemPowerStorage;
 import appeng.api.networking.IGridNode;
+import appeng.api.networking.crafting.ICraftingPatternDetails;
 import appeng.api.storage.IMEInventoryHandler;
 import appeng.api.storage.IMEMonitor;
 import appeng.api.storage.MEMonitorHandler;
@@ -28,6 +30,7 @@ import appeng.tile.inventory.InvOperation;
 import appeng.util.ConfigManager;
 import appeng.util.Platform;
 
+import com.glodblock.github.common.item.ItemFluidDrop;
 import com.glodblock.github.common.item.ItemFluidPacket;
 import com.glodblock.github.inventory.ItemBiggerAppEngInventory;
 import com.glodblock.github.inventory.WirelessFluidPatternTerminalPatterns;
@@ -67,7 +70,7 @@ public class WirelessPatternTerminalInventory extends MEMonitorHandler<IAEItemSt
         this.inventorySlot = slot;
         this.viewCell = new WirelessTerminalViewCells(is);
         this.channel = StorageChannel.ITEMS;
-        this.pattern = new WirelessFluidPatternTerminalPatterns(is);
+        this.pattern = new WirelessFluidPatternTerminalPatterns(is, this);
         this.crafting = new ItemBiggerAppEngInventory(is, "crafting", 9);
         this.output = new ItemBiggerAppEngInventory(is, "output", 3);
     }
@@ -169,7 +172,58 @@ public class WirelessPatternTerminalInventory extends MEMonitorHandler<IAEItemSt
     @Override
     public void onChangeInventory(IInventory inv, int slot, InvOperation mc, ItemStack removedStack,
             ItemStack newStack) {
-        // NO-OP
+        if (inv == this.pattern && slot == 1) {
+            final ItemStack is = inv.getStackInSlot(1);
+            if (is != null && is.getItem() instanceof ICraftingPatternItem) {
+                final ICraftingPatternItem pattern = (ICraftingPatternItem) is.getItem();
+                final ICraftingPatternDetails details = pattern
+                        .getPatternForItem(is, this.getActionableNode().getWorld());
+                if (details != null) {
+                    final IAEItemStack[] inItems = details.getInputs();
+                    final IAEItemStack[] outItems = details.getOutputs();
+
+                    this.setCraftingRecipe(details.isCraftable());
+                    this.setSubstitution(details.canSubstitute());
+                    if (newStack != null) {
+                        NBTTagCompound data = newStack.getTagCompound();
+                        this.setCombineMode(data.getInteger("combine") == 1);
+                        this.setBeSubstitute(details.canBeSubstitute());
+                    }
+                    for (int i = 0; i < this.crafting.getSizeInventory(); i++) {
+                        this.crafting.setInventorySlotContents(i, null);
+                    }
+
+                    for (int i = 0; i < this.output.getSizeInventory(); i++) {
+                        this.output.setInventorySlotContents(i, null);
+                    }
+
+                    for (int i = 0; i < this.crafting.getSizeInventory() && i < inItems.length; i++) {
+                        if (inItems[i] != null) {
+                            final IAEItemStack item = inItems[i];
+                            if (item != null && item.getItem() instanceof ItemFluidDrop) {
+                                ItemStack packet = ItemFluidPacket
+                                        .newStack(ItemFluidDrop.getFluidStack(item.getItemStack()));
+                                this.crafting.setInventorySlotContents(i, packet);
+                            } else this.crafting.setInventorySlotContents(i, item == null ? null : item.getItemStack());
+                        }
+                    }
+
+                    for (int i = 0; i < this.output.getSizeInventory() && i < outItems.length; i++) {
+                        if (outItems[i] != null) {
+                            final IAEItemStack item = outItems[i];
+                            if (item != null && item.getItem() instanceof ItemFluidDrop) {
+                                ItemStack packet = ItemFluidPacket
+                                        .newStack(ItemFluidDrop.getFluidStack(item.getItemStack()));
+                                this.output.setInventorySlotContents(i, packet);
+                            } else this.output.setInventorySlotContents(i, item == null ? null : item.getItemStack());
+                        }
+                    }
+                }
+            }
+        }
+        if (inv == this.crafting) {
+            this.fixCraftingRecipes();
+        }
     }
 
     private void fixCraftingRecipes() {
