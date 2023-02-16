@@ -109,8 +109,6 @@ public class WirelessPatternTerminalInventory extends MEMonitorHandler<IAEItemSt
         this.setSubstitution(data.getBoolean("substitute"));
         this.setCombineMode(data.getBoolean("combine"));
         this.setBeSubstitute(data.getBoolean("beSubstitute"));
-        this.setPrioritization(data.getBoolean("priorization"));
-        this.setInverted(data.getBoolean("inverted"));
         this.setActivePage(data.getInteger("activePage"));
     }
 
@@ -120,8 +118,6 @@ public class WirelessPatternTerminalInventory extends MEMonitorHandler<IAEItemSt
         data.setBoolean("substitute", this.substitute);
         data.setBoolean("combine", this.combine);
         data.setBoolean("beSubstitute", this.beSubstitute);
-        data.setBoolean("priorization", this.prioritize);
-        data.setBoolean("inverted", this.inverted);
         data.setInteger("activePage", this.activePage);
     }
 
@@ -239,7 +235,7 @@ public class WirelessPatternTerminalInventory extends MEMonitorHandler<IAEItemSt
 
     @Override
     public boolean isInverted() {
-        return this.inverted;
+        return false;
     }
 
     @Override
@@ -266,7 +262,7 @@ public class WirelessPatternTerminalInventory extends MEMonitorHandler<IAEItemSt
 
     @Override
     public boolean isPrioritize() {
-        return this.prioritize;
+        return false;
     }
 
     @Override
