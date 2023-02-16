@@ -14,26 +14,37 @@ public class NEI_FC_Config implements IConfigureNEI {
         API.registerNEIGuiHandler(new NEIGuiHandler());
         API.addSearchProvider(new NEIItemFilter());
         for (String identifier : FluidRecipe.getSupportRecipes()) {
-            API.registerGuiOverlayHandler(
-                    GuiFluidCraftingWireless.class,
-                    FluidCraftingTransferHandler.INSTANCE,
-                    identifier);
-            API.registerGuiOverlayHandler(
-                    GuiFluidPatternWireless.class,
-                    FluidPatternTerminalRecipeTransferHandler.INSTANCE,
-                    identifier);
-            API.registerGuiOverlayHandler(
-                    GuiFluidPatternExWireless.class,
-                    FluidPatternTerminalRecipeTransferHandler.INSTANCE,
-                    identifier);
-            API.registerGuiOverlayHandler(
-                    GuiFluidPatternTerminal.class,
-                    FluidPatternTerminalRecipeTransferHandler.INSTANCE,
-                    identifier);
-            API.registerGuiOverlayHandler(
-                    GuiFluidPatternTerminalEx.class,
-                    FluidPatternTerminalRecipeTransferHandler.INSTANCE,
-                    identifier);
+            // that NEE handlers take priority
+            if (!API.hasGuiOverlayHandler(GuiFluidCraftingWireless.class, identifier)) {
+                API.registerGuiOverlayHandler(
+                        GuiFluidCraftingWireless.class,
+                        FluidCraftingTransferHandler.INSTANCE,
+                        identifier);
+            }
+            if (!API.hasGuiOverlayHandler(GuiFluidPatternWireless.class, identifier)) {
+                API.registerGuiOverlayHandler(
+                        GuiFluidPatternWireless.class,
+                        FluidPatternTerminalRecipeTransferHandler.INSTANCE,
+                        identifier);
+            }
+            if (!API.hasGuiOverlayHandler(GuiFluidPatternExWireless.class, identifier)) {
+                API.registerGuiOverlayHandler(
+                        GuiFluidPatternExWireless.class,
+                        FluidPatternTerminalRecipeTransferHandler.INSTANCE,
+                        identifier);
+            }
+            if (!API.hasGuiOverlayHandler(GuiFluidPatternTerminal.class, identifier)) {
+                API.registerGuiOverlayHandler(
+                        GuiFluidPatternTerminal.class,
+                        FluidPatternTerminalRecipeTransferHandler.INSTANCE,
+                        identifier);
+            }
+            if (!API.hasGuiOverlayHandler(GuiFluidPatternTerminalEx.class, identifier)) {
+                API.registerGuiOverlayHandler(
+                        GuiFluidPatternTerminalEx.class,
+                        FluidPatternTerminalRecipeTransferHandler.INSTANCE,
+                        identifier);
+            }
         }
     }
 
