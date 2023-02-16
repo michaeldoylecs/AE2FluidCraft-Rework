@@ -238,7 +238,8 @@ public class FluidConvertingInventoryAdaptor extends InventoryAdaptor {
         boolean anyValid = false;
         for (ForgeDirection dir : ForgeDirection.VALID_DIRECTIONS) {
             // Avoid sending stuff into itself me network
-            if (checkValidSide(this.posInterface.getOffSet(dir).getTileEntity(), dir)) {
+            if (checkValidSide(this.posInterface.getOffSet(dir).getTileEntity(), dir)
+                    && !isConduit(this.posInterface.getOffSet(dir).getTileEntity())) {
                 final int result = checkItemFluids(this.getSideFluid(dir), this.getSideItem(dir), dir.getOpposite());
                 if (result == 1) {
                     return true;
