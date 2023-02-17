@@ -56,6 +56,7 @@ public class WirelessPatternTerminalInventory extends MEMonitorHandler<IAEItemSt
     protected boolean prioritize = false;
     protected boolean inverted = false;
     protected boolean beSubstitute = false;
+    protected boolean autoFillPattern = false;
     protected int activePage = 0;
 
     @SuppressWarnings("unchecked")
@@ -110,6 +111,7 @@ public class WirelessPatternTerminalInventory extends MEMonitorHandler<IAEItemSt
         this.setCombineMode(data.getBoolean("combine"));
         this.setBeSubstitute(data.getBoolean("beSubstitute"));
         this.setActivePage(data.getInteger("activePage"));
+        this.setAutoFillPattern(data.getBoolean("autoFillPattern"));
     }
 
     public void writeToNBT() {
@@ -119,6 +121,7 @@ public class WirelessPatternTerminalInventory extends MEMonitorHandler<IAEItemSt
         data.setBoolean("combine", this.combine);
         data.setBoolean("beSubstitute", this.beSubstitute);
         data.setInteger("activePage", this.activePage);
+        data.setBoolean("autoFillPattern", this.autoFillPattern);
     }
 
     @Override
@@ -366,6 +369,16 @@ public class WirelessPatternTerminalInventory extends MEMonitorHandler<IAEItemSt
             }
         }
         saveChanges();
+    }
+
+    @Override
+    public boolean isAutoFillPattern() {
+        return this.autoFillPattern;
+    }
+
+    @Override
+    public void setAutoFillPattern(boolean canFill) {
+        this.autoFillPattern = canFill;
     }
 
     @Override

@@ -64,7 +64,8 @@ tile.level_maintainer.name=ME库存维持器
 tile.fluid_buffer.name=ME流体缓存器
 tile.walrus.name=海象
 tile.fluid_auto_filler.name=ME流体自动装填器
-tile.certus_quartz_tank.name=赛特斯石英水槽
+tile.certus_quartz_tank.name=赛特斯石英水槽 - %s
+tile.certus_quartz_tank_empty.name=赛特斯石英水槽
 
 ae2fc.waila.speed=速度
 ae2fc.waila.enable=启用
@@ -130,6 +131,10 @@ ae2fc.tooltip.submit=提交
 ae2fc.tooltip.enable=启用
 ae2fc.tooltip.disable=禁用
 ae2fc.tooltip.edit=编辑
+ae2fc.tooltip.fill_pattern=允许自动填充空白样板
+ae2fc.tooltip.not_fill_pattern=允许自动填充空白样板
+ae2fc.tooltip.fill_pattern.hint=启用
+ae2fc.tooltip.not_fill_pattern.hint=禁用
 
 ae2fc.gui.part_fluid_pattern_terminal=ME流体样板终端
 ae2fc.gui.part_fluid_pattern_terminal_ex=ME增广流体样板终端
@@ -157,6 +162,5 @@ ae2fc.gui.fluid_auto_filler=ME流体自动装填器
 error.unknown=未知流体
 
 itemGroup.ae2fc=AE2流体合成套件重置
-
 
 

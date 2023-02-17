@@ -25,6 +25,7 @@ public abstract class FCFluidEncodeTerminal extends FCPart implements IItemPatte
     protected boolean prioritize = false;
     protected boolean inverted = false;
     protected boolean beSubstitute = false;
+    protected boolean autoFillPattern = false;
     protected int activePage = 0;
 
     public FCFluidEncodeTerminal(ItemStack is) {
@@ -51,6 +52,7 @@ public abstract class FCFluidEncodeTerminal extends FCPart implements IItemPatte
         this.setPrioritization(data.getBoolean("priorization"));
         this.setInverted(data.getBoolean("inverted"));
         this.setActivePage(data.getInteger("activePage"));
+        this.setAutoFillPattern(data.getBoolean("autoFillPattern"));
         this.pattern.readFromNBT(data, "pattern");
         this.output.readFromNBT(data, "outputList");
         this.crafting.readFromNBT(data, "craftingGrid");
@@ -66,6 +68,7 @@ public abstract class FCFluidEncodeTerminal extends FCPart implements IItemPatte
         data.setBoolean("substitute", this.substitute);
         data.setBoolean("inverted", this.inverted);
         data.setInteger("activePage", this.activePage);
+        data.setBoolean("autoFillPattern", this.autoFillPattern);
         this.pattern.writeToNBT(data, "pattern");
         this.output.writeToNBT(data, "outputList");
         this.crafting.writeToNBT(data, "craftingGrid");
@@ -203,5 +206,15 @@ public abstract class FCFluidEncodeTerminal extends FCPart implements IItemPatte
             }
         }
         saveChanges();
+    }
+
+    @Override
+    public boolean isAutoFillPattern() {
+        return this.autoFillPattern;
+    }
+
+    @Override
+    public void setAutoFillPattern(boolean canFill) {
+        this.autoFillPattern = canFill;
     }
 }
