@@ -20,6 +20,8 @@ import appeng.core.localization.GuiText;
 
 import com.glodblock.github.client.gui.base.FCGuiEncodeTerminal;
 import com.glodblock.github.client.gui.container.ContainerFluidPatternTerminal;
+import com.glodblock.github.client.gui.container.ContainerFluidPatternWireless;
+import com.glodblock.github.inventory.item.IWirelessTerminal;
 import com.glodblock.github.util.ModAndClassUtil;
 import com.glodblock.github.util.NameConst;
 
@@ -27,6 +29,10 @@ public class GuiFluidPatternTerminal extends FCGuiEncodeTerminal {
 
     public GuiFluidPatternTerminal(final InventoryPlayer inventoryPlayer, final ITerminalHost te) {
         super(inventoryPlayer, te, new ContainerFluidPatternTerminal(inventoryPlayer, te));
+    }
+
+    public GuiFluidPatternTerminal(final InventoryPlayer inventoryPlayer, final IWirelessTerminal te) {
+        super(inventoryPlayer, te, new ContainerFluidPatternWireless(inventoryPlayer, te));
     }
 
     @Override

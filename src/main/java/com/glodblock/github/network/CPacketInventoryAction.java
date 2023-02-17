@@ -22,6 +22,7 @@ import com.glodblock.github.client.gui.container.ContainerPatternValueAmount;
 import com.glodblock.github.common.item.ItemFluidPacket;
 import com.glodblock.github.inventory.InventoryHandler;
 import com.glodblock.github.inventory.gui.GuiType;
+import com.glodblock.github.inventory.item.IWirelessTerminal;
 import com.glodblock.github.util.BlockPos;
 import com.glodblock.github.util.Util;
 
@@ -94,6 +95,7 @@ public class CPacketInventoryAction implements IMessage {
             final EntityPlayerMP sender = ctx.getServerHandler().playerEntity;
             if (sender.openContainer instanceof AEBaseContainer) {
                 final AEBaseContainer baseContainer = (AEBaseContainer) sender.openContainer;
+                Object target = baseContainer.getTarget();
                 if (message.action == InventoryAction.AUTO_CRAFT) {
                     final ContainerOpenContext context = baseContainer.getOpenContext();
                     if (context != null) {
@@ -105,12 +107,12 @@ public class CPacketInventoryAction implements IMessage {
                                     new BlockPos(te),
                                     Objects.requireNonNull(baseContainer.getOpenContext().getSide()),
                                     GuiType.FLUID_CRAFTING_AMOUNT);
-                        } else {
+                        } else if (target instanceof IWirelessTerminal) {
                             InventoryHandler.openGui(
                                     sender,
                                     sender.worldObj,
                                     new BlockPos(
-                                            sender.inventory.currentItem,
+                                            ((IWirelessTerminal) target).getInventorySlot(),
                                             Util.GuiHelper.encodeType(0, Util.GuiHelper.GuiType.ITEM),
                                             0),
                                     ForgeDirection.UNKNOWN,
@@ -136,12 +138,12 @@ public class CPacketInventoryAction implements IMessage {
                                     new BlockPos(te),
                                     Objects.requireNonNull(baseContainer.getOpenContext().getSide()),
                                     GuiType.PATTERN_VALUE_SET);
-                        } else {
+                        } else if (target instanceof IWirelessTerminal) {
                             InventoryHandler.openGui(
                                     sender,
                                     sender.worldObj,
                                     new BlockPos(
-                                            sender.inventory.currentItem,
+                                            ((IWirelessTerminal) target).getInventorySlot(),
                                             Util.GuiHelper.encodeType(0, Util.GuiHelper.GuiType.ITEM),
                                             0),
                                     ForgeDirection.UNKNOWN,

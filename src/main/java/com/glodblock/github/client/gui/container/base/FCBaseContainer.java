@@ -29,7 +29,9 @@ public abstract class FCBaseContainer extends AEBaseContainer {
         if (isWirelessTerminal()) {
             if (this.host != null) {
                 final int slotIndex = this.host.getInventorySlot();
-                this.lockPlayerInventorySlot(slotIndex);
+                if (Util.GuiHelper.decodeInvType(slotIndex).getLeft() == Util.GuiHelper.InvType.PLAYER_INV) {
+                    this.lockPlayerInventorySlot(slotIndex);
+                }
                 return slotIndex;
             } else {
                 this.lockPlayerInventorySlot(ip.currentItem);

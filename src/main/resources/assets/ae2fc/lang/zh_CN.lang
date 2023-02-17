@@ -161,6 +161,8 @@ ae2fc.gui.fluid_auto_filler=ME流体自动装填器
 
 error.unknown=未知流体
 
+key.OpenTerminal=打开无线通用终端
+
 itemGroup.ae2fc=AE2流体合成套件重置
 
 

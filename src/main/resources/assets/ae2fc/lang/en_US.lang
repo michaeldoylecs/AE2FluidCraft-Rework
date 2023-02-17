@@ -130,6 +130,7 @@ ae2fc.tooltip.prio.hint=Disabled
 ae2fc.tooltip.submit=Submit
 ae2fc.tooltip.enable=Enabled
 ae2fc.tooltip.disable=Disabled
+ae2fc.tooltip.edit=Edit
 ae2fc.tooltip.fill_pattern=Allow auto fill blank pattern
 ae2fc.tooltip.not_fill_pattern=Allow auto fill blank pattern
 ae2fc.tooltip.fill_pattern.hint=Enabled
@@ -159,5 +160,7 @@ ae2fc.gui.part_fluid_storage_bus=ME Fluid Storage Bus
 ae2fc.gui.fluid_auto_filler=ME Fluid Auto Filler
 
 error.unknown=Unknown
+
+key.OpenTerminal=Open Wireless Universal Terminal
 
 itemGroup.ae2fc=Fluid Craft For AE2

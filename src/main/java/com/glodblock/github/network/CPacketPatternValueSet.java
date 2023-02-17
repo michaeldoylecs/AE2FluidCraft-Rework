@@ -18,6 +18,7 @@ import com.glodblock.github.common.item.ItemFluidPacket;
 import com.glodblock.github.inventory.InventoryHandler;
 import com.glodblock.github.inventory.gui.GuiType;
 import com.glodblock.github.inventory.gui.PartOrItemGuiFactory;
+import com.glodblock.github.inventory.item.IWirelessTerminal;
 import com.glodblock.github.util.BlockPos;
 import com.glodblock.github.util.Util;
 
@@ -85,11 +86,11 @@ public class CPacketPatternValueSet implements IMessage {
                                             0),
                                     Objects.requireNonNull(context.getSide()),
                                     message.originGui);
-                        } else {
+                        } else if (target instanceof IWirelessTerminal) {
                             InventoryHandler.openGui(
                                     player,
                                     player.worldObj,
-                                    new BlockPos(player.inventory.currentItem, 0, 0),
+                                    new BlockPos(((IWirelessTerminal) target).getInventorySlot(), 0, 0),
                                     Objects.requireNonNull(context.getSide()),
                                     message.originGui);
                         }
