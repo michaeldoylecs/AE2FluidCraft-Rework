@@ -334,10 +334,8 @@ public abstract class FCContainerEncodeTerminal extends ContainerItemMonitor
                 if (this.patternSlotIN.getHasStack() && !iBlankPattern.isSameType(this.patternSlotIN.getStack()))
                     continue;
                 IAEItemStack out = this.getHost().getItemInventory()
-                        .extractItems(iBlankPattern, Actionable.SIMULATE, this.getActionSource());
+                        .extractItems(iBlankPattern, Actionable.MODULATE, this.getActionSource());
                 if (out != null) {
-                    this.getHost().getItemInventory()
-                            .extractItems(iBlankPattern, Actionable.MODULATE, this.getActionSource());
                     ItemStack outPattern;
                     if (this.patternSlotIN.getHasStack()) {
                         outPattern = this.patternSlotIN.getStack().copy();
