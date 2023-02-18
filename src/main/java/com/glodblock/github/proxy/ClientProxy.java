@@ -1,5 +1,6 @@
 package com.glodblock.github.proxy;
 
+import com.glodblock.github.loader.KeybindLoader;
 import com.glodblock.github.loader.ListenerLoader;
 import com.glodblock.github.loader.RenderLoader;
 import com.glodblock.github.nei.recipes.DefaultExtractorLoader;
@@ -21,6 +22,7 @@ public class ClientProxy extends CommonProxy {
         super.init(event);
         (new ListenerLoader()).run();
         (new RenderLoader()).run();
+        (new KeybindLoader()).run();
     }
 
     @Override

@@ -39,10 +39,12 @@ import appeng.tile.networking.TileCableBus;
 import appeng.tile.networking.TileWireless;
 import appeng.util.Platform;
 import appeng.util.item.AEFluidStack;
+import baubles.api.BaublesApi;
 
 import com.glodblock.github.common.item.ItemBaseWirelessTerminal;
 import com.glodblock.github.common.item.ItemFluidDrop;
 import com.glodblock.github.common.item.ItemFluidPacket;
+import com.glodblock.github.common.item.ItemWirelessUltraTerminal;
 import com.glodblock.github.inventory.IAEFluidTank;
 import com.glodblock.github.inventory.item.IFluidPortableCell;
 
@@ -54,18 +56,28 @@ public final class Util {
 
     public static int drainItemPower(AEBaseContainer c, InventoryPlayer ip, int slot, int ticks, double pm,
             IFluidPortableCell wt) {
-        final ItemStack currentItem = slot < 0 ? ip.getCurrentItem() : ip.getStackInSlot(slot);
-        if (wt != null) {
-            if (currentItem != wt.getItemStack()) {
-                if (currentItem != null) {
-                    if (Platform.isSameItem(wt.getItemStack(), currentItem)) {
-                        ip.setInventorySlotContents(ip.currentItem, wt.getItemStack());
+        if (slot != -1) {
+            final ItemStack currentItem = getWirelessTerminal(ip.player, slot);
+            if (wt != null) {
+                if (currentItem != wt.getItemStack()) {
+                    if (currentItem != null) {
+                        if (Platform.isSameItem(wt.getItemStack(), currentItem)) {
+                            if (GuiHelper.decodeInvType(slot).getLeft() == GuiHelper.InvType.PLAYER_INV) {
+                                ip.setInventorySlotContents(slot, wt.getItemStack());
+                            } else {
+                                BaublesApi.getBaubles(ip.player).setInventorySlotContents(
+                                        GuiHelper.decodeInvType(slot).getRight(),
+                                        wt.getItemStack());
+                            }
+                        } else {
+                            c.setValidContainer(false);
+                        }
                     } else {
                         c.setValidContainer(false);
                     }
-                } else {
-                    c.setValidContainer(false);
                 }
+            } else {
+                c.setValidContainer(false);
             }
         } else {
             c.setValidContainer(false);
@@ -130,6 +142,40 @@ public final class Util {
             }
         }
         return new NullInventory<>();
+    }
+
+    public static ItemStack getWirelessTerminal(EntityPlayer player, int x) {
+        ImmutablePair<GuiHelper.InvType, Integer> result = GuiHelper.decodeInvType(x);
+        if (result.getLeft() == GuiHelper.InvType.PLAYER_INV) {
+            return player.inventory.getStackInSlot(result.getRight());
+        } else {
+            return BaublesApi.getBaubles(player).getStackInSlot(result.getRight());
+        }
+    }
+
+    public static ImmutablePair<Integer, ItemStack> getUltraWirelessTerm(EntityPlayer player) {
+        int invSize = player.inventory.getSizeInventory();
+
+        if (invSize <= 0) {
+            return null;
+        }
+        for (int i = 0; i < invSize; ++i) {
+            ItemStack is = player.inventory.getStackInSlot(i);
+            if (is != null && is.getItem() instanceof ItemWirelessUltraTerminal) {
+                return new ImmutablePair<>(i, is);
+            }
+        }
+        IInventory handler = BaublesApi.getBaubles(player);
+        if (handler != null) {
+            invSize = handler.getSizeInventory();
+            for (int i = 0; i < invSize; ++i) {
+                ItemStack is = handler.getStackInSlot(i);
+                if (is != null && is.getItem() instanceof ItemWirelessUltraTerminal) {
+                    return new ImmutablePair<>(GuiHelper.encodeType(i, GuiHelper.InvType.PLAYER_BAUBLES), is);
+                }
+            }
+        }
+        return null;
     }
 
     public static int findItemInPlayerInvSlot(EntityPlayer player, ItemStack itemStack) {
@@ -323,6 +369,11 @@ public final class Util {
             ITEM
         }
 
+        public enum InvType {
+            PLAYER_INV,
+            PLAYER_BAUBLES
+        }
+
         private static final int value = 1 << 30;
 
         public static int encodeType(int y, GuiType type) {
@@ -332,11 +383,26 @@ public final class Util {
             return value | (type.ordinal() << 29) | y;
         }
 
+        public static int encodeType(int x, InvType type) {
+            if (Math.abs(x) > (1 << 28)) {
+                throw new IllegalArgumentException("out of range");
+            }
+            return value | (type.ordinal() << 29) | x;
+        }
+
         public static ImmutablePair<GuiType, Integer> decodeType(int y) {
             if (Math.abs(y) > (1 << 28)) {
                 return new ImmutablePair<>(GuiType.values()[y >> 29 & 1], y - (3 << 29 & y));
             } else {
                 return new ImmutablePair<>(GuiType.TILE, y);
+            }
+        }
+
+        public static ImmutablePair<InvType, Integer> decodeInvType(int x) {
+            if (Math.abs(x) > (1 << 28)) {
+                return new ImmutablePair<>(InvType.values()[x >> 29 & 1], x - (3 << 29 & x));
+            } else {
+                return new ImmutablePair<>(InvType.PLAYER_INV, x);
             }
         }
     }

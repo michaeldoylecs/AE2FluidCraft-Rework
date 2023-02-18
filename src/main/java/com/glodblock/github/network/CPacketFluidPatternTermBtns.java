@@ -116,6 +116,9 @@ public class CPacketFluidPatternTermBtns implements IMessage {
                                 break;
                         }
                         break;
+                    case "PatternTerminal.AutoFillerPattern":
+                        cpt.getPatternTerminal().setAutoFillPattern(Value.equals("1"));
+                        break;
                 }
                 cpt.getPatternTerminal().saveSettings();
             } else if (Name.equals("Terminal.Cpu") && c instanceof ContainerFluidCraftConfirm) {

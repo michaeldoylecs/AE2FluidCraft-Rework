@@ -10,8 +10,10 @@ import net.minecraft.inventory.Container;
 import appeng.client.gui.AEBaseMEGui;
 
 import com.glodblock.github.client.gui.*;
+import com.glodblock.github.client.gui.container.base.FCBaseContainer;
 import com.glodblock.github.common.item.ItemWirelessUltraTerminal;
 import com.glodblock.github.inventory.gui.GuiType;
+import com.glodblock.github.inventory.item.IWirelessTerminal;
 import com.glodblock.github.util.ModAndClassUtil;
 
 public abstract class FCBaseMEGui extends AEBaseMEGui {
@@ -27,9 +29,13 @@ public abstract class FCBaseMEGui extends AEBaseMEGui {
 
     public FCBaseMEGui(final InventoryPlayer inventoryPlayer, Container container) {
         super(container);
-        if (inventoryPlayer.getCurrentItem() != null
-                && inventoryPlayer.getCurrentItem().getItem() instanceof ItemWirelessUltraTerminal)
-            this.drawSwitchGuiBtn = true;
+        if (container instanceof FCBaseContainer) {
+            Object target = ((FCBaseContainer) container).getTarget();
+            if (target instanceof IWirelessTerminal
+                    && ((IWirelessTerminal) target).getItemStack().getItem() instanceof ItemWirelessUltraTerminal) {
+                this.drawSwitchGuiBtn = true;
+            }
+        }
     }
 
     @Override
@@ -134,15 +140,5 @@ public abstract class FCBaseMEGui extends AEBaseMEGui {
             }
         }
         super.actionPerformed(btn);
-    }
-
-    @Override
-    public void drawFG(int offsetX, int offsetY, int mouseX, int mouseY) {
-
-    }
-
-    @Override
-    public void drawBG(int offsetX, int offsetY, int mouseX, int mouseY) {
-
     }
 }

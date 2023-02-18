@@ -51,6 +51,8 @@ public abstract class FCGuiEncodeTerminal extends GuiItemMonitor {
     protected GuiImgButton beSubstitutionsDisabledBtn;
     protected GuiFCImgButton combineEnableBtn;
     protected GuiFCImgButton combineDisableBtn;
+    protected GuiFCImgButton autoFillPatternEnableBtn;
+    protected GuiFCImgButton autoFillPatternDisableBtn;
     protected final GuiScrollbar processingScrollBar = new GuiScrollbar();
     protected final AppEngRenderItem stackSizeRenderer = Ae2ReflectClient.getStackSizeRenderer(this);
 
@@ -60,6 +62,24 @@ public abstract class FCGuiEncodeTerminal extends GuiItemMonitor {
         this.container = (FCContainerEncodeTerminal) this.inventorySlots;
         c.setGui(this);
         setReservedSpace(81);
+    }
+
+    @Override
+    public void initGui() {
+        super.initGui();
+        this.buttonList.add(
+                this.autoFillPatternEnableBtn = new GuiFCImgButton(
+                        this.guiLeft - 18,
+                        this.offsetY,
+                        "FILL_PATTERN",
+                        "DO_FILL"));
+        this.buttonList.add(
+                this.autoFillPatternDisableBtn = new GuiFCImgButton(
+                        this.guiLeft - 18,
+                        this.offsetY,
+                        "NOT_FILL_PATTERN",
+                        "DONT_FILL"));
+        this.offsetY += 20;
     }
 
     @Override
@@ -108,6 +128,11 @@ public abstract class FCGuiEncodeTerminal extends GuiItemMonitor {
         } else if (ModAndClassUtil.isBeSubstitutionsButton && beSubstitutionsEnabledBtn == btn) {
             FluidCraft.proxy.netHandler
                     .sendToServer(new CPacketFluidPatternTermBtns("PatternTerminal.beSubstitute", "0"));
+        } else if (this.autoFillPatternDisableBtn == btn || this.autoFillPatternEnableBtn == btn) {
+            FluidCraft.proxy.netHandler.sendToServer(
+                    new CPacketFluidPatternTermBtns(
+                            "PatternTerminal.AutoFillerPattern",
+                            this.autoFillPatternDisableBtn == btn ? "1" : "0"));
         }
     }
 
@@ -124,6 +149,8 @@ public abstract class FCGuiEncodeTerminal extends GuiItemMonitor {
         updateButton(this.beSubstitutionsDisabledBtn, !this.container.beSubstitute);
         updateButton(this.fluidPrioritizedEnabledBtn, this.container.prioritize);
         updateButton(this.fluidPrioritizedDisabledBtn, !this.container.prioritize);
+        updateButton(this.autoFillPatternEnableBtn, this.container.autoFillPattern);
+        updateButton(this.autoFillPatternDisableBtn, !this.container.autoFillPattern);
         super.drawFG(offsetX, offsetY, mouseX, mouseY);
     }
 

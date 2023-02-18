@@ -11,7 +11,9 @@ import appeng.client.gui.widgets.GuiImgButton;
 
 import com.glodblock.github.FluidCraft;
 import com.glodblock.github.client.gui.base.FCGuiEncodeTerminal;
+import com.glodblock.github.client.gui.container.ContainerFluidPatternExWireless;
 import com.glodblock.github.client.gui.container.ContainerFluidPatternTerminalEx;
+import com.glodblock.github.inventory.item.IWirelessTerminal;
 import com.glodblock.github.network.CPacketFluidPatternTermBtns;
 import com.glodblock.github.util.ModAndClassUtil;
 import com.glodblock.github.util.NameConst;
@@ -20,6 +22,12 @@ public class GuiFluidPatternTerminalEx extends FCGuiEncodeTerminal {
 
     public GuiFluidPatternTerminalEx(final InventoryPlayer inventoryPlayer, final ITerminalHost te) {
         super(inventoryPlayer, te, new ContainerFluidPatternTerminalEx(inventoryPlayer, te));
+        processingScrollBar.setHeight(70).setWidth(7).setLeft(6).setRange(0, 1, 1);
+        processingScrollBar.setTexture(FluidCraft.MODID, "gui/pattern3.png", 242, 0);
+    }
+
+    public GuiFluidPatternTerminalEx(final InventoryPlayer inventoryPlayer, final IWirelessTerminal te) {
+        super(inventoryPlayer, te, new ContainerFluidPatternExWireless(inventoryPlayer, te));
         processingScrollBar.setHeight(70).setWidth(7).setLeft(6).setRange(0, 1, 1);
         processingScrollBar.setTexture(FluidCraft.MODID, "gui/pattern3.png", 242, 0);
     }

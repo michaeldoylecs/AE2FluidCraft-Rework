@@ -30,9 +30,8 @@ public abstract class PartOrItemGuiFactory<T> extends PartGuiFactory<T> {
     @Override
     public Object createServerGui(EntityPlayer player, World world, int x, int y, int z, ForgeDirection face) {
         ImmutablePair<Util.GuiHelper.GuiType, Integer> result = Util.GuiHelper.decodeType(y);
-
         if (result.getLeft() == Util.GuiHelper.GuiType.ITEM) {
-            ItemStack item = player.getHeldItem();
+            ItemStack item = Util.getWirelessTerminal(player, x);
             if (item == null || !(item.getItem() instanceof IItemInventory)) {
                 return null;
             }
@@ -63,7 +62,7 @@ public abstract class PartOrItemGuiFactory<T> extends PartGuiFactory<T> {
     public Object createClientGui(EntityPlayer player, World world, int x, int y, int z, ForgeDirection face) {
         ImmutablePair<Util.GuiHelper.GuiType, Integer> result = Util.GuiHelper.decodeType(y);
         if (result.left == Util.GuiHelper.GuiType.ITEM) {
-            ItemStack item = player.getHeldItem();
+            ItemStack item = Util.getWirelessTerminal(player, x);
             if (item == null || !(item.getItem() instanceof IItemInventory)) {
                 return null;
             }
