@@ -50,6 +50,10 @@ public class DefaultExtractorLoader implements Runnable {
             FluidRecipe.addRecipeMap("EnderIOVat", new EnderIORecipeExtractor());
         }
 
+        if (ModAndClassUtil.AVARITIA) {
+            FluidRecipe.addRecipeMap("extreme", new AvaritiaRecipeExtractor());
+        }
+
         if (ModAndClassUtil.FTR) {
             // GTNH
             FluidRecipe.addRecipeMap("forestry.bottler", new ForestryRecipeExtractor(new NEIHandlerBottler()));

@@ -25,6 +25,7 @@ public final class ModAndClassUtil {
     public static boolean COFH = false;
     public static boolean GTPP = false;
     public static boolean WAILA = false;
+    public static boolean AVARITIA = false;
     public static boolean isV2;
     public static boolean isDoubleButton;
     public static boolean isSaveText;
@@ -130,5 +131,6 @@ public final class ModAndClassUtil {
         if (Loader.isModLoaded("CoFHCore")) COFH = true;
         if (Loader.isModLoaded("miscutils")) GTPP = true;
         if (Loader.isModLoaded("Waila")) WAILA = true;
+        if (Loader.isModLoaded("Avaritia")) AVARITIA = true;
     }
 }
