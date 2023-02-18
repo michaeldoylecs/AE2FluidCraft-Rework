@@ -88,6 +88,7 @@ public class WirelessFluidTerminalInventory extends MEMonitorHandler<IAEFluidSta
         out.registerSetting(Settings.VIEW_MODE, ViewItems.ALL);
         out.registerSetting(Settings.SORT_DIRECTION, SortDir.ASCENDING);
         out.readFromNBT((NBTTagCompound) Platform.openNbtData(this.target).copy());
+        out.putSetting(Settings.VIEW_MODE, ViewItems.ALL);
         return out;
     }
 

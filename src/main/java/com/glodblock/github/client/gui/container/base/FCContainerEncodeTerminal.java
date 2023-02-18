@@ -18,6 +18,7 @@ import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.IFluidContainerItem;
 
 import appeng.api.AEApi;
+import appeng.api.config.Actionable;
 import appeng.api.definitions.IDefinitions;
 import appeng.api.storage.ITerminalHost;
 import appeng.api.storage.data.IAEItemStack;
@@ -74,6 +75,9 @@ public abstract class FCContainerEncodeTerminal extends ContainerItemMonitor
 
     @GuiSync(91)
     public boolean prioritize = false;
+
+    @GuiSync(90)
+    public boolean autoFillPattern = false;
 
     public FCContainerEncodeTerminal(final InventoryPlayer ip, final ITerminalHost monitorable) {
         super(ip, monitorable);
@@ -302,6 +306,7 @@ public abstract class FCContainerEncodeTerminal extends ContainerItemMonitor
             }
             this.patternSlotOUT.putStack(null);
         }
+        fillPattern();
     }
 
     public void encodeAllItemAndMoveToInventory() {
@@ -315,9 +320,38 @@ public abstract class FCContainerEncodeTerminal extends ContainerItemMonitor
             this.patternSlotOUT.putStack(null);
             this.patternSlotIN.putStack(null);
         }
+        fillPattern();
+    }
+
+    private void fillPattern() {
+        if (this.autoFillPattern && this.getHost().getItemInventory() != null) {
+            // try to use me network item to fill pattern input slot
+            final IDefinitions definitions = AEApi.instance().definitions();
+            int fillStackSize = this.patternSlotIN.getHasStack() ? 64 - this.patternSlotIN.getStack().stackSize : 64;
+            if (fillStackSize == 0) return;
+            for (ItemStack blankPattern : definitions.materials().blankPattern().maybeStack(fillStackSize).asSet()) {
+                IAEItemStack iBlankPattern = AEApi.instance().storage().createItemStack(blankPattern);
+                if (this.patternSlotIN.getHasStack() && !iBlankPattern.isSameType(this.patternSlotIN.getStack()))
+                    continue;
+                IAEItemStack out = this.getHost().getItemInventory()
+                        .extractItems(iBlankPattern, Actionable.MODULATE, this.getActionSource());
+                if (out != null) {
+                    ItemStack outPattern;
+                    if (this.patternSlotIN.getHasStack()) {
+                        outPattern = this.patternSlotIN.getStack().copy();
+                        outPattern.stackSize += out.getItemStack().stackSize;
+                    } else {
+                        outPattern = out.getItemStack();
+                    }
+                    this.patternSlotIN.putStack(outPattern);
+                    return;
+                }
+            }
+        }
     }
 
     public void encode() {
+        fillPattern();
         if (!checkHasFluidPattern()) {
             encodeItemPattern();
             return;
@@ -454,6 +488,7 @@ public abstract class FCContainerEncodeTerminal extends ContainerItemMonitor
             this.combine = this.patternTerminal.shouldCombine();
             this.beSubstitute = this.patternTerminal.canBeSubstitute();
             this.prioritize = this.patternTerminal.isPrioritize();
+            this.autoFillPattern = this.patternTerminal.isAutoFillPattern();
         }
     }
 

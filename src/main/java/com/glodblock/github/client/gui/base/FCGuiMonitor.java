@@ -33,10 +33,8 @@ import appeng.core.AEConfig;
 import appeng.core.AELog;
 import appeng.core.localization.ButtonToolTips;
 import appeng.core.localization.GuiText;
-import appeng.core.sync.GuiBridge;
 import appeng.core.sync.network.NetworkHandler;
 import appeng.core.sync.packets.PacketInventoryAction;
-import appeng.core.sync.packets.PacketSwitchGuis;
 import appeng.core.sync.packets.PacketValueConfig;
 import appeng.helpers.InventoryAction;
 import appeng.integration.IntegrationRegistry;
@@ -50,6 +48,8 @@ import codechicken.nei.util.TextHistory;
 import com.glodblock.github.FluidCraft;
 import com.glodblock.github.client.gui.*;
 import com.glodblock.github.client.gui.container.base.FCContainerMonitor;
+import com.glodblock.github.inventory.InventoryHandler;
+import com.glodblock.github.inventory.gui.GuiType;
 import com.glodblock.github.network.CPacketInventoryAction;
 import com.glodblock.github.util.Ae2ReflectClient;
 import com.glodblock.github.util.ModAndClassUtil;
@@ -119,7 +119,7 @@ public abstract class FCGuiMonitor<T extends IAEStack<T>> extends FCBaseMEGui
     @Override
     protected void actionPerformed(final GuiButton btn) {
         if (btn == this.craftingStatusBtn || btn == this.craftingStatusImgBtn) {
-            NetworkHandler.instance.sendToServer(new PacketSwitchGuis(GuiBridge.GUI_CRAFTING_STATUS));
+            InventoryHandler.switchGui(GuiType.CRAFTING_STATUS);
         }
         if (btn instanceof GuiImgButton) {
             final boolean backwards = Mouse.isButtonDown(1);
@@ -314,7 +314,7 @@ public abstract class FCGuiMonitor<T extends IAEStack<T>> extends FCBaseMEGui
 
         for (final Object s : this.inventorySlots.inventorySlots) {
             if (s instanceof AppEngSlot) {
-                if (((Slot) s).xDisplayPosition < 195) {
+                if (((Slot) s).xDisplayPosition < 195 || s instanceof SlotDisabled) {
                     this.repositionSlot((AppEngSlot) s);
                 }
             }

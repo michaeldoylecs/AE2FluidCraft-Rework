@@ -21,6 +21,7 @@ import appeng.core.AELog;
 import com.glodblock.github.client.gui.container.ContainerFluidCraftConfirm;
 import com.glodblock.github.inventory.InventoryHandler;
 import com.glodblock.github.inventory.gui.GuiType;
+import com.glodblock.github.inventory.item.IWirelessTerminal;
 import com.glodblock.github.util.BlockPos;
 
 import cpw.mods.fml.common.network.simpleimpl.IMessage;
@@ -97,11 +98,11 @@ public class CPacketCraftRequest implements IMessage {
                                         new BlockPos(te),
                                         Objects.requireNonNull(context.getSide()),
                                         GuiType.FLUID_CRAFTING_CONFIRM);
-                            } else {
+                            } else if (target instanceof IWirelessTerminal) {
                                 InventoryHandler.openGui(
                                         player,
                                         player.worldObj,
-                                        new BlockPos(player.inventory.currentItem, 0, 0),
+                                        new BlockPos(((IWirelessTerminal) target).getInventorySlot(), 0, 0),
                                         Objects.requireNonNull(context.getSide()),
                                         GuiType.FLUID_CRAFTING_CONFIRM_ITEM);
                             }

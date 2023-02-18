@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.EnumSet;
 import java.util.List;
 
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -13,11 +14,15 @@ import net.minecraft.util.StatCollector;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 
+import org.apache.commons.lang3.tuple.ImmutablePair;
+
 import appeng.api.AEApi;
 import appeng.api.networking.IGridNode;
 import appeng.core.features.AEFeature;
 import appeng.core.localization.PlayerMessages;
 import appeng.util.Platform;
+import baubles.api.BaubleType;
+import baubles.api.IBauble;
 
 import com.glodblock.github.FluidCraft;
 import com.glodblock.github.common.tabs.FluidCraftingTabs;
@@ -36,7 +41,7 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
 public class ItemWirelessUltraTerminal extends ItemBaseWirelessTerminal
-        implements IRegister<ItemWirelessUltraTerminal> {
+        implements IBauble, IRegister<ItemWirelessUltraTerminal> {
 
     public final static String MODE = "mode_main";
     private final static List<GuiType> guis = new ArrayList<>();
@@ -162,9 +167,10 @@ public class ItemWirelessUltraTerminal extends ItemBaseWirelessTerminal
     }
 
     public static void switchTerminal(EntityPlayer player, GuiType guiType) {
-        if (player.inventory.getCurrentItem().getItem() instanceof ItemWirelessUltraTerminal) {
-            ((ItemWirelessUltraTerminal) player.inventory.getCurrentItem().getItem())
-                    .setMode(guiType, player.inventory.getCurrentItem());
+        ImmutablePair<Integer, ItemStack> term = Util.getUltraWirelessTerm(player);
+        if (term == null) return;
+        if (term.getRight().getItem() instanceof ItemWirelessUltraTerminal) {
+            ((ItemWirelessUltraTerminal) term.getRight().getItem()).setMode(guiType, term.getRight());
         }
         if (Platform.isClient()) {
             FluidCraft.proxy.netHandler.sendToServer(new CPacketSwitchGuis(guiType, true));
@@ -173,7 +179,7 @@ public class ItemWirelessUltraTerminal extends ItemBaseWirelessTerminal
                     player,
                     player.worldObj,
                     new BlockPos(
-                            player.inventory.currentItem,
+                            term.getLeft(),
                             Util.GuiHelper.encodeType(
                                     guis.indexOf(GuiType.valueOf(guiType.toString())),
                                     Util.GuiHelper.GuiType.ITEM),
@@ -190,5 +196,35 @@ public class ItemWirelessUltraTerminal extends ItemBaseWirelessTerminal
     @Override
     public GuiType guiGuiType(ItemStack stack) {
         return readMode(stack);
+    }
+
+    @Override
+    public BaubleType getBaubleType(ItemStack itemStack) {
+        return BaubleType.RING;
+    }
+
+    @Override
+    public void onWornTick(ItemStack itemStack, EntityLivingBase entityLivingBase) {
+
+    }
+
+    @Override
+    public void onEquipped(ItemStack itemStack, EntityLivingBase entityLivingBase) {
+
+    }
+
+    @Override
+    public void onUnequipped(ItemStack itemStack, EntityLivingBase entityLivingBase) {
+
+    }
+
+    @Override
+    public boolean canEquip(ItemStack itemStack, EntityLivingBase entityLivingBase) {
+        return true;
+    }
+
+    @Override
+    public boolean canUnequip(ItemStack itemStack, EntityLivingBase entityLivingBase) {
+        return true;
     }
 }

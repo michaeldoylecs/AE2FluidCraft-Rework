@@ -6,6 +6,7 @@ import codechicken.nei.api.IConfigureNEI;
 import com.glodblock.github.FluidCraft;
 import com.glodblock.github.client.gui.*;
 import com.glodblock.github.nei.recipes.FluidRecipe;
+import com.glodblock.github.util.ModAndClassUtil;
 
 public class NEI_FC_Config implements IConfigureNEI {
 
@@ -13,6 +14,14 @@ public class NEI_FC_Config implements IConfigureNEI {
     public void loadConfig() {
         API.registerNEIGuiHandler(new NEIGuiHandler());
         API.addSearchProvider(new NEIItemFilter());
+
+        if (ModAndClassUtil.AVARITIA) {
+            API.registerGuiOverlay(GuiFluidPatternWireless.class, "extreme", null);
+            API.registerGuiOverlay(GuiFluidPatternExWireless.class, "extreme", null);
+            API.registerGuiOverlay(GuiFluidPatternTerminal.class, "extreme", null);
+            API.registerGuiOverlay(GuiFluidPatternTerminalEx.class, "extreme", null);
+        }
+
         for (String identifier : FluidRecipe.getSupportRecipes()) {
             // that NEE handlers take priority
             if (!API.hasGuiOverlayHandler(GuiFluidCraftingWireless.class, identifier)) {

@@ -35,4 +35,8 @@ public interface IItemPatternTerminal extends IItemTerminal {
     boolean isCraftingRecipe();
 
     void sortCraftingItems();
+
+    boolean isAutoFillPattern();
+
+    void setAutoFillPattern(boolean canFill);
 }

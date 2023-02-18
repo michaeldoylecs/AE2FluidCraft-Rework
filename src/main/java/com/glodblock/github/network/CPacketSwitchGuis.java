@@ -14,6 +14,7 @@ import appeng.container.ContainerOpenContext;
 import com.glodblock.github.common.item.ItemWirelessUltraTerminal;
 import com.glodblock.github.inventory.InventoryHandler;
 import com.glodblock.github.inventory.gui.GuiType;
+import com.glodblock.github.inventory.item.IWirelessTerminal;
 import com.glodblock.github.util.BlockPos;
 import com.glodblock.github.util.Util;
 
@@ -84,12 +85,12 @@ public class CPacketSwitchGuis implements IMessage {
                             new BlockPos(te),
                             Objects.requireNonNull(context.getSide()),
                             message.guiType);
-                } else {
+                } else if (((AEBaseContainer) cont).getTarget() instanceof IWirelessTerminal) {
                     InventoryHandler.openGui(
                             player,
                             player.worldObj,
                             new BlockPos(
-                                    player.inventory.currentItem,
+                                    ((IWirelessTerminal) ((AEBaseContainer) cont).getTarget()).getInventorySlot(),
                                     Util.GuiHelper.encodeType(0, Util.GuiHelper.GuiType.ITEM),
                                     0),
                             Objects.requireNonNull(context.getSide()),

@@ -294,7 +294,7 @@ public class ContainerFluidCraftConfirm extends AEBaseContainer {
                     InventoryHandler.openGui(
                             this.getInventoryPlayer().player,
                             getWorld(),
-                            new BlockPos(this.getPlayerInv().currentItem, 0, 0),
+                            new BlockPos(((IWirelessTerminal) ah).getInventorySlot(), 0, 0),
                             ForgeDirection.UNKNOWN,
                             originalGui);
                 } else if (this.getOpenContext() != null) {
