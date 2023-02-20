@@ -259,7 +259,9 @@ public class PartFluidStorageBus extends PartUpgradeable
 
     @Override
     public void onNeighborChanged() {
-        BlockPos neighbor = new BlockPos(this.getTile()).getOffSet(this.getSide());
+        TileEntity tile = this.getTile();
+        if (tile == null || this.getProxy() == null || !this.getProxy().isActive()) return;
+        BlockPos neighbor = new BlockPos(tile).getOffSet(this.getSide());
         final TileEntity te = neighbor.getTileEntity();
         // In case the TE was destroyed, we have to do a full reset immediately.
         if (te instanceof TileCableBus) {
@@ -288,6 +290,7 @@ public class PartFluidStorageBus extends PartUpgradeable
         } else {
             this.resetCache(false);
         }
+
     }
 
     @Override
