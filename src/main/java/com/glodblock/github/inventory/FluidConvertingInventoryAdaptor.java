@@ -1,9 +1,6 @@
 package com.glodblock.github.inventory;
 
-import java.util.Collections;
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 
 import javax.annotation.Nullable;
 
@@ -291,6 +288,24 @@ public class FluidConvertingInventoryAdaptor extends InventoryAdaptor {
         return item;
     }
 
+    private int gtMachineCircuitCheck(InventoryAdaptor ad) {
+        if (ad == null) {
+            return 0;
+        }
+        for (ItemSlot i : ad) {
+            ItemStack is = i.getItemStack();
+            if (is == null || Objects.requireNonNull(is.getItem()).getUnlocalizedName().equals("gt.integrated_circuit"))
+                continue;
+            return 1;
+        }
+        return 0;
+    }
+
+    private boolean isGTMachine(Object o) {
+        return o instanceof TileEntity
+                && ((TileEntity) o).getBlockType().getUnlocalizedName().equals("gt.blockmachines");
+    }
+
     private boolean isConduit(TileEntity te) {
         return ModAndClassUtil.COFH && te instanceof IItemDuct;
     }
@@ -352,6 +367,9 @@ public class FluidConvertingInventoryAdaptor extends InventoryAdaptor {
             if (!hasTank && inv == null) {
                 return 2;
             }
+        }
+        if (isGTMachine(tank)) {
+            return gtMachineCircuitCheck(inv);
         }
         return inv != null && inv.containsItems() ? 1 : 0;
     }
