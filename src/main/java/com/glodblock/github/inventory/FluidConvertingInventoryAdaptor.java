@@ -36,6 +36,11 @@ import com.glodblock.github.util.BlockPos;
 import com.glodblock.github.util.ModAndClassUtil;
 import com.glodblock.github.util.Util;
 
+import crazypants.enderio.conduit.item.IItemConduit;
+import gregtech.api.interfaces.metatileentity.IMetaTileEntity;
+import gregtech.api.interfaces.tileentity.IGregTechTileEntity;
+import gregtech.api.metatileentity.MetaPipeEntity;
+
 public class FluidConvertingInventoryAdaptor extends InventoryAdaptor {
 
     // facing is the target TE direction
@@ -302,12 +307,12 @@ public class FluidConvertingInventoryAdaptor extends InventoryAdaptor {
     }
 
     private boolean isGTMachine(Object o) {
-        return o instanceof TileEntity
+        return ModAndClassUtil.GT5 && o instanceof TileEntity
                 && ((TileEntity) o).getBlockType().getUnlocalizedName().equals("gt.blockmachines");
     }
 
     private boolean isConduit(TileEntity te) {
-        return ModAndClassUtil.COFH && te instanceof IItemDuct;
+        return ModAndClassUtil.EIO && te instanceof IItemConduit;
     }
 
     private ItemStack fillEIOConduit(ItemStack item, TileEntity te, ForgeDirection direction) {
@@ -375,7 +380,20 @@ public class FluidConvertingInventoryAdaptor extends InventoryAdaptor {
     }
 
     private boolean checkValidSide(TileEntity te, ForgeDirection direction) {
+        if (isGTMachine(te)) {
+            return checkGTPipeConnection(te, direction.getOpposite());
+        }
         return isDifferentGrid(getInterfaceTE(te, direction.getOpposite()));
+    }
+
+    private boolean checkGTPipeConnection(TileEntity te, ForgeDirection direction) {
+        if (te instanceof IGregTechTileEntity) {
+            IMetaTileEntity mte = ((IGregTechTileEntity) te).getMetaTileEntity();
+            if (mte instanceof MetaPipeEntity) {
+                return ((MetaPipeEntity) mte).isConnectedAtSide(direction.ordinal());
+            }
+        }
+        return true;
     }
 
     private static IInterfaceHost getInterfaceTE(TileEntity te, ForgeDirection face) {
