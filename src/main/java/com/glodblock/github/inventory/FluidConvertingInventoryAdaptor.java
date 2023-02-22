@@ -1,16 +1,5 @@
 package com.glodblock.github.inventory;
 
-import java.util.*;
-
-import javax.annotation.Nullable;
-
-import net.minecraft.item.ItemStack;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraftforge.common.util.ForgeDirection;
-import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.FluidTankInfo;
-import net.minecraftforge.fluids.IFluidHandler;
-
 import appeng.api.config.FuzzyMode;
 import appeng.api.config.InsertionMode;
 import appeng.api.parts.IPart;
@@ -25,7 +14,6 @@ import appeng.util.InventoryAdaptor;
 import appeng.util.inv.IInventoryDestination;
 import appeng.util.inv.ItemSlot;
 import cofh.api.transport.IItemDuct;
-
 import com.glodblock.github.common.Config;
 import com.glodblock.github.common.item.ItemFluidPacket;
 import com.glodblock.github.common.parts.PartFluidExportBus;
@@ -35,11 +23,21 @@ import com.glodblock.github.util.Ae2Reflect;
 import com.glodblock.github.util.BlockPos;
 import com.glodblock.github.util.ModAndClassUtil;
 import com.glodblock.github.util.Util;
-
 import crazypants.enderio.conduit.item.IItemConduit;
 import gregtech.api.interfaces.metatileentity.IMetaTileEntity;
 import gregtech.api.interfaces.tileentity.IGregTechTileEntity;
 import gregtech.api.metatileentity.MetaPipeEntity;
+import net.minecraft.item.ItemStack;
+import net.minecraft.tileentity.TileEntity;
+import net.minecraftforge.common.util.ForgeDirection;
+import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.fluids.FluidTankInfo;
+import net.minecraftforge.fluids.IFluidHandler;
+
+import javax.annotation.Nullable;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.util.*;
 
 public class FluidConvertingInventoryAdaptor extends InventoryAdaptor {
 
@@ -62,6 +60,21 @@ public class FluidConvertingInventoryAdaptor extends InventoryAdaptor {
     @Nullable
     private final IInterfaceHost selfInterface;
     private final boolean onmi;
+    private static Method eioTypeCheck;
+    private static Class<?> conduitClazz;
+
+    static {
+        if (ModAndClassUtil.EIO) {
+            try {
+                conduitClazz = Class.forName("crazypants.enderio.conduit.TileConduitBundle");
+                eioTypeCheck = conduitClazz.getDeclaredMethod("getConduit", Class.class);
+            } catch (ClassNotFoundException | NoSuchMethodException e) {
+                eioTypeCheck = null;
+            }
+        } else {
+            eioTypeCheck = null;
+        }
+    }
 
     public static InventoryAdaptor wrap(TileEntity capProvider, ForgeDirection face) {
         // sometimes i wish 1.7.10 has cap system.
@@ -241,7 +254,7 @@ public class FluidConvertingInventoryAdaptor extends InventoryAdaptor {
         for (ForgeDirection dir : ForgeDirection.VALID_DIRECTIONS) {
             // Avoid sending stuff into itself me network
             if (checkValidSide(this.posInterface.getOffSet(dir).getTileEntity(), dir)
-                    && !isConduit(this.posInterface.getOffSet(dir).getTileEntity())) {
+                    && !isItemConduit(this.posInterface.getOffSet(dir).getTileEntity())) {
                 final int result = checkItemFluids(this.getSideFluid(dir), this.getSideItem(dir), dir.getOpposite());
                 if (result == 1) {
                     return true;
@@ -311,8 +324,19 @@ public class FluidConvertingInventoryAdaptor extends InventoryAdaptor {
                 && ((TileEntity) o).getBlockType().getUnlocalizedName().equals("gt.blockmachines");
     }
 
+    private boolean isItemConduit(TileEntity te) {
+        if (ModAndClassUtil.EIO && conduitClazz.isInstance(te)) {
+            try {
+                return eioTypeCheck.invoke(te, IItemConduit.class) != null;
+            } catch (InvocationTargetException | IllegalAccessException e) {
+                return false;
+            }
+        }
+        return false;
+    }
+
     private boolean isConduit(TileEntity te) {
-        return ModAndClassUtil.EIO && te instanceof IItemConduit;
+        return ModAndClassUtil.EIO && te instanceof IItemDuct;
     }
 
     private ItemStack fillEIOConduit(ItemStack item, TileEntity te, ForgeDirection direction) {
