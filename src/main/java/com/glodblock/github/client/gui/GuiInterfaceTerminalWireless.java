@@ -302,6 +302,7 @@ public class GuiInterfaceTerminalWireless extends FCBaseMEGui implements IDropTo
         buttonList.add(terminalStyleBox);
         buttonList.add(searchStringSave);
         buttonList.add(craftingStatusBtn);
+        this.guiButtonHashMap.clear();
         addSwitchGuiBtns();
 
         int offset = 51;
