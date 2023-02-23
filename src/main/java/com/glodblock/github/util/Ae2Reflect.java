@@ -16,7 +16,9 @@ import appeng.api.storage.data.IAEItemStack;
 import appeng.container.implementations.ContainerUpgradeable;
 import appeng.container.implementations.CraftingCPURecord;
 import appeng.crafting.MECraftingInventory;
+import appeng.helpers.DualityInterface;
 import appeng.me.cluster.implementations.CraftingCPUCluster;
+import appeng.me.helpers.AENetworkProxy;
 import appeng.me.storage.MEInventoryHandler;
 import appeng.me.storage.MEPassThrough;
 import appeng.parts.p2p.PartP2PLiquids;
@@ -35,6 +37,7 @@ public class Ae2Reflect {
     private static final Field fCPU_inventory;
     private static final Field fCPU_machineSrc;
     private static final Field fContainerUpgradeable_upgradeable;
+    private static final Field fDualInterface_gridProxy;
     private static final Method mItemSlot_setExtractable;
     private static final Method mCPU_getGrid;
     private static final Method mCPU_postChange;
@@ -54,6 +57,7 @@ public class Ae2Reflect {
             fCPU_machineSrc = Ae2Reflect.reflectField(CraftingCPUCluster.class, "machineSrc");
             fContainerUpgradeable_upgradeable = Ae2Reflect.reflectField(ContainerUpgradeable.class, "upgradeable");
             mItemSlot_setExtractable = reflectMethod(ItemSlot.class, "setExtractable", boolean.class);
+            fDualInterface_gridProxy = reflectField(DualityInterface.class, "gridProxy");
             mCPU_getGrid = reflectMethod(CraftingCPUCluster.class, "getGrid");
             mCPU_postChange = reflectMethod(
                     CraftingCPUCluster.class,
@@ -162,6 +166,10 @@ public class Ae2Reflect {
 
     public static IUpgradeableHost getUpgradeableHost(ContainerUpgradeable owner) {
         return Ae2Reflect.readField(owner, fContainerUpgradeable_upgradeable);
+    }
+
+    public static AENetworkProxy getInterfaceProxy(DualityInterface owner) {
+        return Ae2Reflect.readField(owner, fDualInterface_gridProxy);
     }
 
     public static void postCPUChange(CraftingCPUCluster cpu, IAEItemStack stack, MachineSource src) {
