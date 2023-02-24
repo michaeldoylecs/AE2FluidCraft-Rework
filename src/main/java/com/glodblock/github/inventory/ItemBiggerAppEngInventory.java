@@ -19,6 +19,14 @@ public class ItemBiggerAppEngInventory extends BiggerAppEngInventory {
         this.readFromNBT(Platform.openNbtData(is), name);
     }
 
+    public void setCraftingMode(boolean mode) {
+        Platform.openNbtData(is).setBoolean("craftingMode", mode);
+    }
+
+    public boolean getCraftingMode(boolean mode) {
+        return Platform.openNbtData(is).getBoolean("craftingMode");
+    }
+
     @Override
     public void markDirty() {
         boolean isCraft = Platform.openNbtData(is).getBoolean("craftingMode");
