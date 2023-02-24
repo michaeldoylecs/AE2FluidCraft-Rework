@@ -326,6 +326,8 @@ public class WirelessPatternTerminalExInventory extends MEMonitorHandler<IAEItem
     public void setCraftingRecipe(boolean craftingMode) {
         this.craftingMode = craftingMode;
         this.fixCraftingRecipes();
+        // force update crafting mode
+        ((ItemBiggerAppEngInventory) this.crafting).setCraftingMode(craftingMode);
     }
 
     @Override

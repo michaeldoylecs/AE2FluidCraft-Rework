@@ -100,6 +100,8 @@ ae2fc.tooltip.ultra_terminal.WIRELESS_ESSENTIA_TERMINAL=模式: 源质
 ae2fc.tooltip.ultra_terminal.WIRELESS_INTERFACE_TERMINAL=模式: 接口
 ae2fc.tooltip.ultra_terminal.WIRELESS_FLUID_PATTERN_TERMINAL_EX=模式: 增广样板
 ae2fc.tooltip.ultra_terminal=Shift右击切换模式。
+ae2fc.tooltip.ultra_terminal.tips=使用提示:
+ae2fc.tooltip.ultra_terminal.tips.desc=1.你可以把它放到饰品栏内并用热键打开.\n2.接口模式按§3Shift§7切换出接口命名按钮.\n3.当你在合成计划界面时.\n按§3Shift§7点击取消按钮会自动添加合成缺失的物品到NEI收藏栏.
 
 ae2fc.tooltip.cell_contents=内含流体:
 ae2fc.tooltip.cell_empty=空存储
