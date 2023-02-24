@@ -3,6 +3,7 @@ package com.glodblock.github.common.item;
 import static net.minecraft.client.gui.GuiScreen.isShiftKeyDown;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.EnumSet;
 import java.util.List;
 
@@ -77,6 +78,8 @@ public class ItemWirelessUltraTerminal extends ItemBaseWirelessTerminal
         if (isShiftKeyDown()) {
             lines.add(StatCollector.translateToLocal(NameConst.TT_ULTRA_TERMINAL));
             lines.add(StatCollector.translateToLocal(NameConst.TT_ULTRA_TERMINAL + "." + guiGuiType(stack)));
+            lines.add(NameConst.i18n(NameConst.TT_ULTRA_TERMINAL_TIPS));
+            lines.addAll(Arrays.asList(NameConst.i18n(NameConst.TT_ULTRA_TERMINAL_TIPS_DESC).split("\\\\n")));
         } else {
             lines.add(NameConst.i18n(NameConst.TT_SHIFT_FOR_MORE));
         }
