@@ -224,26 +224,38 @@ public class ContainerFluidMonitor extends FCContainerMonitor<IAEFluidStack> {
                 MutablePair<Integer, ItemStack> fillStack = Util.FluidUtil.fillStack(out, toExtract.getFluidStack());
                 if (fillStack.right == null || fillStack.left <= 0) continue;
                 toExtract.setStackSize((long) fillStack.left * fluidContainer.stackSize);
-                IAEFluidStack tmp = this.host.getFluidInventory()
-                        .extractItems(toExtract, Actionable.SIMULATE, this.getActionSource());
-                if (tmp == null) continue;
-                fillStack.right.stackSize = (int) (tmp.getStackSize() / fillStack.left);
-                this.dropItem(fillStack.right);
-                out.stackSize = fillStack.right.stackSize;
+                // The real result may don't match simulation result.
                 if (fillStack.right.getItem() instanceof IFluidContainerItem) {
-                    this.host.getFluidInventory().extractItems(toExtract, Actionable.MODULATE, this.getActionSource());
-                    if ((int) (tmp.getStackSize() % fillStack.left) > 0) {
+                    IAEFluidStack real = this.host.getFluidInventory()
+                            .extractItems(toExtract, Actionable.MODULATE, this.getActionSource());
+                    if (real == null) continue;
+                    // Refill the container
+                    out = fluidContainer.copy();
+                    out.stackSize = 1;
+                    fillStack = Util.FluidUtil.fillStack(out, real.getFluidStack());
+                    fillStack.right.stackSize = (int) (real.getStackSize() / fillStack.left);
+                    out.stackSize = fillStack.right.stackSize;
+                    if ((int) (real.getStackSize() % fillStack.left) > 0) {
                         this.dropItem(
                                 Util.FluidUtil.setFluidContainerAmount(
                                         fillStack.right,
-                                        (int) (tmp.getStackSize() % fillStack.left)),
+                                        (int) (real.getStackSize() % fillStack.left)),
                                 1);
                         out.stackSize++;
                     }
                 } else if (FluidContainerRegistry.isContainer(fillStack.right)) {
+                    IAEFluidStack real = this.host.getFluidInventory()
+                            .extractItems(toExtract, Actionable.MODULATE, this.getActionSource());
+                    if (real == null) continue;
+                    // Refill the container
+                    out = fluidContainer.copy();
+                    out.stackSize = 1;
+                    fillStack = Util.FluidUtil.fillStack(out, real.getFluidStack());
+                    fillStack.right.stackSize = (int) (real.getStackSize() / fillStack.left);
+                    out.stackSize = fillStack.right.stackSize;
                     toExtract.setStackSize((long) fillStack.right.stackSize * fillStack.left);
-                    this.host.getFluidInventory().extractItems(toExtract, Actionable.MODULATE, this.getActionSource());
                 }
+                this.dropItem(fillStack.right);
             } else if (!Util.FluidUtil.isEmpty(fluidContainer)) {
                 // add fluid to ae network
                 AEFluidStack fluidStack = Util.getAEFluidFromItem(fluidContainer);
