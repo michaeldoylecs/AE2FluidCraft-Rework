@@ -54,6 +54,8 @@ public class ChannelLoader implements Runnable {
                 .registerMessage(new SPacketSetItemAmount.Handler(), SPacketSetItemAmount.class, id++, Side.CLIENT);
         FluidCraft.proxy.netHandler
                 .registerMessage(new CPacketRenamer.Handler(), CPacketRenamer.class, id++, Side.SERVER);
+        FluidCraft.proxy.netHandler
+                .registerMessage(new SPacketStringUpdate.Handler(), SPacketStringUpdate.class, id++, Side.CLIENT);
     }
 
     public static void sendPacketToAllPlayers(Packet packet, World world) {

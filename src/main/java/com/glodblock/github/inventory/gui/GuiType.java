@@ -27,6 +27,18 @@ import com.google.common.collect.ImmutableList;
 
 public enum GuiType {
 
+    RENAMER(new PartOrItemGuiFactory<ITerminalHost>(ITerminalHost.class) {
+
+        @Override
+        protected Object createServerGui(EntityPlayer player, ITerminalHost inv) {
+            return new ContainerRenamer(player.inventory, inv);
+        }
+
+        @Override
+        protected Object createClientGui(EntityPlayer player, ITerminalHost inv) {
+            return new GuiRenamer(player.inventory, inv);
+        }
+    }),
     FLUID_AUTO_FILLER(new TileGuiFactory<TileFluidAutoFiller>(TileFluidAutoFiller.class) {
 
         @Override

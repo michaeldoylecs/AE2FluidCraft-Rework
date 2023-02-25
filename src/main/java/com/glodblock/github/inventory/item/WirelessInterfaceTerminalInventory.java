@@ -30,6 +30,7 @@ public class WirelessInterfaceTerminalInventory implements IWirelessInterfaceTer
     private final IAEItemPowerStorage ips;
     private final int inventorySlot;
     private final IGridNode grid;
+    private Util.DimensionalCoordSide tile;
 
     public WirelessInterfaceTerminalInventory(ItemStack is, int slot, IGridNode gridNode, EntityPlayer player) {
         Objects.requireNonNull(Util.getWirelessInv(is, player, StorageChannel.ITEMS));
@@ -37,6 +38,22 @@ public class WirelessInterfaceTerminalInventory implements IWirelessInterfaceTer
         this.grid = gridNode;
         this.target = is;
         this.inventorySlot = slot;
+        readFromNBT();
+    }
+
+    public void readFromNBT() {
+        NBTTagCompound data = Platform.openNbtData(this.target);
+        if (data.hasKey("clickedInterface")) {
+            NBTTagCompound tileMsg = (NBTTagCompound) data.getTag("clickedInterface");
+            this.tile = Util.DimensionalCoordSide.readFromNBT(tileMsg);
+        }
+    }
+
+    public void writeToNBT() {
+        NBTTagCompound data = Platform.openNbtData(this.target);
+        NBTTagCompound tileMsg = new NBTTagCompound();
+        tile.writeToNBT(tileMsg);
+        data.setTag("clickedInterface", tileMsg);
     }
 
     @Override
@@ -113,5 +130,16 @@ public class WirelessInterfaceTerminalInventory implements IWirelessInterfaceTer
     public void onChangeInventory(IInventory inv, int slot, InvOperation mc, ItemStack removedStack,
             ItemStack newStack) {
 
+    }
+
+    @Override
+    public void setClickedInterface(Util.DimensionalCoordSide tile) {
+        this.tile = tile;
+        this.writeToNBT();
+    }
+
+    @Override
+    public Util.DimensionalCoordSide getClickedInterface() {
+        return this.tile;
     }
 }

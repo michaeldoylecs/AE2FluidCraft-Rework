@@ -16,7 +16,6 @@ import org.lwjgl.opengl.GL11;
 
 import appeng.api.AEApi;
 import appeng.api.config.*;
-import appeng.api.util.DimensionalCoord;
 import appeng.api.util.WorldCoord;
 import appeng.client.gui.widgets.*;
 import appeng.client.me.ClientDCInternalInv;
@@ -42,6 +41,7 @@ import com.glodblock.github.inventory.gui.GuiType;
 import com.glodblock.github.inventory.item.IWirelessTerminal;
 import com.glodblock.github.network.CPacketRenamer;
 import com.glodblock.github.util.ModAndClassUtil;
+import com.glodblock.github.util.Util;
 import com.google.common.collect.HashMultimap;
 
 public class GuiInterfaceTerminalWireless extends FCBaseMEGui implements IDropToFillTextField {
@@ -52,7 +52,7 @@ public class GuiInterfaceTerminalWireless extends FCBaseMEGui implements IDropTo
 
     private final HashMap<Long, ClientDCInternalInv> byId = new HashMap<>();
     private final HashMultimap<String, ClientDCInternalInv> byName = HashMultimap.create();
-    private final HashMap<ClientDCInternalInv, DimensionalCoordSide> blockPosHashMap = new HashMap<>();
+    private final HashMap<ClientDCInternalInv, Util.DimensionalCoordSide> blockPosHashMap = new HashMap<>();
     private final HashMap<GuiButton, ClientDCInternalInv> guiButtonHashMap = new HashMap<>();
     private final ArrayList<String> names = new ArrayList<>();
     private final ArrayList<Object> lines = new ArrayList<>();
@@ -352,10 +352,15 @@ public class GuiInterfaceTerminalWireless extends FCBaseMEGui implements IDropTo
     @Override
     protected void actionPerformed(final GuiButton btn) {
         if (guiButtonHashMap.containsKey(btn)) {
-            DimensionalCoordSide blockPos = blockPosHashMap.get(guiButtonHashMap.get(btn));
+            Util.DimensionalCoordSide blockPos = blockPosHashMap.get(guiButtonHashMap.get(btn));
             if (btn instanceof GuiFCImgButton) {
                 FluidCraft.proxy.netHandler.sendToServer(
-                        new CPacketRenamer(blockPos.x, blockPos.y, blockPos.z, blockPos.getDimension(), blockPos.side));
+                        new CPacketRenamer(
+                                blockPos.x,
+                                blockPos.y,
+                                blockPos.z,
+                                blockPos.getDimension(),
+                                blockPos.getSide()));
             } else {
 
                 WorldCoord blockPos2 = new WorldCoord(
@@ -497,17 +502,6 @@ public class GuiInterfaceTerminalWireless extends FCBaseMEGui implements IDropTo
         return false;
     }
 
-    private static class DimensionalCoordSide extends DimensionalCoord {
-
-        private ForgeDirection side = ForgeDirection.UNKNOWN;
-
-        public DimensionalCoordSide(final int _x, final int _y, final int _z, final int _dim, ForgeDirection side) {
-            super(_x, _y, _z, _dim);
-            this.side = side;
-        }
-
-    }
-
     public void postUpdate(final NBTTagCompound in) {
         if (in.getBoolean("clear")) {
             this.byId.clear();
@@ -527,7 +521,9 @@ public class GuiInterfaceTerminalWireless extends FCBaseMEGui implements IDropTo
                     int Z = invData.getInteger("z");
                     int dim = invData.getInteger("dim");
                     ForgeDirection side = ForgeDirection.getOrientation(invData.getInteger("side"));
-                    blockPosHashMap.put(current, new DimensionalCoordSide(X, Y, Z, dim, side));
+                    blockPosHashMap.put(
+                            current,
+                            new Util.DimensionalCoordSide(X, Y, Z, dim, side, current.getUnlocalizedName()));
 
                     for (int x = 0; x < current.getInventory().getSizeInventory(); x++) {
                         final String which = Integer.toString(x);
