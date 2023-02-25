@@ -110,10 +110,11 @@ public final class Util {
     }
 
     public static IMEInventoryHandler<?> getWirelessInv(ItemStack is, EntityPlayer player, StorageChannel channel) {
+        if (Platform.isClient()) return new NullInventory<>();
         IGridNode gridNode = getWirelessGrid(is);
-        if (gridNode == null) return new NullInventory<>();
+        if (gridNode == null) return null;
         IGrid grid = gridNode.getGrid();
-        if (grid == null) return new NullInventory<>();
+        if (grid == null) return null;
         boolean canConnect = false;
         if (hasInfinityBoosterCard(is)) {
             canConnect = true;
@@ -141,7 +142,7 @@ public final class Util {
                 }
             }
         }
-        return new NullInventory<>();
+        return null;
     }
 
     public static ItemStack getWirelessTerminal(EntityPlayer player, int x) {
