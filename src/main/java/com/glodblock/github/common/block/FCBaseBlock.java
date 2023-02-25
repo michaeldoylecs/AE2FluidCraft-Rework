@@ -10,6 +10,9 @@ import net.minecraft.tileentity.TileEntity;
 
 import appeng.block.AEBaseTileBlock;
 import appeng.core.features.AEFeature;
+import appeng.core.features.ActivityState;
+import appeng.core.features.BlockStackSrc;
+import appeng.tile.AEBaseTile;
 
 import com.glodblock.github.FluidCraft;
 import com.glodblock.github.loader.IRegister;
@@ -27,6 +30,7 @@ public abstract class FCBaseBlock extends AEBaseTileBlock implements IRegister<F
 
     @Override
     public void setTileEntity(final Class<? extends TileEntity> clazz) {
+        AEBaseTile.registerTileItem(clazz, new BlockStackSrc(this, 0, ActivityState.Enabled));
         super.setTileEntity(clazz);
     }
 

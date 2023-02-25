@@ -31,6 +31,7 @@ import appeng.api.parts.IPart;
 import appeng.api.storage.IMEInventoryHandler;
 import appeng.api.storage.StorageChannel;
 import appeng.api.storage.data.IAEFluidStack;
+import appeng.api.util.DimensionalCoord;
 import appeng.api.util.WorldCoord;
 import appeng.container.AEBaseContainer;
 import appeng.items.tools.powered.ToolWirelessTerminal;
@@ -110,10 +111,11 @@ public final class Util {
     }
 
     public static IMEInventoryHandler<?> getWirelessInv(ItemStack is, EntityPlayer player, StorageChannel channel) {
+        if (Platform.isClient()) return new NullInventory<>();
         IGridNode gridNode = getWirelessGrid(is);
-        if (gridNode == null) return new NullInventory<>();
+        if (gridNode == null) return null;
         IGrid grid = gridNode.getGrid();
-        if (grid == null) return new NullInventory<>();
+        if (grid == null) return null;
         boolean canConnect = false;
         if (hasInfinityBoosterCard(is)) {
             canConnect = true;
@@ -141,7 +143,7 @@ public final class Util {
                 }
             }
         }
-        return new NullInventory<>();
+        return null;
     }
 
     public static ItemStack getWirelessTerminal(EntityPlayer player, int x) {
@@ -552,5 +554,44 @@ public final class Util {
             }
             return null;
         }
+    }
+
+    public static class DimensionalCoordSide extends DimensionalCoord {
+
+        private ForgeDirection side = ForgeDirection.UNKNOWN;
+        private final String name;
+
+        public DimensionalCoordSide(final int _x, final int _y, final int _z, final int _dim, ForgeDirection side,
+                String name) {
+            super(_x, _y, _z, _dim);
+            this.side = side;
+            this.name = name;
+        }
+
+        public String getName() {
+            return name;
+        }
+
+        public ForgeDirection getSide() {
+            return this.side;
+        }
+
+        @Override
+        public void writeToNBT(NBTTagCompound data) {
+            data.setInteger("side", this.side.ordinal());
+            data.setString("name", this.name);
+            super.writeToNBT(data);
+        }
+
+        public static DimensionalCoordSide readFromNBT(final NBTTagCompound data) {
+            return new DimensionalCoordSide(
+                    data.getInteger("x"),
+                    data.getInteger("y"),
+                    data.getInteger("z"),
+                    data.getInteger("dim"),
+                    ForgeDirection.getOrientation(data.getInteger("side")),
+                    data.getString("name"));
+        }
+
     }
 }
