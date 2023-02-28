@@ -61,6 +61,7 @@ public abstract class FCContainerMonitor<T extends IAEStack<T>> extends FCBaseCo
         this.clientCM.registerSetting(Settings.SORT_BY, SortOrder.NAME);
         this.clientCM.registerSetting(Settings.VIEW_MODE, ViewItems.ALL);
         this.clientCM.registerSetting(Settings.SORT_DIRECTION, SortDir.ASCENDING);
+        this.clientCM.registerSetting(Settings.TYPE_FILTER, TypeFilter.ALL);
     }
 
     public IGridNode getNetworkNode() {
