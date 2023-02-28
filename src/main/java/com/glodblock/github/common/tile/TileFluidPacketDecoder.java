@@ -182,6 +182,7 @@ public class TileFluidPacketDecoder extends AENetworkTile
         ItemStack fluidPacket = this.inventory.getStackInSlot(0);
         if (fluidPacket != null) {
             FluidStack fs = ItemFluidPacket.getFluidStack(fluidPacket);
+            if (fs == null) return null;
             if (fs.isFluidEqual(requestFluid)) {
                 if (fs.amount > requestFluid.amount) {
                     fs.amount -= requestFluid.amount;
@@ -201,6 +202,7 @@ public class TileFluidPacketDecoder extends AENetworkTile
         ItemStack fluidPacket = this.inventory.getStackInSlot(0);
         if (fluidPacket != null) {
             FluidStack requestFluid = ItemFluidPacket.getFluidStack(fluidPacket);
+            if (requestFluid == null) return null;
             requestFluid.amount = maxDrain;
             return this.drain(requestFluid, doDrain);
         }
@@ -224,6 +226,7 @@ public class TileFluidPacketDecoder extends AENetworkTile
             return new FluidTankInfo[0];
         } else {
             FluidStack fs = ItemFluidPacket.getFluidStack(fluidPacket);
+            if (fs == null) return new FluidTankInfo[0];
             return new FluidTankInfo[] { new FluidTankInfo(fs, fs.amount) };
         }
     }
