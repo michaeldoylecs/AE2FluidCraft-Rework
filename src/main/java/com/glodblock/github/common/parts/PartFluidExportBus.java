@@ -137,8 +137,9 @@ public class PartFluidExportBus extends FCSharedFluidBus implements ICraftingReq
                                     this.source);
                         }
 
+                        int space = fh.fill(this.getSide().getOpposite(), toExtract.getFluidStack(), false);
+                        toExtract.setStackSize(space);
                         final IAEFluidStack real = inv.extractItems(toExtract, Actionable.MODULATE, this.source);
-
                         if (real != null && isAllowed) {
                             int realInserted = fh.fill(this.getSide().getOpposite(), real.getFluidStack(), true);
                             if (realInserted < real.getStackSize()) {
