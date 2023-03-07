@@ -63,6 +63,10 @@ public abstract class FCContainerMonitor<T extends IAEStack<T>> extends FCBaseCo
         this.clientCM.registerSetting(Settings.SORT_DIRECTION, SortDir.ASCENDING);
     }
 
+    public IMEMonitor<T> getMonitor() {
+        return this.monitor;
+    }
+
     public IGridNode getNetworkNode() {
         return this.networkNode;
     }
