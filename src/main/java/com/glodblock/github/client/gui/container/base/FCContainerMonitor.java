@@ -64,6 +64,10 @@ public abstract class FCContainerMonitor<T extends IAEStack<T>> extends FCBaseCo
         this.clientCM.registerSetting(Settings.TYPE_FILTER, TypeFilter.ALL);
     }
 
+    public IMEMonitor<T> getMonitor() {
+        return this.monitor;
+    }
+
     public IGridNode getNetworkNode() {
         return this.networkNode;
     }
@@ -113,7 +117,7 @@ public abstract class FCContainerMonitor<T extends IAEStack<T>> extends FCBaseCo
     protected abstract void processItemList();
 
     protected boolean isInvalid() {
-        return this.monitor != this.host.getItemInventory();
+        return this.monitor == null;
     }
 
     protected void updatePowerStatus() {
