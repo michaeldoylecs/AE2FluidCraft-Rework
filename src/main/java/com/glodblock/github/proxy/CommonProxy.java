@@ -1,5 +1,6 @@
 package com.glodblock.github.proxy;
 
+import com.glodblock.github.crossmod.extracells.EC2Replacer;
 import net.minecraft.item.ItemStack;
 
 import appeng.api.AEApi;
@@ -30,6 +31,9 @@ public class CommonProxy {
     public void init(FMLInitializationEvent event) {
         this.registerMovables();
         FMLCommonHandler.instance().bus().register(SPacketMEUpdateBuffer.class);
+        if (!ModAndClassUtil.EC2 && Config.replaceEC2) {
+            EC2Replacer.initReplacer();
+        }
     }
 
     public void postInit(FMLPostInitializationEvent event) {
