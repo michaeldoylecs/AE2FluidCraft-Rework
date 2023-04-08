@@ -1,5 +1,6 @@
 package com.glodblock.github;
 
+import com.glodblock.github.crossmod.extracells.EC2Replacer;
 import net.minecraft.util.ResourceLocation;
 
 import appeng.api.AEApi;
@@ -91,6 +92,13 @@ public class FluidCraft {
     @Mod.EventHandler
     public void onServerStop(FMLServerStoppedEvent event) {
         SPacketMEUpdateBuffer.disable();
+    }
+
+    @Mod.EventHandler
+    public void missingMappings(FMLMissingMappingsEvent event) {
+        if (!ModAndClassUtil.EC2 && Config.replaceEC2) {
+            EC2Replacer.replaceExtraCells(event);
+        }
     }
 
     @Mod.EventHandler
