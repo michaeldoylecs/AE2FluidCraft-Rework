@@ -24,7 +24,7 @@ public class EC2ProxyBlock extends Block {
         GameRegistry.registerBlock(this, EC2ProxyItemBlock.class, "ec2placeholder." + name);
     }
 
-    private static class EC2ProxyItemBlock extends ItemBlock {
+    public static class EC2ProxyItemBlock extends ItemBlock {
 
         public EC2ProxyItemBlock(Block block) {
             super(block);
