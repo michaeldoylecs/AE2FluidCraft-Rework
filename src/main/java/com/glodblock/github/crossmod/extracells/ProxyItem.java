@@ -2,13 +2,14 @@ package com.glodblock.github.crossmod.extracells;
 
 import com.glodblock.github.FluidCraft;
 import com.glodblock.github.common.item.FCBaseItem;
-import com.glodblock.github.common.item.ItemMultiFluidStorageCell;
 import cpw.mods.fml.common.registry.GameRegistry;
+import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.world.World;
 
 import java.util.HashMap;
@@ -29,6 +30,7 @@ public class ProxyItem extends FCBaseItem {
     public ProxyItem(String ec2itemName) {
         this.name = ec2itemName;
         this.replacements = new HashMap<>();
+        setUnlocalizedName("ec2placeholder." + name);
     }
 
     @Override
@@ -52,8 +54,15 @@ public class ProxyItem extends FCBaseItem {
 
     @Override
     public void addInformation(ItemStack stack, EntityPlayer player, List info, boolean p_77624_4_) {
-        info.add("§7(Extra Cells Placeholder): " + name);
-        info.add("§7Put in your inventory to get a replacement (or disappear if incompatible)");
+        int meta = stack.getItemDamage();
+        ProxyItemEntry itemRepl = replacements.get(meta);
+        if (itemRepl != null) {
+            info.add(EnumChatFormatting.RED + "Extra Cells Placeholder for:");
+            info.add(EnumChatFormatting.AQUA + itemRepl.replacement.getUnlocalizedName());
+            info.add(EnumChatFormatting.GOLD + "Put in your inventory to get a replacement.");
+            info.add(EnumChatFormatting.GOLD + "It will disappear if no replacement was found.");
+            info.add(EnumChatFormatting.RED + "Report missing conversions on the Github.");
+        }
     }
 
     @Override
@@ -74,6 +83,7 @@ public class ProxyItem extends FCBaseItem {
                         }
                         player.inventory.setInventorySlotContents(i, replaceStack);
                     }
+                    break;
                 }
             }
         }
