@@ -29,18 +29,18 @@ import com.glodblock.github.common.item.ItemCreativeFluidStorageCell;
 
 public class FluidCellInventory implements IFluidCellInventory {
 
-    private static final String FLUID_TYPE_TAG = "ft";
-    private static final String FLUID_COUNT_TAG = "fc";
-    private static final String FLUID_SLOT = "#";
-    private static final String FLUID_SLOT_COUNT = "@";
+    protected static final String FLUID_TYPE_TAG = "ft";
+    protected static final String FLUID_COUNT_TAG = "fc";
+    protected static final String FLUID_SLOT = "#";
+    protected static final String FLUID_SLOT_COUNT = "@";
     protected IStorageFluidCell cellType;
     protected static String[] fluidSlots;
     protected static String[] fluidSlotCount;
     protected final ItemStack cellItem;
     private final ISaveProvider container;
     private final int MAX_TYPE = 63;
-    private long storedFluidCount;
-    private short storedFluids;
+    protected long storedFluidCount;
+    protected short storedFluids;
     protected IItemList<IAEFluidStack> cellFluids;
     protected final NBTTagCompound tagCompound;
     public static final int singleByteAmount = 256 * 8;
