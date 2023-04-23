@@ -2,10 +2,11 @@ package com.glodblock.github.crossmod.extracells;
 
 import appeng.api.AEApi;
 import appeng.api.definitions.IItemDefinition;
+import com.glodblock.github.common.item.ItemMultiFluidStorageCell;
 import com.glodblock.github.crossmod.extracells.parts.*;
+import com.glodblock.github.crossmod.extracells.storage.ProxyFluidStorageCell;
 import com.glodblock.github.loader.ItemAndBlockHolder;
 import net.minecraft.item.Item;
-import net.minecraft.nbt.NBTTagCompound;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -16,7 +17,7 @@ import java.util.function.Function;
  */
 public class ItemReplacements {
 
-    protected static Map<String, ProxyItem> registry;
+    protected static Map<String, Item> registry;
 
     static void init() {
         registry = new HashMap<>(23);
@@ -28,14 +29,22 @@ public class ItemReplacements {
      * Register proxy items (non-parts)
      */
     static void proxyItems() {
-        deprecateFluidStorage("storage.fluid", 0, ItemAndBlockHolder.CELL1KM);
-        deprecateFluidStorage("storage.fluid", 1, ItemAndBlockHolder.CELL4KM);
-        deprecateFluidStorage("storage.fluid", 3, ItemAndBlockHolder.CELL64KM);
-        deprecateFluidStorage("storage.fluid", 4, ItemAndBlockHolder.CELL256KM);
-        deprecateFluidStorage("storage.fluid", 2, ItemAndBlockHolder.CELL16KM);
-        deprecateFluidStorage("storage.fluid", 5, ItemAndBlockHolder.CELL1024KM);
-        deprecateFluidStorage("storage.fluid", 6, ItemAndBlockHolder.CELL4096KM);
-        deprecateFluidStorage("storage.fluid", 7, ItemAndBlockHolder.CELL16384KM);
+        deprecateFluidStorage("storage.fluid", 0, ItemAndBlockHolder.CELL1KM,
+            1, 8, 0.5);
+        deprecateFluidStorage("storage.fluid", 1, ItemAndBlockHolder.CELL4KM,
+            4, 32, 1.0);
+        deprecateFluidStorage("storage.fluid", 2, ItemAndBlockHolder.CELL16KM,
+            16, 128, 1.5);
+        deprecateFluidStorage("storage.fluid", 3, ItemAndBlockHolder.CELL64KM,
+            64, 512, 2.0);
+        deprecateFluidStorage("storage.fluid", 4, ItemAndBlockHolder.CELL256KM,
+            256, 2048, 2.5);
+        deprecateFluidStorage("storage.fluid", 5, ItemAndBlockHolder.CELL1024KM,
+            1024, 8192, 3.0);
+        deprecateFluidStorage("storage.fluid", 6, ItemAndBlockHolder.CELL4096KM,
+            4096, 32768, 3.5);
+        deprecateFluidStorage("storage.fluid", 7, ItemAndBlockHolder.CELL16384KM,
+            16384, 131072, 4.0);
         // Thanks, AEApi.
         deprecateItemStorage("storage.physical", 0, AEApi.instance().definitions().items().cell256k());
         deprecateItemStorage("storage.physical", 1, AEApi.instance().definitions().items().cell1024k());
@@ -67,7 +76,6 @@ public class ItemReplacements {
         deprecateItem("storage.component", 9, ItemAndBlockHolder.CELL_PART, 5);
         deprecateItem("storage.component", 10, ItemAndBlockHolder.CELL_PART, 6);
         deprecateItem("terminal.universal.wireless", ItemAndBlockHolder.WIRELESS_ULTRA_TERM);
-
     }
 
     /**
@@ -86,9 +94,20 @@ public class ItemReplacements {
 
     private static ProxyItem getOrBuildItem(String srcName) {
         final String fullName = "extracells:" + srcName;
-        ProxyItem proxy = registry.get(fullName);
+        ProxyItem proxy = (ProxyItem) registry.get(fullName);
         if (proxy == null) {
             proxy = new ProxyItem(srcName);
+            registry.put(fullName, proxy);
+            proxy.register();
+        }
+        return proxy;
+    }
+
+    private static ProxyFluidStorageCell getOrBuildFluidStorage(String srcName) {
+        final String fullName = "extracells:" + srcName;
+        ProxyFluidStorageCell proxy = (ProxyFluidStorageCell) registry.get(fullName);
+        if (proxy == null) {
+            proxy = new ProxyFluidStorageCell(srcName);
             registry.put(fullName, proxy);
             proxy.register();
         }
@@ -104,6 +123,10 @@ public class ItemReplacements {
      */
     private static void deprecateItem(String srcName, int srcMeta, Item replacement, int targetMeta) {
         getOrBuildItem(srcName).addMetaReplacement(srcMeta, replacement, targetMeta);
+    }
+
+    static void deprecateItemBlock(String srcName, int srcMeta, Item replacement, int targetMeta) {
+        getOrBuildItem("itemBlock." + srcName).addMetaReplacement(srcMeta, replacement, targetMeta);
     }
 
     private static void deprecateItem(String srcName, Item replacement) {
@@ -130,12 +153,12 @@ public class ItemReplacements {
     }
 
     /**
-     * Deprecate a storage item.
+     * Deprecate a fluid storage item. Note that we can't access the properties directly, so we need to do this
      */
-    private static void deprecateFluidStorage(String srcName, int srcMeta, Item replacement) {
-        ProxyItem item = getOrBuildItem(srcName);
-        ProxyItem.ProxyReplacement storage = new FluidStorageReplacement(replacement, 0);
-        item.addMetaReplacement(srcMeta, storage);
+    private static void deprecateFluidStorage(String srcName, int srcMeta, ItemMultiFluidStorageCell replacement, long kilobytes, int bytesPerType, double idleDrain) {
+        ProxyFluidStorageCell proxyItem = getOrBuildFluidStorage(srcName);
+        ProxyItem.ProxyFluidStorageEntry entry = new ProxyItem.ProxyFluidStorageEntry(replacement, kilobytes, bytesPerType, idleDrain);
+        proxyItem.addMetaReplacement(srcMeta, entry);
     }
 
     /**
@@ -145,33 +168,13 @@ public class ItemReplacements {
     private static void deprecateItemStorage(String srcName, int srcMeta, IItemDefinition replacement) {
         if (replacement.isEnabled()) {
             ProxyItem item = getOrBuildItem(srcName);
-            ProxyItem.ProxyReplacement storage = new ItemStorageReplacement(
+            ProxyItem.ProxyItemEntry storage = new ProxyItem.ItemStorageEntry(
                 replacement.maybeItem().get(), replacement.maybeStack(1).get().getItemDamage());
             item.addMetaReplacement(srcMeta, storage);
         }
     }
 }
 
-class FluidStorageReplacement extends ProxyItem.ProxyReplacement {
-    FluidStorageReplacement(Item replacement, int replacementMeta) {
-        super(replacement, replacementMeta);
-    }
 
-    @Override
-    NBTTagCompound replaceNBT(NBTTagCompound compound) {
-        System.out.println(compound);
-        return compound;
-    }
-}
 
-class ItemStorageReplacement extends ProxyItem.ProxyReplacement {
-    ItemStorageReplacement(Item replacement, int replacementMeta) {
-        super(replacement, replacementMeta);
-    }
 
-    @Override
-    NBTTagCompound replaceNBT(NBTTagCompound compound) {
-        System.out.println(compound);
-        return compound;
-    }
-}
