@@ -4,11 +4,9 @@ import appeng.api.AEApi;
 import appeng.api.definitions.IItemDefinition;
 import com.glodblock.github.common.item.ItemMultiFluidStorageCell;
 import com.glodblock.github.crossmod.extracells.parts.*;
-import com.glodblock.github.crossmod.extracells.storage.ProxyExtremeStorageCell;
-import com.glodblock.github.crossmod.extracells.storage.ProxyFluidStorageCell;
-import com.glodblock.github.crossmod.extracells.storage.ProxyItemCellHandler;
-import com.glodblock.github.crossmod.extracells.storage.ProxyItemStorageCell;
+import com.glodblock.github.crossmod.extracells.storage.*;
 import com.glodblock.github.loader.ItemAndBlockHolder;
+import cpw.mods.fml.common.registry.GameRegistry;
 import net.minecraft.item.Item;
 
 import java.util.HashMap;
@@ -50,6 +48,7 @@ public class ItemReplacements {
             16384, 131072, 4.0);
         // Thanks, AEApi.
         AEApi.instance().registries().cell().addCellHandler(new ProxyItemCellHandler());
+        AEApi.instance().registries().cell().addCellHandler(new ProxyVoidCellHandler());
         deprecateItemStorage(0, AEApi.instance().definitions().items().cell256k(), 256, 2048, 2.5);
         deprecateItemStorage(1, AEApi.instance().definitions().items().cell1024k(), 1024, 8192, 3.0);
         deprecateItemStorage(2, AEApi.instance().definitions().items().cell4096k(), 4096, 32768, 3.5);
@@ -59,7 +58,10 @@ public class ItemReplacements {
             AEApi.instance().definitions().items().cellQuantum(), Integer.MAX_VALUE / 16, 4096, 1000.0);
         deprecateExtremeStorage("storage.physical.advanced.singularity", 0,
             AEApi.instance().definitions().items().cellSingularity(), Long.MAX_VALUE / 16,  4096,  15000.0);
-        deprecateItem("storage.physical.void", 0, AEApi.instance().definitions().items().cellVoid());
+        //Deprecate void cell manually
+        ProxyVoidStorageCell voidCell = new ProxyVoidStorageCell();
+        GameRegistry.registerItem(voidCell, "ec2placeholder.storage.physical.void");
+        registry.put("extracells:storage.physical.void", voidCell);
         deprecateItem("pattern.fluid", ItemAndBlockHolder.PATTERN);
         deprecateItem("terminal.fluid.wireless", ItemAndBlockHolder.WIRELESS_FLUID_TERM);
         /* Storage casings */
