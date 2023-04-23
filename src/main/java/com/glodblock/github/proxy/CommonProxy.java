@@ -1,6 +1,5 @@
 package com.glodblock.github.proxy;
 
-import com.glodblock.github.crossmod.extracells.EC2Replacer;
 import net.minecraft.item.ItemStack;
 
 import appeng.api.AEApi;
@@ -10,6 +9,7 @@ import appeng.api.config.Upgrades;
 import com.glodblock.github.FluidCraft;
 import com.glodblock.github.common.Config;
 import com.glodblock.github.common.tile.TileWalrus;
+import com.glodblock.github.crossmod.extracells.EC2Replacer;
 import com.glodblock.github.inventory.external.AEFluidInterfaceHandler;
 import com.glodblock.github.loader.ItemAndBlockHolder;
 import com.glodblock.github.network.SPacketMEUpdateBuffer;

@@ -3,8 +3,6 @@ package com.glodblock.github.common.storage;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.glodblock.github.crossmod.extracells.storage.ProxyFluidCellInventory;
-import com.glodblock.github.crossmod.extracells.storage.ProxyFluidStorageCell;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -25,6 +23,8 @@ import appeng.util.Platform;
 import appeng.util.item.AEFluidStack;
 
 import com.glodblock.github.common.item.ItemCreativeFluidStorageCell;
+import com.glodblock.github.crossmod.extracells.storage.ProxyFluidCellInventory;
+import com.glodblock.github.crossmod.extracells.storage.ProxyFluidStorageCell;
 
 public class FluidCellInventory implements IFluidCellInventory {
 

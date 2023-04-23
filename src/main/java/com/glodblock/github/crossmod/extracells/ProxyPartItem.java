@@ -1,18 +1,21 @@
 package com.glodblock.github.crossmod.extracells;
 
-import appeng.api.parts.IPart;
-import appeng.api.parts.IPartItem;
+import java.util.function.Function;
+
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+
 import org.jetbrains.annotations.Nullable;
 
-import java.util.function.Function;
+import appeng.api.parts.IPart;
+import appeng.api.parts.IPartItem;
 
 public class ProxyPartItem extends ProxyItem implements IPartItem {
 
     /**
-     * Creates a ProxyPartItem associated with the ProxyPart instance. This instance
-     * is reused on each call to {@link #createPartFromItemStack(ItemStack)}.
+     * Creates a ProxyPartItem associated with the ProxyPart instance. This instance is reused on each call to
+     * {@link #createPartFromItemStack(ItemStack)}.
+     * 
      * @param ec2itemName extra cells internal name
      */
     public ProxyPartItem(String ec2itemName) {
@@ -53,6 +56,3 @@ class PartReplacement extends ProxyItem.ProxyItemEntry {
         this.proxyPart = proxyPart;
     }
 }
-
-
-

@@ -1,17 +1,19 @@
 package com.glodblock.github.crossmod.extracells;
 
+import java.util.HashMap;
+import java.util.Map;
+import java.util.function.Function;
+
+import net.minecraft.item.Item;
+
 import appeng.api.AEApi;
 import appeng.api.definitions.IItemDefinition;
+
 import com.glodblock.github.common.item.ItemMultiFluidStorageCell;
 import com.glodblock.github.crossmod.extracells.parts.*;
 import com.glodblock.github.crossmod.extracells.storage.*;
 import com.glodblock.github.loader.ItemAndBlockHolder;
 import cpw.mods.fml.common.registry.GameRegistry;
-import net.minecraft.item.Item;
-
-import java.util.HashMap;
-import java.util.Map;
-import java.util.function.Function;
 
 /**
  * Shell class to organize proxy replacements and hide the ugliness
@@ -26,26 +28,19 @@ public class ItemReplacements {
         ItemReplacements.proxyItems();
         ItemReplacements.proxyPartItems();
     }
+
     /**
      * Register proxy items (non-parts)
      */
     static void proxyItems() {
-        deprecateFluidStorage("storage.fluid", 0, ItemAndBlockHolder.CELL1KM,
-            1, 8, 0.5);
-        deprecateFluidStorage("storage.fluid", 1, ItemAndBlockHolder.CELL4KM,
-            4, 32, 1.0);
-        deprecateFluidStorage("storage.fluid", 2, ItemAndBlockHolder.CELL16KM,
-            16, 128, 1.5);
-        deprecateFluidStorage("storage.fluid", 3, ItemAndBlockHolder.CELL64KM,
-            64, 512, 2.0);
-        deprecateFluidStorage("storage.fluid", 4, ItemAndBlockHolder.CELL256KM,
-            256, 2048, 2.5);
-        deprecateFluidStorage("storage.fluid", 5, ItemAndBlockHolder.CELL1024KM,
-            1024, 8192, 3.0);
-        deprecateFluidStorage("storage.fluid", 6, ItemAndBlockHolder.CELL4096KM,
-            4096, 32768, 3.5);
-        deprecateFluidStorage("storage.fluid", 7, ItemAndBlockHolder.CELL16384KM,
-            16384, 131072, 4.0);
+        deprecateFluidStorage("storage.fluid", 0, ItemAndBlockHolder.CELL1KM, 1, 8, 0.5);
+        deprecateFluidStorage("storage.fluid", 1, ItemAndBlockHolder.CELL4KM, 4, 32, 1.0);
+        deprecateFluidStorage("storage.fluid", 2, ItemAndBlockHolder.CELL16KM, 16, 128, 1.5);
+        deprecateFluidStorage("storage.fluid", 3, ItemAndBlockHolder.CELL64KM, 64, 512, 2.0);
+        deprecateFluidStorage("storage.fluid", 4, ItemAndBlockHolder.CELL256KM, 256, 2048, 2.5);
+        deprecateFluidStorage("storage.fluid", 5, ItemAndBlockHolder.CELL1024KM, 1024, 8192, 3.0);
+        deprecateFluidStorage("storage.fluid", 6, ItemAndBlockHolder.CELL4096KM, 4096, 32768, 3.5);
+        deprecateFluidStorage("storage.fluid", 7, ItemAndBlockHolder.CELL16384KM, 16384, 131072, 4.0);
         // Thanks, AEApi.
         AEApi.instance().registries().cell().addCellHandler(new ProxyItemCellHandler());
         AEApi.instance().registries().cell().addCellHandler(new ProxyVoidCellHandler());
@@ -54,19 +49,28 @@ public class ItemReplacements {
         deprecateItemStorage(2, AEApi.instance().definitions().items().cell4096k(), 4096, 32768, 3.5);
         deprecateItemStorage(3, AEApi.instance().definitions().items().cell16384k(), 16384, 131072, 4.0);
         deprecateItemStorage(4, AEApi.instance().definitions().items().cellContainer(), 65536, 8, 2.0, 1);
-        deprecateExtremeStorage("storage.physical.advanced.quantum", 0,
-            AEApi.instance().definitions().items().cellQuantum(), Integer.MAX_VALUE / 16, 4096, 1000.0);
-        deprecateExtremeStorage("storage.physical.advanced.singularity", 0,
-            AEApi.instance().definitions().items().cellSingularity(), Long.MAX_VALUE / 16,  4096,  15000.0);
-        //Deprecate void cell manually
+        deprecateExtremeStorage(
+                "storage.physical.advanced.quantum",
+                0,
+                AEApi.instance().definitions().items().cellQuantum(),
+                Integer.MAX_VALUE / 16,
+                4096,
+                1000.0);
+        deprecateExtremeStorage(
+                "storage.physical.advanced.singularity",
+                0,
+                AEApi.instance().definitions().items().cellSingularity(),
+                Long.MAX_VALUE / 16,
+                4096,
+                15000.0);
+        // Deprecate void cell manually
         ProxyVoidStorageCell voidCell = new ProxyVoidStorageCell();
         GameRegistry.registerItem(voidCell, "ec2placeholder.storage.physical.void");
         registry.put("extracells:storage.physical.void", voidCell);
         deprecateItem("pattern.fluid", ItemAndBlockHolder.PATTERN);
         deprecateItem("terminal.fluid.wireless", ItemAndBlockHolder.WIRELESS_FLUID_TERM);
         /* Storage casings */
-        deprecateItem("storage.casing", 0,
-            AEApi.instance().definitions().materials().emptyAdvancedStorageCell());
+        deprecateItem("storage.casing", 0, AEApi.instance().definitions().materials().emptyAdvancedStorageCell());
         deprecateItem("storage.casing", 1, ItemAndBlockHolder.CELL_HOUSING, 2);
         /* Storage components (1k component, etc.) */
         deprecateItem("storage.component", 0, AEApi.instance().definitions().materials().cell256kPart());
@@ -143,10 +147,11 @@ public class ItemReplacements {
 
     /**
      * Deprecate a simple item.
-     * @param srcName name of the to-be-replaced item without the mod id prefix
-     * @param srcMeta meta of the to-be-replaced item
+     * 
+     * @param srcName     name of the to-be-replaced item without the mod id prefix
+     * @param srcMeta     meta of the to-be-replaced item
      * @param replacement item that will replace src
-     * @param targetMeta meta of the item that will replace src
+     * @param targetMeta  meta of the item that will replace src
      */
     private static void deprecateItem(String srcName, int srcMeta, Item replacement, int targetMeta) {
         getOrBuildItem(srcName).addMetaReplacement(srcMeta, replacement, targetMeta);
@@ -162,13 +167,16 @@ public class ItemReplacements {
 
     private static void deprecateItem(String srcName, int srcMeta, IItemDefinition replacement) {
         if (replacement.isEnabled()) {
-            deprecateItem(srcName, srcMeta,
-                replacement.maybeItem().get(),
-                replacement.maybeStack(1).get().getItemDamage());
+            deprecateItem(
+                    srcName,
+                    srcMeta,
+                    replacement.maybeItem().get(),
+                    replacement.maybeStack(1).get().getItemDamage());
         }
     }
 
-    private static void deprecateItemPart(int srcMeta, Item replacement, Function<ProxyPartItem, ProxyPart> partBuilder) {
+    private static void deprecateItemPart(int srcMeta, Item replacement,
+            Function<ProxyPartItem, ProxyPart> partBuilder) {
         final String fullName = "extracells:part.base";
         ProxyPartItem proxyItem = (ProxyPartItem) registry.get(fullName);
         if (proxyItem == null) {
@@ -182,51 +190,65 @@ public class ItemReplacements {
     /**
      * Deprecate a fluid storage item. Note that we can't access the properties directly, so we need to do this
      */
-    private static void deprecateFluidStorage(String srcName, int srcMeta, ItemMultiFluidStorageCell replacement, long kilobytes, int bytesPerType, double idleDrain) {
+    private static void deprecateFluidStorage(String srcName, int srcMeta, ItemMultiFluidStorageCell replacement,
+            long kilobytes, int bytesPerType, double idleDrain) {
         ProxyFluidStorageCell proxyItem = getOrBuildFluidStorage(srcName);
-        ProxyItem.ProxyStorageEntry entry = new ProxyItem.ProxyStorageEntry(replacement, kilobytes, bytesPerType, idleDrain);
+        ProxyItem.ProxyStorageEntry entry = new ProxyItem.ProxyStorageEntry(
+                replacement,
+                kilobytes,
+                bytesPerType,
+                idleDrain);
         proxyItem.addMetaReplacement(srcMeta, entry);
     }
 
     /**
-     * Deprecate a storage item. This goes through AEAPI, as AE2FC doesn't have any item cells.
-     * If the item is disabled in AEAPI, the replacement will not be registered!
+     * Deprecate a storage item. This goes through AEAPI, as AE2FC doesn't have any item cells. If the item is disabled
+     * in AEAPI, the replacement will not be registered!
      */
-    private static void deprecateItemStorage(int srcMeta, IItemDefinition replacement, long kilobytes, int bytesPerType, double idleDrain) {
+    private static void deprecateItemStorage(int srcMeta, IItemDefinition replacement, long kilobytes, int bytesPerType,
+            double idleDrain) {
         if (replacement.isEnabled()) {
             ProxyItemStorageCell item = getOrBuildItemStorage();
             int meta = replacement.maybeStack(1).get().getItemDamage();
             ProxyItem.ProxyItemEntry storage = new ProxyItem.ProxyStorageEntry(
-                replacement.maybeItem().get(), kilobytes, bytesPerType, idleDrain);
+                    replacement.maybeItem().get(),
+                    kilobytes,
+                    bytesPerType,
+                    idleDrain);
             item.addMetaReplacement(srcMeta, storage);
         }
     }
 
     /**
-     * Deprecate a storage item. This goes through AEAPI, as AE2FC doesn't have any item cells.
-     * If the item is disabled in AEAPI, the replacement will not be registered!
+     * Deprecate a storage item. This goes through AEAPI, as AE2FC doesn't have any item cells. If the item is disabled
+     * in AEAPI, the replacement will not be registered!
      */
-    private static void deprecateItemStorage(int srcMeta, IItemDefinition replacement, long kilobytes, int bytesPerType, double idleDrain, int types) {
+    private static void deprecateItemStorage(int srcMeta, IItemDefinition replacement, long kilobytes, int bytesPerType,
+            double idleDrain, int types) {
         if (replacement.isEnabled()) {
             ProxyItemStorageCell item = getOrBuildItemStorage();
             int meta = replacement.maybeStack(1).get().getItemDamage();
             ProxyItem.ProxyItemEntry storage = new ProxyItem.ProxyStorageEntry(
-                replacement.maybeItem().get(), kilobytes, bytesPerType, idleDrain, types);
+                    replacement.maybeItem().get(),
+                    kilobytes,
+                    bytesPerType,
+                    idleDrain,
+                    types);
             item.addMetaReplacement(srcMeta, storage);
         }
     }
 
-    private static void deprecateExtremeStorage(String srcName, int srcMeta, IItemDefinition replacement, long bytes, int bytesPerType, double idleDrain) {
+    private static void deprecateExtremeStorage(String srcName, int srcMeta, IItemDefinition replacement, long bytes,
+            int bytesPerType, double idleDrain) {
         if (replacement.isEnabled()) {
             ProxyExtremeStorageCell item = getOrBuildItemStorage(srcName);
             int meta = replacement.maybeStack(1).get().getItemDamage();
             ProxyItem.ProxyItemEntry storage = new ProxyItem.ProxyStorageEntry(
-                replacement.maybeItem().get(), bytes / 1024, bytesPerType, idleDrain);
+                    replacement.maybeItem().get(),
+                    bytes / 1024,
+                    bytesPerType,
+                    idleDrain);
             item.addMetaReplacement(srcMeta, storage);
         }
     }
 }
-
-
-
-

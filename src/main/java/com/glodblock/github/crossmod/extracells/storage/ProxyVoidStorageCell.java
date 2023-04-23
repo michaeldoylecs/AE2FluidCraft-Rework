@@ -1,23 +1,24 @@
 package com.glodblock.github.crossmod.extracells.storage;
 
-import appeng.api.AEApi;
-import appeng.core.localization.GuiText;
-import appeng.items.storage.ItemVoidStorageCell;
-import com.glodblock.github.crossmod.extracells.ProxyItem;
-import net.minecraft.client.resources.I18n;
+import java.util.List;
+
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.world.World;
 
-import java.util.List;
+import appeng.api.AEApi;
+import appeng.items.storage.ItemVoidStorageCell;
 
 public class ProxyVoidStorageCell extends ItemVoidStorageCell {
 
-    private final String name = AEApi.instance().definitions().items().cellVoid().maybeStack(1).get().getUnlocalizedName();
+    private final String name = AEApi.instance().definitions().items().cellVoid().maybeStack(1).get()
+            .getUnlocalizedName();
+
     @Override
-    public void addCheckedInformation(ItemStack stack, EntityPlayer player, List<String> info, boolean displayMoreInfo) {
+    public void addCheckedInformation(ItemStack stack, EntityPlayer player, List<String> info,
+            boolean displayMoreInfo) {
         info.add(EnumChatFormatting.RED + "Extra Cells Placeholder for:");
         info.add(EnumChatFormatting.AQUA + name);
         info.add(EnumChatFormatting.GOLD + "Put in your inventory to get a replacement.");

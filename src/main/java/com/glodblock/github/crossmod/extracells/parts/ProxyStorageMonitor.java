@@ -1,12 +1,14 @@
 package com.glodblock.github.crossmod.extracells.parts;
 
-import com.glodblock.github.crossmod.extracells.ProxyPart;
-import com.glodblock.github.crossmod.extracells.ProxyPartItem;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidRegistry;
 
+import com.glodblock.github.crossmod.extracells.ProxyPart;
+import com.glodblock.github.crossmod.extracells.ProxyPartItem;
+
 public class ProxyStorageMonitor extends ProxyPart {
+
     public ProxyStorageMonitor(ProxyPartItem item) {
         super(item);
     }

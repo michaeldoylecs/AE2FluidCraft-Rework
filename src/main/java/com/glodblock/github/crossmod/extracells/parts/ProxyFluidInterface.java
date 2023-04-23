@@ -1,12 +1,14 @@
 package com.glodblock.github.crossmod.extracells.parts;
 
-import com.glodblock.github.crossmod.extracells.ProxyPart;
-import com.glodblock.github.crossmod.extracells.ProxyPartItem;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraftforge.common.util.Constants;
 
+import com.glodblock.github.crossmod.extracells.ProxyPart;
+import com.glodblock.github.crossmod.extracells.ProxyPartItem;
+
 public class ProxyFluidInterface extends ProxyPart {
+
     public ProxyFluidInterface(ProxyPartItem item) {
         super(item);
     }

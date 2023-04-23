@@ -1,14 +1,17 @@
 package com.glodblock.github.crossmod.extracells.parts;
 
-import com.glodblock.github.crossmod.extracells.ProxyPart;
-import com.glodblock.github.crossmod.extracells.ProxyPartItem;
+import static net.minecraftforge.common.util.Constants.NBT.TAG_COMPOUND;
+
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 
-import static net.minecraftforge.common.util.Constants.NBT.TAG_COMPOUND;
+import com.glodblock.github.crossmod.extracells.ProxyPart;
+import com.glodblock.github.crossmod.extracells.ProxyPartItem;
 
 public class ProxyFluidStorage extends ProxyPart {
+
     private static int[] FILTER_MAP = null;
+
     protected static void init() {
         // spotless:off
         FILTER_MAP = new int[] {
@@ -23,6 +26,7 @@ public class ProxyFluidStorage extends ProxyPart {
             8, 17, 26, 35, 44, 53 };
         //spotless:on
     }
+
     public ProxyFluidStorage(ProxyPartItem item) {
         super(item);
     }
@@ -35,7 +39,7 @@ public class ProxyFluidStorage extends ProxyPart {
         for (int slot = 0; slot < 54; ++slot) {
             String oldFilterName = "FilterFluid#" + slot;
             fluidFilterNew
-                .setTag("#" + FILTER_MAP[slot], ProxyPart.createFluidDisplayTag(extra.getString(oldFilterName)));
+                    .setTag("#" + FILTER_MAP[slot], ProxyPart.createFluidDisplayTag(extra.getString(oldFilterName)));
             extra.removeTag(oldFilterName);
         }
         extra.setTag("config", fluidFilterNew);

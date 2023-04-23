@@ -1,11 +1,9 @@
 package com.glodblock.github.crossmod.extracells;
 
-import appeng.api.networking.IGridNode;
-import appeng.api.parts.*;
-import appeng.api.storage.data.IAEItemStack;
-import appeng.util.item.AEItemStack;
-import cpw.mods.fml.common.registry.GameRegistry;
-import io.netty.buffer.ByteBuf;
+import java.lang.ref.WeakReference;
+import java.util.List;
+import java.util.Random;
+
 import net.minecraft.client.renderer.RenderBlocks;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
@@ -22,9 +20,12 @@ import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
 
-import java.lang.ref.WeakReference;
-import java.util.List;
-import java.util.Random;
+import appeng.api.networking.IGridNode;
+import appeng.api.parts.*;
+import appeng.api.storage.data.IAEItemStack;
+import appeng.util.item.AEItemStack;
+import cpw.mods.fml.common.registry.GameRegistry;
+import io.netty.buffer.ByteBuf;
 
 /**
  * ProxyPart is expected to be immediately replaced with the replacement part on load.
