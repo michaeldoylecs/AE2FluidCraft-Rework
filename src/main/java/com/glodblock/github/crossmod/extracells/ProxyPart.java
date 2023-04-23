@@ -179,7 +179,7 @@ public class ProxyPart implements IPart, IPartDeprecated {
         if (item.get() == null) {
             throw new NullPointerException("Umm, this wasn't supposed to happen. The ref item " + name + " was GC'd.");
         }
-        ProxyItem.ProxyReplacement r = item.get().replacements.get(meta);
+        ProxyItem.ProxyItemEntry r = item.get().replacements.get(meta);
         def.setInteger("id", Item.getIdFromItem(r.replacement));
         def.setShort("Damage", (short) r.replacementMeta);
         return def;

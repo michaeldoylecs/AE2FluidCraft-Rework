@@ -44,7 +44,7 @@ public class ProxyPartItem extends ProxyItem implements IPartItem {
 /**
  * Item replacement entry for ItemParts. All targets replace into 0.
  */
-class PartReplacement extends ProxyItem.ProxyReplacement {
+class PartReplacement extends ProxyItem.ProxyItemEntry {
 
     Function<ProxyPartItem, ProxyPart> proxyPart;
 
