@@ -100,33 +100,31 @@ public class ProxyItem extends FCBaseItem {
         }
 
         NBTTagCompound replaceNBT(NBTTagCompound compound) {
-            return compound;
-        }
-    }
-
-    protected static class ItemStorageEntry extends ProxyItemEntry {
-        ItemStorageEntry(Item replacement, int replacementMeta) {
-            super(replacement, replacementMeta);
-        }
-
-        @Override
-        NBTTagCompound replaceNBT(NBTTagCompound compound) {
             System.out.println(compound);
             return compound;
         }
     }
 
-    protected static class ProxyFluidStorageEntry extends ProxyItemEntry {
+    protected static class ProxyStorageEntry extends ProxyItemEntry {
         public final long maxBytes;
         public final int bytesPerType;
         public final double idleDrain;
-        protected ProxyFluidStorageEntry(ItemMultiFluidStorageCell replacement, long kilobytes, int bytesPerType, double idleDrain) {
+        public final int types;
+        protected ProxyStorageEntry(Item replacement, long kilobytes, int bytesPerType, double idleDrain) {
             super(replacement, 0);
             this.maxBytes = kilobytes * 1024;
             this.bytesPerType = bytesPerType;
             this.idleDrain = idleDrain;
+            this.types = 63;
         }
 
+        protected ProxyStorageEntry(Item replacement, long kilobytes, int bytesPerType, double idleDrain, int types) {
+            super(replacement, 0);
+            this.maxBytes = kilobytes * 1024;
+            this.bytesPerType = bytesPerType;
+            this.idleDrain = idleDrain;
+            this.types = types;
+        }
         @Override
         NBTTagCompound replaceNBT(NBTTagCompound compound) {
             if (compound != null && compound.hasKey("ecc")) {

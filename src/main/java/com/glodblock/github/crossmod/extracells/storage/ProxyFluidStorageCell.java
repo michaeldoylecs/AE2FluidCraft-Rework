@@ -6,13 +6,11 @@ import appeng.items.contents.CellConfig;
 import appeng.items.contents.CellUpgrades;
 import appeng.util.Platform;
 import com.glodblock.github.common.Config;
-import com.glodblock.github.common.item.ItemMultiFluidStorageCell;
 import com.glodblock.github.common.storage.IStorageFluidCell;
 import com.glodblock.github.crossmod.extracells.ProxyItem;
 import com.glodblock.github.util.ModAndClassUtil;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
 
 public class ProxyFluidStorageCell extends ProxyItem implements IStorageFluidCell {
 
@@ -25,8 +23,8 @@ public class ProxyFluidStorageCell extends ProxyItem implements IStorageFluidCel
         int meta = cellItem.getItemDamage();
         if (replacements.containsKey(meta)) {
             ProxyItemEntry entry = replacements.get(meta);
-            if (entry instanceof ProxyFluidStorageEntry) {
-                return ((ProxyFluidStorageEntry) entry).maxBytes;
+            if (entry instanceof ProxyStorageEntry) {
+                return ((ProxyStorageEntry) entry).maxBytes;
             }
         }
         return 0;
@@ -37,8 +35,8 @@ public class ProxyFluidStorageCell extends ProxyItem implements IStorageFluidCel
         int meta = cellItem.getItemDamage();
         if (replacements.containsKey(meta)) {
             ProxyItemEntry entry = replacements.get(meta);
-            if (entry instanceof ProxyFluidStorageEntry) {
-                return ((ProxyFluidStorageEntry) entry).bytesPerType;
+            if (entry instanceof ProxyStorageEntry) {
+                return ((ProxyStorageEntry) entry).bytesPerType;
             }
         }
         return 0;
@@ -67,8 +65,8 @@ public class ProxyFluidStorageCell extends ProxyItem implements IStorageFluidCel
         int meta = is.getItemDamage();
         if (replacements.containsKey(meta)) {
             ProxyItemEntry entry = replacements.get(meta);
-            if (entry instanceof ProxyFluidStorageEntry) {
-                return ((ProxyFluidStorageEntry) entry).idleDrain;
+            if (entry instanceof ProxyStorageEntry) {
+                return ((ProxyStorageEntry) entry).idleDrain;
             }
         }
         return 0;
