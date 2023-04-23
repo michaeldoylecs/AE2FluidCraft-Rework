@@ -69,6 +69,6 @@ public class FluidCellHandler implements ICellHandler {
     @Override
     public double cellIdleDrain(final ItemStack is, final IMEInventory handler) {
         final IFluidCellInventory inv = ((IFluidCellInventoryHandler) handler).getCellInv();
-        return inv.getIdleDrain();
+        return inv.getIdleDrain(is);
     }
 }
