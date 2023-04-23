@@ -1,9 +1,9 @@
 package com.glodblock.github.crossmod.extracells;
 
-import com.glodblock.github.FluidCraft;
-import com.glodblock.github.common.item.FCBaseItem;
-import cpw.mods.fml.common.registry.GameRegistry;
-import net.minecraft.client.resources.I18n;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
@@ -12,9 +12,9 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.world.World;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import com.glodblock.github.FluidCraft;
+import com.glodblock.github.common.item.FCBaseItem;
+import cpw.mods.fml.common.registry.GameRegistry;
 
 /**
  * EC2ProxyItem - Item that "holds" the data of a missing item.
@@ -27,6 +27,7 @@ public class ProxyItem extends FCBaseItem {
      * Maps a metadata value to a replacement.
      */
     protected final Map<Integer, ProxyItemEntry> replacements;
+
     public ProxyItem(String ec2itemName) {
         this.name = ec2itemName;
         this.replacements = new HashMap<>();
@@ -90,9 +91,8 @@ public class ProxyItem extends FCBaseItem {
     }
 
     /**
-     * Base class for a mapping from source (Item, meta) -> replacement (Item, meta).
-     * Optionally, override the {@link ProxyItemEntry#replaceNBT(NBTTagCompound)}
-     * method for custom NBT migration.
+     * Base class for a mapping from source (Item, meta) -> replacement (Item, meta). Optionally, override the
+     * {@link ProxyItemEntry#replaceNBT(NBTTagCompound)} method for custom NBT migration.
      */
     protected static class ProxyItemEntry {
 
@@ -101,7 +101,8 @@ public class ProxyItem extends FCBaseItem {
 
         /**
          * Creates a Proxy Replacement.
-         * @param replacement Item that will replace the other.
+         * 
+         * @param replacement     Item that will replace the other.
          * @param replacementMeta Metadata/damage value of the replacement
          */
         protected ProxyItemEntry(Item replacement, int replacementMeta) {
@@ -116,10 +117,12 @@ public class ProxyItem extends FCBaseItem {
     }
 
     protected static class ProxyStorageEntry extends ProxyItemEntry {
+
         public final long maxBytes;
         public final int bytesPerType;
         public final double idleDrain;
         public final int types;
+
         protected ProxyStorageEntry(Item replacement, long kilobytes, int bytesPerType, double idleDrain) {
             super(replacement, 0);
             this.maxBytes = kilobytes * 1024;
@@ -135,6 +138,7 @@ public class ProxyItem extends FCBaseItem {
             this.idleDrain = idleDrain;
             this.types = types;
         }
+
         @Override
         NBTTagCompound replaceNBT(NBTTagCompound compound) {
             if (compound != null && compound.hasKey("ecc")) {

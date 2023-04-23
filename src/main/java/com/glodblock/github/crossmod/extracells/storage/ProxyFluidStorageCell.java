@@ -1,16 +1,18 @@
 package com.glodblock.github.crossmod.extracells.storage;
 
+import net.minecraft.inventory.IInventory;
+import net.minecraft.item.ItemStack;
+
 import appeng.api.config.FuzzyMode;
 import appeng.api.storage.data.IAEFluidStack;
 import appeng.items.contents.CellConfig;
 import appeng.items.contents.CellUpgrades;
 import appeng.util.Platform;
+
 import com.glodblock.github.common.Config;
 import com.glodblock.github.common.storage.IStorageFluidCell;
 import com.glodblock.github.crossmod.extracells.ProxyItem;
 import com.glodblock.github.util.ModAndClassUtil;
-import net.minecraft.inventory.IInventory;
-import net.minecraft.item.ItemStack;
 
 public class ProxyFluidStorageCell extends ProxyItem implements IStorageFluidCell {
 

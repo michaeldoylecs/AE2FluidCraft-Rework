@@ -1,18 +1,22 @@
 package com.glodblock.github.crossmod.extracells.parts;
 
-import appeng.api.config.RedstoneMode;
-import com.glodblock.github.crossmod.extracells.ProxyPart;
-import com.glodblock.github.crossmod.extracells.ProxyPartItem;
+import static net.minecraftforge.common.util.Constants.NBT.TAG_COMPOUND;
+
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 
-import static net.minecraftforge.common.util.Constants.NBT.TAG_COMPOUND;
+import appeng.api.config.RedstoneMode;
+
+import com.glodblock.github.crossmod.extracells.ProxyPart;
+import com.glodblock.github.crossmod.extracells.ProxyPartItem;
 
 public class ProxyFluidBusIO extends ProxyPart {
+
     /**
      * Map for converting slots from bus EC2 -> AE2FC
      */
     private static int[] FILTER_MAP = null;
+
     public static void init() {
         FILTER_MAP = new int[] { 5, 3, 6, 1, 0, 2, 7, 4, 8 };
     }
@@ -29,7 +33,7 @@ public class ProxyFluidBusIO extends ProxyPart {
         for (int slot = 0; slot < 9; ++slot) {
             String oldFilterName = "FilterFluid#" + slot;
             fluidFilterNew
-                .setTag("#" + FILTER_MAP[slot], ProxyPart.createFluidDisplayTag(extra.getString(oldFilterName)));
+                    .setTag("#" + FILTER_MAP[slot], ProxyPart.createFluidDisplayTag(extra.getString(oldFilterName)));
             extra.removeTag(oldFilterName);
         }
         extra.setTag("config", fluidFilterNew);

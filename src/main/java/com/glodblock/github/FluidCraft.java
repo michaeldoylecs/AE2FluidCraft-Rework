@@ -1,12 +1,12 @@
 package com.glodblock.github;
 
-import com.glodblock.github.crossmod.extracells.EC2Replacer;
 import net.minecraft.util.ResourceLocation;
 
 import appeng.api.AEApi;
 
 import com.glodblock.github.common.Config;
 import com.glodblock.github.common.storage.FluidCellHandler;
+import com.glodblock.github.crossmod.extracells.EC2Replacer;
 import com.glodblock.github.crossmod.opencomputers.OCDriverInit;
 import com.glodblock.github.crossmod.waila.WailaInit;
 import com.glodblock.github.inventory.InventoryHandler;

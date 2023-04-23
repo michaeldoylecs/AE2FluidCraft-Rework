@@ -1,18 +1,22 @@
 package com.glodblock.github.crossmod.extracells.storage;
 
-import appeng.api.AEApi;
-import appeng.api.exceptions.AppEngException;
-import appeng.api.storage.ISaveProvider;
-import appeng.api.storage.data.IAEFluidStack;
-import appeng.util.item.AEFluidStack;
-import com.glodblock.github.common.storage.FluidCellInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.fluids.FluidStack;
 
+import appeng.api.AEApi;
+import appeng.api.exceptions.AppEngException;
+import appeng.api.storage.ISaveProvider;
+import appeng.api.storage.data.IAEFluidStack;
+import appeng.util.item.AEFluidStack;
+
+import com.glodblock.github.common.storage.FluidCellInventory;
+
 public class ProxyFluidCellInventory extends FluidCellInventory {
+
     private static final String EC_CONVERTED = "ecc";
+
     public ProxyFluidCellInventory(ItemStack o, ISaveProvider container) throws AppEngException {
         super(o, container);
     }

@@ -1,7 +1,8 @@
 package com.glodblock.github.crossmod.extracells.storage;
 
-import appeng.core.features.registries.entries.BasicCellHandler;
 import net.minecraft.item.ItemStack;
+
+import appeng.core.features.registries.entries.BasicCellHandler;
 
 public class ProxyItemCellHandler extends BasicCellHandler {
 
