@@ -3,7 +3,6 @@ package com.glodblock.github.common.storage;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.glodblock.github.crossmod.extracells.storage.ProxyFluidCellInvHandler;
 import com.glodblock.github.crossmod.extracells.storage.ProxyFluidCellInventory;
 import com.glodblock.github.crossmod.extracells.storage.ProxyFluidStorageCell;
 import net.minecraft.inventory.IInventory;

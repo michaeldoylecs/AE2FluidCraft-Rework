@@ -4,7 +4,10 @@ import appeng.api.AEApi;
 import appeng.api.definitions.IItemDefinition;
 import com.glodblock.github.common.item.ItemMultiFluidStorageCell;
 import com.glodblock.github.crossmod.extracells.parts.*;
+import com.glodblock.github.crossmod.extracells.storage.ProxyExtremeStorageCell;
 import com.glodblock.github.crossmod.extracells.storage.ProxyFluidStorageCell;
+import com.glodblock.github.crossmod.extracells.storage.ProxyItemCellHandler;
+import com.glodblock.github.crossmod.extracells.storage.ProxyItemStorageCell;
 import com.glodblock.github.loader.ItemAndBlockHolder;
 import net.minecraft.item.Item;
 
@@ -46,17 +49,17 @@ public class ItemReplacements {
         deprecateFluidStorage("storage.fluid", 7, ItemAndBlockHolder.CELL16384KM,
             16384, 131072, 4.0);
         // Thanks, AEApi.
-        deprecateItemStorage("storage.physical", 0, AEApi.instance().definitions().items().cell256k());
-        deprecateItemStorage("storage.physical", 1, AEApi.instance().definitions().items().cell1024k());
-        deprecateItemStorage("storage.physical", 2, AEApi.instance().definitions().items().cell4096k());
-        deprecateItemStorage("storage.physical", 3, AEApi.instance().definitions().items().cell16384k());
-        deprecateItemStorage("storage.physical", 4, AEApi.instance().definitions().items().cellContainer());
-        deprecateItemStorage("storage.physical.advanced.singularity", 0,
-            AEApi.instance().definitions().items().cellSingularity());
-        deprecateItemStorage("storage.physical.advanced.quantum", 0,
-            AEApi.instance().definitions().items().cellQuantum());
-        deprecateItemStorage("storage.physical.void", 0,
-            AEApi.instance().definitions().items().cellVoid());
+        AEApi.instance().registries().cell().addCellHandler(new ProxyItemCellHandler());
+        deprecateItemStorage(0, AEApi.instance().definitions().items().cell256k(), 256, 2048, 2.5);
+        deprecateItemStorage(1, AEApi.instance().definitions().items().cell1024k(), 1024, 8192, 3.0);
+        deprecateItemStorage(2, AEApi.instance().definitions().items().cell4096k(), 4096, 32768, 3.5);
+        deprecateItemStorage(3, AEApi.instance().definitions().items().cell16384k(), 16384, 131072, 4.0);
+        deprecateItemStorage(4, AEApi.instance().definitions().items().cellContainer(), 65536, 8, 2.0, 1);
+        deprecateExtremeStorage("storage.physical.advanced.quantum", 0,
+            AEApi.instance().definitions().items().cellQuantum(), Integer.MAX_VALUE / 16, 4096, 1000.0);
+        deprecateExtremeStorage("storage.physical.advanced.singularity", 0,
+            AEApi.instance().definitions().items().cellSingularity(), Long.MAX_VALUE / 16,  4096,  15000.0);
+        deprecateItem("storage.physical.void", 0, AEApi.instance().definitions().items().cellVoid());
         deprecateItem("pattern.fluid", ItemAndBlockHolder.PATTERN);
         deprecateItem("terminal.fluid.wireless", ItemAndBlockHolder.WIRELESS_FLUID_TERM);
         /* Storage casings */
@@ -114,6 +117,28 @@ public class ItemReplacements {
         return proxy;
     }
 
+    private static ProxyItemStorageCell getOrBuildItemStorage() {
+        final String fullName = "extracells:storage.physical";
+        ProxyItemStorageCell proxy = (ProxyItemStorageCell) registry.get(fullName);
+        if (proxy == null) {
+            proxy = new ProxyItemStorageCell("storage.physical");
+            registry.put(fullName, proxy);
+            proxy.register();
+        }
+        return proxy;
+    }
+
+    private static ProxyExtremeStorageCell getOrBuildItemStorage(String srcName) {
+        final String fullName = "extracells:" + srcName;
+        ProxyExtremeStorageCell proxy = (ProxyExtremeStorageCell) registry.get(fullName);
+        if (proxy == null) {
+            proxy = new ProxyExtremeStorageCell(srcName);
+            registry.put(fullName, proxy);
+            proxy.register();
+        }
+        return proxy;
+    }
+
     /**
      * Deprecate a simple item.
      * @param srcName name of the to-be-replaced item without the mod id prefix
@@ -157,7 +182,7 @@ public class ItemReplacements {
      */
     private static void deprecateFluidStorage(String srcName, int srcMeta, ItemMultiFluidStorageCell replacement, long kilobytes, int bytesPerType, double idleDrain) {
         ProxyFluidStorageCell proxyItem = getOrBuildFluidStorage(srcName);
-        ProxyItem.ProxyFluidStorageEntry entry = new ProxyItem.ProxyFluidStorageEntry(replacement, kilobytes, bytesPerType, idleDrain);
+        ProxyItem.ProxyStorageEntry entry = new ProxyItem.ProxyStorageEntry(replacement, kilobytes, bytesPerType, idleDrain);
         proxyItem.addMetaReplacement(srcMeta, entry);
     }
 
@@ -165,11 +190,36 @@ public class ItemReplacements {
      * Deprecate a storage item. This goes through AEAPI, as AE2FC doesn't have any item cells.
      * If the item is disabled in AEAPI, the replacement will not be registered!
      */
-    private static void deprecateItemStorage(String srcName, int srcMeta, IItemDefinition replacement) {
+    private static void deprecateItemStorage(int srcMeta, IItemDefinition replacement, long kilobytes, int bytesPerType, double idleDrain) {
         if (replacement.isEnabled()) {
-            ProxyItem item = getOrBuildItem(srcName);
-            ProxyItem.ProxyItemEntry storage = new ProxyItem.ItemStorageEntry(
-                replacement.maybeItem().get(), replacement.maybeStack(1).get().getItemDamage());
+            ProxyItemStorageCell item = getOrBuildItemStorage();
+            int meta = replacement.maybeStack(1).get().getItemDamage();
+            ProxyItem.ProxyItemEntry storage = new ProxyItem.ProxyStorageEntry(
+                replacement.maybeItem().get(), kilobytes, bytesPerType, idleDrain);
+            item.addMetaReplacement(srcMeta, storage);
+        }
+    }
+
+    /**
+     * Deprecate a storage item. This goes through AEAPI, as AE2FC doesn't have any item cells.
+     * If the item is disabled in AEAPI, the replacement will not be registered!
+     */
+    private static void deprecateItemStorage(int srcMeta, IItemDefinition replacement, long kilobytes, int bytesPerType, double idleDrain, int types) {
+        if (replacement.isEnabled()) {
+            ProxyItemStorageCell item = getOrBuildItemStorage();
+            int meta = replacement.maybeStack(1).get().getItemDamage();
+            ProxyItem.ProxyItemEntry storage = new ProxyItem.ProxyStorageEntry(
+                replacement.maybeItem().get(), kilobytes, bytesPerType, idleDrain, types);
+            item.addMetaReplacement(srcMeta, storage);
+        }
+    }
+
+    private static void deprecateExtremeStorage(String srcName, int srcMeta, IItemDefinition replacement, long bytes, int bytesPerType, double idleDrain) {
+        if (replacement.isEnabled()) {
+            ProxyExtremeStorageCell item = getOrBuildItemStorage(srcName);
+            int meta = replacement.maybeStack(1).get().getItemDamage();
+            ProxyItem.ProxyItemEntry storage = new ProxyItem.ProxyStorageEntry(
+                replacement.maybeItem().get(), bytes / 1024, bytesPerType, idleDrain);
             item.addMetaReplacement(srcMeta, storage);
         }
     }
