@@ -18,7 +18,7 @@ public interface IFluidCellInventory extends IMEInventory<IAEFluidStack> {
     /**
      * @return idle cost for this Storage Cell
      */
-    double getIdleDrain();
+    double getIdleDrain(ItemStack is);
 
     /**
      * @return access configured list

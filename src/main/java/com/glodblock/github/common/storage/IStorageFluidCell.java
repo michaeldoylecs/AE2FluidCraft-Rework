@@ -17,7 +17,7 @@ public interface IStorageFluidCell extends ICellWorkbenchItem {
 
     boolean isStorageCell(ItemStack i);
 
-    double getIdleDrain();
+    double getIdleDrain(ItemStack is);
 
     int getTotalTypes(ItemStack cellItem);
 }
