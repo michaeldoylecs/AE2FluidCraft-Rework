@@ -69,8 +69,8 @@ public class ProxyItem extends FCBaseItem {
                         player.inventory.setInventorySlotContents(i, null);
                     } else {
                         ItemStack replaceStack = new ItemStack(r.replacement, stack.stackSize, r.replacementMeta);
-                        if (replaceStack.hasTagCompound()) {
-                            replaceStack.setTagCompound(r.replaceNBT(replaceStack.getTagCompound()));
+                        if (stack.hasTagCompound()) {
+                            replaceStack.setTagCompound(r.replaceNBT(stack.getTagCompound()));
                         }
                         player.inventory.setInventorySlotContents(i, replaceStack);
                     }
@@ -129,7 +129,9 @@ public class ProxyItem extends FCBaseItem {
 
         @Override
         NBTTagCompound replaceNBT(NBTTagCompound compound) {
-            System.out.println(compound);
+            if (compound != null && compound.hasKey("ecc")) {
+                compound.removeTag("ecc");
+            }
             return compound;
         }
     }

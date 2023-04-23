@@ -1,24 +1,18 @@
 package com.glodblock.github.crossmod.extracells.storage;
 
 import appeng.api.AEApi;
-import appeng.api.config.Actionable;
 import appeng.api.exceptions.AppEngException;
-import appeng.api.networking.security.BaseActionSource;
 import appeng.api.storage.ISaveProvider;
-import appeng.api.storage.StorageChannel;
 import appeng.api.storage.data.IAEFluidStack;
-import appeng.api.storage.data.IItemList;
 import appeng.util.item.AEFluidStack;
 import com.glodblock.github.common.storage.FluidCellInventory;
-import com.glodblock.github.common.storage.IFluidCellInventory;
-import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTBase;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.fluids.FluidStack;
 
-import java.util.List;
-
 public class ProxyFluidCellInventory extends FluidCellInventory {
-    private static final String EC_CONVERTED = "ec_converted";
+    private static final String EC_CONVERTED = "ecc";
     public ProxyFluidCellInventory(ItemStack o, ISaveProvider container) throws AppEngException {
         super(o, container);
     }
@@ -35,6 +29,7 @@ public class ProxyFluidCellInventory extends FluidCellInventory {
             // Load using Extra Cell's NBT format
             for (int i = 0; i < this.cellType.getTotalTypes(this.cellItem); i++) {
                 FluidStack fs = FluidStack.loadFluidStackFromNBT(tagCompound.getCompoundTag("Fluid#" + i));
+                tagCompound.removeTag("Fluid#" + i);
                 final AEFluidStack aet = AEFluidStack.create(fs);
                 if (aet != null) {
                     if (aet.getStackSize() > 0) {
@@ -43,6 +38,33 @@ public class ProxyFluidCellInventory extends FluidCellInventory {
                 }
             }
             this.tagCompound.setBoolean(EC_CONVERTED, true);
+            // Convert to the new format
+            long fluidCount = 0;
+            int x = 0;
+
+            for (final IAEFluidStack v : this.cellFluids) {
+                fluidCount += v.getStackSize();
+                final NBTBase c = this.tagCompound.getTag(fluidSlots[x]);
+                if (c instanceof NBTTagCompound) {
+                    v.writeToNBT((NBTTagCompound) c);
+                } else {
+                    final NBTTagCompound g = new NBTTagCompound();
+                    v.writeToNBT(g);
+                    this.tagCompound.setTag(fluidSlots[x], g);
+                }
+                this.tagCompound.setLong(fluidSlotCount[x], v.getStackSize());
+                x++;
+            }
+            this.storedFluids = (short) this.cellFluids.size();
+
+            if (!this.cellFluids.isEmpty()) {
+                this.tagCompound.setShort(FLUID_TYPE_TAG, this.storedFluids);
+            }
+
+            this.storedFluidCount = fluidCount;
+            if (fluidCount > 0) {
+                this.tagCompound.setLong(FLUID_COUNT_TAG, fluidCount);
+            }
         } else {
             super.loadCellFluids();
         }
