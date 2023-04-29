@@ -6,6 +6,7 @@ import appeng.api.AEApi;
 
 import com.glodblock.github.common.Config;
 import com.glodblock.github.common.storage.FluidCellHandler;
+import com.glodblock.github.crossmod.extracells.EC2Replacer;
 import com.glodblock.github.crossmod.opencomputers.OCDriverInit;
 import com.glodblock.github.crossmod.waila.WailaInit;
 import com.glodblock.github.inventory.InventoryHandler;
@@ -91,6 +92,13 @@ public class FluidCraft {
     @Mod.EventHandler
     public void onServerStop(FMLServerStoppedEvent event) {
         SPacketMEUpdateBuffer.disable();
+    }
+
+    @Mod.EventHandler
+    public void missingMappings(FMLMissingMappingsEvent event) {
+        if (!ModAndClassUtil.EC2 && Config.replaceEC2) {
+            EC2Replacer.replaceExtraCells(event);
+        }
     }
 
     @Mod.EventHandler

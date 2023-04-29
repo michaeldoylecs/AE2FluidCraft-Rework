@@ -150,7 +150,7 @@ public class ItemPortableFluidCell extends AEBasePoweredItem
     }
 
     @Override
-    public double getIdleDrain() {
+    public double getIdleDrain(ItemStack is) {
         return 0.5;
     }
 

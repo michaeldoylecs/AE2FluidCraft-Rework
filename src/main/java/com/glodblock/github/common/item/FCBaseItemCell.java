@@ -175,7 +175,7 @@ public abstract class FCBaseItemCell extends AEBaseItem implements IStorageFluid
     }
 
     @Override
-    public double getIdleDrain() {
+    public double getIdleDrain(ItemStack is) {
         return this.idleDrain;
     }
 

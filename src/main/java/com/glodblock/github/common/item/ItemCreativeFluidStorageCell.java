@@ -71,7 +71,7 @@ public class ItemCreativeFluidStorageCell extends AEBaseItem
     }
 
     @Override
-    public double getIdleDrain() {
+    public double getIdleDrain(ItemStack is) {
         return 0;
     }
 
