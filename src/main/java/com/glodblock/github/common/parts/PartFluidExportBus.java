@@ -119,40 +119,36 @@ public class PartFluidExportBus extends FCSharedFluidBus implements ICraftingReq
                     IAEFluidStack fluid = AEFluidStack
                             .create(ItemFluidPacket.getFluidStack(getInv().getStackInSlot(slotToExport)));
                     if (fluid != null) {
-                        boolean isAllowed = true;
-
-                        final IAEFluidStack toExtract = fluid.copy();
-
-                        toExtract.setStackSize(this.calculateAmountToSend());
-
+                        fluid.setStackSize(this.calculateAmountToSend());
                         if (this.craftOnly()) {
-                            isAllowed = this.craftingTracker.handleCrafting(
+                            this.didSomething = this.craftingTracker.handleCrafting(
                                     i,
-                                    toExtract.getStackSize(),
-                                    ItemFluidDrop.newAeStack(toExtract),
+                                    fluid.getStackSize(),
+                                    ItemFluidDrop.newAeStack(fluid),
                                     destination,
                                     this.getTile().getWorldObj(),
                                     this.getProxy().getGrid(),
                                     cg,
                                     this.source);
+                            continue;
                         }
-
-                        int space = fh.fill(this.getSide().getOpposite(), toExtract.getFluidStack(), false);
-                        toExtract.setStackSize(space);
-                        final IAEFluidStack real = inv.extractItems(toExtract, Actionable.MODULATE, this.source);
-                        if (real != null && isAllowed) {
+                        // Extract from the ME system.
+                        final IAEFluidStack real = inv.extractItems(fluid, Actionable.MODULATE, this.source);
+                        if (real != null) {
                             int realInserted = fh.fill(this.getSide().getOpposite(), real.getFluidStack(), true);
                             if (realInserted < real.getStackSize()) {
-                                toExtract.setStackSize(real.getStackSize() - realInserted);
-                                inv.injectItems(toExtract, Actionable.MODULATE, this.source);
+                                // Could not use the entirety of the amount we extracted, so put it back.
+                                fluid.setStackSize(real.getStackSize() - realInserted);
+                                inv.injectItems(fluid, Actionable.MODULATE, this.source);
                             }
                             this.fluidToSend -= realInserted;
                             didSomething = true;
                         } else if (this.isCraftingEnabled()) {
-                            this.craftingTracker.handleCrafting(
+                            // If we didn't send anything, try crafting it if we can.
+                            this.didSomething = this.craftingTracker.handleCrafting(
                                     i,
-                                    toExtract.getStackSize(),
-                                    ItemFluidDrop.newAeStack(toExtract),
+                                    fluid.getStackSize(),
+                                    ItemFluidDrop.newAeStack(fluid),
                                     destination,
                                     this.getTile().getWorldObj(),
                                     this.getProxy().getGrid(),
