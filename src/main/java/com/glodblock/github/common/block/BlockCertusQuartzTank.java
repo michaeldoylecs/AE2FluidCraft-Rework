@@ -131,12 +131,19 @@ public class BlockCertusQuartzTank extends BaseBlockContainer implements IRegist
             if (liquid != null) {
                 int amountFilled = tank.fill(ForgeDirection.UNKNOWN, liquid, true);
                 if (amountFilled != 0 && !entityplayer.capabilities.isCreativeMode && current.getItem() != null) {
+                    ItemStack empty;
+                    if (FluidContainerRegistry.isContainer(current)) {
+                        empty = FluidContainerRegistry.drainFluidContainer(current);
+                    } else {
+                        // Try this as a fallback.
+                        entityplayer.inventory.addItemStackToInventory(current.getItem().getContainerItem(current));
+                        empty = current.getItem().getContainerItem(current);
+                    }
                     if (current.stackSize > 1) {
                         entityplayer.inventory.mainInventory[entityplayer.inventory.currentItem].stackSize -= 1;
-                        entityplayer.inventory.addItemStackToInventory(current.getItem().getContainerItem(current));
+                        entityplayer.inventory.addItemStackToInventory(empty);
                     } else {
-                        entityplayer.inventory.mainInventory[entityplayer.inventory.currentItem] = current.getItem()
-                                .getContainerItem(current);
+                        entityplayer.inventory.mainInventory[entityplayer.inventory.currentItem] = empty;
                     }
                 }
                 return true;
