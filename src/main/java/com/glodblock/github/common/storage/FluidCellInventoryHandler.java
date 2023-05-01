@@ -19,7 +19,7 @@ import com.glodblock.github.util.Util;
 
 public class FluidCellInventoryHandler extends MEInventoryHandler<IAEFluidStack> implements IFluidCellInventoryHandler {
 
-    FluidCellInventoryHandler(final IMEInventory<IAEFluidStack> c) {
+    protected FluidCellInventoryHandler(final IMEInventory<IAEFluidStack> c) {
         super(c, StorageChannel.FLUIDS);
 
         final IFluidCellInventory ci = this.getCellInv();

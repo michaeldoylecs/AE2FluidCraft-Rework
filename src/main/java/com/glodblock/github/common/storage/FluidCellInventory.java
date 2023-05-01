@@ -23,23 +23,25 @@ import appeng.util.Platform;
 import appeng.util.item.AEFluidStack;
 
 import com.glodblock.github.common.item.ItemCreativeFluidStorageCell;
+import com.glodblock.github.crossmod.extracells.storage.ProxyFluidCellInventory;
+import com.glodblock.github.crossmod.extracells.storage.ProxyFluidStorageCell;
 
 public class FluidCellInventory implements IFluidCellInventory {
 
-    private static final String FLUID_TYPE_TAG = "ft";
-    private static final String FLUID_COUNT_TAG = "fc";
-    private static final String FLUID_SLOT = "#";
-    private static final String FLUID_SLOT_COUNT = "@";
+    protected static final String FLUID_TYPE_TAG = "ft";
+    protected static final String FLUID_COUNT_TAG = "fc";
+    protected static final String FLUID_SLOT = "#";
+    protected static final String FLUID_SLOT_COUNT = "@";
     protected IStorageFluidCell cellType;
-    private static String[] fluidSlots;
-    private static String[] fluidSlotCount;
+    protected static String[] fluidSlots;
+    protected static String[] fluidSlotCount;
     protected final ItemStack cellItem;
     private final ISaveProvider container;
     private final int MAX_TYPE = 63;
-    private long storedFluidCount;
-    private short storedFluids;
+    protected long storedFluidCount;
+    protected short storedFluids;
     protected IItemList<IAEFluidStack> cellFluids;
-    private final NBTTagCompound tagCompound;
+    protected final NBTTagCompound tagCompound;
     public static final int singleByteAmount = 256 * 8;
 
     public FluidCellInventory(final ItemStack o, final ISaveProvider container) throws AppEngException {
@@ -80,6 +82,8 @@ public class FluidCellInventory implements IFluidCellInventory {
         try {
             if (o.getItem() instanceof ItemCreativeFluidStorageCell) {
                 return new FluidCellInventoryHandler(new CreativeFluidCellInventory(o, container2));
+            } else if (o.getItem() instanceof ProxyFluidStorageCell) {
+                return new FluidCellInventoryHandler(new ProxyFluidCellInventory(o, container2));
             } else {
                 return new FluidCellInventoryHandler(new FluidCellInventory(o, container2));
             }
@@ -105,8 +109,8 @@ public class FluidCellInventory implements IFluidCellInventory {
     }
 
     @Override
-    public double getIdleDrain() {
-        return this.cellType.getIdleDrain();
+    public double getIdleDrain(ItemStack is) {
+        return this.cellType.getIdleDrain(is);
     }
 
     @Override

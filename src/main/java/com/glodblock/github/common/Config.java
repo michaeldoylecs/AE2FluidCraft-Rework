@@ -19,6 +19,7 @@ public class Config {
     public static double portableCellBattery;
     public static int packetSize;
     public static int packetRate;
+    public static boolean replaceEC2;
 
     public static void run() {
         loadCategory();
@@ -60,6 +61,11 @@ public class Config {
                 .get("Fluid Craft for AE2", "packetRate", 50, "Period at which packets are dispatched, in ms.")
                 .getInt();
         if (packetRate <= 0) packetRate = 50;
+        replaceEC2 = Config.getBoolean(
+                "Fluid Craft for AE2",
+                "replaceEC2",
+                true,
+                "Set true to handle missing item mappings from EC2. Note to work properly, you must have all relevant parts.");
         if (Config.hasChanged()) Config.save();
     }
 
