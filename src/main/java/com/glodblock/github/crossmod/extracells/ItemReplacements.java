@@ -5,15 +5,21 @@ import java.util.Map;
 import java.util.function.Function;
 
 import net.minecraft.item.Item;
+import net.minecraft.nbt.NBTTagCompound;
 
-import appeng.api.AEApi;
-import appeng.api.definitions.IItemDefinition;
-
+import com.glodblock.github.common.item.ItemBaseWirelessTerminal;
 import com.glodblock.github.common.item.ItemMultiFluidStorageCell;
 import com.glodblock.github.crossmod.extracells.parts.*;
 import com.glodblock.github.crossmod.extracells.storage.*;
 import com.glodblock.github.loader.ItemAndBlockHolder;
+
+import appeng.api.AEApi;
+import appeng.api.definitions.IItemDefinition;
+import cpw.mods.fml.common.Loader;
+import cpw.mods.fml.common.Optional;
 import cpw.mods.fml.common.registry.GameRegistry;
+import li.cil.oc.api.Items;
+import li.cil.oc.api.detail.ItemInfo;
 
 /**
  * Shell class to organize proxy replacements and hide the ugliness
@@ -22,11 +28,14 @@ public class ItemReplacements {
 
     protected static Map<String, Item> registry;
 
-    static void init() {
+    static void postinit() {
         registry = new HashMap<>(23);
         ProxyFluidBusIO.init();
         ItemReplacements.proxyItems();
         ItemReplacements.proxyPartItems();
+        if (Loader.isModLoaded("OpenComputers")) {
+            deprecateOC();
+        }
     }
 
     /**
@@ -68,7 +77,7 @@ public class ItemReplacements {
         GameRegistry.registerItem(voidCell, "ec2placeholder.storage.physical.void");
         registry.put("extracells:storage.physical.void", voidCell);
         deprecateItem("pattern.fluid", ItemAndBlockHolder.PATTERN);
-        deprecateItem("terminal.fluid.wireless", ItemAndBlockHolder.WIRELESS_FLUID_TERM);
+        deprecateWireless("terminal.fluid.wireless", ItemAndBlockHolder.WIRELESS_FLUID_TERM);
         /* Storage casings */
         deprecateItem("storage.casing", 0, AEApi.instance().definitions().materials().emptyAdvancedStorageCell());
         deprecateItem("storage.casing", 1, ItemAndBlockHolder.CELL_HOUSING, 2);
@@ -84,7 +93,24 @@ public class ItemReplacements {
         deprecateItem("storage.component", 8, ItemAndBlockHolder.CELL_PART, 4);
         deprecateItem("storage.component", 9, ItemAndBlockHolder.CELL_PART, 5);
         deprecateItem("storage.component", 10, ItemAndBlockHolder.CELL_PART, 6);
-        deprecateItem("terminal.universal.wireless", ItemAndBlockHolder.WIRELESS_ULTRA_TERM);
+        deprecateWireless("terminal.universal.wireless", ItemAndBlockHolder.WIRELESS_ULTRA_TERM);
+
+    }
+
+    /**
+     * Deprecate OC upgrades. Wrapper so we don't need a hard dependency
+     */
+    @Optional.Method(modid = "OpenComputers")
+    static void deprecateOC() {
+        ItemInfo info = Items.get("me_upgrade1");
+        if (info != null) {
+            // Note EC tier 1, 2, 3 corresponds to the correct meta equivalent in OC, so we can be lazy
+            deprecateItem("oc.upgrade", 0, info.item(), 0);
+            deprecateItem("oc.upgrade", 1, info.item(), 1);
+            deprecateItem("oc.upgrade", 2, info.item(), 2);
+        } else {
+            System.out.println("OpenComputers detected, but could not replace items: me_upgrade1");
+        }
     }
 
     /**
@@ -99,6 +125,7 @@ public class ItemReplacements {
         deprecateItemPart(9, ItemAndBlockHolder.FLUID_INTERFACE, ProxyFluidInterface::new);
         deprecateItemPart(10, ItemAndBlockHolder.FLUID_STORAGE_MONITOR, ProxyStorageMonitor::new);
         deprecateItemPart(11, ItemAndBlockHolder.FLUID_CONVERSION_MONITOR, ProxyStorageMonitor::new);
+        deprecateItemPart(12, AEApi.instance().definitions().parts().exportBus(), ProxyOreDictExportBus::new);
     }
 
     private static ProxyItem getOrBuildItem(String srcName) {
@@ -147,7 +174,7 @@ public class ItemReplacements {
 
     /**
      * Deprecate a simple item.
-     * 
+     *
      * @param srcName     name of the to-be-replaced item without the mod id prefix
      * @param srcMeta     meta of the to-be-replaced item
      * @param replacement item that will replace src
@@ -155,10 +182,6 @@ public class ItemReplacements {
      */
     private static void deprecateItem(String srcName, int srcMeta, Item replacement, int targetMeta) {
         getOrBuildItem(srcName).addMetaReplacement(srcMeta, replacement, targetMeta);
-    }
-
-    static void deprecateItemBlock(String srcName, int srcMeta, Item replacement, int targetMeta) {
-        getOrBuildItem("itemBlock." + srcName).addMetaReplacement(srcMeta, replacement, targetMeta);
     }
 
     private static void deprecateItem(String srcName, Item replacement) {
@@ -175,6 +198,22 @@ public class ItemReplacements {
         }
     }
 
+    private static void deprecateWireless(String srcName, ItemBaseWirelessTerminal replacement) {
+        getOrBuildItem(srcName).addMetaReplacement(0, new ProxyItem.ProxyItemEntry(replacement, 0) {
+
+            @Override
+            NBTTagCompound replaceNBT(NBTTagCompound compound) {
+                double power = compound.getDouble("power");
+                compound.removeTag("power");
+                compound.setDouble("internalCurrentPower", power);
+                String key = compound.getString("key");
+                compound.removeTag("key");
+                compound.setString("encryptionKey", key);
+                return compound;
+            }
+        });
+    }
+
     private static void deprecateItemPart(int srcMeta, Item replacement,
             Function<ProxyPartItem, ProxyPart> partBuilder) {
         final String fullName = "extracells:part.base";
@@ -187,6 +226,20 @@ public class ItemReplacements {
         proxyItem.addItemPart(srcMeta, replacement, partBuilder);
     }
 
+    private static void deprecateItemPart(int srcMeta, IItemDefinition definition,
+            Function<ProxyPartItem, ProxyPart> partBuilder) {
+        if (definition.isEnabled()) {
+            final String fullName = "extracells:part.base";
+            ProxyPartItem proxyItem = (ProxyPartItem) registry.get(fullName);
+            if (proxyItem == null) {
+                proxyItem = new ProxyPartItem("part.base");
+                registry.put(fullName, proxyItem);
+                proxyItem.register();
+            }
+            proxyItem.addItemPart(srcMeta, definition, partBuilder);
+        }
+    }
+
     /**
      * Deprecate a fluid storage item. Note that we can't access the properties directly, so we need to do this
      */
@@ -195,6 +248,7 @@ public class ItemReplacements {
         ProxyFluidStorageCell proxyItem = getOrBuildFluidStorage(srcName);
         ProxyItem.ProxyStorageEntry entry = new ProxyItem.ProxyStorageEntry(
                 replacement,
+                0,
                 kilobytes,
                 bytesPerType,
                 idleDrain);
@@ -212,6 +266,7 @@ public class ItemReplacements {
             int meta = replacement.maybeStack(1).get().getItemDamage();
             ProxyItem.ProxyItemEntry storage = new ProxyItem.ProxyStorageEntry(
                     replacement.maybeItem().get(),
+                    meta,
                     kilobytes,
                     bytesPerType,
                     idleDrain);
@@ -245,6 +300,7 @@ public class ItemReplacements {
             int meta = replacement.maybeStack(1).get().getItemDamage();
             ProxyItem.ProxyItemEntry storage = new ProxyItem.ProxyStorageEntry(
                     replacement.maybeItem().get(),
+                    meta,
                     bytes / 1024,
                     bytesPerType,
                     idleDrain);
