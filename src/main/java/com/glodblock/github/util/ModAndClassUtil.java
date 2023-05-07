@@ -26,6 +26,8 @@ public final class ModAndClassUtil {
     public static boolean GTPP = false;
     public static boolean WAILA = false;
     public static boolean AVARITIA = false;
+    public static boolean HODGEPODGE = false;
+
     public static boolean isV2;
     public static boolean isTypeFilter;
     public static boolean isDoubleButton;
@@ -140,5 +142,6 @@ public final class ModAndClassUtil {
         if (Loader.isModLoaded("miscutils")) GTPP = true;
         if (Loader.isModLoaded("Waila")) WAILA = true;
         if (Loader.isModLoaded("Avaritia")) AVARITIA = true;
+        if (Loader.isModLoaded("hodgepodge")) HODGEPODGE = true;
     }
 }
