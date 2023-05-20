@@ -40,8 +40,6 @@ public final class ModAndClassUtil {
 
     public static boolean isBeSubstitutionsButton;
 
-    public static Class<?> essentiaGas;
-
     @SuppressWarnings("all")
     public static void init() {
 
@@ -115,17 +113,10 @@ public final class ModAndClassUtil {
             isV2 = false;
         }
         try {
-            Field filters = Class.forName("appeng.client.me.ItemRepo").getDeclaredField("filters");
-            if (filters == null) isTypeFilter = false;
+            Class<?> filter = Class.forName("appeng.core.features.registries.ItemDisplayRegistry");
             isTypeFilter = true;
-        } catch (ClassNotFoundException | NoSuchFieldException e) {
-            isTypeFilter = false;
-        }
-
-        try {
-            essentiaGas = Class.forName("thaumicenergistics.common.fluids.GaseousEssentia");
         } catch (ClassNotFoundException e) {
-            essentiaGas = null;
+            isTypeFilter = false;
         }
 
         if (Loader.isModLoaded("gregtech") && !Loader.isModLoaded("gregapi")) GT5 = true;

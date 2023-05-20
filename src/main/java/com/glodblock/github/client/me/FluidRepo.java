@@ -20,6 +20,7 @@ import javax.annotation.Nonnull;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fluids.Fluid;
 
+import com.glodblock.github.api.FluidCraftAPI;
 import com.glodblock.github.common.item.ItemFluidDrop;
 import com.glodblock.github.util.FluidSorters;
 import com.glodblock.github.util.Util;
@@ -27,36 +28,36 @@ import com.glodblock.github.util.Util;
 import appeng.api.AEApi;
 import appeng.api.config.*;
 import appeng.api.storage.data.IAEItemStack;
+import appeng.api.storage.data.IDisplayRepo;
 import appeng.api.storage.data.IItemList;
 import appeng.client.gui.widgets.IScrollSource;
 import appeng.client.gui.widgets.ISortSource;
-import appeng.client.me.ItemRepo;
 import appeng.core.AEConfig;
 import appeng.items.storage.ItemViewCell;
 import appeng.util.prioitylist.IPartitionList;
 import cpw.mods.fml.relauncher.ReflectionHelper;
 
-public class FluidRepo extends ItemRepo {
+public class FluidRepo implements IDisplayRepo {
 
-    private final IItemList<IAEItemStack> list = AEApi.instance().storage().createItemList();
+    protected final IItemList<IAEItemStack> list = AEApi.instance().storage().createItemList();
     protected final ArrayList<IAEItemStack> view = new ArrayList<>();
     protected final ArrayList<ItemStack> dsp = new ArrayList<>();
-    private final IScrollSource src;
-    private final ISortSource sortSrc;
+    protected final IScrollSource src;
+    protected final ISortSource sortSrc;
 
-    private int rowSize = 9;
+    protected int rowSize = 9;
 
-    private String searchString = "";
-    private IPartitionList<IAEItemStack> myPartitionList;
+    protected String searchString = "";
+    protected IPartitionList<IAEItemStack> myPartitionList;
     private String NEIWord = null;
     private boolean hasPower;
 
     public FluidRepo(final IScrollSource src, final ISortSource sortSrc) {
-        super(src, sortSrc);
         this.src = src;
         this.sortSrc = sortSrc;
     }
 
+    @Override
     public IAEItemStack getReferenceItem(int idx) {
         idx += this.src.getCurrentScroll() * this.rowSize;
 
@@ -66,6 +67,7 @@ public class FluidRepo extends ItemRepo {
         return this.view.get(idx);
     }
 
+    @Override
     public ItemStack getItem(int idx) {
         idx += this.src.getCurrentScroll() * this.rowSize;
 
@@ -75,10 +77,7 @@ public class FluidRepo extends ItemRepo {
         return this.dsp.get(idx);
     }
 
-    void setSearch(final String search) {
-        this.searchString = search == null ? "" : search;
-    }
-
+    @Override
     public void postUpdate(final IAEItemStack is) {
         final IAEItemStack st = this.list.findPrecise(is);
         if (st != null) {
@@ -89,11 +88,13 @@ public class FluidRepo extends ItemRepo {
         }
     }
 
+    @Override
     public void setViewCell(final ItemStack[] list) {
         this.myPartitionList = ItemViewCell.createFilter(list);
         this.updateView();
     }
 
+    @Override
     public void updateView() {
         this.view.clear();
         this.dsp.clear();
@@ -145,7 +146,13 @@ public class FluidRepo extends ItemRepo {
             if (viewMode == ViewItems.STORED && is.getStackSize() == 0) {
                 continue;
             }
+
             Fluid fluid = ItemFluidDrop.getAeFluidStack(is).getFluid();
+
+            if (FluidCraftAPI.instance().isBlacklistedInDisplay(fluid.getClass())) {
+                continue;
+            }
+
             if (searchMod) {
                 if (m.matcher(Util.getFluidModID(fluid).toLowerCase()).find()
                         || m.matcher(Util.getFluidModName(fluid).toLowerCase()).find()) {
@@ -179,7 +186,7 @@ public class FluidRepo extends ItemRepo {
         }
     }
 
-    private void updateNEI(final String filter) {
+    protected void updateNEI(final String filter) {
         try {
             if (this.NEIWord == null || !this.NEIWord.equals(filter)) {
                 final Class<?> c = ReflectionHelper
@@ -199,19 +206,23 @@ public class FluidRepo extends ItemRepo {
         }
     }
 
+    @Override
     public int size() {
         return this.view.size();
     }
 
+    @Override
     public void clear() {
         this.list.resetStatus();
     }
 
+    @Override
     public boolean hasPower() {
         return this.hasPower;
     }
 
-    public void setPower(final boolean hasPower) {
+    @Override
+    public void setPowered(final boolean hasPower) {
         this.hasPower = hasPower;
     }
 
