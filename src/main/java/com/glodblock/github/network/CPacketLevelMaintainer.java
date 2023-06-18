@@ -116,23 +116,14 @@ public class CPacketLevelMaintainer implements IMessage {
         @Override
         public IMessage onMessage(CPacketLevelMaintainer message, MessageContext ctx) {
             if (message.action.startsWith("TileLevelMaintainer.")
-                    && ctx.getServerHandler().playerEntity.openContainer instanceof ContainerLevelMaintainer) {
+                    && ctx.getServerHandler().playerEntity.openContainer instanceof final ContainerLevelMaintainer cca) {
                 EntityPlayerMP player = ctx.getServerHandler().playerEntity;
-                final ContainerLevelMaintainer cca = (ContainerLevelMaintainer) ctx
-                        .getServerHandler().playerEntity.openContainer;
                 switch (message.action) {
-                    case "TileLevelMaintainer.Quantity":
-                        cca.getTile().updateQuantity(message.slotIndex, message.size);
-                        break;
-                    case "TileLevelMaintainer.Batch":
-                        cca.getTile().updateBatchSize(message.slotIndex, message.size);
-                        break;
-                    case "TileLevelMaintainer.Enable":
-                        cca.getTile().setRequestStatus(message.slotIndex, false);
-                        break;
-                    case "TileLevelMaintainer.Disable":
-                        cca.getTile().setRequestStatus(message.slotIndex, true);
-                        break;
+                    case "TileLevelMaintainer.Quantity" -> cca.getTile()
+                            .updateQuantity(message.slotIndex, message.size);
+                    case "TileLevelMaintainer.Batch" -> cca.getTile().updateBatchSize(message.slotIndex, message.size);
+                    case "TileLevelMaintainer.Enable" -> cca.getTile().setRequestStatus(message.slotIndex, false);
+                    case "TileLevelMaintainer.Disable" -> cca.getTile().setRequestStatus(message.slotIndex, true);
                 }
                 this.refresh(cca, player);
             }

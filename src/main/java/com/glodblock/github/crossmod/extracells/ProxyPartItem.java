@@ -23,12 +23,6 @@ public class ProxyPartItem extends ProxyItem implements IPartItem {
         super(ec2itemName);
     }
 
-    /**
-     *
-     * @param srcMeta
-     * @param replacement
-     * @param part
-     */
     protected void addItemPart(int srcMeta, Item replacement, Function<ProxyPartItem, ProxyPart> part) {
         this.replacements.put(srcMeta, new PartReplacement(replacement, part));
     }
@@ -42,8 +36,7 @@ public class ProxyPartItem extends ProxyItem implements IPartItem {
     @Override
     public IPart createPartFromItemStack(ItemStack is) {
         final int meta = is.getItemDamage();
-        if (this.replacements.get(meta) instanceof PartReplacement) {
-            PartReplacement part = (PartReplacement) this.replacements.get(meta);
+        if (this.replacements.get(meta) instanceof PartReplacement part) {
             return part.proxyPart.apply(this);
         }
         return null;

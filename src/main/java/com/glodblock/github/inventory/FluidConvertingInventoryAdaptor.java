@@ -82,7 +82,6 @@ public class FluidConvertingInventoryAdaptor extends InventoryAdaptor {
     }
 
     public static InventoryAdaptor wrap(TileEntity capProvider, ForgeDirection face) {
-        // sometimes i wish 1.7.10 has cap system.
         TileEntity inter = capProvider.getWorldObj().getTileEntity(
                 capProvider.xCoord + face.offsetX,
                 capProvider.yCoord + face.offsetY,
@@ -376,9 +375,8 @@ public class FluidConvertingInventoryAdaptor extends InventoryAdaptor {
         }
         if (tank != null && tank.getTankInfo(direction) != null) {
             List<FluidTankInfo[]> tankInfos = new LinkedList<>();
-            if (Util.getPart(tank, direction) instanceof PartP2PLiquids) {
+            if (Util.getPart(tank, direction) instanceof PartP2PLiquids invFluidsP2P) {
                 // read other ends of p2p for blocking mode
-                PartP2PLiquids invFluidsP2P = (PartP2PLiquids) Util.getPart(tank, direction);
                 try {
                     Iterator<PartP2PLiquids> it = invFluidsP2P.getOutputs().iterator();
                     boolean checkedInput = false;

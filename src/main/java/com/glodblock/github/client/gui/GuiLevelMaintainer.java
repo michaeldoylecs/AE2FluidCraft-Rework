@@ -364,32 +364,33 @@ public class GuiLevelMaintainer extends AEBaseGui implements INEIGuiHandler {
         public void draw() {
             this.getQty().draw();
             this.getBatch().draw();
-            ArrayList<String> message = new ArrayList<String>();
+            ArrayList<String> message = new ArrayList<>();
             message.add(NameConst.i18n(NameConst.TT_LEVEL_MAINTAINER_TITLE) + "\n");
             switch (this.state) {
-                case Idling:
+                case Idling -> {
                     this.line.setColor(0xFF55FF55);
                     message.add(
                             NameConst.i18n(NameConst.TT_LEVEL_MAINTAINER_CURRENT)
                                     + NameConst.i18n(NameConst.TT_LEVEL_MAINTAINER_IDLE));
-                    break;
-                case Crafting:
+                }
+                case Crafting -> {
                     this.line.setColor(0xFFFFFF55);
                     message.add(
                             NameConst.i18n(NameConst.TT_LEVEL_MAINTAINER_CURRENT)
                                     + NameConst.i18n(NameConst.TT_LEVEL_MAINTAINER_LINK));
-                    break;
-                case Exporting:
+                }
+                case Exporting -> {
                     this.line.setColor(0xFFAA00AA);
                     message.add(
                             NameConst.i18n(NameConst.TT_LEVEL_MAINTAINER_CURRENT)
                                     + NameConst.i18n(NameConst.TT_LEVEL_MAINTAINER_EXPORT));
-                    break;
-                default:
+                }
+                default -> {
                     this.line.setColor(0);
                     message.add(
                             NameConst.i18n(NameConst.TT_LEVEL_MAINTAINER_CURRENT)
                                     + NameConst.i18n(NameConst.TT_LEVEL_MAINTAINER_NONE));
+                }
             }
             message.add("");
             if (isShiftKeyDown()) {
@@ -430,7 +431,7 @@ public class GuiLevelMaintainer extends AEBaseGui implements INEIGuiHandler {
             this.textField = textField;
             this.textField.setEnableBackgroundDrawing(false);
             this.textField.setText("0");
-            this.textField.setMaxStringLength(10); // it's enough to useful
+            this.textField.setMaxStringLength(10); // this length is enough to useful
             this.idx = idx;
             this.action = action;
             this.tooltip = tooltip;

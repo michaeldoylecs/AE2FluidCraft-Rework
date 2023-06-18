@@ -78,16 +78,12 @@ public class BlockCertusQuartzTank extends BaseBlockContainer implements IRegist
 
     @Override
     public IIcon getIcon(int side, int meta) {
-        switch (meta) {
-            case 1:
-                return this.sideTopIcon;
-            case 2:
-                return this.sideBottomIcon;
-            case 3:
-                return this.sideMiddleIcon;
-            default:
-                return side == 0 ? this.bottomIcon : side == 1 ? this.topIcon : this.sideIcon;
-        }
+        return switch (meta) {
+            case 1 -> this.sideTopIcon;
+            case 2 -> this.sideBottomIcon;
+            case 3 -> this.sideMiddleIcon;
+            default -> side == 0 ? this.bottomIcon : side == 1 ? this.topIcon : this.sideIcon;
+        };
     }
 
     @Override
@@ -103,8 +99,7 @@ public class BlockCertusQuartzTank extends BaseBlockContainer implements IRegist
     @Override
     public int getLightValue(IBlockAccess world, int x, int y, int z) {
         TileEntity tile = world.getTileEntity(x, y, z);
-        if (tile instanceof TileCertusQuartzTank) {
-            TileCertusQuartzTank tank = (TileCertusQuartzTank) tile;
+        if (tile instanceof TileCertusQuartzTank tank) {
             return tank.getFluidLightLevel();
         }
         return super.getLightValue(world, x, y, z);

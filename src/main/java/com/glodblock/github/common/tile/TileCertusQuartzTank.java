@@ -99,9 +99,8 @@ public class TileCertusQuartzTank extends TileEntity implements IFluidHandler {
 
         if (drained == null || drained.amount < fluid.amount) {
             TileEntity offTE = this.worldObj.getTileEntity(this.xCoord, this.yCoord - 1, this.zCoord);
-            if (offTE instanceof TileCertusQuartzTank) {
-                TileCertusQuartzTank tank = (TileCertusQuartzTank) offTE;
-                FluidStack externallyDrained = tank.drain(
+            if (offTE instanceof TileCertusQuartzTank tileCertusQuartzTank) {
+                FluidStack externallyDrained = tileCertusQuartzTank.drain(
                         new FluidStack(fluid.getFluid(), fluid.amount - (drained != null ? drained.amount : 0)),
                         doDrain,
                         false);
@@ -158,16 +157,18 @@ public class TileCertusQuartzTank extends TileEntity implements IFluidHandler {
 
         if (filled < fluid.amount) {
             TileEntity offTE = this.worldObj.getTileEntity(this.xCoord, this.yCoord + 1, this.zCoord);
-            if (offTE instanceof TileCertusQuartzTank) {
-                TileCertusQuartzTank tank = (TileCertusQuartzTank) offTE;
-                return filled + tank.fill(new FluidStack(fluid.getFluid(), fluid.amount - filled), doFill, false);
+            if (offTE instanceof TileCertusQuartzTank tileCertusQuartzTank) {
+                return filled + tileCertusQuartzTank
+                        .fill(new FluidStack(fluid.getFluid(), fluid.amount - filled), doFill, false);
             }
         }
 
         return filled;
     }
 
-    /* IFluidHandler */
+    /**
+     * An override for {@link IFluidHandler}
+     */
     @Override
     public int fill(ForgeDirection from, FluidStack resource, boolean doFill) {
         if (resource == null || this.tank.getFluid() != null && resource.getFluid() != this.tank.getFluid().getFluid())
@@ -223,7 +224,7 @@ public class TileCertusQuartzTank extends TileEntity implements IFluidHandler {
 
     private TileCertusQuartzTank getTankBelow(TileEntity tile) {
         TileEntity tank = new BlockPos(tile).getOffSet(0, -1, 0).getTileEntity();
-        if (tank != null && tank instanceof TileCertusQuartzTank) {
+        if (tank instanceof TileCertusQuartzTank) {
             return (TileCertusQuartzTank) tank;
         }
         return null;

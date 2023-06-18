@@ -175,9 +175,7 @@ public abstract class FCPartMonitor extends AbstractPartDisplay implements IPart
 
                 this.updateReportingValue(this.getProxy().getStorage().getFluidInventory());
             }
-        } catch (final GridAccessException e) {
-            // >.>
-        }
+        } catch (final GridAccessException ignored) {}
     }
 
     protected void extractItem(final EntityPlayer player) {}
@@ -248,41 +246,35 @@ public abstract class FCPartMonitor extends AbstractPartDisplay implements IPart
     }
 
     private void tesrRenderScreen(final Tessellator tess, final IAEFluidStack ais) {
-        // GL11.glPushAttrib( GL11.GL_ALL_ATTRIB_BITS );
-
         final ForgeDirection d = this.getSide();
 
         GL11.glTranslated(d.offsetX * 0.77, d.offsetY * 0.77, d.offsetZ * 0.77);
 
         switch (d) {
-            case UP:
+            case UP -> {
                 GL11.glScalef(1.0f, -1.0f, 1.0f);
                 GL11.glRotatef(90.0f, 1.0f, 0.0f, 0.0f);
                 GL11.glRotatef(this.getSpin() * 90.0F, 0, 0, 1);
-                break;
-            case DOWN:
+            }
+            case DOWN -> {
                 GL11.glScalef(1.0f, -1.0f, 1.0f);
                 GL11.glRotatef(-90.0f, 1.0f, 0.0f, 0.0f);
                 GL11.glRotatef(this.getSpin() * -90.0F, 0, 0, 1);
-                break;
-            case EAST:
+            }
+            case EAST -> {
                 GL11.glScalef(-1.0f, -1.0f, -1.0f);
                 GL11.glRotatef(-90.0f, 0.0f, 1.0f, 0.0f);
-                break;
-            case WEST:
+            }
+            case WEST -> {
                 GL11.glScalef(-1.0f, -1.0f, -1.0f);
                 GL11.glRotatef(90.0f, 0.0f, 1.0f, 0.0f);
-                break;
-            case NORTH:
-                GL11.glScalef(-1.0f, -1.0f, -1.0f);
-                break;
-            case SOUTH:
+            }
+            case NORTH -> GL11.glScalef(-1.0f, -1.0f, -1.0f);
+            case SOUTH -> {
                 GL11.glScalef(-1.0f, -1.0f, -1.0f);
                 GL11.glRotatef(180.0f, 0.0f, 1.0f, 0.0f);
-                break;
-
-            default:
-                break;
+            }
+            default -> {}
         }
         final ItemStack sis = ItemFluidPacket.newDisplayStack(ais.getFluidStack());
 
@@ -296,7 +288,6 @@ public abstract class FCPartMonitor extends AbstractPartDisplay implements IPart
 
             GL11.glDisable(GL11.GL_LIGHTING);
             GL11.glDisable(GL12.GL_RESCALE_NORMAL);
-            // RenderHelper.enableGUIStandardItemLighting();
             tess.setColorOpaque_F(1.0f, 1.0f, 1.0f);
 
             ClientHelper.proxy.doRenderItem(sis, this.getTile().getWorldObj());
@@ -318,7 +309,6 @@ public abstract class FCPartMonitor extends AbstractPartDisplay implements IPart
             GL11.glTranslatef(-0.5f * width, 0.0f, -1.0f);
             fr.drawString(renderedStackSize, 0, 0, 0);
         }
-        // GL11.glPopAttrib();
     }
 
     @Override

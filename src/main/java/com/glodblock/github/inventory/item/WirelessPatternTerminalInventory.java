@@ -174,9 +174,8 @@ public class WirelessPatternTerminalInventory extends MEMonitorHandler<IAEItemSt
             ItemStack newStack) {
         if (inv == this.pattern && slot == 1) {
             final ItemStack is = inv.getStackInSlot(1);
-            if (is != null && is.getItem() instanceof ICraftingPatternItem) {
-                final ICraftingPatternItem pattern = (ICraftingPatternItem) is.getItem();
-                final ICraftingPatternDetails details = pattern
+            if (is != null && is.getItem() instanceof final ICraftingPatternItem craftingPatternItem) {
+                final ICraftingPatternDetails details = craftingPatternItem
                         .getPatternForItem(is, this.getActionableNode().getWorld());
                 if (details != null) {
                     final IAEItemStack[] inItems = details.getInputs();
@@ -345,8 +344,8 @@ public class WirelessPatternTerminalInventory extends MEMonitorHandler<IAEItemSt
 
     @Override
     public void sortCraftingItems() {
-        List<ItemStack> items = new ArrayList<ItemStack>();
-        List<ItemStack> fluids = new ArrayList<ItemStack>();
+        List<ItemStack> items = new ArrayList<>();
+        List<ItemStack> fluids = new ArrayList<>();
         for (ItemStack is : this.crafting) {
             if (is == null) continue;
             if (is.getItem() instanceof ItemFluidPacket) {

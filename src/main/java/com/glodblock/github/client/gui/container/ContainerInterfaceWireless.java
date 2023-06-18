@@ -42,13 +42,12 @@ import appeng.util.inv.WrapperInvSlot;
 public class ContainerInterfaceWireless extends FCBaseContainer {
 
     /**
-     * this stuff is all server side..
+     * this stuff is all server side
      */
     private static long autoBase = Long.MIN_VALUE;
 
     private final Multimap<IInterfaceHost, ContainerInterfaceWireless.InvTracker> diList = HashMultimap.create();
-    private final Map<Long, ContainerInterfaceWireless.InvTracker> byId = new HashMap<Long, ContainerInterfaceWireless.InvTracker>();
-    // private final Map<Long, InvTracker> byId = new HashMap<>();
+    private final Map<Long, ContainerInterfaceWireless.InvTracker> byId = new HashMap<>();
     private IGrid grid;
     private NBTTagCompound data = new NBTTagCompound();
 
@@ -114,9 +113,7 @@ public class ContainerInterfaceWireless extends FCBaseContainer {
             try {
                 NetworkHandler.instance
                         .sendTo(new PacketCompressedNBT(this.data), (EntityPlayerMP) this.getPlayerInv().player);
-            } catch (final IOException e) {
-                // :P
-            }
+            } catch (final IOException ignored) {}
 
             this.data = new NBTTagCompound();
         }
@@ -140,7 +137,7 @@ public class ContainerInterfaceWireless extends FCBaseContainer {
             boolean canInsert = true;
 
             switch (action) {
-                case PICKUP_OR_SET_DOWN:
+                case PICKUP_OR_SET_DOWN -> {
                     if (hasItemInHand) {
                         for (int s = 0; s < interfaceHandler.getSizeInventory(); s++) {
                             if (Platform.isSameItemPrecise(
@@ -175,9 +172,8 @@ public class ContainerInterfaceWireless extends FCBaseContainer {
                         final IInventory mySlot = slotInv.getWrapper(slot + inv.offset);
                         mySlot.setInventorySlotContents(0, playerHand.addItems(mySlot.getStackInSlot(0)));
                     }
-
-                    break;
-                case SPLIT_OR_PLACE_SINGLE:
+                }
+                case SPLIT_OR_PLACE_SINGLE -> {
                     if (hasItemInHand) {
                         for (int s = 0; s < interfaceHandler.getSizeInventory(); s++) {
                             if (Platform.isSameItemPrecise(
@@ -205,31 +201,28 @@ public class ContainerInterfaceWireless extends FCBaseContainer {
                             interfaceSlot.addItems(extra);
                         }
                     }
-
-                    break;
-                case SHIFT_CLICK:
+                }
+                case SHIFT_CLICK -> {
                     final IInventory mySlot = slotInv.getWrapper(slot + inv.offset);
                     final InventoryAdaptor playerInv = InventoryAdaptor.getAdaptor(player, ForgeDirection.UNKNOWN);
                     mySlot.setInventorySlotContents(0, mergeToPlayerInventory(playerInv, mySlot.getStackInSlot(0)));
-
-                    break;
-                case MOVE_REGION:
+                }
+                case MOVE_REGION -> {
                     final InventoryAdaptor playerInvAd = InventoryAdaptor.getAdaptor(player, ForgeDirection.UNKNOWN);
                     for (int x = 0; x < inv.client.getSizeInventory(); x++) {
                         inv.server.setInventorySlotContents(
                                 x + inv.offset,
                                 mergeToPlayerInventory(playerInvAd, inv.server.getStackInSlot(x + inv.offset)));
                     }
-
-                    break;
-                case CREATIVE_DUPLICATE:
+                }
+                case CREATIVE_DUPLICATE -> {
                     if (player.capabilities.isCreativeMode && !hasItemInHand) {
                         player.inventory.setItemStack(is == null ? null : is.copy());
                     }
-
-                    break;
-                default:
+                }
+                default -> {
                     return;
+                }
             }
 
             this.updateHeld(player);

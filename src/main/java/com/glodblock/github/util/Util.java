@@ -300,7 +300,6 @@ public final class Util {
     }
 
     public static IAEFluidStack loadFluidStackFromNBT(final NBTTagCompound i) {
-        // Fuck ae2
         final FluidStack t = FluidRegistry.getFluidStack(i.getString("FluidName"), 1);
         if (t == null) return null;
         final AEFluidStack fluid = AEFluidStack.create(t);
@@ -503,8 +502,7 @@ public final class Util {
         public static int getCapacity(ItemStack itemStack, Fluid fluid) {
             if (itemStack == null) return 0;
             Item item = itemStack.getItem();
-            if (item instanceof IFluidContainerItem) {
-                IFluidContainerItem fluidContainerItem = (IFluidContainerItem) item;
+            if (item instanceof IFluidContainerItem fluidContainerItem) {
                 int capacity = fluidContainerItem.getCapacity(itemStack);
                 FluidStack existing = fluidContainerItem.getFluid(itemStack);
                 if (existing != null) {

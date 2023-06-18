@@ -122,9 +122,8 @@ public abstract class FCGuiMonitor<T extends IAEStack<T>> extends FCBaseMEGui
         if (btn == this.craftingStatusBtn || btn == this.craftingStatusImgBtn) {
             InventoryHandler.switchGui(GuiType.CRAFTING_STATUS);
         }
-        if (btn instanceof GuiImgButton) {
+        if (btn instanceof final GuiImgButton iBtn) {
             final boolean backwards = Mouse.isButtonDown(1);
-            final GuiImgButton iBtn = (GuiImgButton) btn;
             if (iBtn.getSetting() != Settings.ACTIONS) {
                 final Enum<?> cv = iBtn.getCurrentValue();
                 final Enum<?> next = Platform.rotateEnum(cv, backwards, iBtn.getSetting().getPossibleValues());
@@ -273,6 +272,8 @@ public abstract class FCGuiMonitor<T extends IAEStack<T>> extends FCBaseMEGui
                         AEConfig.instance.settings.getSetting(Settings.TERMINAL_STYLE)));
         this.offsetY += 20;
 
+        // Right now 80 > offsetX, but that can be changed later.
+        // noinspection DataFlowIssue
         this.searchField = new FCGuiTextField(
                 this.fontRendererObj,
                 this.guiLeft + Math.max(80, this.offsetX),
@@ -433,7 +434,7 @@ public abstract class FCGuiMonitor<T extends IAEStack<T>> extends FCBaseMEGui
 
         if (slot instanceof SlotPatternTerm) {
             if (mouseButton == 6) {
-                return; // prevent weird double clicks..
+                return; // prevents weird double clicks
             }
             try {
                 NetworkHandler.instance.sendToServer(((SlotPatternTerm) slot).getRequest(isShiftKeyDown()));
@@ -442,13 +443,13 @@ public abstract class FCGuiMonitor<T extends IAEStack<T>> extends FCBaseMEGui
             }
         } else if (slot instanceof SlotCraftingTerm) {
             if (mouseButton == 6) {
-                return; // prevent weird double clicks..
+                return; // prevents weird double clicks
             }
             InventoryAction action;
             if (isShiftKeyDown()) {
                 action = InventoryAction.CRAFT_SHIFT;
             } else {
-                // Craft stack on right-click, craft single on left-click
+                // Craft a stack on right-click, craft a single one on left-click
                 action = (mouseButton == 1) ? InventoryAction.CRAFT_STACK : InventoryAction.CRAFT_ITEM;
             }
             final PacketInventoryAction p = new PacketInventoryAction(action, slotIdx, 0);

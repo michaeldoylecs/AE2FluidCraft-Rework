@@ -76,7 +76,7 @@ public abstract class FCPart extends AEBasePart
             this.getProxy().setFlags(GridFlags.REQUIRE_CHANNEL);
             this.getProxy().setIdlePowerUsage(1.0 / 2.0);
         } else {
-            this.getProxy().setIdlePowerUsage(1.0 / 16.0); // lights drain a little bit.
+            this.getProxy().setIdlePowerUsage(1.0 / 16.0); // lights drain a little
         }
         this.cm.registerSetting(Settings.SORT_BY, SortOrder.NAME);
         this.cm.registerSetting(Settings.VIEW_MODE, ViewItems.ALL);
@@ -163,9 +163,7 @@ public abstract class FCPart extends AEBasePart
             if (this.getProxy().getNode().meetsChannelRequirements()) {
                 this.clientFlags = this.getClientFlags() | FCPart.CHANNEL_FLAG;
             }
-        } catch (final GridAccessException e) {
-            // um.. nothing.
-        }
+        } catch (final GridAccessException ignored) {}
 
         data.writeByte((byte) this.getClientFlags());
     }
@@ -195,18 +193,10 @@ public abstract class FCPart extends AEBasePart
                 }
 
                 switch (this.getSpin()) {
-                    case 0:
-                        this.spin = 1;
-                        break;
-                    case 1:
-                        this.spin = 3;
-                        break;
-                    case 2:
-                        this.spin = 0;
-                        break;
-                    case 3:
-                        this.spin = 2;
-                        break;
+                    case 0 -> this.spin = 1;
+                    case 1 -> this.spin = 3;
+                    case 2 -> this.spin = 0;
+                    case 3 -> this.spin = 2;
                 }
 
                 this.getHost().markForUpdate();
@@ -276,9 +266,7 @@ public abstract class FCPart extends AEBasePart
     public IMEMonitor<IAEItemStack> getItemInventory() {
         try {
             return this.getProxy().getStorage().getItemInventory();
-        } catch (final GridAccessException e) {
-            // err nope?
-        }
+        } catch (final GridAccessException ignored) {}
         return null;
     }
 
@@ -286,9 +274,7 @@ public abstract class FCPart extends AEBasePart
     public IMEMonitor<IAEFluidStack> getFluidInventory() {
         try {
             return this.getProxy().getStorage().getFluidInventory();
-        } catch (final GridAccessException e) {
-            // err nope?
-        }
+        } catch (final GridAccessException ignored) {}
         return null;
     }
 
@@ -434,27 +420,27 @@ public abstract class FCPart extends AEBasePart
     /**
      * The texture used for the bright front layer.
      * <p>
-     * The final texture can overlap any of the the texture in no particular order.
+     * The final texture can overlap any of the texture in no particular order.
      */
     public abstract FCPartsTexture getFrontBright();
 
     /**
      * The texture used for the colored (medium) front layer.
      * <p>
-     * The final texture can overlap any of the the texture in no particular order.
+     * The final texture can overlap any of the texture in no particular order.
      */
     public abstract FCPartsTexture getFrontColored();
 
     /**
      * The texture used for the dark front layer.
      * <p>
-     * The final texture can overlap any of the the texture in no particular order.
+     * The final texture can overlap any of the texture in no particular order.
      */
     public abstract FCPartsTexture getFrontDark();
 
     /**
-     * Should the part emit light. This actually only affects the light level, light source use a level of 15 and non
-     * light source 9.
+     * Should the part emit light. This actually only affects the light level, light source use a level of 15 and
+     * non-light source 9.
      */
     public abstract boolean isLightSource();
 }

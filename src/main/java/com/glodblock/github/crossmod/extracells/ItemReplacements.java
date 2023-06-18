@@ -22,7 +22,7 @@ import li.cil.oc.api.Items;
 import li.cil.oc.api.detail.ItemInfo;
 
 /**
- * Shell class to organize proxy replacements and hide the ugliness
+ * A shell class to organize proxy replacements and hide the ugliness
  */
 public class ItemReplacements {
 
@@ -78,9 +78,11 @@ public class ItemReplacements {
         registry.put("extracells:storage.physical.void", voidCell);
         deprecateItem("pattern.fluid", ItemAndBlockHolder.PATTERN);
         deprecateWireless("terminal.fluid.wireless", ItemAndBlockHolder.WIRELESS_FLUID_TERM);
+
         /* Storage casings */
         deprecateItem("storage.casing", 0, AEApi.instance().definitions().materials().emptyAdvancedStorageCell());
         deprecateItem("storage.casing", 1, ItemAndBlockHolder.CELL_HOUSING, 2);
+
         /* Storage components (1k component, etc.) */
         deprecateItem("storage.component", 0, AEApi.instance().definitions().materials().cell256kPart());
         deprecateItem("storage.component", 1, AEApi.instance().definitions().materials().cell1024kPart());

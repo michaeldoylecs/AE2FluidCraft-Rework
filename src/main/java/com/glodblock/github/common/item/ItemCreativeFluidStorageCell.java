@@ -53,7 +53,6 @@ public class ItemCreativeFluidStorageCell extends AEBaseItem
 
     @Override
     public boolean isBlackListed(ItemStack cellItem, IAEFluidStack requestedAddition) {
-        // What even is a null fluid
         return requestedAddition == null || requestedAddition.getFluid() == null
                 || FluidCraftAPI.instance().isBlacklistedInStorage(requestedAddition.getFluid().getClass());
     }
@@ -109,8 +108,7 @@ public class ItemCreativeFluidStorageCell extends AEBaseItem
         final IMEInventoryHandler<?> inventory = AEApi.instance().registries().cell()
                 .getCellInventory(stack, null, StorageChannel.FLUIDS);
 
-        if (inventory instanceof IFluidCellInventoryHandler) {
-            final IFluidCellInventoryHandler handler = (IFluidCellInventoryHandler) inventory;
+        if (inventory instanceof final IFluidCellInventoryHandler handler) {
             final IFluidCellInventory cellInventory = handler.getCellInv();
 
             if (GuiScreen.isCtrlKeyDown()) {

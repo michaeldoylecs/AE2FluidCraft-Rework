@@ -48,7 +48,7 @@ public class CPacketTransferRecipe implements IMessage {
         this.shift = shift;
     }
 
-    // I should use GZIP to compress the message, but i'm too lazy.
+    // TODO: this should use GZIP to compress the message
     // NBT to ByteBuf has a compress stream
     @Override
     public void toBytes(ByteBuf buf) {
@@ -100,9 +100,8 @@ public class CPacketTransferRecipe implements IMessage {
                 if (monitor != null) {
                     storageList = monitor.getStorageList();
                 }
-                if (c instanceof FCContainerEncodeTerminal) {
+                if (c instanceof FCContainerEncodeTerminal cf) {
                     // pattern terminal only
-                    FCContainerEncodeTerminal cf = (FCContainerEncodeTerminal) c;
 
                     boolean combine = cf.combine;
                     cf.getPatternTerminal().setCraftingRecipe(message.isCraft);
