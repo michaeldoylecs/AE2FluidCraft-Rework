@@ -24,8 +24,6 @@ public class EC2Replacer {
             if (m.type == GameRegistry.Type.ITEM && ItemReplacements.registry.containsKey(m.name)) {
                 Item toRemap = ItemReplacements.registry.get(m.name);
                 m.remap(toRemap);
-            } else {
-                m.warn();
             }
         }
     }

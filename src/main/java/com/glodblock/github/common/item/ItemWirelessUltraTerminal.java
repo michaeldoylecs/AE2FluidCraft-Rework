@@ -36,10 +36,12 @@ import appeng.core.localization.PlayerMessages;
 import appeng.util.Platform;
 import baubles.api.BaubleType;
 import baubles.api.IBauble;
+import cpw.mods.fml.common.Optional;
 import cpw.mods.fml.common.registry.GameRegistry;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
+@Optional.Interface(iface = "baubles.api.IBauble", modid = "Baubles")
 public class ItemWirelessUltraTerminal extends ItemBaseWirelessTerminal
         implements IBauble, IRegister<ItemWirelessUltraTerminal> {
 
