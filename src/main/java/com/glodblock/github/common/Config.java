@@ -16,6 +16,7 @@ public class Config {
     public static boolean fluidIOBus;
     public static boolean removeRecipe;
     public static double portableCellBattery;
+    public static boolean fluidP2PInterface;
     public static int packetSize;
     public static int packetRate;
     public static boolean replaceEC2;
@@ -41,6 +42,11 @@ public class Config {
                 "Fluid Craft for AE2",
                 true,
                 "Enable this to add Fluid Import/Export Bus like EC2's one.");
+        fluidP2PInterface = Config.getBoolean(
+                "fluidP2PInterface",
+                "Fluid Craft for AE2",
+                true,
+                "Enable the P2P Tunnel - ME Dual Interface feature.");
         removeRecipe = Config.getBoolean(
                 "Disable all recipes",
                 "Fluid Craft for AE2",

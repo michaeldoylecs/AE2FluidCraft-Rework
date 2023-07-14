@@ -21,6 +21,7 @@ import com.glodblock.github.common.storage.CellType;
 import com.glodblock.github.loader.recipe.WirelessTerminalRecipe;
 import com.glodblock.github.util.ModAndClassUtil;
 
+import appeng.api.AEApi;
 import cpw.mods.fml.common.registry.GameRegistry;
 import extracells.registries.ItemEnum;
 
@@ -102,6 +103,7 @@ public class RecipeLoader implements Runnable {
             54);
     public static final ItemStack AE2_WIRELESS_TERMINAL = GameRegistry
             .findItemStack("appliedenergistics2", "item.ToolWirelessTerminal", 1);
+    public static final ItemStack AE2_P2P_ME = AEApi.instance().definitions().parts().p2PTunnelME().maybeStack(1).get();
     public static final ItemStack AE2_ME_CHEST = GameRegistry
             .findItemStack("appliedenergistics2", "tile.BlockChest", 1);
     public static final ItemStack AE2_ENERGY_CELL = GameRegistry
@@ -146,6 +148,10 @@ public class RecipeLoader implements Runnable {
                         'E',
                         AE2_INTERFACE));
         GameRegistry.addShapelessRecipe(FLUID_INTERFACE.stack(), INTERFACE.stack());
+        if (Config.fluidP2PInterface) {
+            GameRegistry.addShapelessRecipe(FLUID_INTERFACE_P2P.stack(), AE2_P2P_ME, INTERFACE.stack());
+            GameRegistry.addShapelessRecipe(FLUID_INTERFACE_P2P.stack(), AE2_P2P_ME, FLUID_INTERFACE.stack());
+        }
         GameRegistry.addShapelessRecipe(INTERFACE.stack(), FLUID_INTERFACE.stack());
         GameRegistry.addShapelessRecipe(WIRELESS_FLUID_TERM.stack(), AE2_WIRELESS_TERMINAL, BUCKET);
         GameRegistry.addShapelessRecipe(WIRELESS_PATTERN_TERM.stack(), WIRELESS_FLUID_TERM, FLUID_TERMINAL);
