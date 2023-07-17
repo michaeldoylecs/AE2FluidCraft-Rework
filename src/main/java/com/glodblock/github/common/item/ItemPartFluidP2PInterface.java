@@ -1,8 +1,12 @@
 package com.glodblock.github.common.item;
 
+import appeng.client.texture.CableBusTextures;
+import appeng.items.parts.ItemMultiPart;
+import appeng.items.parts.PartType;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.IIcon;
 import net.minecraft.world.World;
 
 import org.jetbrains.annotations.Nullable;
@@ -22,6 +26,7 @@ import cpw.mods.fml.relauncher.SideOnly;
 
 public class ItemPartFluidP2PInterface extends FCBaseItem implements IPartItem {
 
+    private IIcon icon;
     public ItemPartFluidP2PInterface() {
         this.setMaxStackSize(64);
         this.setUnlocalizedName(NameConst.ITEM_PART_FLUID_P2P_INTERFACE);
@@ -49,7 +54,16 @@ public class ItemPartFluidP2PInterface extends FCBaseItem implements IPartItem {
     }
 
     @Override
-    public void registerIcons(IIconRegister register) {}
+    public IIcon getIconFromDamage(int dmg) {
+        return icon;
+    }
+
+    @Override
+    public void registerIcons(IIconRegister register) {
+        if (Config.fluidP2PInterface) {
+            this.icon = register.registerIcon("appliedenergistics2:ItemPart.P2PTunnel");
+        }
+    }
 
     @Override
     @SideOnly(Side.CLIENT)
