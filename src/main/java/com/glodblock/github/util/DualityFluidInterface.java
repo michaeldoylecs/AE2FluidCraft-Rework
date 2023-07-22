@@ -165,7 +165,7 @@ public class DualityFluidInterface implements IGridTickable, IStorageMonitorable
 
     @Override
     public IInventory getInventoryByName(String name) {
-        return null;
+        return iHost.getInventoryByName(name);
     }
 
     public IFluidHandler getFluidInventoryByName(String name) {
