@@ -17,6 +17,7 @@ import com.glodblock.github.common.Config;
 import com.glodblock.github.common.item.ItemFluidPacket;
 import com.glodblock.github.common.parts.PartFluidExportBus;
 import com.glodblock.github.common.parts.PartFluidInterface;
+import com.glodblock.github.common.parts.PartFluidP2PInterface;
 import com.glodblock.github.common.tile.TileFluidInterface;
 import com.glodblock.github.util.Ae2Reflect;
 import com.glodblock.github.util.BlockPos;
@@ -88,7 +89,8 @@ public class FluidConvertingInventoryAdaptor extends InventoryAdaptor {
                 capProvider.zCoord + face.offsetZ);
         if (!Config.noFluidPacket && !(inter instanceof TileFluidInterface
                 || Util.getPart(inter, face.getOpposite()) instanceof PartFluidInterface
-                || Util.getPart(inter, face.getOpposite()) instanceof PartFluidExportBus))
+                || Util.getPart(inter, face.getOpposite()) instanceof PartFluidExportBus
+                || Util.getPart(inter, face.getOpposite()) instanceof PartFluidP2PInterface))
             return InventoryAdaptor.getAdaptor(capProvider, face);
         InventoryAdaptor item = InventoryAdaptor.getAdaptor(capProvider, face);
         IFluidHandler fluid = capProvider instanceof IFluidHandler ? (IFluidHandler) capProvider : null;
