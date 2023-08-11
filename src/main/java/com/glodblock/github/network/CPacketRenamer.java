@@ -97,11 +97,15 @@ public class CPacketRenamer implements IMessage {
 
     public static class Handler implements IMessageHandler<CPacketRenamer, IMessage> {
 
+        private String getName(ICustomNameObject obj) {
+            return obj.hasCustomName() ? obj.getCustomName() : "";
+        }
+
         private String getName(TileEntity tile, ForgeDirection side) {
             if (tile instanceof TileCableBus) {
-                return ((ICustomNameObject) ((TileCableBus) tile).getPart(side)).getCustomName();
+                return getName((ICustomNameObject) ((TileCableBus) tile).getPart(side));
             } else {
-                return ((ICustomNameObject) tile).getCustomName();
+                return getName((ICustomNameObject) tile);
             }
         }
 
