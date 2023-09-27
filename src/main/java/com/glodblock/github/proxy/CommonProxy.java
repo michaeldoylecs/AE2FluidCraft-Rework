@@ -18,7 +18,6 @@ import com.glodblock.github.util.ModAndClassUtil;
 import appeng.api.AEApi;
 import appeng.api.IAppEngApi;
 import appeng.api.config.Upgrades;
-import appeng.helpers.InterfaceTerminalSupportedClassProvider;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
@@ -67,9 +66,9 @@ public class CommonProxy {
             Upgrades.CRAFTING.registerItem(new ItemStack(ItemAndBlockHolder.FLUID_EXPORT_BUS), 1);
         }
         AEApi.instance().registries().externalStorage().addExternalStorageInterface(new AEFluidInterfaceHandler());
-        InterfaceTerminalSupportedClassProvider.register(PartFluidP2PInterface.class);
-        InterfaceTerminalSupportedClassProvider.register(PartFluidInterface.class);
-        InterfaceTerminalSupportedClassProvider.register(TileFluidInterface.class);
+        AEApi.instance().registries().ifaceTerm().register(PartFluidP2PInterface.class);
+        AEApi.instance().registries().ifaceTerm().register(PartFluidInterface.class);
+        AEApi.instance().registries().ifaceTerm().register(TileFluidInterface.class);
     }
 
     public void registerRenderers() {}
