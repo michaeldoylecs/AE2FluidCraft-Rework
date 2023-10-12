@@ -59,6 +59,13 @@ public class GuiFCImgButton extends GuiButton implements ITooltip {
             this.registerApp(15, "PATTERN_EX_TEM", "YES", "pattern_terminal_ex_w");
             this.registerApp(16, "FILL_PATTERN", "DO_FILL", "fill_pattern");
             this.registerApp(17, "NOT_FILL_PATTERN", "DONT_FILL", "not_fill_pattern");
+            this.registerApp(20, "LEVEL_TEM", "YES", "level_terminal_w");
+            this.registerApp(21, "SWITCH", "ON", "edit");
+            this.registerApp(22, "SWITCH", "OFF", "view");
+            this.registerApp(21, "SWITCH", "ENABLE", "enable");
+            this.registerApp(22, "SWITCH", "DISABLE", "disable");
+            this.registerApp(23, "CONFIG", "YES", "open_configuration");
+            this.registerApp(24, "HIGHLIGHT", "YES", "block_highlight");
         }
     }
 
@@ -108,6 +115,10 @@ public class GuiFCImgButton extends GuiButton implements ITooltip {
 
     public String getCurrentValue() {
         return this.currentValue;
+    }
+
+    public boolean getMouseIn() {
+        return this.field_146123_n;
     }
 
     public void set(final String e) {

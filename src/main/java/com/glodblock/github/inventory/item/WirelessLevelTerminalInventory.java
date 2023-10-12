@@ -27,7 +27,7 @@ import appeng.tile.inventory.InvOperation;
 import appeng.util.ConfigManager;
 import appeng.util.Platform;
 
-public class WirelessInterfaceTerminalInventory implements IClickableInTerminal, IWirelessTerminal {
+public class WirelessLevelTerminalInventory implements IClickableInTerminal, IWirelessTerminal {
 
     private final ItemStack target;
     private final IAEItemPowerStorage ips;
@@ -35,7 +35,7 @@ public class WirelessInterfaceTerminalInventory implements IClickableInTerminal,
     private final IGridNode grid;
     private Util.DimensionalCoordSide tile;
 
-    public WirelessInterfaceTerminalInventory(ItemStack is, int slot, IGridNode gridNode, EntityPlayer player) {
+    public WirelessLevelTerminalInventory(ItemStack is, int slot, IGridNode gridNode, EntityPlayer player) {
         Objects.requireNonNull(Util.getWirelessInv(is, player, StorageChannel.ITEMS));
         this.ips = (ToolWirelessTerminal) is.getItem();
         this.grid = gridNode;
