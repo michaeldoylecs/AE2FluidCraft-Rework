@@ -82,7 +82,7 @@ public class GuiFluidLevelEmitter extends GuiUpgradeable {
     @Override
     public void drawFG(final int offsetX, final int offsetY, final int mouseX, final int mouseY) {
         this.fontRendererObj.drawString(
-                NameConst.i18n(NameConst.GUI_FLUID_LEVEL_EMITTER),
+                getGuiDisplayName(NameConst.i18n(NameConst.GUI_FLUID_LEVEL_EMITTER)),
                 8,
                 6,
                 GuiColors.UpgradableTitle.getColor());
