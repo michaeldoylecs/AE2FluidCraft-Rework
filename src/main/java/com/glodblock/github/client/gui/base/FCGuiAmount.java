@@ -65,11 +65,12 @@ public abstract class FCGuiAmount extends AEBaseGui {
         if (this.originalGui != null && this.myIcon != null) {
             this.buttonList.add(
                     this.originalGuiBtn = new GuiTabButton(
-                            this.guiLeft + 154,
-                            this.guiTop,
+                            this.guiLeft + 151,
+                            this.guiTop - 4,
                             this.myIcon,
                             this.myIcon.getDisplayName(),
                             itemRender));
+            this.originalGuiBtn.setHideEdge(13);
         }
 
         this.amountBox = new GuiTextField(
