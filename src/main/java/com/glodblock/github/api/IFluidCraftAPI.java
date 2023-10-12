@@ -2,6 +2,8 @@ package com.glodblock.github.api;
 
 import net.minecraftforge.fluids.Fluid;
 
+import com.glodblock.github.api.registries.ILevelTerminalRegistry;
+
 @SuppressWarnings("unused")
 public interface IFluidCraftAPI {
 
@@ -24,4 +26,9 @@ public interface IFluidCraftAPI {
      * Mostly for internal use; queries whether the fluid is blacklisted from being displayed.
      */
     boolean isBlacklistedInDisplay(Class<? extends Fluid> fluid);
+
+    /**
+     * Get instance of `ILevelTerminalRegistry` to add new supported machines into terminal
+     */
+    ILevelTerminalRegistry levelTerminalRegistry();
 }

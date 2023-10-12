@@ -5,6 +5,9 @@ import java.util.Set;
 
 import net.minecraftforge.fluids.Fluid;
 
+import com.glodblock.github.api.registries.ILevelTerminalRegistry;
+import com.glodblock.github.coremod.registries.LevelTerminalRegistry;
+
 public final class FluidCraftAPI implements IFluidCraftAPI {
 
     private static final FluidCraftAPI API = new FluidCraftAPI();
@@ -41,5 +44,10 @@ public final class FluidCraftAPI implements IFluidCraftAPI {
     @Override
     public boolean isBlacklistedInDisplay(Class<? extends Fluid> fluid) {
         return blacklistedDispFluids.contains(fluid);
+    }
+
+    @Override
+    public ILevelTerminalRegistry levelTerminalRegistry() {
+        return LevelTerminalRegistry.instance();
     }
 }
