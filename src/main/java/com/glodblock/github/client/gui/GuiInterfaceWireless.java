@@ -57,7 +57,7 @@ import appeng.integration.IntegrationRegistry;
 import appeng.integration.IntegrationType;
 import appeng.util.Platform;
 
-public class GuiInterfaceTerminalWireless extends FCBaseMEGui implements IDropToFillTextField {
+public class GuiInterfaceWireless extends FCBaseMEGui implements IDropToFillTextField {
 
     protected int offsetY;
     private static final int MAGIC_HEIGHT_NUMBER = 52 + 99;
@@ -93,7 +93,7 @@ public class GuiInterfaceTerminalWireless extends FCBaseMEGui implements IDropTo
 
     private static final String MOLECULAR_ASSEMBLER = "tile.appliedenergistics2.BlockMolecularAssembler";
 
-    public GuiInterfaceTerminalWireless(final InventoryPlayer inventoryPlayer, final IWirelessTerminal te) {
+    public GuiInterfaceWireless(final InventoryPlayer inventoryPlayer, final IWirelessTerminal te) {
         super(inventoryPlayer, new ContainerInterfaceWireless(inventoryPlayer, te));
 
         this.setScrollBar(new GuiScrollbar());
@@ -248,7 +248,7 @@ public class GuiInterfaceTerminalWireless extends FCBaseMEGui implements IDropTo
                 GuiColors.InterfaceTerminalTitle.getColor());
         fontRendererObj.drawString(
                 GuiText.inventory.getLocal(),
-                GuiInterfaceTerminalWireless.offsetX + 2,
+                GuiInterfaceWireless.offsetX + 2,
                 this.ySize - 96,
                 GuiColors.InterfaceTerminalInventory.getColor());
 
@@ -279,7 +279,7 @@ public class GuiInterfaceTerminalWireless extends FCBaseMEGui implements IDropTo
 
                 this.fontRendererObj.drawString(
                         name + postfix,
-                        GuiInterfaceTerminalWireless.offsetX + 3,
+                        GuiInterfaceWireless.offsetX + 3,
                         6 + offset,
                         GuiColors.InterfaceTerminalName.getColor());
             }
@@ -288,6 +288,7 @@ public class GuiInterfaceTerminalWireless extends FCBaseMEGui implements IDropTo
         }
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     public void drawScreen(final int mouseX, final int mouseY, final float btn) {
 
@@ -383,7 +384,6 @@ public class GuiInterfaceTerminalWireless extends FCBaseMEGui implements IDropTo
                                 blockPos.getDimension(),
                                 blockPos.getSide()));
             } else {
-
                 WorldCoord blockPos2 = new WorldCoord(
                         (int) mc.thePlayer.posX,
                         (int) mc.thePlayer.posY,
