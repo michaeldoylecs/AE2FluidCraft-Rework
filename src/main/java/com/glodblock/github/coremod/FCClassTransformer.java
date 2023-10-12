@@ -11,7 +11,7 @@ import com.glodblock.github.coremod.transform.CraftingTreeNodeTransformer;
 import com.glodblock.github.coremod.transform.DualityInterfaceTransformer;
 import com.glodblock.github.coremod.transform.ExternalStorageRegistryTransformer;
 import com.glodblock.github.coremod.transform.GuiCraftingTransformer;
-import com.glodblock.github.coremod.transform.NEITransfermer;
+import com.glodblock.github.coremod.transform.NEITransformer;
 import com.glodblock.github.coremod.transform.PacketCompressedNBTTransformer;
 
 public class FCClassTransformer implements IClassTransformer {
@@ -24,7 +24,7 @@ public class FCClassTransformer implements IClassTransformer {
             case "appeng.me.cluster.implementations.CraftingCPUCluster" -> tform = CraftingCpuTransformer.INSTANCE;
             case "appeng.helpers.DualityInterface" -> tform = DualityInterfaceTransformer.INSTANCE;
             case "appeng.client.gui.implementations.GuiCraftingCPU", "appeng.client.gui.implementations.GuiCraftConfirm", "net.p455w0rd.wirelesscraftingterminal.client.gui.GuiCraftConfirm", "appeng.client.gui.widgets.GuiCraftingTree" -> tform = GuiCraftingTransformer.INSTANCE;
-            case "appeng.integration.modules.NEI" -> tform = NEITransfermer.INSTANCE;
+            case "appeng.integration.modules.NEI" -> tform = NEITransformer.INSTANCE;
             case "appeng.core.features.registries.ExternalStorageRegistry" -> tform = ExternalStorageRegistryTransformer.INSTANCE;
             case "appeng.core.sync.packets.PacketCompressedNBT" -> tform = PacketCompressedNBTTransformer.INSTANCE;
             default -> {
