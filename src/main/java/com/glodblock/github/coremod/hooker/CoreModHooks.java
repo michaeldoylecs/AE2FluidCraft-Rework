@@ -5,7 +5,6 @@ import java.util.Set;
 
 import javax.annotation.Nullable;
 
-import appeng.client.gui.IGuiTooltipHandler;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.inventory.InventoryCrafting;
 import net.minecraft.item.ItemStack;
@@ -34,6 +33,7 @@ import appeng.api.networking.storage.IStorageGrid;
 import appeng.api.storage.IMEInventory;
 import appeng.api.storage.data.IAEFluidStack;
 import appeng.api.storage.data.IAEItemStack;
+import appeng.client.gui.IGuiTooltipHandler;
 import appeng.crafting.MECraftingInventory;
 import appeng.me.MachineSet;
 import appeng.me.cluster.implementations.CraftingCPUCluster;
