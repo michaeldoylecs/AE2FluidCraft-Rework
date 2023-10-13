@@ -9,9 +9,9 @@ import org.lwjgl.input.Mouse;
 import com.glodblock.github.FluidCraft;
 import com.glodblock.github.client.gui.container.ContainerFluidStorageBus;
 import com.glodblock.github.common.parts.PartFluidStorageBus;
+import com.glodblock.github.inventory.InventoryHandler;
 import com.glodblock.github.inventory.gui.GuiType;
 import com.glodblock.github.network.CPacketFluidPatternTermBtns;
-import com.glodblock.github.network.CPacketSwitchGuis;
 import com.glodblock.github.util.NameConst;
 
 import appeng.api.config.AccessRestriction;
@@ -93,7 +93,7 @@ public class GuiFluidStorageBus extends GuiUpgradeable {
         } else if (btn == this.clear) {
             FluidCraft.proxy.netHandler.sendToServer(new CPacketFluidPatternTermBtns("StorageBus.Action", "Clear"));
         } else if (btn == this.priority) {
-            FluidCraft.proxy.netHandler.sendToServer(new CPacketSwitchGuis(GuiType.PRIORITY));
+            InventoryHandler.switchGui(GuiType.PRIORITY);
         } else if (btn == this.rwMode) {
             NetworkHandler.instance.sendToServer(new PacketConfigButton(this.rwMode.getSetting(), backwards));
         }

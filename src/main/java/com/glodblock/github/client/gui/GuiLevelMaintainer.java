@@ -15,26 +15,38 @@ import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.common.util.ForgeDirection;
 
 import org.lwjgl.input.Keyboard;
 
 import com.glodblock.github.FluidCraft;
 import com.glodblock.github.client.gui.container.ContainerLevelMaintainer;
+import com.glodblock.github.common.item.ItemWirelessUltraTerminal;
+import com.glodblock.github.common.parts.PartLevelTerminal;
 import com.glodblock.github.common.tile.TileLevelMaintainer;
 import com.glodblock.github.common.tile.TileLevelMaintainer.State;
 import com.glodblock.github.common.tile.TileLevelMaintainer.TLMTags;
+import com.glodblock.github.inventory.gui.GuiType;
 import com.glodblock.github.inventory.gui.MouseRegionManager;
+import com.glodblock.github.inventory.item.IWirelessTerminal;
+import com.glodblock.github.inventory.item.WirelessLevelTerminalInventory;
 import com.glodblock.github.inventory.slot.SlotFluidConvertingFake;
 import com.glodblock.github.inventory.slot.SlotSingleItem;
+import com.glodblock.github.loader.ItemAndBlockHolder;
 import com.glodblock.github.network.CPacketLevelMaintainer;
 import com.glodblock.github.network.CPacketLevelMaintainer.Action;
+import com.glodblock.github.network.CPacketLevelTerminalCommands;
 import com.glodblock.github.util.Ae2ReflectClient;
 import com.glodblock.github.util.FCGuiColors;
 import com.glodblock.github.util.NameConst;
+import com.glodblock.github.util.Util;
 
 import appeng.api.storage.data.IAEItemStack;
+import appeng.api.util.DimensionalCoord;
 import appeng.client.gui.AEBaseGui;
+import appeng.client.gui.widgets.GuiTabButton;
 import appeng.client.render.AppEngRenderItem;
+import appeng.container.AEBaseContainer;
 import appeng.container.slot.SlotFake;
 import appeng.core.sync.network.NetworkHandler;
 import appeng.core.sync.packets.PacketNEIDragClick;
@@ -56,6 +68,11 @@ public class GuiLevelMaintainer extends AEBaseGui implements INEIGuiHandler {
     private int lastWorkingTick;
     private int refreshTick;
     private final CoFHFontRenderer render;
+    protected ItemStack icon = null;
+
+    protected GuiType originalGui;
+    protected Util.DimensionalCoordSide originalBlockPos;
+    protected GuiTabButton originalGuiBtn;
 
     public GuiLevelMaintainer(InventoryPlayer ipl, TileLevelMaintainer tile) {
         super(new ContainerLevelMaintainer(ipl, tile));
@@ -68,6 +85,43 @@ public class GuiLevelMaintainer extends AEBaseGui implements INEIGuiHandler {
                 Minecraft.getMinecraft().getTextureManager(),
                 true);
         this.refreshTick = 0;
+        if (ipl.player.openContainer instanceof AEBaseContainer container) {
+            var target = container.getTarget();
+            if (target instanceof PartLevelTerminal terminal) {
+                icon = ItemAndBlockHolder.LEVEL_TERMINAL.stack();
+                originalGui = GuiType.LEVEL_TERMINAL;
+                DimensionalCoord blockPos = new DimensionalCoord(terminal.getTile());
+                originalBlockPos = new Util.DimensionalCoordSide(
+                        blockPos.x,
+                        blockPos.y,
+                        blockPos.z,
+                        blockPos.getDimension(),
+                        terminal.getSide(),
+                        "");
+            } else if (target instanceof IWirelessTerminal terminal && terminal.isUniversal(target)) {
+                icon = ItemAndBlockHolder.WIRELESS_ULTRA_TERM.stack();
+                originalGui = ItemWirelessUltraTerminal.readMode(terminal.getItemStack());
+                originalBlockPos = new Util.DimensionalCoordSide(
+                        terminal.getInventorySlot(),
+                        Util.GuiHelper.encodeType(0, Util.GuiHelper.GuiType.ITEM),
+                        0,
+                        ipl.player.worldObj.provider.dimensionId,
+                        ForgeDirection.UNKNOWN,
+                        "");
+            } else if (target instanceof WirelessLevelTerminalInventory terminal) {
+                icon = ItemAndBlockHolder.LEVEL_TERMINAL.stack();
+                originalGui = GuiType.WIRELESS_LEVEL_TERMINAL;
+                originalBlockPos = new Util.DimensionalCoordSide(
+                        terminal.getInventorySlot(),
+                        Util.GuiHelper.encodeType(0, Util.GuiHelper.GuiType.ITEM),
+                        0,
+                        ipl.player.worldObj.provider.dimensionId,
+                        ForgeDirection.UNKNOWN,
+                        "");
+
+            }
+        }
+
     }
 
     public void postUpdate(List<IAEItemStack> list) {
@@ -90,6 +144,7 @@ public class GuiLevelMaintainer extends AEBaseGui implements INEIGuiHandler {
         }
     }
 
+    @SuppressWarnings("unchecked")
     public void initGui() {
         super.initGui();
         this.lastWorkingTick = this.refreshTick;
@@ -110,6 +165,16 @@ public class GuiLevelMaintainer extends AEBaseGui implements INEIGuiHandler {
                     new GuiFCImgButton(guiLeft + 9, guiTop + 20 + 19 * i, "DISABLE", "DISABLE", false),
                     new FCGuiLineField(fontRendererObj, guiLeft + 47, guiTop + 33 + 19 * i, 125),
                     this.buttonList);
+        }
+        if (this.icon != null) {
+            this.originalGuiBtn = new GuiTabButton(
+                    this.guiLeft + 151,
+                    this.guiTop - 4,
+                    this.icon,
+                    this.icon.getDisplayName(),
+                    itemRender);
+            this.originalGuiBtn.setHideEdge(13);
+            this.buttonList.add(originalGuiBtn);
         }
         FluidCraft.proxy.netHandler.sendToServer(new CPacketLevelMaintainer(Action.Refresh));
     }
@@ -232,12 +297,32 @@ public class GuiLevelMaintainer extends AEBaseGui implements INEIGuiHandler {
 
     @Override
     protected void actionPerformed(final GuiButton btn) {
-        super.actionPerformed(btn);
-        for (Component com : this.component) {
-            if (com.sendToServer(btn)) {
-                break;
+        if (btn == originalGuiBtn) {
+            switchGui();
+        } else {
+            super.actionPerformed(btn);
+            for (Component com : this.component) {
+                if (com.sendToServer(btn)) {
+                    break;
+                }
             }
         }
+    }
+
+    public GuiType getOriginalGui() {
+        return originalGui;
+    }
+
+    public void switchGui() {
+        FluidCraft.proxy.netHandler.sendToServer(
+                new CPacketLevelTerminalCommands(
+                        CPacketLevelTerminalCommands.Action.BACK,
+                        originalBlockPos.x,
+                        originalBlockPos.y,
+                        originalBlockPos.z,
+                        originalBlockPos.getDimension(),
+                        originalBlockPos.getSide()));
+        // InventoryHandler.switchGui(originalGui);
     }
 
     @Override

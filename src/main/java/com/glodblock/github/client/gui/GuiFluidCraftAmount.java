@@ -2,7 +2,6 @@ package com.glodblock.github.client.gui;
 
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.entity.player.InventoryPlayer;
-import net.minecraft.item.ItemStack;
 
 import com.glodblock.github.FluidCraft;
 import com.glodblock.github.client.gui.base.FCGuiAmount;
@@ -67,25 +66,25 @@ public class GuiFluidCraftAmount extends FCGuiAmount {
     @Override
     protected void setOriginGUI(Object target) {
         if (target instanceof PartFluidPatternTerminal) {
-            this.myIcon = new ItemStack(ItemAndBlockHolder.FLUID_TERMINAL, 1);
+            this.myIcon = ItemAndBlockHolder.FLUID_TERMINAL.stack();
             this.originalGui = GuiType.FLUID_PATTERN_TERMINAL;
         } else if (target instanceof PartFluidPatternTerminalEx) {
-            this.myIcon = new ItemStack(ItemAndBlockHolder.FLUID_TERMINAL_EX, 1);
+            this.myIcon = ItemAndBlockHolder.FLUID_TERMINAL_EX.stack();
             this.originalGui = GuiType.FLUID_PATTERN_TERMINAL_EX;
         } else if (target instanceof PartFluidTerminal) {
-            this.myIcon = new ItemStack(ItemAndBlockHolder.FLUID_TERM, 1);
+            this.myIcon = ItemAndBlockHolder.FLUID_TERM.stack();
             this.originalGui = GuiType.FLUID_TERMINAL;
         } else if (target instanceof PartLevelTerminal) {
-            myIcon = new ItemStack(ItemAndBlockHolder.LEVEL_TERMINAL, 1);
+            myIcon = ItemAndBlockHolder.LEVEL_TERMINAL.stack();
             originalGui = GuiType.LEVEL_TERMINAL;
-        } else if (target instanceof IWirelessTerminal && ((IWirelessTerminal) target).isUniversal(target)) {
-            this.myIcon = new ItemStack(ItemAndBlockHolder.WIRELESS_ULTRA_TERM, 1);
-            this.originalGui = ItemWirelessUltraTerminal.readMode(((IWirelessTerminal) target).getItemStack());
+        } else if (target instanceof IWirelessTerminal terminal && terminal.isUniversal(target)) {
+            this.myIcon = ItemAndBlockHolder.WIRELESS_ULTRA_TERM.stack();
+            this.originalGui = ItemWirelessUltraTerminal.readMode(terminal.getItemStack());
         } else if (target instanceof WirelessPatternTerminalInventory) {
-            this.myIcon = new ItemStack(ItemAndBlockHolder.WIRELESS_PATTERN_TERM, 1);
+            this.myIcon = ItemAndBlockHolder.WIRELESS_PATTERN_TERM.stack();
             this.originalGui = GuiType.FLUID_TERMINAL;
         } else if (target instanceof WirelessLevelTerminalInventory) {
-            myIcon = new ItemStack(ItemAndBlockHolder.LEVEL_TERMINAL, 1);
+            myIcon = ItemAndBlockHolder.LEVEL_TERMINAL.stack();
             originalGui = GuiType.WIRELESS_LEVEL_TERMINAL;
         }
     }

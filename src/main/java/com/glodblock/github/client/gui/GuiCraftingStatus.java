@@ -2,7 +2,6 @@ package com.glodblock.github.client.gui;
 
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.entity.player.InventoryPlayer;
-import net.minecraft.item.ItemStack;
 
 import com.glodblock.github.common.item.ItemWirelessUltraTerminal;
 import com.glodblock.github.common.parts.PartFluidPatternTerminal;
@@ -35,23 +34,23 @@ public class GuiCraftingStatus extends appeng.client.gui.implementations.GuiCraf
     @Override
     public void initGui() {
         if (host instanceof PartFluidPatternTerminal)
-            Ae2ReflectClient.rewriteIcon(this, new ItemStack(ItemAndBlockHolder.FLUID_TERMINAL, 1));
+            Ae2ReflectClient.rewriteIcon(this, ItemAndBlockHolder.FLUID_TERMINAL.stack());
         else if (host instanceof PartFluidPatternTerminalEx)
-            Ae2ReflectClient.rewriteIcon(this, new ItemStack(ItemAndBlockHolder.FLUID_TERMINAL_EX, 1));
+            Ae2ReflectClient.rewriteIcon(this, ItemAndBlockHolder.FLUID_TERMINAL_EX.stack());
         else if (host instanceof PartFluidTerminal)
-            Ae2ReflectClient.rewriteIcon(this, new ItemStack(ItemAndBlockHolder.FLUID_TERM, 1));
+            Ae2ReflectClient.rewriteIcon(this, ItemAndBlockHolder.FLUID_TERM.stack());
         else if (host instanceof PartLevelTerminal)
-            Ae2ReflectClient.rewriteIcon(this, new ItemStack(ItemAndBlockHolder.LEVEL_TERMINAL, 1));
+            Ae2ReflectClient.rewriteIcon(this, ItemAndBlockHolder.LEVEL_TERMINAL.stack());
         else if (host instanceof IWirelessTerminal terminal && terminal.isUniversal(host))
-            Ae2ReflectClient.rewriteIcon(this, new ItemStack(ItemAndBlockHolder.WIRELESS_ULTRA_TERM, 1));
+            Ae2ReflectClient.rewriteIcon(this, ItemAndBlockHolder.WIRELESS_ULTRA_TERM.stack());
         else if (host instanceof WirelessFluidTerminalInventory)
-            Ae2ReflectClient.rewriteIcon(this, new ItemStack(ItemAndBlockHolder.WIRELESS_FLUID_TERM, 1));
+            Ae2ReflectClient.rewriteIcon(this, ItemAndBlockHolder.WIRELESS_FLUID_TERM.stack());
         else if (host instanceof WirelessPatternTerminalInventory)
-            Ae2ReflectClient.rewriteIcon(this, new ItemStack(ItemAndBlockHolder.WIRELESS_PATTERN_TERM, 1));
+            Ae2ReflectClient.rewriteIcon(this, ItemAndBlockHolder.WIRELESS_PATTERN_TERM.stack());
         else if (host instanceof WirelessInterfaceTerminalInventory)
-            Ae2ReflectClient.rewriteIcon(this, new ItemStack(ItemAndBlockHolder.WIRELESS_INTERFACE_TERM, 1));
+            Ae2ReflectClient.rewriteIcon(this, ItemAndBlockHolder.WIRELESS_INTERFACE_TERM.stack());
         else if (host instanceof WirelessLevelTerminalInventory)
-            Ae2ReflectClient.rewriteIcon(this, new ItemStack(ItemAndBlockHolder.WIRELESS_LEVEL_TERM, 1));
+            Ae2ReflectClient.rewriteIcon(this, ItemAndBlockHolder.WIRELESS_LEVEL_TERM.stack());
         super.initGui();
         originalGuiBtn = Ae2ReflectClient.getOriginalGuiButton(this);
     }
@@ -64,8 +63,8 @@ public class GuiCraftingStatus extends appeng.client.gui.implementations.GuiCraf
                 InventoryHandler.switchGui(GuiType.FLUID_PATTERN_TERMINAL_EX);
             else if (host instanceof PartFluidTerminal) InventoryHandler.switchGui(GuiType.FLUID_TERMINAL);
             else if (host instanceof PartLevelTerminal) InventoryHandler.switchGui(GuiType.LEVEL_TERMINAL);
-            else if (host instanceof IWirelessTerminal && ((IWirelessTerminal) host).isUniversal(host)) InventoryHandler
-                    .switchGui(ItemWirelessUltraTerminal.readMode(((IWirelessTerminal) host).getItemStack()));
+            else if (host instanceof IWirelessTerminal terminal && terminal.isUniversal(host))
+                InventoryHandler.switchGui(ItemWirelessUltraTerminal.readMode(terminal.getItemStack()));
             else if (host instanceof WirelessFluidTerminalInventory)
                 InventoryHandler.switchGui(GuiType.WIRELESS_FLUID_TERMINAL);
             else if (host instanceof WirelessPatternTerminalInventory)
