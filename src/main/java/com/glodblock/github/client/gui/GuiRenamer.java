@@ -1,5 +1,6 @@
 package com.glodblock.github.client.gui;
 
+import net.minecraft.client.gui.GuiButton;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.item.ItemStack;
 
@@ -7,10 +8,19 @@ import org.lwjgl.input.Keyboard;
 
 import com.glodblock.github.FluidCraft;
 import com.glodblock.github.client.gui.container.ContainerRenamer;
+import com.glodblock.github.common.item.ItemWirelessUltraTerminal;
+import com.glodblock.github.common.parts.PartLevelTerminal;
+import com.glodblock.github.inventory.InventoryHandler;
+import com.glodblock.github.inventory.gui.GuiType;
+import com.glodblock.github.inventory.item.IWirelessTerminal;
+import com.glodblock.github.inventory.item.WirelessInterfaceTerminalInventory;
+import com.glodblock.github.inventory.item.WirelessLevelTerminalInventory;
+import com.glodblock.github.loader.ItemAndBlockHolder;
 import com.glodblock.github.network.CPacketRenamer;
 
 import appeng.api.storage.ITerminalHost;
 import appeng.client.gui.AEBaseGui;
+import appeng.client.gui.widgets.GuiTabButton;
 import appeng.client.gui.widgets.IDropToFillTextField;
 import appeng.client.gui.widgets.MEGuiTextField;
 import appeng.core.localization.GuiColors;
@@ -18,20 +28,46 @@ import appeng.core.localization.GuiText;
 
 public class GuiRenamer extends AEBaseGui implements IDropToFillTextField {
 
-    private final MEGuiTextField textField;
+    protected final MEGuiTextField textField;
+
+    protected final ITerminalHost host;
+    protected GuiTabButton originalGuiBtn;
+
+    protected ItemStack icon = null;
 
     public GuiRenamer(InventoryPlayer ip, ITerminalHost monitorable) {
         super(new ContainerRenamer(ip, monitorable));
+        this.host = monitorable;
         this.xSize = 256;
 
         this.textField = new MEGuiTextField(230, 12);
         this.textField.setMaxStringLength(32);
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     public void initGui() {
         super.initGui();
         FluidCraft.proxy.netHandler.sendToServer(new CPacketRenamer(CPacketRenamer.Action.GET_TEXT));
+        if (host instanceof PartLevelTerminal) {
+            icon = new ItemStack(ItemAndBlockHolder.LEVEL_TERMINAL, 1);
+        } else if (host instanceof IWirelessTerminal terminal && terminal.isUniversal(host)) {
+            icon = new ItemStack(ItemAndBlockHolder.WIRELESS_ULTRA_TERM, 1);
+        } else if (host instanceof WirelessLevelTerminalInventory) {
+            icon = new ItemStack(ItemAndBlockHolder.WIRELESS_LEVEL_TERM, 1);
+        } else if (host instanceof WirelessInterfaceTerminalInventory) {
+            icon = new ItemStack(ItemAndBlockHolder.WIRELESS_INTERFACE_TERM, 1);
+        }
+        if (this.icon != null) {
+            this.buttonList.add(
+                    this.originalGuiBtn = new GuiTabButton(
+                            this.guiLeft + 231,
+                            this.guiTop - 4,
+                            this.icon,
+                            this.icon.getDisplayName(),
+                            itemRender));
+            this.originalGuiBtn.setHideEdge(13);
+        }
         this.textField.x = this.guiLeft + 12;
         this.textField.y = this.guiTop + 35;
         this.textField.setFocused(true);
@@ -66,6 +102,25 @@ public class GuiRenamer extends AEBaseGui implements IDropToFillTextField {
 
     public boolean isOverTextField(final int mousex, final int mousey) {
         return textField.isMouseIn(mousex, mousey);
+    }
+
+    @Override
+    protected void actionPerformed(GuiButton button) {
+        if (button == originalGuiBtn) {
+            switchGui();
+        } else {
+            super.actionPerformed(button);
+        }
+    }
+
+    public void switchGui() {
+        if (host instanceof PartLevelTerminal) InventoryHandler.switchGui(GuiType.LEVEL_TERMINAL);
+        else if (host instanceof IWirelessTerminal terminal && terminal.isUniversal(host))
+            InventoryHandler.switchGui(ItemWirelessUltraTerminal.readMode(((IWirelessTerminal) host).getItemStack()));
+        else if (host instanceof WirelessInterfaceTerminalInventory)
+            InventoryHandler.switchGui(GuiType.WIRELESS_INTERFACE_TERMINAL);
+        else if (host instanceof WirelessLevelTerminalInventory)
+            InventoryHandler.switchGui(GuiType.WIRELESS_LEVEL_TERMINAL);
     }
 
     public void setTextFieldValue(final String displayName, final int mousex, final int mousey, final ItemStack stack) {

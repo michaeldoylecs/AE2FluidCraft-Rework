@@ -20,6 +20,8 @@ public class Config {
     public static int packetSize;
     public static int packetRate;
     public static boolean replaceEC2;
+    public static int levelMaintainerMinTicks;
+    public static int levelMaintainerMaxTicks;
 
     public static void run() {
         loadCategory();
@@ -66,6 +68,12 @@ public class Config {
                 "Fluid Craft for AE2",
                 true,
                 "Set true to handle missing item mappings from EC2. Note to work properly, you must have all relevant parts.");
+
+        levelMaintainerMinTicks = Config.get("LevelMaintainer", "minTick", 5, "Number on ticks for minimal request")
+                .getInt();
+        levelMaintainerMaxTicks = Config.get("LevelMaintainer", "maxTick", 120, "Number on ticks for maximal request")
+                .getInt();
+
         if (Config.hasChanged()) Config.save();
     }
 

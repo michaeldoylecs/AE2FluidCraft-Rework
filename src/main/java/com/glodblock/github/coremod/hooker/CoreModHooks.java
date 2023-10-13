@@ -13,6 +13,7 @@ import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.fluids.FluidStack;
 
 import com.glodblock.github.client.gui.GuiFluidCraftConfirm;
+import com.glodblock.github.client.gui.IGuiTooltipHandler;
 import com.glodblock.github.common.item.ItemFluidDrop;
 import com.glodblock.github.common.item.ItemFluidPacket;
 import com.glodblock.github.common.parts.PartFluidInterface;
@@ -176,15 +177,15 @@ public class CoreModHooks {
     }
 
     public static ItemStack getStackUnderMouse(GuiContainer gui, int mousex, int mousey) {
-        if (gui instanceof GuiFluidCraftConfirm) {
-            return ((GuiFluidCraftConfirm) gui).getHoveredStack();
+        if (gui instanceof IGuiTooltipHandler guiTooltipHandler) {
+            return guiTooltipHandler.getHoveredStack();
         }
         return null;
     }
 
     public static boolean shouldShowTooltip(GuiContainer gui) {
-        if (gui instanceof GuiFluidCraftConfirm) {
-            return ((GuiFluidCraftConfirm) gui).getHoveredStack() == null;
+        if (gui instanceof GuiFluidCraftConfirm guiCraftConfirm) {
+            return guiCraftConfirm.getHoveredStack() == null;
         }
         return true;
     }

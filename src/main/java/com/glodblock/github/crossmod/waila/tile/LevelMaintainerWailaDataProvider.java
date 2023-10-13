@@ -16,23 +16,23 @@ import appeng.integration.modules.waila.BaseWailaDataProvider;
 import mcp.mobius.waila.api.IWailaConfigHandler;
 import mcp.mobius.waila.api.IWailaDataAccessor;
 
-public class LevelMaintainerWailaDataProvide extends BaseWailaDataProvider {
+public class LevelMaintainerWailaDataProvider extends BaseWailaDataProvider {
 
     @Override
     public List<String> getWailaBody(final ItemStack itemStack, final List<String> currentToolTip,
             final IWailaDataAccessor accessor, final IWailaConfigHandler config) {
         final TileEntity te = accessor.getTileEntity();
-        if (te instanceof TileLevelMaintainer) {
+        if (te instanceof TileLevelMaintainer tileLevelMaintainer) {
             te.readFromNBT(accessor.getNBTData());
             for (int i = 0; i < TileLevelMaintainer.REQ_COUNT; i++) {
-                IAEItemStack ias = ((TileLevelMaintainer) te).requests.getRequestStacks().getStack(i);
+                IAEItemStack ias = tileLevelMaintainer.requests.getAEItemStack(i);
                 if (ias != null) {
                     currentToolTip.add(
                             Tooltip.tileLevelMaintainerFormat(
                                     ias.getItemStack().getDisplayName(),
-                                    ((TileLevelMaintainer) te).requests.getQuantity(i),
-                                    ((TileLevelMaintainer) te).requests.getBatchSize(i),
-                                    ((TileLevelMaintainer) te).requests.isEnable(i)));
+                                    tileLevelMaintainer.requests.getQuantity(i),
+                                    tileLevelMaintainer.requests.getBatchSize(i),
+                                    tileLevelMaintainer.requests.isEnable(i)));
                 }
             }
         }

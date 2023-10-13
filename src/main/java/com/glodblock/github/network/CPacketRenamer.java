@@ -1,19 +1,22 @@
 package com.glodblock.github.network;
 
-import static com.glodblock.github.common.item.ItemWirelessUltraTerminal.getGuis;
-
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.DimensionManager;
 import net.minecraftforge.common.util.ForgeDirection;
 
 import com.glodblock.github.FluidCraft;
+import com.glodblock.github.client.gui.GuiRenamer;
 import com.glodblock.github.inventory.InventoryHandler;
 import com.glodblock.github.inventory.gui.GuiType;
-import com.glodblock.github.inventory.item.IWirelessInterfaceTerminal;
+import com.glodblock.github.inventory.item.IClickableInTerminal;
+import com.glodblock.github.inventory.item.IWirelessTerminal;
 import com.glodblock.github.util.BlockPos;
 import com.glodblock.github.util.Util;
 
+import appeng.api.implementations.IUpgradeableHost;
 import appeng.container.AEBaseContainer;
 import appeng.helpers.ICustomNameObject;
 import appeng.tile.networking.TileCableBus;
@@ -121,58 +124,70 @@ public class CPacketRenamer implements IMessage {
         public IMessage onMessage(CPacketRenamer message, MessageContext ctx) {
             EntityPlayerMP player = ctx.getServerHandler().playerEntity;
             AEBaseContainer con = (AEBaseContainer) player.openContainer;
-            TileEntity tile;
-            if (message.action == Action.OPEN) {
-                tile = DimensionManager.getWorld(message.dim).getTileEntity(message.x, message.y, message.z);
-                if (tile != null && con.getTarget() instanceof IWirelessInterfaceTerminal
-                        && tile instanceof ICustomNameObject) {
-                    String name = getName(tile, message.side);
-                    ((IWirelessInterfaceTerminal) con.getTarget()).setClickedInterface(
-                            new Util.DimensionalCoordSide(
-                                    message.x,
-                                    message.y,
-                                    message.z,
-                                    message.dim,
+            switch (message.action) {
+                case OPEN -> {
+                    if (con.getTarget() instanceof IClickableInTerminal clickableInterface) {
+                        TileEntity tile = DimensionManager.getWorld(message.dim)
+                                .getTileEntity(message.x, message.y, message.z);
+                        if (!(tile instanceof ICustomNameObject)) {
+                            break;
+                        }
+
+                        String name = getName(tile, message.side);
+                        clickableInterface.setClickedInterface(
+                                new Util.DimensionalCoordSide(
+                                        message.x,
+                                        message.y,
+                                        message.z,
+                                        message.dim,
+                                        message.side,
+                                        name));
+
+                        if (con.getTarget() instanceof IWirelessTerminal terminal) {
+                            InventoryHandler.openGui(
+                                    player,
+                                    player.worldObj,
+                                    new BlockPos(
+                                            terminal.getInventorySlot(),
+                                            Util.GuiHelper.encodeType(0, Util.GuiHelper.GuiType.ITEM),
+                                            1),
                                     message.side,
-                                    name));
-                    InventoryHandler.openGui(
-                            player,
-                            player.worldObj,
-                            new BlockPos(
-                                    ((IWirelessInterfaceTerminal) con.getTarget()).getInventorySlot(),
-                                    Util.GuiHelper.encodeType(0, Util.GuiHelper.GuiType.ITEM),
-                                    1),
-                            message.side,
-                            GuiType.RENAMER);
+                                    GuiType.RENAMER);
+                        } else if (con.getTarget() instanceof IUpgradeableHost host) {
+                            InventoryHandler.openGui(
+                                    player,
+                                    player.worldObj,
+                                    new BlockPos(host.getTile()),
+                                    con.getOpenContext().getSide(),
+                                    GuiType.RENAMER);
+                        }
+                    }
                 }
-            } else {
-                if (con.getTarget() instanceof IWirelessInterfaceTerminal) {
-                    Util.DimensionalCoordSide intMsg = ((IWirelessInterfaceTerminal) con.getTarget())
-                            .getClickedInterface();
-                    tile = DimensionManager.getWorld(intMsg.getDimension()).getTileEntity(intMsg.x, intMsg.y, intMsg.z);
-                    if (message.action == Action.GET_TEXT) {
+                case GET_TEXT -> {
+                    if (con.getTarget() instanceof IClickableInTerminal clickableInterface) {
+                        Util.DimensionalCoordSide intMsg = clickableInterface.getClickedInterface();
+                        TileEntity tile = DimensionManager.getWorld(intMsg.getDimension())
+                                .getTileEntity(intMsg.x, intMsg.y, intMsg.z);
                         FluidCraft.proxy.netHandler
                                 .sendTo(new SPacketStringUpdate(this.getName(tile, intMsg.getSide())), player);
-                    } else {
+                    }
+                }
+                case SET_TEXT -> {
+                    if (con.getTarget() instanceof IClickableInTerminal clickableInterface) {
+                        Util.DimensionalCoordSide intMsg = clickableInterface.getClickedInterface();
+                        TileEntity tile = DimensionManager.getWorld(intMsg.getDimension())
+                                .getTileEntity(intMsg.x, intMsg.y, intMsg.z);
                         this.setName(tile, intMsg.getSide(), message.text);
-                        InventoryHandler.openGui(
-                                player,
-                                player.worldObj,
-                                new BlockPos(
-                                        ((IWirelessInterfaceTerminal) con.getTarget()).getInventorySlot(),
-                                        Util.GuiHelper.encodeType(
-                                                getGuis().indexOf(
-                                                        GuiType.valueOf(
-                                                                GuiType.WIRELESS_INTERFACE_TERMINAL.toString())),
-                                                Util.GuiHelper.GuiType.ITEM),
-                                        0),
-                                ForgeDirection.UNKNOWN,
-                                GuiType.WIRELESS_INTERFACE_TERMINAL);
+
+                        final GuiScreen gs = Minecraft.getMinecraft().currentScreen;
+                        if (gs instanceof GuiRenamer guiRenamer) {
+                            guiRenamer.switchGui();
+                        }
                     }
                 }
             }
-
             return null;
         }
+
     }
 }
