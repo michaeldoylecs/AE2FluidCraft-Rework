@@ -50,13 +50,13 @@ public class GuiRenamer extends AEBaseGui implements IDropToFillTextField {
         super.initGui();
         FluidCraft.proxy.netHandler.sendToServer(new CPacketRenamer(CPacketRenamer.Action.GET_TEXT));
         if (host instanceof PartLevelTerminal) {
-            icon = new ItemStack(ItemAndBlockHolder.LEVEL_TERMINAL, 1);
+            icon = ItemAndBlockHolder.LEVEL_TERMINAL.stack();
         } else if (host instanceof IWirelessTerminal terminal && terminal.isUniversal(host)) {
-            icon = new ItemStack(ItemAndBlockHolder.WIRELESS_ULTRA_TERM, 1);
+            icon = ItemAndBlockHolder.WIRELESS_ULTRA_TERM.stack();
         } else if (host instanceof WirelessLevelTerminalInventory) {
-            icon = new ItemStack(ItemAndBlockHolder.WIRELESS_LEVEL_TERM, 1);
+            icon = ItemAndBlockHolder.WIRELESS_LEVEL_TERM.stack();
         } else if (host instanceof WirelessInterfaceTerminalInventory) {
-            icon = new ItemStack(ItemAndBlockHolder.WIRELESS_INTERFACE_TERM, 1);
+            icon = ItemAndBlockHolder.WIRELESS_INTERFACE_TERM.stack();
         }
         if (this.icon != null) {
             this.buttonList.add(
@@ -116,7 +116,7 @@ public class GuiRenamer extends AEBaseGui implements IDropToFillTextField {
     public void switchGui() {
         if (host instanceof PartLevelTerminal) InventoryHandler.switchGui(GuiType.LEVEL_TERMINAL);
         else if (host instanceof IWirelessTerminal terminal && terminal.isUniversal(host))
-            InventoryHandler.switchGui(ItemWirelessUltraTerminal.readMode(((IWirelessTerminal) host).getItemStack()));
+            InventoryHandler.switchGui(ItemWirelessUltraTerminal.readMode(terminal.getItemStack()));
         else if (host instanceof WirelessInterfaceTerminalInventory)
             InventoryHandler.switchGui(GuiType.WIRELESS_INTERFACE_TERMINAL);
         else if (host instanceof WirelessLevelTerminalInventory)

@@ -1,10 +1,13 @@
 package com.glodblock.github.network;
 
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.DimensionManager;
 import net.minecraftforge.common.util.ForgeDirection;
 
+import com.glodblock.github.client.gui.GuiLevelMaintainer;
 import com.glodblock.github.inventory.InventoryHandler;
 import com.glodblock.github.inventory.gui.GuiType;
 import com.glodblock.github.inventory.item.IClickableInTerminal;
@@ -28,6 +31,7 @@ public class CPacketLevelTerminalCommands implements IMessage {
 
     public enum Action {
         EDIT,
+        BACK,
         ENABLE,
         DISABLE,
         ENABLE_ALL,
@@ -49,7 +53,7 @@ public class CPacketLevelTerminalCommands implements IMessage {
     public void fromBytes(ByteBuf buf) {
         action = Action.values()[buf.readInt()];
         switch (action) {
-            case EDIT -> {
+            case EDIT, BACK -> {
                 x = buf.readInt();
                 y = buf.readInt();
                 z = buf.readInt();
@@ -67,11 +71,11 @@ public class CPacketLevelTerminalCommands implements IMessage {
     public void toBytes(ByteBuf buf) {
         buf.writeInt(action.ordinal());
         switch (action) {
-            case EDIT -> {
-                buf.writeInt(this.x);
-                buf.writeInt(this.y);
-                buf.writeInt(this.z);
-                buf.writeInt(this.dim);
+            case EDIT, BACK -> {
+                buf.writeInt(x);
+                buf.writeInt(y);
+                buf.writeInt(z);
+                buf.writeInt(dim);
                 buf.writeInt(side.ordinal());
             }
             case ENABLE -> {}
@@ -97,6 +101,23 @@ public class CPacketLevelTerminalCommands implements IMessage {
                             new BlockPos(tile),
                             message.side,
                             GuiType.LEVEL_MAINTAINER);
+                }
+                case BACK -> {
+                    GuiType originalGui = null;
+                    final GuiScreen gs = Minecraft.getMinecraft().currentScreen;
+                    if (gs instanceof GuiLevelMaintainer guiLevelMaintainer) {
+                        originalGui = guiLevelMaintainer.getOriginalGui();
+                    }
+                    if (originalGui == null) {
+                        return null;
+                    }
+
+                    InventoryHandler.openGui(
+                            player,
+                            player.worldObj,
+                            new BlockPos(message.x, message.y, message.z, DimensionManager.getWorld(message.dim)),
+                            message.side,
+                            originalGui);
                 }
                 case ENABLE -> {
                     if (con.getTarget() instanceof IClickableInTerminal clickableInterface) {

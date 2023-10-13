@@ -65,7 +65,6 @@ public class ContainerLevelTerminal extends FCBaseContainer {
             }
             dirty = this.updateList();
             if (dirty != null) {
-                FluidCraft.proxy.netHandler.sendTo(dirty, (EntityPlayerMP) ip.player);
                 this.isDirty = true;
             } else {
                 dirty = new SPacketLevelTerminalUpdate();

@@ -1,5 +1,6 @@
 package com.glodblock.github.loader;
 
+import com.glodblock.github.network.wrapper.FCNetworkWrapper;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.network.Packet;
 import net.minecraft.world.World;
@@ -25,7 +26,6 @@ import com.glodblock.github.network.SPacketMEItemInvUpdate;
 import com.glodblock.github.network.SPacketSetItemAmount;
 import com.glodblock.github.network.SPacketStringUpdate;
 
-import cpw.mods.fml.common.network.simpleimpl.SimpleNetworkWrapper;
 import cpw.mods.fml.relauncher.Side;
 
 public class ChannelLoader implements Runnable {
@@ -33,10 +33,9 @@ public class ChannelLoader implements Runnable {
     public static final ChannelLoader INSTANCE = new ChannelLoader();
 
     @Override
-    @SuppressWarnings("all")
     public void run() {
         int id = 0;
-        SimpleNetworkWrapper netHandler = FluidCraft.proxy.netHandler;
+        FCNetworkWrapper netHandler = FluidCraft.proxy.netHandler;
         netHandler.registerMessage(new CPacketSwitchGuis.Handler(), CPacketSwitchGuis.class, id++, Side.SERVER);
         netHandler.registerMessage(
                 new CPacketFluidPatternTermBtns.Handler(),
@@ -76,7 +75,7 @@ public class ChannelLoader implements Runnable {
                 new CPacketLevelTerminalCommands.Handler(),
                 CPacketLevelTerminalCommands.class,
                 id++,
-                Side.CLIENT);
+                Side.SERVER);
     }
 
     public static void sendPacketToAllPlayers(Packet packet, World world) {
