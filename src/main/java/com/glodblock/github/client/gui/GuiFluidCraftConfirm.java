@@ -15,7 +15,7 @@ import com.glodblock.github.inventory.item.WirelessPatternTerminalInventory;
 import appeng.api.storage.ITerminalHost;
 import appeng.client.gui.implementations.GuiCraftConfirm;
 
-public class GuiFluidCraftConfirm extends GuiCraftConfirm implements IGuiTooltipHandler {
+public class GuiFluidCraftConfirm extends GuiCraftConfirm {
 
     private GuiType originalGui;
 
