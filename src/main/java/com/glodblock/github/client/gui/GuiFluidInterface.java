@@ -17,11 +17,11 @@ import com.glodblock.github.client.gui.container.ContainerFluidInterface;
 import com.glodblock.github.common.parts.PartFluidInterface;
 import com.glodblock.github.inventory.IAEFluidTank;
 import com.glodblock.github.inventory.IDualHost;
+import com.glodblock.github.inventory.InventoryHandler;
 import com.glodblock.github.inventory.gui.GuiType;
 import com.glodblock.github.inventory.gui.MouseRegionManager;
 import com.glodblock.github.inventory.gui.TankMouseHandler;
 import com.glodblock.github.loader.ItemAndBlockHolder;
-import com.glodblock.github.network.CPacketSwitchGuis;
 import com.glodblock.github.util.NameConst;
 import com.glodblock.github.util.RenderUtil;
 
@@ -117,7 +117,7 @@ public class GuiFluidInterface extends AEBaseGui {
     protected void actionPerformed(final GuiButton btn) {
         super.actionPerformed(btn);
         if (btn == this.switcher) {
-            FluidCraft.proxy.netHandler.sendToServer(new CPacketSwitchGuis(GuiType.DUAL_INTERFACE));
+            InventoryHandler.switchGui(GuiType.DUAL_INTERFACE);
         }
     }
 

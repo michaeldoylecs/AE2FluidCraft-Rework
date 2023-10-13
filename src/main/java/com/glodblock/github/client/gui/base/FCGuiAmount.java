@@ -7,9 +7,8 @@ import net.minecraft.item.ItemStack;
 
 import org.lwjgl.input.Keyboard;
 
-import com.glodblock.github.FluidCraft;
+import com.glodblock.github.inventory.InventoryHandler;
 import com.glodblock.github.inventory.gui.GuiType;
-import com.glodblock.github.network.CPacketSwitchGuis;
 
 import appeng.client.gui.AEBaseGui;
 import appeng.client.gui.widgets.GuiTabButton;
@@ -107,7 +106,7 @@ public abstract class FCGuiAmount extends AEBaseGui {
     protected void actionPerformed(final GuiButton btn) {
         super.actionPerformed(btn);
         if (btn == this.originalGuiBtn) {
-            FluidCraft.proxy.netHandler.sendToServer(new CPacketSwitchGuis(this.originalGui));
+            InventoryHandler.switchGui(originalGui);
         }
         final boolean isPlus = btn == this.plus1 || btn == this.plus10 || btn == this.plus100 || btn == this.plus1000;
         final boolean isMinus = btn == this.minus1 || btn == this.minus10

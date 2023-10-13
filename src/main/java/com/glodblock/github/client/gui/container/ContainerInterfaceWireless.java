@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.entity.player.InventoryPlayer;
@@ -75,7 +76,12 @@ public class ContainerInterfaceWireless extends FCBaseContainer {
         if (host != null) {
             final IGridNode agn = host.getActionableNode();
             if (agn != null && agn.isActive()) {
-                for (var clz : InterfaceTerminalSupportedClassProvider.getSupportedClasses()) {
+                Set<Class<? extends IInterfaceTerminalSupport>> supportedClasses = InterfaceTerminalSupportedClassProvider
+                        .getSupportedClasses();
+                if (supportedClasses == null) {
+                    return;
+                }
+                for (var clz : supportedClasses) {
                     for (final IGridNode gn : this.grid.getMachines(clz)) {
                         final IInterfaceTerminalSupport interfaceTerminalSupport = (IInterfaceTerminalSupport) gn
                                 .getMachine();
@@ -246,7 +252,12 @@ public class ContainerInterfaceWireless extends FCBaseContainer {
         if (host != null) {
             final IGridNode agn = host.getActionableNode();
             if (agn != null && agn.isActive()) {
-                for (var clz : InterfaceTerminalSupportedClassProvider.getSupportedClasses()) {
+                Set<Class<? extends IInterfaceTerminalSupport>> supportedClasses = InterfaceTerminalSupportedClassProvider
+                        .getSupportedClasses();
+                if (supportedClasses == null) {
+                    return;
+                }
+                for (var clz : supportedClasses) {
                     for (final IGridNode gn : this.grid.getMachines(clz)) {
                         final IInterfaceTerminalSupport terminalSupport = (IInterfaceTerminalSupport) gn.getMachine();
                         if (!gn.isActive() || !terminalSupport.shouldDisplay()) continue;
