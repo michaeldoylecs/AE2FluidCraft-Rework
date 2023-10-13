@@ -1,6 +1,5 @@
 package com.glodblock.github.loader;
 
-import com.glodblock.github.network.wrapper.FCNetworkWrapper;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.network.Packet;
 import net.minecraft.world.World;
@@ -25,6 +24,7 @@ import com.glodblock.github.network.SPacketMEFluidInvUpdate;
 import com.glodblock.github.network.SPacketMEItemInvUpdate;
 import com.glodblock.github.network.SPacketSetItemAmount;
 import com.glodblock.github.network.SPacketStringUpdate;
+import com.glodblock.github.network.wrapper.FCNetworkWrapper;
 
 import cpw.mods.fml.relauncher.Side;
 
