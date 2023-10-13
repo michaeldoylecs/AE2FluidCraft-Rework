@@ -63,7 +63,6 @@ import appeng.api.config.YesNo;
 import appeng.api.storage.ITerminalHost;
 import appeng.api.storage.data.IAEItemStack;
 import appeng.api.util.WorldCoord;
-import appeng.client.gui.IGuiTooltipHandler;
 import appeng.client.gui.widgets.GuiImgButton;
 import appeng.client.gui.widgets.GuiScrollbar;
 import appeng.client.gui.widgets.GuiTabButton;
