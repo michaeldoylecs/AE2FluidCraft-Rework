@@ -51,7 +51,6 @@ import com.glodblock.github.network.CPacketInventoryAction;
 import com.glodblock.github.network.CPacketLevelTerminalCommands;
 import com.glodblock.github.network.CPacketLevelTerminalCommands.Action;
 import com.glodblock.github.network.CPacketRenamer;
-import com.glodblock.github.util.Ae2ReflectClient;
 import com.glodblock.github.util.FCGuiColors;
 import com.glodblock.github.util.ModAndClassUtil;
 import com.glodblock.github.util.NameConst;
@@ -68,7 +67,6 @@ import appeng.client.gui.widgets.GuiScrollbar;
 import appeng.client.gui.widgets.GuiTabButton;
 import appeng.client.gui.widgets.IDropToFillTextField;
 import appeng.client.gui.widgets.MEGuiTextField;
-import appeng.client.render.AppEngRenderItem;
 import appeng.client.render.BlockPosHighlighter;
 import appeng.container.AEBaseContainer;
 import appeng.container.slot.AppEngSlot;
@@ -94,7 +92,6 @@ public class GuiLevelTerminal extends FCBaseMEGui implements IDropToFillTextFiel
     private static final ResourceLocation TEX_BG = FluidCraft.resource("textures/gui/level_terminal.png");
     protected int offsetY;
     private static final int offsetX = 21;
-    private final AppEngRenderItem stackSizeRenderer = Ae2ReflectClient.getStackSizeRenderer(this);
     protected static String searchFieldOutputsText = "";
     protected static String searchFieldNamesText = "";
     protected static String currentMode = "OFF";
@@ -496,6 +493,7 @@ public class GuiLevelTerminal extends FCBaseMEGui implements IDropToFillTextFiel
         Tessellator.instance.startDrawingQuads();
         int relY = 0;
         final int slotLeftMargin = (VIEW_WIDTH - entry.rowSize * 18);
+        float lastZLevel = aeRenderItem.zLevel;
 
         entry.dispY = viewY;
         /* PASS 1: BG */
@@ -571,6 +569,9 @@ public class GuiLevelTerminal extends FCBaseMEGui implements IDropToFillTextFiel
                 if (stack != null) {
 
                     NBTTagCompound data = stack.getTagCompound();
+                    ItemStack itemStack = data.hasKey(TLMTags.Stack.tagName)
+                            ? ItemStack.loadItemStackFromNBT(data.getCompoundTag(TLMTags.Stack.tagName))
+                            : stack.copy();
                     long quantity = data.getLong(TLMTags.Quantity.tagName);
                     long batch = data.getLong(TLMTags.Batch.tagName);
                     State state = State.values()[data.getInteger(TLMTags.State.tagName)];
@@ -580,16 +581,16 @@ public class GuiLevelTerminal extends FCBaseMEGui implements IDropToFillTextFiel
                     GL11.glTranslatef(colLeft, viewY + rowYTop + 1, ITEM_STACK_Z);
                     GL11.glEnable(GL12.GL_RESCALE_NORMAL);
                     RenderHelper.enableGUIStandardItemLighting();
-                    stackSizeRenderer.zLevel = 3.0f - 50.0f;
-                    stackSizeRenderer.renderItemAndEffectIntoGUI(fontRendererObj, mc.getTextureManager(), stack, 0, 0);
-                    stackSizeRenderer.zLevel = 0.0f;
+                    aeRenderItem.zLevel = 3.0f - 50.0f;
+                    aeRenderItem.renderItemAndEffectIntoGUI(fontRendererObj, mc.getTextureManager(), itemStack, 0, 0);
+                    aeRenderItem.zLevel = 0.0f;
                     GL11.glTranslatef(0.0f, 0.0f, ITEM_STACK_OVERLAY_Z - ITEM_STACK_Z);
-                    stack.stackSize = (int) quantity;
-                    stackSizeRenderer.renderItemOverlayIntoGUI(fontRendererObj, mc.getTextureManager(), stack, 0, 0);
+                    itemStack.stackSize = (int) quantity;
+                    aeRenderItem.renderItemOverlayIntoGUI(fontRendererObj, mc.getTextureManager(), itemStack, 0, 0);
                     if (batch > 0) {
-                        stack.stackSize = (int) batch;
-                        stackSizeRenderer
-                                .renderItemOverlayIntoGUI(fontRendererObj, mc.getTextureManager(), stack, 0, -11);
+                        itemStack.stackSize = (int) batch;
+                        aeRenderItem
+                                .renderItemOverlayIntoGUI(fontRendererObj, mc.getTextureManager(), itemStack, 0, -11);
                     }
                     int color = switch (state) {
                         case Idle -> FCGuiColors.StateIdle.getColor();
@@ -634,6 +635,7 @@ public class GuiLevelTerminal extends FCBaseMEGui implements IDropToFillTextFiel
             }
         }
         GL11.glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
+        aeRenderItem.zLevel = lastZLevel;
         return relY + 1;
     }
 

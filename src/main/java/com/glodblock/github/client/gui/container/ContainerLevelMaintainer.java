@@ -126,12 +126,21 @@ public class ContainerLevelMaintainer extends AEBaseContainer {
 
     public static ItemStack createLevelValues(ItemStack itemStack) {
         var data = itemStack.hasTagCompound() ? itemStack.getTagCompound() : new NBTTagCompound();
-        var itemStackTag = new NBTTagCompound();
-        itemStack.writeToNBT(itemStackTag);
-        data.setTag(TLMTags.Stack.tagName, itemStackTag);
-        data.setLong(TLMTags.Quantity.tagName, itemStack.stackSize);
-        data.setLong(TLMTags.Batch.tagName, 0);
-        data.setBoolean(TLMTags.Enable.tagName, false);
+        if (!data.hasKey(TLMTags.Stack.tagName)) {
+            var itemStackTag = new NBTTagCompound();
+            itemStack.copy().writeToNBT(itemStackTag);
+            data.setTag(TLMTags.Stack.tagName, itemStackTag);
+        }
+        if (!data.hasKey(TLMTags.Quantity.tagName)) {
+            data.setLong(TLMTags.Quantity.tagName, itemStack.stackSize);
+        }
+        if (!data.hasKey(TLMTags.Batch.tagName)) {
+            data.setLong(TLMTags.Batch.tagName, 0);
+        }
+        if (!data.hasKey(TLMTags.Enable.tagName)) {
+            data.setBoolean(TLMTags.Enable.tagName, false);
+        }
+
         data.setInteger(TLMTags.State.tagName, State.None.ordinal());
         itemStack.setTagCompound(data);
 

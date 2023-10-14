@@ -205,7 +205,7 @@ public class ContainerLevelTerminal extends FCBaseContainer {
                         }
                         valid.add(i);
                     }
-                    if (valid.size() > 0) {
+                    if (!valid.isEmpty()) {
                         int[] validIndices = Ints.toArray(valid);
                         NBTTagList tag = new NBTTagList();
                         for (int i = 0; i < valid.size(); ++i) {

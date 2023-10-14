@@ -18,6 +18,7 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.util.ForgeDirection;
 
 import org.lwjgl.input.Keyboard;
+import org.lwjgl.opengl.GL11;
 
 import com.glodblock.github.FluidCraft;
 import com.glodblock.github.client.gui.container.ContainerLevelMaintainer;
@@ -36,7 +37,6 @@ import com.glodblock.github.loader.ItemAndBlockHolder;
 import com.glodblock.github.network.CPacketLevelMaintainer;
 import com.glodblock.github.network.CPacketLevelMaintainer.Action;
 import com.glodblock.github.network.CPacketLevelTerminalCommands;
-import com.glodblock.github.util.Ae2ReflectClient;
 import com.glodblock.github.util.FCGuiColors;
 import com.glodblock.github.util.NameConst;
 import com.glodblock.github.util.Util;
@@ -45,7 +45,6 @@ import appeng.api.storage.data.IAEItemStack;
 import appeng.api.util.DimensionalCoord;
 import appeng.client.gui.AEBaseGui;
 import appeng.client.gui.widgets.GuiTabButton;
-import appeng.client.render.AppEngRenderItem;
 import appeng.container.AEBaseContainer;
 import appeng.container.slot.SlotFake;
 import appeng.core.sync.network.NetworkHandler;
@@ -63,7 +62,6 @@ public class GuiLevelMaintainer extends AEBaseGui implements INEIGuiHandler {
     private final ContainerLevelMaintainer cont;
     private final Component[] component = new Component[TileLevelMaintainer.REQ_COUNT];
     private final MouseRegionManager mouseRegions = new MouseRegionManager(this);
-    private final AppEngRenderItem stackSizeRenderer = Ae2ReflectClient.getStackSizeRenderer(this);
     private FCGuiTextField input;
     private int lastWorkingTick;
     private int refreshTick;
@@ -226,13 +224,17 @@ public class GuiLevelMaintainer extends AEBaseGui implements INEIGuiHandler {
             } else {
                 fake.setStackSize(0);
             }
-            stackSizeRenderer.setAeStack(fake);
-            stackSizeRenderer.renderItemOverlayIntoGUI(
+            float lastZLevel = this.zLevel;
+            this.zLevel = 0f;
+            GL11.glTranslatef(0.0f, 0.0f, 200.0f);
+            aeRenderItem.renderItemOverlayIntoGUI(
                     fontRendererObj,
                     mc.getTextureManager(),
                     fake.getItemStack(),
                     slot.xDisplayPosition,
                     slot.yDisplayPosition);
+            GL11.glTranslatef(0.0f, 0.0f, -200.0f);
+            this.zLevel = lastZLevel;
             return false;
         }
         return true;
@@ -322,7 +324,6 @@ public class GuiLevelMaintainer extends AEBaseGui implements INEIGuiHandler {
                         originalBlockPos.z,
                         originalBlockPos.getDimension(),
                         originalBlockPos.getSide()));
-        // InventoryHandler.switchGui(originalGui);
     }
 
     @Override
