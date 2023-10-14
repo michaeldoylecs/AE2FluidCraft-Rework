@@ -18,6 +18,7 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.util.ForgeDirection;
 
 import org.lwjgl.input.Keyboard;
+import org.lwjgl.opengl.GL11;
 
 import com.glodblock.github.FluidCraft;
 import com.glodblock.github.client.gui.container.ContainerLevelMaintainer;
@@ -218,6 +219,7 @@ public class GuiLevelMaintainer extends AEBaseGui implements INEIGuiHandler {
     public boolean drawSlot0(Slot slot) {
         if (slot instanceof SlotFake) {
             IAEItemStack stack = ((SlotFluidConvertingFake) slot).getAeStack();
+            GL11.glEnable(GL11.GL_DEPTH_TEST);
             super.func_146977_a(new SlotSingleItem(slot));
             if (stack == null) return true;
             IAEItemStack fake = stack.copy();
@@ -226,6 +228,8 @@ public class GuiLevelMaintainer extends AEBaseGui implements INEIGuiHandler {
             } else {
                 fake.setStackSize(0);
             }
+            this.zLevel = 0f;
+            GL11.glTranslatef(0.0f, 0.0f, 200.0f);
             stackSizeRenderer.setAeStack(fake);
             stackSizeRenderer.renderItemOverlayIntoGUI(
                     fontRendererObj,
@@ -233,6 +237,7 @@ public class GuiLevelMaintainer extends AEBaseGui implements INEIGuiHandler {
                     fake.getItemStack(),
                     slot.xDisplayPosition,
                     slot.yDisplayPosition);
+            GL11.glTranslatef(0.0f, 0.0f, -200.0f);
             return false;
         }
         return true;
@@ -322,7 +327,6 @@ public class GuiLevelMaintainer extends AEBaseGui implements INEIGuiHandler {
                         originalBlockPos.z,
                         originalBlockPos.getDimension(),
                         originalBlockPos.getSide()));
-        // InventoryHandler.switchGui(originalGui);
     }
 
     @Override
