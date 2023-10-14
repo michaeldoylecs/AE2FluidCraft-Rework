@@ -33,11 +33,13 @@ public class PartLevelEmitterAdapter implements ILevelViewable, ILevelViewableAd
     };
 
     @NotNull
-    static public IInventory getPatchedInventory(IInventory inventory, long value, State state) {
+    static public IInventory getPatchedInventory(IInventory inventory, long quantity, State state) {
         ItemStack itemStack = inventory.getStackInSlot(SLOT_IN).copy();
         NBTTagCompound data = !itemStack.hasTagCompound() ? new NBTTagCompound() : itemStack.getTagCompound();
-        data.setLong(TLMTags.Quantity.tagName, value);
-        data.setInteger(TLMTags.State.tagName, state.ordinal());
+        if (!data.hasKey(TLMTags.Quantity.tagName) || data.getLong(TLMTags.Quantity.tagName) != quantity)
+            data.setLong(TLMTags.Quantity.tagName, quantity);
+        if (!data.hasKey(TLMTags.State.tagName) || data.getInteger(TLMTags.State.tagName) != state.ordinal())
+            data.setInteger(TLMTags.State.tagName, state.ordinal());
         itemStack.setTagCompound(data);
         inventory.setInventorySlotContents(SLOT_IN, itemStack);
 

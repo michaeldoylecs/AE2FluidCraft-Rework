@@ -8,6 +8,8 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.util.ForgeDirection;
 
+import org.jetbrains.annotations.Nullable;
+
 import com.glodblock.github.api.registries.ILevelViewable;
 import com.glodblock.github.common.Config;
 import com.glodblock.github.common.item.ItemFluidDrop;
@@ -49,6 +51,7 @@ import appeng.tile.events.TileEventType;
 import appeng.tile.grid.AENetworkTile;
 import appeng.tile.inventory.IAEAppEngInventory;
 import appeng.tile.inventory.InvOperation;
+import appeng.util.Platform;
 import appeng.util.item.AEItemStack;
 import io.netty.buffer.ByteBuf;
 
@@ -296,6 +299,27 @@ public class TileLevelMaintainer extends AENetworkTile
     public void readFromNBTEvent(NBTTagCompound data) {
         if (data.hasKey(TLMTags.RequestStacks.tagName)) {
             requests.requestStacks.readFromNbt(data, TLMTags.RequestStacks.tagName);
+            if (Platform.isServer()) {
+                for (int i = 0; i < REQ_COUNT; i++) {
+                    if (requests.requestStacks.getStack(i) != null) {
+                        ItemStack storageStack = requests.requestStacks.getStack(i).getItemStack();
+                        ItemStack itemStack = loadItemStackFromTag(storageStack);
+                        ItemStack craftStack = removeRecursion(storageStack);
+                        if (!ItemStack.areItemStacksEqual(itemStack, craftStack)) {
+                            requests.updateStack(i, craftStack);
+                            AELog.info(
+                                    "[TileLevelMaintainer] Replace craft stack from: " + itemStack.toString()
+                                            + ":"
+                                            + (itemStack.hasTagCompound() ? itemStack.getTagCompound() : "{no tags}")
+                                            + "; with: "
+                                            + craftStack
+                                            + ":"
+                                            + (craftStack.hasTagCompound() ? craftStack.getTagCompound()
+                                                    : "{no tags}"));
+                        }
+                    }
+                }
+            }
         } else {
             // Migration from old data storage
             long[] batches = new long[REQ_COUNT];
@@ -321,6 +345,18 @@ public class TileLevelMaintainer extends AENetworkTile
             }
             readLinkFromNBT__old(data);
         }
+    }
+
+    private ItemStack removeRecursion(ItemStack itemStack) {
+        if (itemStack.hasTagCompound() && itemStack.getTagCompound().hasKey(TLMTags.Stack.tagName)) {
+            return removeRecursion(loadItemStackFromTag(itemStack));
+        }
+        return itemStack;
+    }
+
+    @Nullable
+    private static ItemStack loadItemStackFromTag(ItemStack itemStack) {
+        return ItemStack.loadItemStackFromNBT(itemStack.getTagCompound().getCompoundTag(TLMTags.Stack.tagName));
     }
 
     @TileEvent(TileEventType.NETWORK_READ)
@@ -571,8 +607,7 @@ public class TileLevelMaintainer extends AENetworkTile
         public IAEItemStack getCraftItem(int idx) {
             IAEItemStack is = requestStacks.getStack(idx);
             if (is == null) return null;
-            ItemStack qis = ItemStack
-                    .loadItemStackFromNBT(is.getItemStack().getTagCompound().getCompoundTag(TLMTags.Stack.tagName));
+            ItemStack qis = loadItemStackFromTag(is.getItemStack());
             IAEItemStack qais = AEItemStack.create(qis);
             qais.setStackSize(getBatchSize(idx));
 

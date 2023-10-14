@@ -218,7 +218,7 @@ public class GuiInterfaceWireless extends FCBaseMEGui implements IDropToFillText
     protected void repositionSlots() {
         for (final Object obj : this.inventorySlots.inventorySlots) {
             if (obj instanceof final AppEngSlot slot) {
-                slot.yDisplayPosition = this.ySize + slot.getY() - 78 - 7;
+                slot.yDisplayPosition = this.ySize + slot.getY() - 78 - 4;
             }
         }
     }
