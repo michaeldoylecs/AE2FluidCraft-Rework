@@ -11,6 +11,8 @@ import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fluids.FluidStack;
 
+import org.lwjgl.opengl.GL11;
+
 import com.glodblock.github.FluidCraft;
 import com.glodblock.github.client.gui.container.ContainerEssentiaMonitor;
 import com.glodblock.github.client.me.EssentiaRepo;
@@ -21,16 +23,13 @@ import com.glodblock.github.inventory.InventoryHandler;
 import com.glodblock.github.inventory.gui.GuiType;
 import com.glodblock.github.inventory.item.IWirelessTerminal;
 import com.glodblock.github.network.CPacketFluidUpdate;
-import com.glodblock.github.util.Ae2ReflectClient;
 
 import appeng.api.storage.data.IAEFluidStack;
 import appeng.api.storage.data.IAEItemStack;
 import appeng.client.me.SlotME;
-import appeng.client.render.AppEngRenderItem;
 
 public class GuiEssentiaTerminal extends GuiFluidMonitor {
 
-    private final AppEngRenderItem stackSizeRenderer = Ae2ReflectClient.getStackSizeRenderer(this);
     protected EntityPlayer player;
 
     public GuiEssentiaTerminal(InventoryPlayer inventoryPlayer, IWirelessTerminal te) {
@@ -64,13 +63,15 @@ public class GuiEssentiaTerminal extends GuiFluidMonitor {
                     AspectUtil.getAspectFromGas(fluidStack),
                     fluidStack.amount);
             IAEItemStack gas = stack.copy().setStackSize(stack.getStackSize() / AspectUtil.R);
-            stackSizeRenderer.setAeStack(gas);
-            stackSizeRenderer.renderItemOverlayIntoGUI(
+            aeRenderItem.setAeStack(gas);
+            GL11.glTranslatef(0.0f, 0.0f, 200.0f);
+            aeRenderItem.renderItemOverlayIntoGUI(
                     fontRendererObj,
                     mc.getTextureManager(),
                     gas.getItemStack(),
                     slot.xDisplayPosition,
                     slot.yDisplayPosition);
+            GL11.glTranslatef(0.0f, 0.0f, -200.0f);
             return false;
         }
         return true;
