@@ -7,7 +7,6 @@ import com.glodblock.github.FluidCraft;
 import com.glodblock.github.client.gui.container.ContainerFluidLevelEmitter;
 import com.glodblock.github.common.parts.PartFluidLevelEmitter;
 import com.glodblock.github.network.CPacketValueConfig;
-import com.glodblock.github.util.Ae2ReflectClient;
 import com.glodblock.github.util.NameConst;
 
 import appeng.api.config.RedstoneMode;
@@ -16,7 +15,6 @@ import appeng.api.storage.data.IAEFluidStack;
 import appeng.client.gui.implementations.GuiUpgradeable;
 import appeng.client.gui.widgets.GuiImgButton;
 import appeng.client.gui.widgets.GuiNumberBox;
-import appeng.client.render.AppEngRenderItem;
 import appeng.core.AEConfig;
 import appeng.core.AELog;
 import appeng.core.localization.GuiColors;
@@ -25,7 +23,6 @@ import appeng.core.localization.GuiText;
 public class GuiFluidLevelEmitter extends GuiUpgradeable {
 
     private GuiNumberBox level;
-    private final AppEngRenderItem stackSizeRenderer = Ae2ReflectClient.getStackSizeRenderer(this);
     private GuiButton plus1;
     private GuiButton plus10;
     private GuiButton plus100;

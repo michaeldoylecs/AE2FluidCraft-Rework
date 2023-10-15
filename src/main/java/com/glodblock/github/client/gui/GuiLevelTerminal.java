@@ -582,6 +582,7 @@ public class GuiLevelTerminal extends FCBaseMEGui implements IDropToFillTextFiel
                     GL11.glTranslatef(colLeft, viewY + rowYTop + 1, ITEM_STACK_Z);
                     GL11.glEnable(GL12.GL_RESCALE_NORMAL);
                     RenderHelper.enableGUIStandardItemLighting();
+                    aeRenderItem.setAeStack(null);
                     aeRenderItem.zLevel = 3.0f - 50.0f;
                     aeRenderItem.renderItemAndEffectIntoGUI(fontRendererObj, mc.getTextureManager(), itemStack, 0, 0);
                     aeRenderItem.zLevel = 0.0f;

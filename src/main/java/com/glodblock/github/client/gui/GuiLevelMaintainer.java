@@ -224,8 +224,6 @@ public class GuiLevelMaintainer extends AEBaseGui implements INEIGuiHandler {
             } else {
                 fake.setStackSize(0);
             }
-            float lastZLevel = this.zLevel;
-            this.zLevel = 0f;
             GL11.glTranslatef(0.0f, 0.0f, 200.0f);
             aeRenderItem.renderItemOverlayIntoGUI(
                     fontRendererObj,
@@ -234,7 +232,6 @@ public class GuiLevelMaintainer extends AEBaseGui implements INEIGuiHandler {
                     slot.xDisplayPosition,
                     slot.yDisplayPosition);
             GL11.glTranslatef(0.0f, 0.0f, -200.0f);
-            this.zLevel = lastZLevel;
             return false;
         }
         return true;
