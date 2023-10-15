@@ -5,6 +5,7 @@ import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.Slot;
 
 import org.lwjgl.input.Keyboard;
+import org.lwjgl.opengl.GL11;
 
 import com.glodblock.github.FluidCraft;
 import com.glodblock.github.client.gui.GuiFCImgButton;
@@ -15,7 +16,6 @@ import com.glodblock.github.inventory.InventoryHandler;
 import com.glodblock.github.inventory.gui.GuiType;
 import com.glodblock.github.inventory.slot.SlotSingleItem;
 import com.glodblock.github.network.CPacketFluidPatternTermBtns;
-import com.glodblock.github.util.Ae2ReflectClient;
 import com.glodblock.github.util.ModAndClassUtil;
 
 import appeng.api.storage.ITerminalHost;
@@ -23,7 +23,6 @@ import appeng.api.storage.data.IAEItemStack;
 import appeng.client.gui.widgets.GuiImgButton;
 import appeng.client.gui.widgets.GuiScrollbar;
 import appeng.client.gui.widgets.GuiTabButton;
-import appeng.client.render.AppEngRenderItem;
 import appeng.container.slot.AppEngSlot;
 import appeng.container.slot.SlotFake;
 import appeng.util.item.AEItemStack;
@@ -54,7 +53,6 @@ public abstract class FCGuiEncodeTerminal extends GuiItemMonitor {
     protected GuiFCImgButton autoFillPatternEnableBtn;
     protected GuiFCImgButton autoFillPatternDisableBtn;
     protected final GuiScrollbar processingScrollBar = new GuiScrollbar();
-    protected final AppEngRenderItem stackSizeRenderer = Ae2ReflectClient.getStackSizeRenderer(this);
 
     public FCGuiEncodeTerminal(final InventoryPlayer inventoryPlayer, final ITerminalHost te,
             final FCContainerEncodeTerminal c) {
@@ -184,13 +182,15 @@ public abstract class FCGuiEncodeTerminal extends GuiItemMonitor {
                 if (ItemFluidPacket.getFluidStack(stack) != null && ItemFluidPacket.getFluidStack(stack).amount > 0)
                     fake.setStackSize(ItemFluidPacket.getFluidStack(stack).amount);
             } else return true;
-            stackSizeRenderer.setAeStack(fake);
-            stackSizeRenderer.renderItemOverlayIntoGUI(
+            aeRenderItem.setAeStack(fake);
+            GL11.glTranslatef(0.0f, 0.0f, 200.0f);
+            aeRenderItem.renderItemOverlayIntoGUI(
                     fontRendererObj,
                     mc.getTextureManager(),
                     stack.getItemStack(),
                     slot.xDisplayPosition,
                     slot.yDisplayPosition);
+            GL11.glTranslatef(0.0f, 0.0f, -200.0f);
             return false;
         }
         return true;

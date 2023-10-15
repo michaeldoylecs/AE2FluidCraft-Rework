@@ -67,6 +67,7 @@ import appeng.integration.IntegrationType;
 import appeng.items.misc.ItemEncodedPattern;
 import appeng.tile.inventory.AppEngInternalInventory;
 import appeng.util.Platform;
+import appeng.util.item.AEItemStack;
 import cpw.mods.fml.common.Loader;
 
 public class GuiInterfaceWireless extends FCBaseMEGui implements IDropToFillTextField, IInterfaceTerminalPostUpdate {
@@ -202,7 +203,7 @@ public class GuiInterfaceWireless extends FCBaseMEGui implements IDropToFillText
         guiButtonAssemblersOnly.xPosition = guiLeft - 18;
         guiButtonAssemblersOnly.yPosition = guiButtonHideFull.yPosition + 18;
 
-        offsetY = 103;
+        offsetY = guiButtonAssemblersOnly.yPosition + 18;
 
         this.setScrollBar();
         this.repositionSlots();
@@ -493,17 +494,19 @@ public class GuiInterfaceWireless extends FCBaseMEGui implements IDropToFillText
         if (viewY + entry.optionsButton.height > 0 && viewY < viewHeight) {
             entry.optionsButton.yPosition = viewY + 5;
             entry.renameButton.yPosition = viewY + 5;
+            GuiFCImgButton toRender;
             if (isShiftKeyDown()) {
-                entry.renameButton.drawButton(mc, relMouseX, relMouseY);
+                toRender = entry.renameButton;
             } else {
-                entry.optionsButton.drawButton(mc, relMouseX, relMouseY);
+                toRender = entry.optionsButton;
             }
-            if (entry.optionsButton.getMouseIn()
+            toRender.drawButton(mc, relMouseX, relMouseY);
+            if (toRender.getMouseIn()
                     && relMouseY >= Math.max(IfaceSection.TITLE_HEIGHT, entry.optionsButton.yPosition)) {
                 // draw a tooltip
                 GL11.glTranslatef(0f, 0f, TOOLTIP_Z);
                 GL11.glDisable(GL11.GL_SCISSOR_TEST);
-                drawHoveringText(extraOptionsText, relMouseX, relMouseY);
+                drawHoveringText(Arrays.asList(toRender.getMessage()), relMouseX, relMouseY);
                 GL11.glTranslatef(0f, 0f, -TOOLTIP_Z);
                 GL11.glEnable(GL11.GL_SCISSOR_TEST);
             }
@@ -542,6 +545,7 @@ public class GuiInterfaceWireless extends FCBaseMEGui implements IDropToFillText
                     translatedRenderItem
                             .renderItemAndEffectIntoGUI(fontRendererObj, mc.getTextureManager(), toRender, 0, 0);
                     GL11.glTranslatef(0.0f, 0.0f, ITEMSTACK_OVERLAY_Z - ITEMSTACK_Z);
+                    aeRenderItem.setAeStack(AEItemStack.create(toRender));
                     aeRenderItem.renderItemOverlayIntoGUI(fontRendererObj, mc.getTextureManager(), toRender, 0, 0);
                     aeRenderItem.zLevel = 0.0f;
                     RenderHelper.disableStandardItemLighting();
@@ -1150,7 +1154,7 @@ public class GuiInterfaceWireless extends FCBaseMEGui implements IDropToFillText
 
         String dispName;
         AppEngInternalInventory inv;
-        GuiImgButton optionsButton;
+        GuiFCImgButton optionsButton;
         GuiFCImgButton renameButton;
 
         /** Nullable - icon that represents the interface */
@@ -1187,7 +1191,7 @@ public class GuiInterfaceWireless extends FCBaseMEGui implements IDropToFillText
             this.rows = rows;
             this.rowSize = rowSize;
             this.online = online;
-            this.optionsButton = new GuiImgButton(2, 0, Settings.ACTIONS, ActionItems.HIGHLIGHT_INTERFACE);
+            this.optionsButton = new GuiFCImgButton(2, 0, "HIGHLIGHT", "YES");
             this.optionsButton.setHalfSize(true);
             this.renameButton = new GuiFCImgButton(2, 0, "EDIT", "YES");
             this.renameButton.setHalfSize(true);
