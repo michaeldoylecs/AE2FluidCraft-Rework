@@ -47,6 +47,9 @@ import appeng.client.gui.AEBaseGui;
 import appeng.client.gui.widgets.GuiTabButton;
 import appeng.container.AEBaseContainer;
 import appeng.container.slot.SlotFake;
+import appeng.core.AEConfig;
+import appeng.core.AELog;
+import appeng.core.features.AEFeature;
 import appeng.core.sync.network.NetworkHandler;
 import appeng.core.sync.packets.PacketNEIDragClick;
 import codechicken.nei.VisiblityData;
@@ -130,6 +133,12 @@ public class GuiLevelMaintainer extends AEBaseGui implements INEIGuiHandler {
         }
         for (IAEItemStack is : list) {
             NBTTagCompound data = is.getItemStack().getTagCompound();
+            if (data == null) {
+                if (AEConfig.instance.isFeatureEnabled(AEFeature.PacketLogging)) {
+                    AELog.info("Received empty configuration: ", is);
+                }
+                continue;
+            }
             long batch = data.getLong(TLMTags.Batch.tagName);
             long quantity = data.getLong(TLMTags.Quantity.tagName);
             int idx = data.getInteger(TLMTags.Index.tagName);
