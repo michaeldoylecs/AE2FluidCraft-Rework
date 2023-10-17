@@ -569,6 +569,7 @@ public class GuiLevelTerminal extends FCBaseMEGui implements IDropToFillTextFiel
                         && relMouseY < Math.min(viewY + rowYBot, viewHeight);
                 if (stack != null) {
 
+                    AEItemStack aeItemStack = AEItemStack.create(stack);
                     NBTTagCompound data = stack.getTagCompound();
                     ItemStack itemStack = data.hasKey(TLMTags.Stack.tagName)
                             ? ItemStack.loadItemStackFromNBT(data.getCompoundTag(TLMTags.Stack.tagName))
@@ -582,15 +583,18 @@ public class GuiLevelTerminal extends FCBaseMEGui implements IDropToFillTextFiel
                     GL11.glTranslatef(colLeft, viewY + rowYTop + 1, ITEM_STACK_Z);
                     GL11.glEnable(GL12.GL_RESCALE_NORMAL);
                     RenderHelper.enableGUIStandardItemLighting();
-                    aeRenderItem.setAeStack(null);
+                    aeItemStack.setStackSize(1);
+                    aeRenderItem.setAeStack(aeItemStack);
                     aeRenderItem.zLevel = 3.0f - 50.0f;
                     aeRenderItem.renderItemAndEffectIntoGUI(fontRendererObj, mc.getTextureManager(), itemStack, 0, 0);
                     aeRenderItem.zLevel = 0.0f;
                     GL11.glTranslatef(0.0f, 0.0f, ITEM_STACK_OVERLAY_Z - ITEM_STACK_Z);
-                    itemStack.stackSize = (int) quantity;
+                    aeItemStack.setStackSize(quantity);
+                    aeRenderItem.setAeStack(aeItemStack);
                     aeRenderItem.renderItemOverlayIntoGUI(fontRendererObj, mc.getTextureManager(), itemStack, 0, 0);
                     if (batch > 0) {
-                        itemStack.stackSize = (int) batch;
+                        aeItemStack.setStackSize(batch);
+                        aeRenderItem.setAeStack(aeItemStack);
                         aeRenderItem
                                 .renderItemOverlayIntoGUI(fontRendererObj, mc.getTextureManager(), itemStack, 0, -11);
                     }
