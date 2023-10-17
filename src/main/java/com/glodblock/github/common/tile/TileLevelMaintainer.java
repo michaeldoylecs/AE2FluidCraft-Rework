@@ -607,7 +607,9 @@ public class TileLevelMaintainer extends AENetworkTile
         public IAEItemStack getCraftItem(int idx) {
             IAEItemStack is = requestStacks.getStack(idx);
             if (is == null) return null;
+            if (is.getItemStack() == null) return null;
             ItemStack qis = loadItemStackFromTag(is.getItemStack());
+            if (qis == null) return null;
             IAEItemStack qais = AEItemStack.create(qis);
             qais.setStackSize(getBatchSize(idx));
 
