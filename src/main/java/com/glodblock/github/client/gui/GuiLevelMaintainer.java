@@ -225,6 +225,7 @@ public class GuiLevelMaintainer extends AEBaseGui implements INEIGuiHandler {
                 fake.setStackSize(0);
             }
             GL11.glTranslatef(0.0f, 0.0f, 200.0f);
+            aeRenderItem.setAeStack(fake);
             aeRenderItem.renderItemOverlayIntoGUI(
                     fontRendererObj,
                     mc.getTextureManager(),
@@ -344,9 +345,11 @@ public class GuiLevelMaintainer extends AEBaseGui implements INEIGuiHandler {
 
     @Override
     public boolean handleDragNDrop(GuiContainer gui, int mouseX, int mouseY, ItemStack draggedStack, int button) {
-        for (SlotFluidConvertingFake slot : this.cont.getRequestSlots()) {
+        for (int i = 0; i < this.cont.getRequestSlots().length; i++) {
+            SlotFluidConvertingFake slot = this.cont.getRequestSlots()[i];
             if (getSlotArea(slot).contains(mouseX, mouseY)) {
                 ItemStack itemStack = createLevelValues(draggedStack.copy());
+                itemStack.getTagCompound().setInteger(TLMTags.Index.tagName, i);
                 slot.putStack(itemStack);
                 NetworkHandler.instance.sendToServer(new PacketNEIDragClick(itemStack, slot.getSlotIndex()));
                 this.updateAmount(slot.getSlotIndex(), itemStack.stackSize);
