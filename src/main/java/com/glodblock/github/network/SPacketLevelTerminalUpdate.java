@@ -49,7 +49,17 @@ public class SPacketLevelTerminalUpdate implements IMessage {
         int numEntries = buf.readInt();
 
         for (int i = 0; i < numEntries; ++i) {
-            if (buf.readableBytes() == 0) {
+            try {
+                PacketType type = PacketType.values()[buf.readByte()];
+
+                switch (type) {
+                    case ADD -> this.commands.add(new PacketAdd(buf));
+                    case REMOVE -> this.commands.add(new PacketRemove(buf));
+                    case OVERWRITE -> this.commands.add(new PacketOverwrite(buf));
+                    case RENAME -> this.commands.add(new PacketRename(buf));
+                    default -> throw new IOException("Unknown packet type received of index " + type);
+                }
+            } catch (Exception e) {
                 if (AEConfig.instance.isFeatureEnabled(AEFeature.PacketLogging)) {
                     AELog.info(
                             "Corrupted packet commands: (" + i
@@ -62,19 +72,6 @@ public class SPacketLevelTerminalUpdate implements IMessage {
                                             .collect(Collectors.groupingBy(String::new, Collectors.counting())));
                     AELog.info("Parsed content: -> " + this.commands);
                 }
-                return;
-            }
-            PacketType type = PacketType.values()[buf.readByte()];
-
-            try {
-                switch (type) {
-                    case ADD -> this.commands.add(new PacketAdd(buf));
-                    case REMOVE -> this.commands.add(new PacketRemove(buf));
-                    case OVERWRITE -> this.commands.add(new PacketOverwrite(buf));
-                    case RENAME -> this.commands.add(new PacketRename(buf));
-                    default -> throw new IOException("Unknown packet type received of index " + type);
-                }
-            } catch (Exception e) {
                 AELog.debug(e);
                 return;
             }
