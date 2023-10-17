@@ -2,7 +2,9 @@ package com.glodblock.github.network;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.annotation.Nullable;
 
@@ -16,7 +18,9 @@ import net.minecraftforge.common.util.Constants.NBT;
 
 import com.glodblock.github.client.gui.GuiLevelTerminal;
 
+import appeng.core.AEConfig;
 import appeng.core.AELog;
+import appeng.core.features.AEFeature;
 import cpw.mods.fml.common.network.ByteBufUtils;
 import cpw.mods.fml.common.network.simpleimpl.IMessage;
 import cpw.mods.fml.common.network.simpleimpl.IMessageHandler;
@@ -45,6 +49,21 @@ public class SPacketLevelTerminalUpdate implements IMessage {
         int numEntries = buf.readInt();
 
         for (int i = 0; i < numEntries; ++i) {
+            if (buf.readableBytes() == 0) {
+                if (AEConfig.instance.isFeatureEnabled(AEFeature.PacketLogging)) {
+                    AELog.info(
+                            "Corrupted packet commands: (" + i
+                                    + ") of ("
+                                    + numEntries
+                                    + ") -> "
+                                    + this.commands.size()
+                                    + " : "
+                                    + this.commands.stream().map(packetEntry -> packetEntry.getClass().getSimpleName())
+                                            .collect(Collectors.groupingBy(String::new, Collectors.counting())));
+                    AELog.info("Parsed content: -> " + this.commands);
+                }
+                return;
+            }
             PacketType type = PacketType.values()[buf.readByte()];
 
             try {
@@ -135,6 +154,14 @@ public class SPacketLevelTerminalUpdate implements IMessage {
             final GuiScreen gs = Minecraft.getMinecraft().currentScreen;
 
             if (gs instanceof GuiLevelTerminal levelTerminal) {
+                if (AEConfig.instance.isFeatureEnabled(AEFeature.PacketLogging)) {
+                    AELog.info(
+                            "Received commands -> " + message.commands.size()
+                                    + " : "
+                                    + message.commands.stream()
+                                            .map(packetEntry -> packetEntry.getClass().getSimpleName())
+                                            .collect(Collectors.groupingBy(String::new, Collectors.counting())));
+                }
                 levelTerminal.postUpdate(message.commands, message.statusFlags);
             }
 
@@ -282,6 +309,38 @@ public class SPacketLevelTerminalUpdate implements IMessage {
                 this.items = payload.getTagList("data", NBT.TAG_COMPOUND);
             }
         }
+
+        @Override
+        public String toString() {
+            return "PacketAdd{" + "name='"
+                    + name
+                    + '\''
+                    + ", x="
+                    + x
+                    + ", y="
+                    + y
+                    + ", z="
+                    + z
+                    + ", dim="
+                    + dim
+                    + ", side="
+                    + side
+                    + ", rows="
+                    + rows
+                    + ", rowSize="
+                    + rowSize
+                    + ", online="
+                    + online
+                    + ", selfItemStack="
+                    + selfItemStack
+                    + ", displayItemStack="
+                    + displayItemStack
+                    + ", items="
+                    + items
+                    + ", entryId="
+                    + entryId
+                    + '}';
+        }
     }
 
     public static class PacketRemove extends PacketEntry {
@@ -302,6 +361,11 @@ public class SPacketLevelTerminalUpdate implements IMessage {
 
         @Override
         protected void read(ByteBuf buf) {}
+
+        @Override
+        public String toString() {
+            return "PacketRemove{" + "entryId=" + entryId + '}';
+        }
     }
 
     /**
@@ -417,6 +481,25 @@ public class SPacketLevelTerminalUpdate implements IMessage {
                 }
             }
         }
+
+        @Override
+        public String toString() {
+            return "PacketOverwrite{" + "onlineValid="
+                    + onlineValid
+                    + ", online="
+                    + online
+                    + ", itemsValid="
+                    + itemsValid
+                    + ", allItemUpdate="
+                    + allItemUpdate
+                    + ", validIndices="
+                    + Arrays.toString(validIndices)
+                    + ", items="
+                    + items
+                    + ", entryId="
+                    + entryId
+                    + '}';
+        }
     }
 
     /**
@@ -445,6 +528,11 @@ public class SPacketLevelTerminalUpdate implements IMessage {
         @Override
         protected void read(ByteBuf buf) {
             newName = ByteBufUtils.readUTF8String(buf);
+        }
+
+        @Override
+        public String toString() {
+            return "PacketRename{" + "newName='" + newName + '\'' + ", entryId=" + entryId + '}';
         }
     }
 }

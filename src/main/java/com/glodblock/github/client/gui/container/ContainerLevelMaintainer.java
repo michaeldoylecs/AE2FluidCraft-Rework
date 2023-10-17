@@ -105,10 +105,13 @@ public class ContainerLevelMaintainer extends AEBaseContainer {
             return null;
         }
 
-        for (SlotFluidConvertingFake slot : this.getRequestSlots()) {
+        for (int i = 0; i < this.getRequestSlots().length; i++) {
+            SlotFluidConvertingFake slot = this.getRequestSlots()[i];
             if (!slot.getHasStack()) {
                 ItemStack itemStack = ((Slot) this.inventorySlots.get(idx)).getStack();
-                slot.putConvertedStack(createLevelValues(itemStack.copy()));
+                ItemStack configuration = createLevelValues(itemStack.copy());
+                configuration.getTagCompound().setInteger(TLMTags.Index.tagName, i);
+                slot.putConvertedStack(configuration);
                 break;
             }
         }
@@ -139,6 +142,9 @@ public class ContainerLevelMaintainer extends AEBaseContainer {
         }
         if (!data.hasKey(TLMTags.Enable.tagName)) {
             data.setBoolean(TLMTags.Enable.tagName, false);
+        }
+        if (data.hasKey(TLMTags.Index.tagName)) {
+            data.removeTag(TLMTags.Index.tagName);
         }
 
         data.setInteger(TLMTags.State.tagName, State.None.ordinal());
