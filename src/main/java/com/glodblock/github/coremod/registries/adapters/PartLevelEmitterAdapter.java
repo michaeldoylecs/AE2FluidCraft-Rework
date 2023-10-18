@@ -12,12 +12,17 @@ import com.glodblock.github.api.registries.ILevelViewable;
 import com.glodblock.github.api.registries.ILevelViewableAdapter;
 import com.glodblock.github.common.tile.TileLevelMaintainer.State;
 import com.glodblock.github.common.tile.TileLevelMaintainer.TLMTags;
+import com.glodblock.github.inventory.AeItemStackHandler;
+import com.glodblock.github.inventory.AeStackInventoryImpl;
 
 import appeng.api.networking.IGridHost;
 import appeng.api.networking.IGridNode;
+import appeng.api.storage.StorageChannel;
+import appeng.api.storage.data.IAEItemStack;
 import appeng.api.util.AECableType;
 import appeng.api.util.DimensionalCoord;
 import appeng.parts.automation.PartLevelEmitter;
+import appeng.util.item.AEItemStack;
 
 public class PartLevelEmitterAdapter implements ILevelViewable, ILevelViewableAdapter {
 
@@ -30,20 +35,21 @@ public class PartLevelEmitterAdapter implements ILevelViewable, ILevelViewableAd
     public ILevelViewable adapt(IGridHost gridHost) {
         if (gridHost instanceof PartLevelEmitter levelEmitter) this.delegate = levelEmitter;
         return this;
-    };
+    }
 
     @NotNull
     static public IInventory getPatchedInventory(IInventory inventory, long quantity, State state) {
-        ItemStack itemStack = inventory.getStackInSlot(SLOT_IN).copy();
+        ItemStack itemStack = inventory.getStackInSlot(SLOT_IN);
+        if (itemStack == null) return inventory;
         NBTTagCompound data = !itemStack.hasTagCompound() ? new NBTTagCompound() : itemStack.getTagCompound();
-        if (!data.hasKey(TLMTags.Quantity.tagName) || data.getLong(TLMTags.Quantity.tagName) != quantity)
-            data.setLong(TLMTags.Quantity.tagName, quantity);
-        if (!data.hasKey(TLMTags.State.tagName) || data.getInteger(TLMTags.State.tagName) != state.ordinal())
-            data.setInteger(TLMTags.State.tagName, state.ordinal());
+        data.setLong(TLMTags.Quantity.tagName, quantity);
+        data.setInteger(TLMTags.State.tagName, state.ordinal());
         itemStack.setTagCompound(data);
-        inventory.setInventorySlotContents(SLOT_IN, itemStack);
 
-        return inventory;
+        AeStackInventoryImpl<IAEItemStack> inv = new AeStackInventoryImpl<>(StorageChannel.ITEMS, 1);
+        inv.setStack(SLOT_IN, AEItemStack.create(itemStack));
+
+        return new AeItemStackHandler(inv);
     }
 
     @Override

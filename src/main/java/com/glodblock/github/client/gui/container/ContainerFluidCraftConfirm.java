@@ -9,6 +9,7 @@ import net.minecraftforge.common.util.ForgeDirection;
 import com.glodblock.github.common.item.ItemBaseWirelessTerminal;
 import com.glodblock.github.common.parts.PartFluidPatternTerminal;
 import com.glodblock.github.common.parts.PartFluidPatternTerminalEx;
+import com.glodblock.github.common.parts.PartLevelTerminal;
 import com.glodblock.github.inventory.InventoryHandler;
 import com.glodblock.github.inventory.gui.GuiType;
 import com.glodblock.github.inventory.item.IWirelessTerminal;
@@ -34,6 +35,9 @@ public class ContainerFluidCraftConfirm extends ContainerCraftConfirm {
         }
         if (ah instanceof PartFluidPatternTerminalEx) {
             originalGui = GuiType.FLUID_PATTERN_TERMINAL_EX;
+        }
+        if (ah instanceof PartLevelTerminal) {
+            originalGui = GuiType.LEVEL_TERMINAL;
         }
         if (ah instanceof IWirelessTerminal) {
             ItemStack terminal = ((IWirelessTerminal) ah).getItemStack();

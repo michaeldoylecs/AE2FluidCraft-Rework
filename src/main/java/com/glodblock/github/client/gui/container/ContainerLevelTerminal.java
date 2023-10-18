@@ -46,7 +46,7 @@ public class ContainerLevelTerminal extends FCBaseContainer {
      */
     private int nextId = 0;
 
-    private final Map<ILevelViewable, ContainerLevelTerminal.InvTracker> tracked = new HashMap<>();
+    private final Map<IGridHost, ContainerLevelTerminal.InvTracker> tracked = new HashMap<>();
     private final Map<Long, ContainerLevelTerminal.InvTracker> trackedById = new HashMap<>();
 
     private IGrid grid;
@@ -246,21 +246,22 @@ public class ContainerLevelTerminal extends FCBaseContainer {
     private SPacketLevelTerminalUpdate updateList() {
         SPacketLevelTerminalUpdate update = null;
         var supported = LevelTerminalRegistry.instance().getSupportedClasses();
-        Set<ILevelViewable> visited = new HashSet<>();
+        Set<IGridHost> visited = new HashSet<>();
 
         for (Class<? extends ILevelViewable> clz : supported) {
             boolean isAdopted = LevelTerminalRegistry.instance().isAdopted(clz);
             Class<? extends IGridHost> machineClass = isAdopted ? LevelTerminalRegistry.instance().getAdopted(clz)
                     : clz;
             for (IGridNode gridNode : grid.getMachines(machineClass)) {
+                final IGridHost gridHost = gridNode.getMachine();
                 final ILevelViewable machine = isAdopted
-                        ? LevelTerminalRegistry.instance().getAdapter(clz).adapt(gridNode.getMachine())
-                        : (ILevelViewable) gridNode.getMachine();
+                        ? LevelTerminalRegistry.instance().getAdapter(clz).adapt(gridHost)
+                        : (ILevelViewable) gridHost;
 
                 /* First check if we are already tracking this node */
-                if (tracked.containsKey(machine)) {
+                if (tracked.containsKey(gridHost)) {
                     /* Check for updates */
-                    ContainerLevelTerminal.InvTracker knownTracker = tracked.get(machine);
+                    ContainerLevelTerminal.InvTracker knownTracker = tracked.get(gridHost);
 
                     /* Name changed? */
                     String name = machine.getCustomName();
@@ -310,15 +311,15 @@ public class ContainerLevelTerminal extends FCBaseContainer {
                             .setLocation(entry.x, entry.y, entry.z, entry.dim, entry.side.ordinal())
                             .setItems(entry.rows, entry.rowSize, entry.inventoryNbt)
                             .setViewItemStack(machine.getSelfItemStack(), machine.getDisplayItemStack());
-                    tracked.put(machine, entry);
+                    tracked.put(gridHost, entry);
                     trackedById.put(entry.id, entry);
                 }
-                visited.add(machine);
+                visited.add(gridHost);
             }
         }
 
         /* Now find any entries that we need to remove */
-        Iterator<Map.Entry<ILevelViewable, ContainerLevelTerminal.InvTracker>> it = tracked.entrySet().iterator();
+        Iterator<Map.Entry<IGridHost, ContainerLevelTerminal.InvTracker>> it = tracked.entrySet().iterator();
         while (it.hasNext()) {
             var entry = it.next();
             if (visited.contains(entry.getKey())) {
