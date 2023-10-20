@@ -70,16 +70,36 @@ public class SPacketLevelTerminalUpdate implements IMessage {
                                     + " : "
                                     + this.commands.stream().map(packetEntry -> packetEntry.getClass().getSimpleName())
                                             .collect(Collectors.groupingBy(String::new, Collectors.counting())));
-                    AELog.info("Parsed content: -> " + this.commands);
+                    if (AEConfig.instance.isFeatureEnabled(AEFeature.DebugLogging)) {
+                        AELog.info(" <- Parsed content: " + this.commands);
+                    }
                 }
                 AELog.debug(e);
                 return;
             }
         }
+        if (AEConfig.instance.isFeatureEnabled(AEFeature.PacketLogging)) {
+            AELog.info(
+                    " <- Received commands " + this.commands.size()
+                            + " : "
+                            + this.commands.stream().map(packetEntry -> packetEntry.getClass().getSimpleName())
+                                    .collect(Collectors.groupingBy(String::new, Collectors.counting())));
+        }
     }
 
     public void toBytes(ByteBuf buf) {
         try {
+            if (AEConfig.instance.isFeatureEnabled(AEFeature.PacketLogging)) {
+                AELog.info(
+                        " <- Sent commands " + this.commands.size()
+                                + " : "
+                                + this.commands.stream().map(packetEntry -> packetEntry.getClass().getSimpleName())
+                                        .collect(Collectors.groupingBy(String::new, Collectors.counting())));
+                if (AEConfig.instance.isFeatureEnabled(AEFeature.DebugLogging)) {
+                    AELog.info(" -> Sent commands: " + this.commands);
+                }
+            }
+
             buf.writeByte(statusFlags);
             buf.writeInt(commands.size());
             for (PacketEntry entry : commands) {
@@ -151,14 +171,6 @@ public class SPacketLevelTerminalUpdate implements IMessage {
             final GuiScreen gs = Minecraft.getMinecraft().currentScreen;
 
             if (gs instanceof GuiLevelTerminal levelTerminal) {
-                if (AEConfig.instance.isFeatureEnabled(AEFeature.PacketLogging)) {
-                    AELog.info(
-                            "Received commands -> " + message.commands.size()
-                                    + " : "
-                                    + message.commands.stream()
-                                            .map(packetEntry -> packetEntry.getClass().getSimpleName())
-                                            .collect(Collectors.groupingBy(String::new, Collectors.counting())));
-                }
                 levelTerminal.postUpdate(message.commands, message.statusFlags);
             }
 
@@ -437,12 +449,19 @@ public class SPacketLevelTerminalUpdate implements IMessage {
                         buf.writeInt(validIndex);
                     }
                 }
-                try (ByteBufOutputStream stream = new ByteBufOutputStream(buf)) {
+                ByteBuf tempBuf = Unpooled.directBuffer(256);
+                try {
+                    try (ByteBufOutputStream stream = new ByteBufOutputStream(tempBuf)) {
 
-                    NBTTagCompound wrapper = new NBTTagCompound();
+                        NBTTagCompound wrapper = new NBTTagCompound();
 
-                    wrapper.setTag("data", items);
-                    CompressedStreamTools.writeCompressed(wrapper, stream);
+                        wrapper.setTag("data", items);
+                        CompressedStreamTools.writeCompressed(wrapper, stream);
+                    }
+                    buf.writeInt(tempBuf.readableBytes());
+                    buf.writeBytes(tempBuf);
+                } finally {
+                    tempBuf.release();
                 }
             } else {
                 buf.writeByte(flags);
@@ -472,8 +491,8 @@ public class SPacketLevelTerminalUpdate implements IMessage {
                         this.validIndices[i] = buf.readInt();
                     }
                 }
-
-                try (ByteBufInputStream stream = new ByteBufInputStream(buf)) {
+                int payloadSize = buf.readInt();
+                try (ByteBufInputStream stream = new ByteBufInputStream(buf, payloadSize)) {
                     this.items = CompressedStreamTools.readCompressed(stream).getTagList("data", NBT.TAG_COMPOUND);
                 }
             }
