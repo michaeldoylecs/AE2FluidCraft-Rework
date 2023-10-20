@@ -2,7 +2,7 @@
 
 dependencies {
     api('com.github.GTNewHorizons:NotEnoughItems:2.4.5-GTNH:dev')
-    api('com.github.GTNewHorizons:Applied-Energistics-2-Unofficial:rv3-beta-268-GTNH-pre:dev')
+    api('com.github.GTNewHorizons:Applied-Energistics-2-Unofficial:rv3-beta-270-GTNH-pre:dev')
     api('curse.maven:cofh-core-69162:2388751')
     api('com.github.GTNewHorizons:waila:1.6.2:dev')
     api("com.github.GTNewHorizons:WirelessCraftingTerminal:1.10.1:dev")
@@ -13,7 +13,7 @@ dependencies {
 
     compileOnly('com.github.GTNewHorizons:ForestryMC:4.6.14:dev')
     compileOnly('com.github.GTNewHorizons:EnderIO:2.5.3:dev')
-    compileOnly('com.github.GTNewHorizons:GT5-Unofficial:5.09.44.49:dev') {
+    compileOnly('com.github.GTNewHorizons:GT5-Unofficial:5.09.44.55:dev') {
         exclude group: 'com.github.GTNewHorizons', module: 'AE2FluidCraft-Rework'
     }
     compileOnly('thaumcraft:Thaumcraft:1.7.10-4.2.3.5:dev')
