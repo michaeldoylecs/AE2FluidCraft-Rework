@@ -263,6 +263,19 @@ public class GuiLevelMaintainer extends AEBaseGui implements INEIGuiHandler {
                 }
             }
             this.input = null;
+            for (int i = 0; i < this.cont.getRequestSlots().length; i++) {
+                SlotFluidConvertingFake slot = this.cont.getRequestSlots()[i];
+                ItemStack currentStack = this.cont.getPlayerInv().getItemStack();
+                if (getSlotArea(slot).contains(xCoord, yCoord) && currentStack != null) {
+                    ItemStack itemStack = createLevelValues(currentStack.copy());
+                    itemStack.getTagCompound().setInteger(TLMTags.Index.tagName, i);
+                    slot.putStack(itemStack);
+                    NetworkHandler.instance.sendToServer(new PacketNEIDragClick(itemStack, slot.getSlotIndex()));
+                    this.updateAmount(slot.getSlotIndex(), itemStack.stackSize);
+                    return;
+                }
+            }
+
         }
         super.mouseClicked(xCoord, yCoord, btn);
     }
@@ -354,17 +367,6 @@ public class GuiLevelMaintainer extends AEBaseGui implements INEIGuiHandler {
 
     @Override
     public boolean handleDragNDrop(GuiContainer gui, int mouseX, int mouseY, ItemStack draggedStack, int button) {
-        for (int i = 0; i < this.cont.getRequestSlots().length; i++) {
-            SlotFluidConvertingFake slot = this.cont.getRequestSlots()[i];
-            if (getSlotArea(slot).contains(mouseX, mouseY)) {
-                ItemStack itemStack = createLevelValues(draggedStack.copy());
-                itemStack.getTagCompound().setInteger(TLMTags.Index.tagName, i);
-                slot.putStack(itemStack);
-                NetworkHandler.instance.sendToServer(new PacketNEIDragClick(itemStack, slot.getSlotIndex()));
-                this.updateAmount(slot.getSlotIndex(), itemStack.stackSize);
-                return true;
-            }
-        }
         if (draggedStack != null) {
             draggedStack.stackSize = 0;
         }

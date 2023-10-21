@@ -15,6 +15,7 @@ import net.minecraft.nbt.CompressedStreamTools;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraftforge.common.util.Constants.NBT;
+import net.minecraftforge.common.util.ForgeDirection;
 
 import com.glodblock.github.client.gui.GuiLevelTerminal;
 
@@ -307,6 +308,28 @@ public class SPacketLevelTerminalUpdate implements IMessage {
             int payloadSize = buf.readInt();
             try (ByteBufInputStream stream = new ByteBufInputStream(buf, payloadSize)) {
                 NBTTagCompound payload = CompressedStreamTools.readCompressed(stream);
+                int available = stream.available();
+                if (available > 0) {
+                    byte[] left = new byte[available];
+                    int read = stream.read(left);
+                    if (AEConfig.instance.isFeatureEnabled(AEFeature.PacketLogging)) {
+                        AELog.info(
+                                "Unread bytes detected (" + read
+                                        + "): "
+                                        + Arrays.toString(left)
+                                        + " at "
+                                        + dim
+                                        + "#("
+                                        + x
+                                        + ":"
+                                        + y
+                                        + ":"
+                                        + z
+                                        + ")@"
+                                        + ForgeDirection.getOrientation(side));
+                    }
+                }
+
                 if (payload.hasKey("self", NBT.TAG_COMPOUND)) {
                     this.selfItemStack = ItemStack.loadItemStackFromNBT(payload.getCompoundTag("self"));
                 }
@@ -494,6 +517,14 @@ public class SPacketLevelTerminalUpdate implements IMessage {
                 int payloadSize = buf.readInt();
                 try (ByteBufInputStream stream = new ByteBufInputStream(buf, payloadSize)) {
                     this.items = CompressedStreamTools.readCompressed(stream).getTagList("data", NBT.TAG_COMPOUND);
+                    int available = stream.available();
+                    if (available > 0) {
+                        byte[] left = new byte[available];
+                        int read = stream.read(left);
+                        if (AEConfig.instance.isFeatureEnabled(AEFeature.PacketLogging)) {
+                            AELog.info("Unread bytes detected (" + read + "): " + Arrays.toString(left));
+                        }
+                    }
                 }
             }
         }
