@@ -10,6 +10,7 @@ dependencies {
     compileOnly('com.github.GTNewHorizons:Baubles:1.0.1.16:dev')
 
     compileOnly('com.github.GTNewHorizons:ExtraCells2:2.5.34:dev') { transitive = false }
+    compileOnly("com.github.GTNewHorizons:WirelessCraftingTerminal:1.10.0:dev")
 
     compileOnly('com.github.GTNewHorizons:ForestryMC:4.6.14:dev')
     compileOnly('com.github.GTNewHorizons:EnderIO:2.5.3:dev')
