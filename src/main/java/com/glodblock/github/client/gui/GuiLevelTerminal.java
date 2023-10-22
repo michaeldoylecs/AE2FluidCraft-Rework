@@ -81,6 +81,7 @@ import appeng.integration.IntegrationRegistry;
 import appeng.integration.IntegrationType;
 import appeng.tile.inventory.AppEngInternalInventory;
 import appeng.util.Platform;
+import appeng.util.ReadableNumberConverter;
 import appeng.util.item.AEItemStack;
 import cpw.mods.fml.common.Loader;
 
@@ -114,11 +115,13 @@ public class GuiLevelTerminal extends FCBaseMEGui implements IDropToFillTextFiel
     // private GuiFCImgButton modeSwitchEdit;
     private final LevelTerminalList masterList = new LevelTerminalList();
     private final List<String> extraOptionsText = new ArrayList<>(2);
-    private static final float ITEM_STACK_Z = 1.0f;
+    private static final float ITEM_STACK_Z = 100.0f;
     private static final float SLOT_Z = 0.5f;
-    private static final float ITEM_STACK_OVERLAY_Z = 20.0f;
-    private static final float SLOT_HOVER_Z = 31.0f;
-    private static final float TOOLTIP_Z = 200.0f;
+    private static final float ITEM_STACK_OVERLAY_Z = 200.0f;
+    private static final float SLOT_HOVER_Z = 310.0f;
+    private static final float TOOLTIP_Z = 210.0f;
+    private static final float STEP_Z = 10.0f;
+    private static final float MAGIC_RENDER_ITEM_Z = 50.0f;
 
     public GuiLevelTerminal(InventoryPlayer inventoryPlayer, Container container) {
         super(inventoryPlayer, container);
@@ -440,32 +443,14 @@ public class GuiLevelTerminal extends FCBaseMEGui implements IDropToFillTextFiel
         /*
          * Render title
          */
-        GL11.glTranslatef(0.0f, 0.0f, 50f);
         mc.getTextureManager().bindTexture(TEX_BG);
         if (sectionBottom > 0 && sectionBottom < LevelTerminalSection.TITLE_HEIGHT) {
-            /* Transition draw */
-            drawTexturedModalRect(
-                    0,
-                    0,
-                    VIEW_LEFT,
-                    HEADER_HEIGHT + LevelTerminalSection.TITLE_HEIGHT - sectionBottom,
-                    VIEW_WIDTH,
-                    sectionBottom);
-            fontRendererObj
-                    .drawString(section.name, 2, sectionBottom - LevelTerminalSection.TITLE_HEIGHT + 2, fontColor);
             title = sectionBottom;
         } else if (viewY < 0) {
-            /* Hidden title draw */
-            drawTexturedModalRect(0, 0, VIEW_LEFT, HEADER_HEIGHT, VIEW_WIDTH, LevelTerminalSection.TITLE_HEIGHT);
-            fontRendererObj.drawString(section.name, 2, 2, fontColor);
             title = 0;
         } else {
-            /* Normal title draw */
-            drawTexturedModalRect(0, viewY, VIEW_LEFT, HEADER_HEIGHT, VIEW_WIDTH, LevelTerminalSection.TITLE_HEIGHT);
-            fontRendererObj.drawString(section.name, 2, viewY + 2, fontColor);
             title = 0;
         }
-        GL11.glTranslatef(0.0f, 0.0f, -50f);
         GL11.glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
 
         Iterator<LevelTerminalEntry> visible = section.getVisible();
@@ -485,6 +470,36 @@ public class GuiLevelTerminal extends FCBaseMEGui implements IDropToFillTextFiel
                 entry.configButton.yPosition = -1;
             }
         }
+        /*
+         * Render title
+         */
+        mc.getTextureManager().bindTexture(TEX_BG);
+        GL11.glTranslatef(0.0f, 0.0f, ITEM_STACK_OVERLAY_Z + ITEM_STACK_Z + STEP_Z);
+        if (sectionBottom > 0 && sectionBottom < LevelTerminalSection.TITLE_HEIGHT) {
+            /* Transition draw */
+            drawTexturedModalRect(
+                    0,
+                    0,
+                    VIEW_LEFT,
+                    HEADER_HEIGHT + LevelTerminalSection.TITLE_HEIGHT - sectionBottom,
+                    VIEW_WIDTH,
+                    sectionBottom);
+            fontRendererObj
+                    .drawString(section.name, 2, sectionBottom - LevelTerminalSection.TITLE_HEIGHT + 2, fontColor);
+        } else if (viewY < 0) {
+            /* Hidden title draw */
+            GL11.glDisable(GL11.GL_DEPTH_TEST);
+            GL11.glTranslatef(0.0f, 0.0f, 100f);
+            drawTexturedModalRect(0, 0, VIEW_LEFT, HEADER_HEIGHT, VIEW_WIDTH, LevelTerminalSection.TITLE_HEIGHT);
+            fontRendererObj.drawString(section.name, 2, 2, fontColor);
+            GL11.glEnable(GL11.GL_DEPTH_TEST);
+        } else {
+            /* Normal title draw */
+            drawTexturedModalRect(0, viewY, VIEW_LEFT, HEADER_HEIGHT, VIEW_WIDTH, LevelTerminalSection.TITLE_HEIGHT);
+            fontRendererObj.drawString(section.name, 2, viewY + 2, fontColor);
+        }
+        GL11.glTranslatef(0.0f, 0.0f, -(ITEM_STACK_OVERLAY_Z + ITEM_STACK_Z + STEP_Z));
+
         return LevelTerminalSection.TITLE_HEIGHT + renderY;
     }
 
@@ -583,21 +598,13 @@ public class GuiLevelTerminal extends FCBaseMEGui implements IDropToFillTextFiel
                     GL11.glTranslatef(colLeft, viewY + rowYTop + 1, ITEM_STACK_Z);
                     GL11.glEnable(GL12.GL_RESCALE_NORMAL);
                     RenderHelper.enableGUIStandardItemLighting();
-                    aeItemStack.setStackSize(1);
-                    aeRenderItem.setAeStack(aeItemStack);
-                    aeRenderItem.zLevel = 3.0f - 50.0f;
-                    aeRenderItem.renderItemAndEffectIntoGUI(fontRendererObj, mc.getTextureManager(), itemStack, 0, 0);
-                    aeRenderItem.zLevel = 0.0f;
-                    GL11.glTranslatef(0.0f, 0.0f, ITEM_STACK_OVERLAY_Z - ITEM_STACK_Z);
+                    itemStack.stackSize = 1;
                     aeItemStack.setStackSize(quantity);
                     aeRenderItem.setAeStack(aeItemStack);
+                    aeRenderItem.zLevel = ITEM_STACK_Z - MAGIC_RENDER_ITEM_Z;
+                    aeRenderItem.renderItemAndEffectIntoGUI(fontRendererObj, mc.getTextureManager(), itemStack, 0, 0);
                     aeRenderItem.renderItemOverlayIntoGUI(fontRendererObj, mc.getTextureManager(), itemStack, 0, 0);
-                    if (batch > 0) {
-                        aeItemStack.setStackSize(batch);
-                        aeRenderItem.setAeStack(aeItemStack);
-                        aeRenderItem
-                                .renderItemOverlayIntoGUI(fontRendererObj, mc.getTextureManager(), itemStack, 0, -11);
-                    }
+                    GL11.glTranslatef(0.0f, 0.0f, ITEM_STACK_OVERLAY_Z - ITEM_STACK_Z);
                     int color = switch (state) {
                         case Idle -> FCGuiColors.StateIdle.getColor();
                         case Craft -> FCGuiColors.StateCraft.getColor();
@@ -608,6 +615,11 @@ public class GuiLevelTerminal extends FCBaseMEGui implements IDropToFillTextFiel
                     int offset = 0;
                     int size = 4;
                     drawRect(offset, offset, offset + size, offset + size, color);
+                    GL11.glTranslatef(0.0f, 0.0f, ITEM_STACK_OVERLAY_Z - ITEM_STACK_Z);
+                    this.drawReadableAmount(fontRendererObj, quantity, 16.0f, 12f, 16777215);
+                    if (batch > 0) {
+                        this.drawReadableAmount(fontRendererObj, batch, 16.0f, 1f, 16777215);
+                    }
                     RenderHelper.disableStandardItemLighting();
 
                     /*
@@ -643,6 +655,45 @@ public class GuiLevelTerminal extends FCBaseMEGui implements IDropToFillTextFiel
         GL11.glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
         aeRenderItem.zLevel = lastZLevel;
         return relY + 1;
+    }
+
+    public void drawReadableAmount(final FontRenderer fontRenderer, long amount, float x, float y, int color) {
+
+        final float scaleFactor = AEConfig.instance.useTerminalUseLargeFont() ? 0.85f : 0.5f;
+        final float inverseScaleFactor = 1.0f / scaleFactor;
+        final int offset = AEConfig.instance.useTerminalUseLargeFont() ? 0 : -1;
+        final boolean unicodeFlag = fontRenderer.getUnicodeFlag();
+        final String stackSize = this.getToBeRenderedStackSize(amount);
+
+        fontRenderer.setUnicodeFlag(false);
+
+        GL11.glDisable(GL11.GL_LIGHTING);
+        GL11.glPushMatrix();
+        GL11.glScaled(scaleFactor, scaleFactor, scaleFactor);
+
+        final int X = (int) (((float) x + offset - fontRenderer.getStringWidth(stackSize) * scaleFactor)
+                * inverseScaleFactor);
+        final int Y = (int) (((float) y + offset * scaleFactor) * inverseScaleFactor);
+
+        fontRenderer.drawString(stackSize, X + 1, Y, 0);
+        fontRenderer.drawString(stackSize, X - 1, Y, 0);
+        fontRenderer.drawString(stackSize, X, Y + 1, 0);
+        fontRenderer.drawString(stackSize, X, Y - 1, 0);
+
+        fontRenderer.drawString(stackSize, X, Y, color);
+
+        GL11.glPopMatrix();
+        GL11.glEnable(GL11.GL_LIGHTING);
+
+        fontRenderer.setUnicodeFlag(unicodeFlag);
+    }
+
+    private String getToBeRenderedStackSize(final long originalSize) {
+        if (AEConfig.instance.useTerminalUseLargeFont()) {
+            return ReadableNumberConverter.INSTANCE.toSlimReadableForm(originalSize);
+        } else {
+            return ReadableNumberConverter.INSTANCE.toWideReadableForm(originalSize);
+        }
     }
 
     @SuppressWarnings("unchecked")

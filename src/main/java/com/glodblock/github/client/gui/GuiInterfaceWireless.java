@@ -100,11 +100,13 @@ public class GuiInterfaceWireless extends FCBaseMEGui implements IDropToFillText
      * Z-level Map (FLOATS) 0.0 - BACKGROUND 1.0 - ItemStacks 2.0 - Slot color overlays 20.0 - ItemStack overlays 21.0 -
      * Slot mouse hover overlay 200.0 - Tooltips
      */
-    private static final float ITEMSTACK_Z = 1.0f;
+    private static final float ITEM_STACK_Z = 100.0f;
     private static final float SLOT_Z = 0.5f;
-    private static final float ITEMSTACK_OVERLAY_Z = 20.0f;
-    private static final float SLOT_HOVER_Z = 31.0f;
-    private static final float TOOLTIP_Z = 200.0f;
+    private static final float ITEM_STACK_OVERLAY_Z = 200.0f;
+    private static final float SLOT_HOVER_Z = 310.0f;
+    private static final float TOOLTIP_Z = 210.0f;
+    private static final float STEP_Z = 10.0f;
+    private static final float MAGIC_RENDER_ITEM_Z = 50.0f;
 
     protected int offsetY;
 
@@ -409,31 +411,19 @@ public class GuiInterfaceWireless extends FCBaseMEGui implements IDropToFillText
         /*
          * Render title
          */
-        GL11.glTranslatef(0.0f, 0.0f, 50f);
         bindTexture(BACKGROUND);
+        GL11.glTranslatef(0.0f, 0.0f, ITEM_STACK_OVERLAY_Z + ITEM_STACK_Z + STEP_Z);
         if (sectionBottom > 0 && sectionBottom < IfaceSection.TITLE_HEIGHT) {
             /* Transition draw */
-            drawTexturedModalRect(
-                    0,
-                    0,
-                    VIEW_LEFT,
-                    HEADER_HEIGHT + IfaceSection.TITLE_HEIGHT - sectionBottom,
-                    VIEW_WIDTH,
-                    sectionBottom);
-            fontRendererObj.drawString(section.name, 2, sectionBottom - IfaceSection.TITLE_HEIGHT + 2, fontColor);
             title = sectionBottom;
         } else if (viewY < 0) {
             /* Hidden title draw */
-            drawTexturedModalRect(0, 0, VIEW_LEFT, HEADER_HEIGHT, VIEW_WIDTH, IfaceSection.TITLE_HEIGHT);
-            fontRendererObj.drawString(section.name, 2, 2, fontColor);
             title = 0;
         } else {
             /* Normal title draw */
-            drawTexturedModalRect(0, viewY, VIEW_LEFT, HEADER_HEIGHT, VIEW_WIDTH, IfaceSection.TITLE_HEIGHT);
-            fontRendererObj.drawString(section.name, 2, viewY + 2, fontColor);
             title = 0;
         }
-        GL11.glTranslatef(0.0f, 0.0f, -50f);
+        GL11.glTranslatef(0.0f, 0.0f, -(ITEM_STACK_OVERLAY_Z + ITEM_STACK_Z + STEP_Z));
         GL11.glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
 
         Iterator<IfaceEntry> visible = section.getVisible();
@@ -451,6 +441,32 @@ public class GuiInterfaceWireless extends FCBaseMEGui implements IDropToFillText
                 entry.optionsButton.yPosition = -1;
             }
         }
+        bindTexture(BACKGROUND);
+        GL11.glTranslatef(0.0f, 0.0f, ITEM_STACK_OVERLAY_Z + ITEM_STACK_Z + STEP_Z);
+        if (sectionBottom > 0 && sectionBottom < IfaceSection.TITLE_HEIGHT) {
+            /* Transition draw */
+            drawTexturedModalRect(
+                    0,
+                    0,
+                    VIEW_LEFT,
+                    HEADER_HEIGHT + IfaceSection.TITLE_HEIGHT - sectionBottom,
+                    VIEW_WIDTH,
+                    sectionBottom);
+            fontRendererObj.drawString(section.name, 2, sectionBottom - IfaceSection.TITLE_HEIGHT + 2, fontColor);
+        } else if (viewY < 0) {
+            /* Hidden title draw */
+            GL11.glDisable(GL11.GL_DEPTH_TEST);
+            GL11.glTranslatef(0.0f, 0.0f, 100f);
+            drawTexturedModalRect(0, 0, VIEW_LEFT, HEADER_HEIGHT, VIEW_WIDTH, IfaceSection.TITLE_HEIGHT);
+            fontRendererObj.drawString(section.name, 2, 2, fontColor);
+            GL11.glEnable(GL11.GL_DEPTH_TEST);
+        } else {
+            /* Normal title draw */
+            drawTexturedModalRect(0, viewY, VIEW_LEFT, HEADER_HEIGHT, VIEW_WIDTH, IfaceSection.TITLE_HEIGHT);
+            fontRendererObj.drawString(section.name, 2, viewY + 2, fontColor);
+        }
+        GL11.glTranslatef(0.0f, 0.0f, -(ITEM_STACK_OVERLAY_Z + ITEM_STACK_Z + STEP_Z));
+
         return IfaceSection.TITLE_HEIGHT + renderY;
     }
 
@@ -538,23 +554,23 @@ public class GuiInterfaceWireless extends FCBaseMEGui implements IDropToFillText
                     final ItemStack toRender = iep.getOutput(stack);
 
                     GL11.glPushMatrix();
-                    GL11.glTranslatef(colLeft, viewY + rowYTop + 1, ITEMSTACK_Z);
+                    GL11.glTranslatef(colLeft, viewY + rowYTop + 1, ITEM_STACK_Z);
                     GL11.glEnable(GL12.GL_RESCALE_NORMAL);
                     RenderHelper.enableGUIStandardItemLighting();
-                    translatedRenderItem.zLevel = 3.0f - 50.0f;
+                    translatedRenderItem.zLevel = ITEM_STACK_Z - MAGIC_RENDER_ITEM_Z;
                     translatedRenderItem
                             .renderItemAndEffectIntoGUI(fontRendererObj, mc.getTextureManager(), toRender, 0, 0);
-                    GL11.glTranslatef(0.0f, 0.0f, ITEMSTACK_OVERLAY_Z - ITEMSTACK_Z);
+                    GL11.glTranslatef(0.0f, 0.0f, ITEM_STACK_OVERLAY_Z - ITEM_STACK_Z);
                     aeRenderItem.setAeStack(AEItemStack.create(toRender));
                     aeRenderItem.renderItemOverlayIntoGUI(fontRendererObj, mc.getTextureManager(), toRender, 0, 0);
                     aeRenderItem.zLevel = 0.0f;
                     RenderHelper.disableStandardItemLighting();
                     if (!tooltip) {
                         if (entry.brokenRecipes[slotIdx]) {
-                            GL11.glTranslatef(0.0f, 0.0f, SLOT_Z - ITEMSTACK_OVERLAY_Z);
+                            GL11.glTranslatef(0.0f, 0.0f, SLOT_Z - ITEM_STACK_OVERLAY_Z);
                             drawRect(0, 0, 16, 16, GuiColors.ItemSlotOverlayInvalid.getColor());
                         } else if (entry.filteredRecipes[slotIdx]) {
-                            GL11.glTranslatef(0.0f, 0.0f, ITEMSTACK_OVERLAY_Z);
+                            GL11.glTranslatef(0.0f, 0.0f, ITEM_STACK_OVERLAY_Z);
                             drawRect(0, 0, 16, 16, GuiColors.ItemSlotOverlayUnpowered.getColor());
                         }
                     } else {
@@ -563,7 +579,7 @@ public class GuiInterfaceWireless extends FCBaseMEGui implements IDropToFillText
                     GL11.glPopMatrix();
                 } else if (entry.filteredRecipes[slotIdx]) {
                     GL11.glPushMatrix();
-                    GL11.glTranslatef(colLeft, viewY + rowYTop + 1, ITEMSTACK_OVERLAY_Z);
+                    GL11.glTranslatef(colLeft, viewY + rowYTop + 1, ITEM_STACK_OVERLAY_Z);
                     drawRect(0, 0, 16, 16, GuiColors.ItemSlotOverlayUnpowered.getColor());
                     GL11.glPopMatrix();
                 }
