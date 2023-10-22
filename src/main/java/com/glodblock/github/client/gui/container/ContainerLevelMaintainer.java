@@ -135,10 +135,10 @@ public class ContainerLevelMaintainer extends AEBaseContainer {
             data.setTag(TLMTags.Stack.tagName, itemStackTag);
         }
         if (!data.hasKey(TLMTags.Quantity.tagName)) {
-            data.setLong(TLMTags.Quantity.tagName, itemStack.stackSize);
+            data.setLong(TLMTags.Quantity.tagName, itemStack.stackSize > 0 ? itemStack.stackSize : 1);
         }
         if (!data.hasKey(TLMTags.Batch.tagName)) {
-            data.setLong(TLMTags.Batch.tagName, 0);
+            data.setLong(TLMTags.Batch.tagName, 1);
         }
         if (!data.hasKey(TLMTags.Enable.tagName)) {
             data.setBoolean(TLMTags.Enable.tagName, false);
