@@ -65,9 +65,9 @@ public class CommonProxy {
             Upgrades.CRAFTING.registerItem(new ItemStack(ItemAndBlockHolder.FLUID_EXPORT_BUS), 1);
         }
         AEApi.instance().registries().externalStorage().addExternalStorageInterface(new AEFluidInterfaceHandler());
-        AEApi.instance().registries().ifaceTerm().register(PartFluidP2PInterface.class);
-        AEApi.instance().registries().ifaceTerm().register(PartFluidInterface.class);
-        AEApi.instance().registries().ifaceTerm().register(TileFluidInterface.class);
+        AEApi.instance().registries().interfaceTerminal().register(PartFluidP2PInterface.class);
+        AEApi.instance().registries().interfaceTerminal().register(PartFluidInterface.class);
+        AEApi.instance().registries().interfaceTerminal().register(TileFluidInterface.class);
     }
 
     public void registerRenderers() {}

@@ -58,7 +58,7 @@ import appeng.core.localization.GuiColors;
 import appeng.core.localization.GuiText;
 import appeng.core.localization.PlayerMessages;
 import appeng.core.sync.network.NetworkHandler;
-import appeng.core.sync.packets.PacketIfaceTermUpdate;
+import appeng.core.sync.packets.PacketInterfaceTerminalUpdate;
 import appeng.core.sync.packets.PacketInventoryAction;
 import appeng.helpers.InventoryAction;
 import appeng.helpers.PatternHelper;
@@ -80,7 +80,7 @@ public class GuiInterfaceWireless extends FCBaseMEGui implements IDropToFillText
             AppEng.MOD_ID,
             "textures/guis/newinterfaceterminal.png");
 
-    private final IfaceList masterList = new IfaceList();
+    private final InterfaceWirelessList masterList = new InterfaceWirelessList();
     private final MEGuiTextField searchFieldOutputs;
     private final MEGuiTextField searchFieldInputs;
     private final MEGuiTextField searchFieldNames;
@@ -329,7 +329,7 @@ public class GuiInterfaceWireless extends FCBaseMEGui implements IDropToFillText
                 offsetY + HEADER_HEIGHT + viewHeight + 1,
                 0.0f,
                 0.0f,
-                (HEADER_HEIGHT + IfaceSection.TITLE_HEIGHT + 1.0f) / 256.0f,
+                (HEADER_HEIGHT + InterfaceWirelessSection.TITLE_HEIGHT + 1.0f) / 256.0f,
                 this.xSize / 256.0f,
                 (HEADER_HEIGHT + 106.0f) / 256.0f);
         Tessellator.instance.draw();
@@ -361,7 +361,7 @@ public class GuiInterfaceWireless extends FCBaseMEGui implements IDropToFillText
         final int scroll = this.getScrollBar().getCurrentScroll();
         int viewY = -scroll; // current y in viewport coordinates
         int entryIdx = 0;
-        List<IfaceSection> visibleSections = this.masterList.getVisibleSections();
+        List<InterfaceWirelessSection> visibleSections = this.masterList.getVisibleSections();
 
         final float guiScaleX = (float) mc.displayWidth / width;
         final float guiScaleY = (float) mc.displayHeight / height;
@@ -376,7 +376,7 @@ public class GuiInterfaceWireless extends FCBaseMEGui implements IDropToFillText
          * Render each section
          */
         while (viewY < this.viewHeight && entryIdx < visibleSections.size()) {
-            IfaceSection section = visibleSections.get(entryIdx);
+            InterfaceWirelessSection section = visibleSections.get(entryIdx);
             int sectionHeight = section.getHeight();
 
             /* Is it viewable/in the viewport at all? */
@@ -403,7 +403,7 @@ public class GuiInterfaceWireless extends FCBaseMEGui implements IDropToFillText
      * @param relMouseY transformed mouse coords relative to viewport
      * @return the height of the section rendered in viewport coordinates, max of viewHeight.
      */
-    private int drawSection(IfaceSection section, int viewY, int relMouseX, int relMouseY) {
+    private int drawSection(InterfaceWirelessSection section, int viewY, int relMouseX, int relMouseY) {
         int title;
         int renderY = 0;
         final int sectionBottom = viewY + section.getHeight() - 1;
@@ -413,7 +413,7 @@ public class GuiInterfaceWireless extends FCBaseMEGui implements IDropToFillText
          */
         bindTexture(BACKGROUND);
         GL11.glTranslatef(0.0f, 0.0f, ITEM_STACK_OVERLAY_Z + ITEM_STACK_Z + STEP_Z);
-        if (sectionBottom > 0 && sectionBottom < IfaceSection.TITLE_HEIGHT) {
+        if (sectionBottom > 0 && sectionBottom < InterfaceWirelessSection.TITLE_HEIGHT) {
             /* Transition draw */
             title = sectionBottom;
         } else if (viewY < 0) {
@@ -426,48 +426,55 @@ public class GuiInterfaceWireless extends FCBaseMEGui implements IDropToFillText
         GL11.glTranslatef(0.0f, 0.0f, -(ITEM_STACK_OVERLAY_Z + ITEM_STACK_Z + STEP_Z));
         GL11.glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
 
-        Iterator<IfaceEntry> visible = section.getVisible();
+        Iterator<InerfaceWirelessEntry> visible = section.getVisible();
         while (visible.hasNext()) {
             if (viewY < viewHeight) {
                 renderY += drawEntry(
                         visible.next(),
-                        viewY + IfaceSection.TITLE_HEIGHT + renderY,
+                        viewY + InterfaceWirelessSection.TITLE_HEIGHT + renderY,
                         title,
                         relMouseX,
                         relMouseY);
             } else {
-                IfaceEntry entry = visible.next();
+                InerfaceWirelessEntry entry = visible.next();
                 entry.dispY = -9999;
                 entry.optionsButton.yPosition = -1;
             }
         }
         bindTexture(BACKGROUND);
         GL11.glTranslatef(0.0f, 0.0f, ITEM_STACK_OVERLAY_Z + ITEM_STACK_Z + STEP_Z);
-        if (sectionBottom > 0 && sectionBottom < IfaceSection.TITLE_HEIGHT) {
+        if (sectionBottom > 0 && sectionBottom < InterfaceWirelessSection.TITLE_HEIGHT) {
             /* Transition draw */
             drawTexturedModalRect(
                     0,
                     0,
                     VIEW_LEFT,
-                    HEADER_HEIGHT + IfaceSection.TITLE_HEIGHT - sectionBottom,
+                    HEADER_HEIGHT + InterfaceWirelessSection.TITLE_HEIGHT - sectionBottom,
                     VIEW_WIDTH,
                     sectionBottom);
-            fontRendererObj.drawString(section.name, 2, sectionBottom - IfaceSection.TITLE_HEIGHT + 2, fontColor);
+            fontRendererObj
+                    .drawString(section.name, 2, sectionBottom - InterfaceWirelessSection.TITLE_HEIGHT + 2, fontColor);
         } else if (viewY < 0) {
             /* Hidden title draw */
             GL11.glDisable(GL11.GL_DEPTH_TEST);
             GL11.glTranslatef(0.0f, 0.0f, 100f);
-            drawTexturedModalRect(0, 0, VIEW_LEFT, HEADER_HEIGHT, VIEW_WIDTH, IfaceSection.TITLE_HEIGHT);
+            drawTexturedModalRect(0, 0, VIEW_LEFT, HEADER_HEIGHT, VIEW_WIDTH, InterfaceWirelessSection.TITLE_HEIGHT);
             fontRendererObj.drawString(section.name, 2, 2, fontColor);
             GL11.glEnable(GL11.GL_DEPTH_TEST);
         } else {
             /* Normal title draw */
-            drawTexturedModalRect(0, viewY, VIEW_LEFT, HEADER_HEIGHT, VIEW_WIDTH, IfaceSection.TITLE_HEIGHT);
+            drawTexturedModalRect(
+                    0,
+                    viewY,
+                    VIEW_LEFT,
+                    HEADER_HEIGHT,
+                    VIEW_WIDTH,
+                    InterfaceWirelessSection.TITLE_HEIGHT);
             fontRendererObj.drawString(section.name, 2, viewY + 2, fontColor);
         }
         GL11.glTranslatef(0.0f, 0.0f, -(ITEM_STACK_OVERLAY_Z + ITEM_STACK_Z + STEP_Z));
 
-        return IfaceSection.TITLE_HEIGHT + renderY;
+        return InterfaceWirelessSection.TITLE_HEIGHT + renderY;
     }
 
     /**
@@ -475,7 +482,7 @@ public class GuiInterfaceWireless extends FCBaseMEGui implements IDropToFillText
      *
      * @param viewY the gui coordinate z
      */
-    private int drawEntry(IfaceEntry entry, int viewY, int titleBottom, int relMouseX, int relMouseY) {
+    private int drawEntry(InerfaceWirelessEntry entry, int viewY, int titleBottom, int relMouseX, int relMouseY) {
         bindTexture(BACKGROUND);
         Tessellator.instance.startDrawingQuads();
         int relY = 0;
@@ -518,7 +525,7 @@ public class GuiInterfaceWireless extends FCBaseMEGui implements IDropToFillText
             }
             toRender.drawButton(mc, relMouseX, relMouseY);
             if (toRender.getMouseIn()
-                    && relMouseY >= Math.max(IfaceSection.TITLE_HEIGHT, entry.optionsButton.yPosition)) {
+                    && relMouseY >= Math.max(InterfaceWirelessSection.TITLE_HEIGHT, entry.optionsButton.yPosition)) {
                 // draw a tooltip
                 GL11.glTranslatef(0f, 0f, TOOLTIP_Z);
                 GL11.glDisable(GL11.GL_SCISSOR_TEST);
@@ -547,7 +554,7 @@ public class GuiInterfaceWireless extends FCBaseMEGui implements IDropToFillText
                 ItemStack stack = inv.getStackInSlot(slotIdx);
 
                 boolean tooltip = relMouseX > colLeft - 1 && relMouseX < colRight - 1
-                        && relMouseY >= Math.max(viewY + rowYTop, IfaceSection.TITLE_HEIGHT)
+                        && relMouseY >= Math.max(viewY + rowYTop, InterfaceWirelessSection.TITLE_HEIGHT)
                         && relMouseY < Math.min(viewY + rowYBot, viewHeight);
                 if (stack != null) {
                     final ItemEncodedPattern iep = (ItemEncodedPattern) stack.getItem();
@@ -773,32 +780,38 @@ public class GuiInterfaceWireless extends FCBaseMEGui implements IDropToFillText
         return false;
     }
 
-    public void postUpdate(List<PacketIfaceTermUpdate.PacketEntry> updates, int statusFlags) {
-        if ((statusFlags & PacketIfaceTermUpdate.CLEAR_ALL_BIT) == PacketIfaceTermUpdate.CLEAR_ALL_BIT) {
+    public void postUpdate(List<PacketInterfaceTerminalUpdate.PacketEntry> updates, int statusFlags) {
+        if ((statusFlags & PacketInterfaceTerminalUpdate.CLEAR_ALL_BIT)
+                == PacketInterfaceTerminalUpdate.CLEAR_ALL_BIT) {
             /* Should clear all client entries. */
             this.masterList.list.clear();
         }
         /* Should indicate disconnected, so the terminal turns dark. */
-        this.online = (statusFlags & PacketIfaceTermUpdate.DISCONNECT_BIT) != PacketIfaceTermUpdate.DISCONNECT_BIT;
+        this.online = (statusFlags & PacketInterfaceTerminalUpdate.DISCONNECT_BIT)
+                != PacketInterfaceTerminalUpdate.DISCONNECT_BIT;
 
-        for (PacketIfaceTermUpdate.PacketEntry cmd : updates) {
+        for (PacketInterfaceTerminalUpdate.PacketEntry cmd : updates) {
             parsePacketCmd(cmd);
         }
         this.masterList.markDirty();
 
     }
 
-    private void parsePacketCmd(PacketIfaceTermUpdate.PacketEntry cmd) {
+    private void parsePacketCmd(PacketInterfaceTerminalUpdate.PacketEntry cmd) {
         long id = cmd.entryId;
-        if (cmd instanceof PacketIfaceTermUpdate.PacketAdd addCmd) {
-            IfaceEntry entry = new IfaceEntry(id, addCmd.name, addCmd.rows, addCmd.rowSize, addCmd.online)
-                    .setLocation(addCmd.x, addCmd.y, addCmd.z, addCmd.dim, addCmd.side)
-                    .setIcons(addCmd.selfRep, addCmd.dispRep).setItems(addCmd.items);
+        if (cmd instanceof PacketInterfaceTerminalUpdate.PacketAdd addCmd) {
+            InerfaceWirelessEntry entry = new InerfaceWirelessEntry(
+                    id,
+                    addCmd.name,
+                    addCmd.rows,
+                    addCmd.rowSize,
+                    addCmd.online).setLocation(addCmd.x, addCmd.y, addCmd.z, addCmd.dim, addCmd.side)
+                            .setIcons(addCmd.selfRep, addCmd.dispRep).setItems(addCmd.items);
             masterList.addEntry(entry);
-        } else if (cmd instanceof PacketIfaceTermUpdate.PacketRemove) {
+        } else if (cmd instanceof PacketInterfaceTerminalUpdate.PacketRemove) {
             masterList.removeEntry(id);
-        } else if (cmd instanceof PacketIfaceTermUpdate.PacketOverwrite owCmd) {
-            IfaceEntry entry = masterList.list.get(id);
+        } else if (cmd instanceof PacketInterfaceTerminalUpdate.PacketOverwrite owCmd) {
+            InerfaceWirelessEntry entry = masterList.list.get(id);
 
             if (entry == null) {
                 return;
@@ -816,8 +829,8 @@ public class GuiInterfaceWireless extends FCBaseMEGui implements IDropToFillText
                 }
             }
             masterList.isDirty = true;
-        } else if (cmd instanceof PacketIfaceTermUpdate.PacketRename renameCmd) {
-            IfaceEntry entry = masterList.list.get(id);
+        } else if (cmd instanceof PacketInterfaceTerminalUpdate.PacketRename renameCmd) {
+            InerfaceWirelessEntry entry = masterList.list.get(id);
 
             if (entry != null) {
                 if (StatCollector.canTranslate(renameCmd.newName)) {
@@ -910,16 +923,16 @@ public class GuiInterfaceWireless extends FCBaseMEGui implements IDropToFillText
     /**
      * Tracks the list of entries.
      */
-    private class IfaceList {
+    private class InterfaceWirelessList {
 
-        private final Map<Long, IfaceEntry> list = new HashMap<>();
-        private final Map<String, IfaceSection> sections = new TreeMap<>();
-        private final List<IfaceSection> visibleSections = new ArrayList<>();
+        private final Map<Long, InerfaceWirelessEntry> list = new HashMap<>();
+        private final Map<String, InterfaceWirelessSection> sections = new TreeMap<>();
+        private final List<InterfaceWirelessSection> visibleSections = new ArrayList<>();
         private boolean isDirty;
         private int height;
-        private IfaceEntry hoveredEntry;
+        private InerfaceWirelessEntry hoveredEntry;
 
-        IfaceList() {
+        InterfaceWirelessList() {
             this.isDirty = true;
         }
 
@@ -930,7 +943,7 @@ public class GuiInterfaceWireless extends FCBaseMEGui implements IDropToFillText
             height = 0;
             visibleSections.clear();
 
-            for (IfaceSection section : sections.values()) {
+            for (InterfaceWirelessSection section : sections.values()) {
                 String query = GuiInterfaceWireless.this.searchFieldNames.getText();
                 if (!query.isEmpty() && !section.name.toLowerCase().contains(query.toLowerCase())) {
                     continue;
@@ -982,7 +995,7 @@ public class GuiInterfaceWireless extends FCBaseMEGui implements IDropToFillText
             } else {
                 int y = 0;
 
-                for (IfaceSection section : sections) {
+                for (InterfaceWirelessSection section : sections) {
                     if (y > viewY) {
                         result = true;
                         scrollbar.setCurrentScroll(y);
@@ -994,11 +1007,11 @@ public class GuiInterfaceWireless extends FCBaseMEGui implements IDropToFillText
             return result;
         }
 
-        public void addEntry(IfaceEntry entry) {
-            IfaceSection section = sections.get(entry.dispName);
+        public void addEntry(InerfaceWirelessEntry entry) {
+            InterfaceWirelessSection section = sections.get(entry.dispName);
 
             if (section == null) {
-                section = new IfaceSection(entry.dispName);
+                section = new InterfaceWirelessSection(entry.dispName);
                 sections.put(entry.dispName, section);
             }
             section.addEntry(entry);
@@ -1007,14 +1020,14 @@ public class GuiInterfaceWireless extends FCBaseMEGui implements IDropToFillText
         }
 
         public void removeEntry(long id) {
-            IfaceEntry entry = list.remove(id);
+            InerfaceWirelessEntry entry = list.remove(id);
 
             if (entry != null) {
                 entry.section.removeEntry(entry);
             }
         }
 
-        public List<IfaceSection> getVisibleSections() {
+        public List<InterfaceWirelessSection> getVisibleSections() {
             if (isDirty) {
                 update();
             }
@@ -1032,7 +1045,7 @@ public class GuiInterfaceWireless extends FCBaseMEGui implements IDropToFillText
             if (relMouseX < 0 || relMouseX >= VIEW_WIDTH || relMouseY < 0 || relMouseY >= viewHeight) {
                 return false;
             }
-            for (IfaceSection section : getVisibleSections()) {
+            for (InterfaceWirelessSection section : getVisibleSections()) {
                 if (section.mouseClicked(relMouseX, relMouseY, btn)) {
                     return true;
                 }
@@ -1044,13 +1057,13 @@ public class GuiInterfaceWireless extends FCBaseMEGui implements IDropToFillText
     /**
      * A section holds all the interface entries with the same name.
      */
-    private class IfaceSection {
+    private class InterfaceWirelessSection {
 
         public static final int TITLE_HEIGHT = 12;
 
         String name;
-        List<IfaceEntry> entries = new ArrayList<>();
-        Set<IfaceEntry> visibleEntries = new TreeSet<>(Comparator.comparing(e -> {
+        List<InerfaceWirelessEntry> entries = new ArrayList<>();
+        Set<InerfaceWirelessEntry> visibleEntries = new TreeSet<>(Comparator.comparing(e -> {
             if (e.dispRep != null) {
                 return e.dispRep.getDisplayName() + e.id;
             } else {
@@ -1061,7 +1074,7 @@ public class GuiInterfaceWireless extends FCBaseMEGui implements IDropToFillText
         private boolean isDirty = true;
         boolean visible = false;
 
-        IfaceSection(String name) {
+        InterfaceWirelessSection(String name) {
             this.name = name;
         }
 
@@ -1081,7 +1094,7 @@ public class GuiInterfaceWireless extends FCBaseMEGui implements IDropToFillText
                 height = 0;
             } else {
                 height = TITLE_HEIGHT;
-                for (IfaceEntry entry : visibleEntries) {
+                for (InerfaceWirelessEntry entry : visibleEntries) {
                     height += entry.guiHeight;
                 }
             }
@@ -1093,7 +1106,7 @@ public class GuiInterfaceWireless extends FCBaseMEGui implements IDropToFillText
             String input = GuiInterfaceWireless.this.searchFieldInputs.getText().toLowerCase();
             String output = GuiInterfaceWireless.this.searchFieldOutputs.getText().toLowerCase();
 
-            for (IfaceEntry entry : entries) {
+            for (InerfaceWirelessEntry entry : entries) {
                 var moleAss = AEApi.instance().definitions().blocks().molecularAssembler().maybeStack(1);
                 entry.dispY = -9999;
                 if (onlyMolecularAssemblers
@@ -1132,19 +1145,19 @@ public class GuiInterfaceWireless extends FCBaseMEGui implements IDropToFillText
             }
         }
 
-        public void addEntry(IfaceEntry entry) {
+        public void addEntry(InerfaceWirelessEntry entry) {
             this.entries.add(entry);
             entry.section = this;
             this.isDirty = true;
         }
 
-        public void removeEntry(IfaceEntry entry) {
+        public void removeEntry(InerfaceWirelessEntry entry) {
             this.entries.remove(entry);
             entry.section = null;
             this.isDirty = true;
         }
 
-        public Iterator<IfaceEntry> getVisible() {
+        public Iterator<InerfaceWirelessEntry> getVisible() {
             if (isDirty) {
                 update();
             }
@@ -1152,7 +1165,7 @@ public class GuiInterfaceWireless extends FCBaseMEGui implements IDropToFillText
         }
 
         public boolean mouseClicked(int relMouseX, int relMouseY, int btn) {
-            Iterator<IfaceEntry> it = getVisible();
+            Iterator<InerfaceWirelessEntry> it = getVisible();
             boolean ret = false;
 
             while (it.hasNext() && !ret) {
@@ -1166,7 +1179,7 @@ public class GuiInterfaceWireless extends FCBaseMEGui implements IDropToFillText
     /**
      * This class keeps track of an entry and its widgets.
      */
-    private class IfaceEntry {
+    private class InerfaceWirelessEntry {
 
         String dispName;
         AppEngInternalInventory inv;
@@ -1177,7 +1190,7 @@ public class GuiInterfaceWireless extends FCBaseMEGui implements IDropToFillText
         ItemStack selfRep;
         /** Nullable - icon that represents the interface's "target" */
         ItemStack dispRep;
-        IfaceSection section;
+        InterfaceWirelessSection section;
         long id;
         int x, y, z, dim, side;
         int rows, rowSize;
@@ -1191,7 +1204,7 @@ public class GuiInterfaceWireless extends FCBaseMEGui implements IDropToFillText
         boolean[] filteredRecipes;
         private int hoveredSlotIdx = -1;
 
-        IfaceEntry(long id, String name, int rows, int rowSize, boolean online) {
+        InerfaceWirelessEntry(long id, String name, int rows, int rowSize, boolean online) {
             this.id = id;
             if (StatCollector.canTranslate(name)) {
                 this.dispName = StatCollector.translateToLocal(name);
@@ -1216,7 +1229,7 @@ public class GuiInterfaceWireless extends FCBaseMEGui implements IDropToFillText
             this.filteredRecipes = new boolean[rows * rowSize];
         }
 
-        IfaceEntry setLocation(int x, int y, int z, int dim, int side) {
+        InerfaceWirelessEntry setLocation(int x, int y, int z, int dim, int side) {
             this.x = x;
             this.y = y;
             this.z = z;
@@ -1226,7 +1239,7 @@ public class GuiInterfaceWireless extends FCBaseMEGui implements IDropToFillText
             return this;
         }
 
-        IfaceEntry setIcons(ItemStack selfRep, ItemStack dispRep) {
+        InerfaceWirelessEntry setIcons(ItemStack selfRep, ItemStack dispRep) {
             // Kotlin would make this pretty easy :(
             this.selfRep = selfRep;
             this.dispRep = dispRep;
@@ -1246,7 +1259,7 @@ public class GuiInterfaceWireless extends FCBaseMEGui implements IDropToFillText
             this.guiHeight = 18 * rows + 4;
         }
 
-        IfaceEntry setItems(NBTTagList items) {
+        InerfaceWirelessEntry setItems(NBTTagList items) {
             assert items.tagCount() == inv.getSizeInventory();
 
             for (int i = 0; i < items.tagCount(); ++i) {
@@ -1286,7 +1299,7 @@ public class GuiInterfaceWireless extends FCBaseMEGui implements IDropToFillText
                 return false;
             }
             if (mouseX >= optionsButton.xPosition && mouseX < 2 + optionsButton.width
-                    && mouseY > Math.max(optionsButton.yPosition, IfaceSection.TITLE_HEIGHT)
+                    && mouseY > Math.max(optionsButton.yPosition, InterfaceWirelessSection.TITLE_HEIGHT)
                     && mouseY <= Math.min(optionsButton.yPosition + optionsButton.height, viewHeight)) {
                 optionsButton.func_146113_a(mc.getSoundHandler());
                 DimensionalCoord blockPos = new DimensionalCoord(x, y, z, dim);
@@ -1327,7 +1340,7 @@ public class GuiInterfaceWireless extends FCBaseMEGui implements IDropToFillText
             int offsetY = mouseY - dispY;
             int offsetX = mouseX - (VIEW_WIDTH - rowSize * 18) - 1;
             if (offsetX >= 0 && offsetX < (rowSize * 18)
-                    && mouseY > Math.max(dispY, IfaceSection.TITLE_HEIGHT)
+                    && mouseY > Math.max(dispY, InterfaceWirelessSection.TITLE_HEIGHT)
                     && offsetY < Math.min(viewHeight - dispY, guiHeight)) {
                 final int col = offsetX / 18;
                 final int row = offsetY / 18;
