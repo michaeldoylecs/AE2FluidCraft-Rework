@@ -104,7 +104,7 @@ public class GuiInterfaceWireless extends FCBaseMEGui implements IDropToFillText
     private static final float SLOT_Z = 0.5f;
     private static final float ITEM_STACK_OVERLAY_Z = 200.0f;
     private static final float SLOT_HOVER_Z = 310.0f;
-    private static final float TOOLTIP_Z = 210.0f;
+    private static final float TOOLTIP_Z = 410.0f;
     private static final float STEP_Z = 10.0f;
     private static final float MAGIC_RENDER_ITEM_Z = 50.0f;
 
