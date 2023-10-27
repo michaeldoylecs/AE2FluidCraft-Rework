@@ -13,6 +13,8 @@ import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fluids.FluidStack;
 
+import org.lwjgl.opengl.GL11;
+
 import com.glodblock.github.FluidCraft;
 import com.glodblock.github.client.gui.container.ContainerFluidPatternEncoder;
 import com.glodblock.github.common.item.ItemFluidPacket;
@@ -21,12 +23,10 @@ import com.glodblock.github.inventory.gui.MouseRegionManager;
 import com.glodblock.github.inventory.slot.ISlotFluid;
 import com.glodblock.github.inventory.slot.SlotSingleItem;
 import com.glodblock.github.network.CPacketEncodePattern;
-import com.glodblock.github.util.Ae2ReflectClient;
 import com.glodblock.github.util.NameConst;
 
 import appeng.api.storage.data.IAEItemStack;
 import appeng.client.gui.AEBaseGui;
-import appeng.client.render.AppEngRenderItem;
 import appeng.core.localization.GuiText;
 
 public class GuiFluidPatternEncoder extends AEBaseGui {
@@ -35,7 +35,6 @@ public class GuiFluidPatternEncoder extends AEBaseGui {
 
     private final ContainerFluidPatternEncoder cont;
     private final MouseRegionManager mouseRegions = new MouseRegionManager(this);
-    private final AppEngRenderItem stackSizeRenderer = Ae2ReflectClient.getStackSizeRenderer(this);
 
     public GuiFluidPatternEncoder(InventoryPlayer ipl, TileFluidPatternEncoder tile) {
         super(new ContainerFluidPatternEncoder(ipl, tile));
@@ -95,13 +94,15 @@ public class GuiFluidPatternEncoder extends AEBaseGui {
                 if (ItemFluidPacket.getFluidStack(stack) != null && ItemFluidPacket.getFluidStack(stack).amount > 0)
                     fake.setStackSize(ItemFluidPacket.getFluidStack(stack).amount);
             }
-            stackSizeRenderer.setAeStack(fake);
-            stackSizeRenderer.renderItemOverlayIntoGUI(
+            aeRenderItem.setAeStack(fake);
+            GL11.glTranslatef(0.0f, 0.0f, 200.0f);
+            aeRenderItem.renderItemOverlayIntoGUI(
                     fontRendererObj,
                     mc.getTextureManager(),
                     stack.getItemStack(),
                     slot.xDisplayPosition,
                     slot.yDisplayPosition);
+            GL11.glTranslatef(0.0f, 0.0f, -200.0f);
         } else {
             super.func_146977_a(slot);
         }

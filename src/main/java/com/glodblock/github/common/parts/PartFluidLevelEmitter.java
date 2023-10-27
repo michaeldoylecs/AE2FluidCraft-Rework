@@ -17,6 +17,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.fluids.FluidStack;
 
+import com.glodblock.github.api.registries.ILevelViewable;
 import com.glodblock.github.common.item.ItemFluidPacket;
 import com.glodblock.github.inventory.InventoryHandler;
 import com.glodblock.github.inventory.gui.GuiType;
@@ -62,8 +63,8 @@ import appeng.util.Platform;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
-public class PartFluidLevelEmitter extends PartUpgradeable
-        implements IStackWatcherHost, ICraftingWatcherHost, IMEMonitorHandlerReceiver<IAEFluidStack>, IGridTickable {
+public class PartFluidLevelEmitter extends PartUpgradeable implements IStackWatcherHost, ICraftingWatcherHost,
+        IMEMonitorHandlerReceiver<IAEFluidStack>, IGridTickable, ILevelViewable {
 
     private static final int FLAG_ON = 8;
 

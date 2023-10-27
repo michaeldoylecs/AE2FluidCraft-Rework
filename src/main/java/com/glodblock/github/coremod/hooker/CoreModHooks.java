@@ -33,6 +33,7 @@ import appeng.api.networking.storage.IStorageGrid;
 import appeng.api.storage.IMEInventory;
 import appeng.api.storage.data.IAEFluidStack;
 import appeng.api.storage.data.IAEItemStack;
+import appeng.client.gui.IGuiTooltipHandler;
 import appeng.crafting.MECraftingInventory;
 import appeng.me.MachineSet;
 import appeng.me.cluster.implementations.CraftingCPUCluster;
@@ -176,15 +177,15 @@ public class CoreModHooks {
     }
 
     public static ItemStack getStackUnderMouse(GuiContainer gui, int mousex, int mousey) {
-        if (gui instanceof GuiFluidCraftConfirm) {
-            return ((GuiFluidCraftConfirm) gui).getHoveredStack();
+        if (gui instanceof IGuiTooltipHandler guiTooltipHandler) {
+            return guiTooltipHandler.getHoveredStack();
         }
         return null;
     }
 
     public static boolean shouldShowTooltip(GuiContainer gui) {
-        if (gui instanceof GuiFluidCraftConfirm) {
-            return ((GuiFluidCraftConfirm) gui).getHoveredStack() == null;
+        if (gui instanceof GuiFluidCraftConfirm guiCraftConfirm) {
+            return guiCraftConfirm.getHoveredStack() == null;
         }
         return true;
     }

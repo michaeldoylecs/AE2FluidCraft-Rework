@@ -6,11 +6,11 @@ import org.objectweb.asm.Opcodes;
 
 import com.glodblock.github.coremod.FCClassTransformer;
 
-public class NEITransfermer extends FCClassTransformer.ClassMapper {
+public class NEITransformer extends FCClassTransformer.ClassMapper {
 
-    public static final NEITransfermer INSTANCE = new NEITransfermer();
+    public static final NEITransformer INSTANCE = new NEITransformer();
 
-    private NEITransfermer() {
+    private NEITransformer() {
         // NO-OP
     }
 

@@ -24,6 +24,7 @@ import com.glodblock.github.inventory.gui.GuiType;
 import com.glodblock.github.inventory.item.WirelessCraftingTerminalInventory;
 import com.glodblock.github.inventory.item.WirelessFluidTerminalInventory;
 import com.glodblock.github.inventory.item.WirelessInterfaceTerminalInventory;
+import com.glodblock.github.inventory.item.WirelessLevelTerminalInventory;
 import com.glodblock.github.inventory.item.WirelessPatternTerminalExInventory;
 import com.glodblock.github.inventory.item.WirelessPatternTerminalInventory;
 import com.glodblock.github.loader.IRegister;
@@ -63,6 +64,7 @@ public class ItemWirelessUltraTerminal extends ItemBaseWirelessTerminal
         guis.add(GuiType.WIRELESS_FLUID_PATTERN_TERMINAL_EX);
         guis.add(GuiType.WIRELESS_FLUID_TERMINAL);
         guis.add(GuiType.WIRELESS_INTERFACE_TERMINAL);
+        guis.add(GuiType.WIRELESS_LEVEL_TERMINAL);
         if (ModAndClassUtil.ThE) {
             guis.add(GuiType.WIRELESS_ESSENTIA_TERMINAL);
         }
@@ -115,6 +117,8 @@ public class ItemWirelessUltraTerminal extends ItemBaseWirelessTerminal
                 return new WirelessFluidTerminalInventory(stack, x, gridNode, player);
             } else if (gui == GuiType.WIRELESS_INTERFACE_TERMINAL) {
                 return new WirelessInterfaceTerminalInventory(stack, x, gridNode, player);
+            } else if (gui == GuiType.WIRELESS_LEVEL_TERMINAL) {
+                return new WirelessLevelTerminalInventory(stack, x, gridNode, player);
             } else if (gui == GuiType.WIRELESS_FLUID_PATTERN_TERMINAL_EX) {
                 return new WirelessPatternTerminalExInventory(stack, x, gridNode, player);
             } else {
@@ -195,6 +199,15 @@ public class ItemWirelessUltraTerminal extends ItemBaseWirelessTerminal
                     ForgeDirection.UNKNOWN,
                     guiType);
         }
+    }
+
+    public static boolean hasInfinityBoosterCard(EntityPlayer player) {
+        ImmutablePair<Integer, ItemStack> term = Util.getUltraWirelessTerm(player);
+        if (term == null) return false;
+        if (term.getRight().getItem() instanceof ItemWirelessUltraTerminal) {
+            return Util.hasInfinityBoosterCard(term.getRight());
+        }
+        return false;
     }
 
     public static List<GuiType> getGuis() {

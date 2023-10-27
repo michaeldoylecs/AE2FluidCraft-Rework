@@ -1,7 +1,56 @@
 package com.glodblock.github.loader;
 
 import static com.glodblock.github.common.storage.CellType.Cell16384kPart;
-import static com.glodblock.github.loader.ItemAndBlockHolder.*;
+import static com.glodblock.github.loader.ItemAndBlockHolder.BUFFER;
+import static com.glodblock.github.loader.ItemAndBlockHolder.CELL1024K;
+import static com.glodblock.github.loader.ItemAndBlockHolder.CELL1024KM;
+import static com.glodblock.github.loader.ItemAndBlockHolder.CELL16384K;
+import static com.glodblock.github.loader.ItemAndBlockHolder.CELL16384KM;
+import static com.glodblock.github.loader.ItemAndBlockHolder.CELL16K;
+import static com.glodblock.github.loader.ItemAndBlockHolder.CELL16KM;
+import static com.glodblock.github.loader.ItemAndBlockHolder.CELL1K;
+import static com.glodblock.github.loader.ItemAndBlockHolder.CELL1KM;
+import static com.glodblock.github.loader.ItemAndBlockHolder.CELL256K;
+import static com.glodblock.github.loader.ItemAndBlockHolder.CELL256KM;
+import static com.glodblock.github.loader.ItemAndBlockHolder.CELL4096K;
+import static com.glodblock.github.loader.ItemAndBlockHolder.CELL4096KM;
+import static com.glodblock.github.loader.ItemAndBlockHolder.CELL4K;
+import static com.glodblock.github.loader.ItemAndBlockHolder.CELL4KM;
+import static com.glodblock.github.loader.ItemAndBlockHolder.CELL64K;
+import static com.glodblock.github.loader.ItemAndBlockHolder.CELL64KM;
+import static com.glodblock.github.loader.ItemAndBlockHolder.CELL_HOUSING;
+import static com.glodblock.github.loader.ItemAndBlockHolder.CERTUS_QUARTZ_TANK;
+import static com.glodblock.github.loader.ItemAndBlockHolder.DECODER;
+import static com.glodblock.github.loader.ItemAndBlockHolder.DISCRETIZER;
+import static com.glodblock.github.loader.ItemAndBlockHolder.ENCODER;
+import static com.glodblock.github.loader.ItemAndBlockHolder.FLUID_AUTO_FILLER;
+import static com.glodblock.github.loader.ItemAndBlockHolder.FLUID_BUFFER;
+import static com.glodblock.github.loader.ItemAndBlockHolder.FLUID_CONVERSION_MONITOR;
+import static com.glodblock.github.loader.ItemAndBlockHolder.FLUID_EXPORT_BUS;
+import static com.glodblock.github.loader.ItemAndBlockHolder.FLUID_IMPORT_BUS;
+import static com.glodblock.github.loader.ItemAndBlockHolder.FLUID_INTERFACE;
+import static com.glodblock.github.loader.ItemAndBlockHolder.FLUID_INTERFACE_P2P;
+import static com.glodblock.github.loader.ItemAndBlockHolder.FLUID_LEVEL_EMITTER;
+import static com.glodblock.github.loader.ItemAndBlockHolder.FLUID_STORAGE_BUS;
+import static com.glodblock.github.loader.ItemAndBlockHolder.FLUID_STORAGE_MONITOR;
+import static com.glodblock.github.loader.ItemAndBlockHolder.FLUID_TERM;
+import static com.glodblock.github.loader.ItemAndBlockHolder.FLUID_TERMINAL;
+import static com.glodblock.github.loader.ItemAndBlockHolder.FLUID_TERMINAL_EX;
+import static com.glodblock.github.loader.ItemAndBlockHolder.INTERFACE;
+import static com.glodblock.github.loader.ItemAndBlockHolder.LARGE_BUFFER;
+import static com.glodblock.github.loader.ItemAndBlockHolder.LEVEL_MAINTAINER;
+import static com.glodblock.github.loader.ItemAndBlockHolder.LEVEL_TERMINAL;
+import static com.glodblock.github.loader.ItemAndBlockHolder.OC_EDITOR;
+import static com.glodblock.github.loader.ItemAndBlockHolder.PATTERN;
+import static com.glodblock.github.loader.ItemAndBlockHolder.PORTABLE_FLUID_CELL;
+import static com.glodblock.github.loader.ItemAndBlockHolder.QUANTUM_CELL;
+import static com.glodblock.github.loader.ItemAndBlockHolder.SINGULARITY_CELL;
+import static com.glodblock.github.loader.ItemAndBlockHolder.WALRUS;
+import static com.glodblock.github.loader.ItemAndBlockHolder.WIRELESS_FLUID_TERM;
+import static com.glodblock.github.loader.ItemAndBlockHolder.WIRELESS_INTERFACE_TERM;
+import static com.glodblock.github.loader.ItemAndBlockHolder.WIRELESS_LEVEL_TERM;
+import static com.glodblock.github.loader.ItemAndBlockHolder.WIRELESS_PATTERN_TERM;
+import static com.glodblock.github.loader.ItemAndBlockHolder.WIRELESS_ULTRA_TERM;
 import static net.minecraft.init.Blocks.redstone_torch;
 import static net.minecraft.init.Items.fish;
 
@@ -156,6 +205,7 @@ public class RecipeLoader implements Runnable {
         GameRegistry.addShapelessRecipe(WIRELESS_FLUID_TERM.stack(), AE2_WIRELESS_TERMINAL, BUCKET);
         GameRegistry.addShapelessRecipe(WIRELESS_PATTERN_TERM.stack(), WIRELESS_FLUID_TERM, FLUID_TERMINAL);
         GameRegistry.addShapelessRecipe(WIRELESS_INTERFACE_TERM.stack(), AE2_WIRELESS_TERMINAL, AE2_INTERFACE_TERMINAL);
+        GameRegistry.addShapelessRecipe(WIRELESS_LEVEL_TERM.stack(), AE2_WIRELESS_TERMINAL, LEVEL_MAINTAINER);
         GameRegistry
                 .addRecipe(new ShapedOreRecipe(CERTUS_QUARTZ_TANK.stack(), "GGG", "G G", "GGG", 'G', AE2_QUARTZ_GLASS));
         GameRegistry.addShapelessRecipe(FLUID_AUTO_FILLER.stack(), FLUID_TERMINAL, ENCODER);
@@ -276,6 +326,7 @@ public class RecipeLoader implements Runnable {
                         AE2_PROCESS_ENG));
         GameRegistry.addShapelessRecipe(AE2_BLANK_PATTERN, PATTERN.stack());
         GameRegistry.addShapelessRecipe(FLUID_TERM.stack(), AE2_TERMINAL, BUFFER);
+        GameRegistry.addShapelessRecipe(LEVEL_TERMINAL.stack(), AE2_TERMINAL, LEVEL_MAINTAINER);
         GameRegistry.addShapelessRecipe(
                 FLUID_BUFFER.stack(),
                 LARGE_BUFFER.stack(),
@@ -594,10 +645,11 @@ public class RecipeLoader implements Runnable {
             GameRegistry.addRecipe(new WirelessTerminalRecipe(WIRELESS_FLUID_TERM.stack()));
             GameRegistry.addRecipe(new WirelessTerminalRecipe(WIRELESS_ULTRA_TERM.stack()));
             GameRegistry.addRecipe(new WirelessTerminalRecipe(WIRELESS_INTERFACE_TERM.stack()));
+            GameRegistry.addRecipe(new WirelessTerminalRecipe(WIRELESS_LEVEL_TERM.stack()));
         }
 
         ItemStack[] term = { AE2_WIRELESS_TERMINAL, WIRELESS_FLUID_TERM.stack(), WIRELESS_PATTERN_TERM.stack(),
-                WIRELESS_INTERFACE_TERM.stack(), THE_WIRELESS_TERM, WCT_WIRELESS_TERM };
+                WIRELESS_INTERFACE_TERM.stack(), WIRELESS_LEVEL_TERM.stack(), THE_WIRELESS_TERM, WCT_WIRELESS_TERM };
         GameRegistry.addShapelessRecipe(
                 WIRELESS_ULTRA_TERM.stack(),
                 Arrays.stream(term).filter(Objects::nonNull).toArray());

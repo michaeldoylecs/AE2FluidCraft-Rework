@@ -27,7 +27,7 @@ import appeng.tile.inventory.InvOperation;
 import appeng.util.ConfigManager;
 import appeng.util.Platform;
 
-public class WirelessInterfaceTerminalInventory implements IWirelessInterfaceTerminal {
+public class WirelessInterfaceTerminalInventory implements IClickableInTerminal, IWirelessTerminal {
 
     private final ItemStack target;
     private final IAEItemPowerStorage ips;
@@ -125,9 +125,7 @@ public class WirelessInterfaceTerminalInventory implements IWirelessInterfaceTer
     }
 
     @Override
-    public void saveChanges() {
-
-    }
+    public void saveChanges() {}
 
     @Override
     public void onChangeInventory(IInventory inv, int slot, InvOperation mc, ItemStack removedStack,

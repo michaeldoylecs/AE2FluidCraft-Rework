@@ -9,7 +9,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 
 import com.glodblock.github.crossmod.waila.tile.FluidInvWailaDataProvider;
-import com.glodblock.github.crossmod.waila.tile.LevelMaintainerWailaDataProvide;
+import com.glodblock.github.crossmod.waila.tile.LevelMaintainerWailaDataProvider;
 import com.google.common.collect.Lists;
 
 import mcp.mobius.waila.api.IWailaConfigHandler;
@@ -22,7 +22,7 @@ public class TileWailaDataProvider implements IWailaDataProvider {
 
     public TileWailaDataProvider() {
         final IWailaDataProvider fluidInv = new FluidInvWailaDataProvider();
-        final IWailaDataProvider levelMaintainer = new LevelMaintainerWailaDataProvide();
+        final IWailaDataProvider levelMaintainer = new LevelMaintainerWailaDataProvider();
         this.providers = Lists.newArrayList(fluidInv, levelMaintainer);
     }
 

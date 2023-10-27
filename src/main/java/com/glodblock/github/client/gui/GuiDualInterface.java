@@ -6,13 +6,12 @@ import net.minecraft.util.StatCollector;
 
 import org.lwjgl.input.Mouse;
 
-import com.glodblock.github.FluidCraft;
 import com.glodblock.github.client.gui.container.ContainerDualInterface;
 import com.glodblock.github.common.parts.PartFluidInterface;
 import com.glodblock.github.common.tile.TileFluidInterface;
+import com.glodblock.github.inventory.InventoryHandler;
 import com.glodblock.github.inventory.gui.GuiType;
 import com.glodblock.github.loader.ItemAndBlockHolder;
-import com.glodblock.github.network.CPacketSwitchGuis;
 import com.glodblock.github.util.ModAndClassUtil;
 import com.glodblock.github.util.NameConst;
 
@@ -148,9 +147,9 @@ public class GuiDualInterface extends GuiUpgradeable {
         super.actionPerformed(btn);
         final boolean backwards = Mouse.isButtonDown(1);
         if (btn == this.priority) {
-            FluidCraft.proxy.netHandler.sendToServer(new CPacketSwitchGuis(GuiType.PRIORITY));
+            InventoryHandler.switchGui(GuiType.PRIORITY);
         } else if (btn == this.switcher) {
-            FluidCraft.proxy.netHandler.sendToServer(new CPacketSwitchGuis(GuiType.DUAL_INTERFACE_FLUID));
+            InventoryHandler.switchGui(GuiType.DUAL_INTERFACE_FLUID);
         } else if (btn == this.interfaceMode) {
             NetworkHandler.instance.sendToServer(new PacketConfigButton(Settings.INTERFACE_TERMINAL, backwards));
         } else if (btn == this.BlockMode) {

@@ -35,9 +35,11 @@ import com.glodblock.github.common.item.ItemPartFluidPatternTerminal;
 import com.glodblock.github.common.item.ItemPartFluidPatternTerminalEx;
 import com.glodblock.github.common.item.ItemPartFluidStorageBus;
 import com.glodblock.github.common.item.ItemPartFluidTerminal;
+import com.glodblock.github.common.item.ItemPartLevelTerminal;
 import com.glodblock.github.common.item.ItemPortableFluidCell;
 import com.glodblock.github.common.item.ItemWirelessFluidTerminal;
 import com.glodblock.github.common.item.ItemWirelessInterfaceTerminal;
+import com.glodblock.github.common.item.ItemWirelessLevelTerminal;
 import com.glodblock.github.common.item.ItemWirelessPatternTerminal;
 import com.glodblock.github.common.item.ItemWirelessUltraTerminal;
 import com.glodblock.github.common.storage.CellType;
@@ -64,6 +66,7 @@ public class ItemAndBlockHolder {
     public static ItemPartFluidPatternTerminalEx FLUID_TERMINAL_EX = new ItemPartFluidPatternTerminalEx().register();
     public static ItemPartFluidInterface FLUID_INTERFACE = new ItemPartFluidInterface().register();
     public static ItemPartFluidP2PInterface FLUID_INTERFACE_P2P = new ItemPartFluidP2PInterface().register();
+    public static ItemPartLevelTerminal LEVEL_TERMINAL = new ItemPartLevelTerminal().register();
     public static ItemFluidImportBus FLUID_IMPORT_BUS = new ItemFluidImportBus().register();
     public static ItemFluidExportBus FLUID_EXPORT_BUS = new ItemFluidExportBus().register();
     public static ItemPartFluidStorageBus FLUID_STORAGE_BUS = new ItemPartFluidStorageBus().register();
@@ -72,8 +75,9 @@ public class ItemAndBlockHolder {
     public static ItemFluidConversionMonitor FLUID_CONVERSION_MONITOR = new ItemFluidConversionMonitor().register();
     public static ItemPortableFluidCell PORTABLE_FLUID_CELL = new ItemPortableFluidCell().register();
     public static ItemWirelessFluidTerminal WIRELESS_FLUID_TERM = new ItemWirelessFluidTerminal().register();
-    public static ItemWirelessUltraTerminal WIRELESS_ULTRA_TERM = new ItemWirelessUltraTerminal().register();
+    public static ItemWirelessLevelTerminal WIRELESS_LEVEL_TERM = new ItemWirelessLevelTerminal().register();
     public static ItemWirelessPatternTerminal WIRELESS_PATTERN_TERM = new ItemWirelessPatternTerminal().register();
+    public static ItemWirelessUltraTerminal WIRELESS_ULTRA_TERM = new ItemWirelessUltraTerminal().register();
     public static ItemWirelessInterfaceTerminal WIRELESS_INTERFACE_TERM = new ItemWirelessInterfaceTerminal()
             .register();
     public static ItemFluidPacket PACKET = new ItemFluidPacket().register();

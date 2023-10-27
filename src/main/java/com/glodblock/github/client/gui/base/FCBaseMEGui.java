@@ -13,7 +13,8 @@ import com.glodblock.github.client.gui.GuiFluidCraftingWireless;
 import com.glodblock.github.client.gui.GuiFluidPatternExWireless;
 import com.glodblock.github.client.gui.GuiFluidPatternWireless;
 import com.glodblock.github.client.gui.GuiFluidPortableCell;
-import com.glodblock.github.client.gui.GuiInterfaceTerminalWireless;
+import com.glodblock.github.client.gui.GuiInterfaceWireless;
+import com.glodblock.github.client.gui.GuiLevelWireless;
 import com.glodblock.github.client.gui.container.base.FCBaseContainer;
 import com.glodblock.github.common.item.ItemWirelessUltraTerminal;
 import com.glodblock.github.inventory.gui.GuiType;
@@ -29,7 +30,8 @@ public abstract class FCBaseMEGui extends AEBaseMEGui {
     protected GuiFCImgButton PatternTerminal;
     protected GuiFCImgButton EssentiaTerminal;
     protected GuiFCImgButton InterfaceTerminal;
-    protected GuiFCImgButton PatternTerminaleEx;
+    protected GuiFCImgButton LevelTerminal;
+    protected GuiFCImgButton PatternTerminalEx;
     protected List<GuiFCImgButton> termBtns = new ArrayList<>();
     protected boolean drawSwitchGuiBtn;
 
@@ -87,13 +89,13 @@ public abstract class FCBaseMEGui extends AEBaseMEGui {
         }
         if (!(this instanceof GuiFluidPatternExWireless)) {
             this.buttonList.add(
-                    this.PatternTerminaleEx = new GuiFCImgButton(
+                    this.PatternTerminalEx = new GuiFCImgButton(
                             this.guiLeft - 18,
                             this.getOffsetY(),
                             "PATTERN_EX_TEM",
                             "YES"));
             this.setOffsetY(this.getOffsetY() + 20);
-            termBtns.add(this.PatternTerminaleEx);
+            termBtns.add(this.PatternTerminalEx);
         }
         if (!(this instanceof GuiFluidPortableCell)) {
             this.buttonList.add(
@@ -101,7 +103,7 @@ public abstract class FCBaseMEGui extends AEBaseMEGui {
             this.setOffsetY(this.getOffsetY() + 20);
             termBtns.add(this.FluidTerminal);
         }
-        if (!(this instanceof GuiInterfaceTerminalWireless)) {
+        if (!(this instanceof GuiInterfaceWireless)) {
             this.buttonList.add(
                     this.InterfaceTerminal = new GuiFCImgButton(
                             this.guiLeft - 18,
@@ -110,6 +112,12 @@ public abstract class FCBaseMEGui extends AEBaseMEGui {
                             "YES"));
             this.setOffsetY(this.getOffsetY() + 20);
             termBtns.add(this.InterfaceTerminal);
+        }
+        if (!(this instanceof GuiLevelWireless)) {
+            this.buttonList.add(
+                    this.LevelTerminal = new GuiFCImgButton(this.guiLeft - 18, this.getOffsetY(), "LEVEL_TEM", "YES"));
+            this.setOffsetY(this.getOffsetY() + 20);
+            termBtns.add(this.LevelTerminal);
         }
         if (ModAndClassUtil.ThE && !(this instanceof GuiEssentiaTerminal)) {
             this.buttonList.add(
@@ -123,6 +131,7 @@ public abstract class FCBaseMEGui extends AEBaseMEGui {
         }
     }
 
+    @SuppressWarnings("unchecked")
     protected void addSwitchGuiBtns() {
         if (!drawSwitchGuiBtn) return;
         this.buttonList.addAll(termBtns);
@@ -141,7 +150,9 @@ public abstract class FCBaseMEGui extends AEBaseMEGui {
                 ItemWirelessUltraTerminal.switchTerminal(this.mc.thePlayer, GuiType.WIRELESS_FLUID_PATTERN_TERMINAL);
             } else if (btn == this.InterfaceTerminal) {
                 ItemWirelessUltraTerminal.switchTerminal(this.mc.thePlayer, GuiType.WIRELESS_INTERFACE_TERMINAL);
-            } else if (btn == this.PatternTerminaleEx) {
+            } else if (btn == this.LevelTerminal) {
+                ItemWirelessUltraTerminal.switchTerminal(this.mc.thePlayer, GuiType.WIRELESS_LEVEL_TERMINAL);
+            } else if (btn == this.PatternTerminalEx) {
                 ItemWirelessUltraTerminal.switchTerminal(this.mc.thePlayer, GuiType.WIRELESS_FLUID_PATTERN_TERMINAL_EX);
             }
         }

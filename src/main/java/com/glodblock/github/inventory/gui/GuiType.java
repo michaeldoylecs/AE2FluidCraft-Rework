@@ -6,6 +6,7 @@ import javax.annotation.Nullable;
 
 import net.minecraft.entity.player.EntityPlayer;
 
+import com.glodblock.github.client.gui.GuiCraftingStatus;
 import com.glodblock.github.client.gui.GuiDualInterface;
 import com.glodblock.github.client.gui.GuiEssentiaTerminal;
 import com.glodblock.github.client.gui.GuiFCPriority;
@@ -20,16 +21,17 @@ import com.glodblock.github.client.gui.GuiFluidPacketDecoder;
 import com.glodblock.github.client.gui.GuiFluidPatternEncoder;
 import com.glodblock.github.client.gui.GuiFluidPatternExWireless;
 import com.glodblock.github.client.gui.GuiFluidPatternTerminal;
-import com.glodblock.github.client.gui.GuiFluidPatternTerminalCraftingStatus;
 import com.glodblock.github.client.gui.GuiFluidPatternTerminalEx;
 import com.glodblock.github.client.gui.GuiFluidPatternWireless;
 import com.glodblock.github.client.gui.GuiFluidPortableCell;
 import com.glodblock.github.client.gui.GuiFluidStorageBus;
 import com.glodblock.github.client.gui.GuiFluidTerminal;
 import com.glodblock.github.client.gui.GuiIngredientBuffer;
-import com.glodblock.github.client.gui.GuiInterfaceTerminalWireless;
+import com.glodblock.github.client.gui.GuiInterfaceWireless;
 import com.glodblock.github.client.gui.GuiLargeIngredientBuffer;
 import com.glodblock.github.client.gui.GuiLevelMaintainer;
+import com.glodblock.github.client.gui.GuiLevelTerminal;
+import com.glodblock.github.client.gui.GuiLevelWireless;
 import com.glodblock.github.client.gui.GuiOCPatternEditor;
 import com.glodblock.github.client.gui.GuiPatternValueAmount;
 import com.glodblock.github.client.gui.GuiRenamer;
@@ -54,6 +56,8 @@ import com.glodblock.github.client.gui.container.ContainerIngredientBuffer;
 import com.glodblock.github.client.gui.container.ContainerInterfaceWireless;
 import com.glodblock.github.client.gui.container.ContainerLargeIngredientBuffer;
 import com.glodblock.github.client.gui.container.ContainerLevelMaintainer;
+import com.glodblock.github.client.gui.container.ContainerLevelTerminal;
+import com.glodblock.github.client.gui.container.ContainerLevelWireless;
 import com.glodblock.github.client.gui.container.ContainerOCPatternEditor;
 import com.glodblock.github.client.gui.container.ContainerPatternValueAmount;
 import com.glodblock.github.client.gui.container.ContainerRenamer;
@@ -246,7 +250,7 @@ public enum GuiType {
 
         @Override
         protected Object createClientGui(EntityPlayer player, ITerminalHost inv) {
-            return new GuiFluidPatternTerminalCraftingStatus(player.inventory, inv);
+            return new GuiCraftingStatus(player.inventory, inv);
         }
     }),
 
@@ -260,6 +264,19 @@ public enum GuiType {
         @Override
         protected Object createClientGui(EntityPlayer player, ITerminalHost inv) {
             return new GuiFluidTerminal(player.inventory, inv);
+        }
+    }),
+
+    LEVEL_TERMINAL(new TileOrPartGuiFactory<>(ITerminalHost.class) {
+
+        @Override
+        protected Object createServerGui(EntityPlayer player, ITerminalHost inv) {
+            return new ContainerLevelTerminal(player.inventory, inv);
+        }
+
+        @Override
+        protected Object createClientGui(EntityPlayer player, ITerminalHost inv) {
+            return new GuiLevelTerminal(player.inventory, inv);
         }
     }),
 
@@ -335,7 +352,20 @@ public enum GuiType {
 
         @Override
         protected Object createClientGui(EntityPlayer player, IWirelessTerminal inv) {
-            return new GuiInterfaceTerminalWireless(player.inventory, inv);
+            return new GuiInterfaceWireless(player.inventory, inv);
+        }
+    }),
+
+    WIRELESS_LEVEL_TERMINAL(new ItemGuiFactory<>(IWirelessTerminal.class) {
+
+        @Override
+        protected Object createServerGui(EntityPlayer player, IWirelessTerminal inv) {
+            return new ContainerLevelWireless(player.inventory, inv);
+        }
+
+        @Override
+        protected Object createClientGui(EntityPlayer player, IWirelessTerminal inv) {
+            return new GuiLevelWireless(player.inventory, inv);
         }
     }),
 

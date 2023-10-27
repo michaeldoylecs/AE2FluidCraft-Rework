@@ -17,7 +17,7 @@ public class NEI_FC_Config implements IConfigureNEI {
 
     @Override
     public void loadConfig() {
-        API.registerNEIGuiHandler(new NEIGuiHandler());
+        API.registerNEIGuiHandler(new AE2FC_NEIGuiHandler());
         API.addSearchProvider(new NEIItemFilter());
         API.registerStackStringifyHandler(new FCStackStringifyHandler());
 

@@ -22,7 +22,6 @@ import com.glodblock.github.common.item.ItemFluidDrop;
 import com.glodblock.github.inventory.InventoryHandler;
 import com.glodblock.github.inventory.gui.GuiType;
 import com.glodblock.github.network.CPacketFluidUpdate;
-import com.glodblock.github.util.Ae2ReflectClient;
 import com.glodblock.github.util.ModAndClassUtil;
 import com.glodblock.github.util.Util;
 import com.mitchej123.hodgepodge.textures.IPatchedTextureAtlasSprite;
@@ -31,12 +30,10 @@ import appeng.api.storage.ITerminalHost;
 import appeng.api.storage.data.IAEFluidStack;
 import appeng.api.storage.data.IAEItemStack;
 import appeng.client.me.SlotME;
-import appeng.client.render.AppEngRenderItem;
 import appeng.container.slot.AppEngSlot;
 
 public class GuiFluidTerminal extends GuiFluidMonitor {
 
-    private final AppEngRenderItem stackSizeRenderer = Ae2ReflectClient.getStackSizeRenderer(this);
     protected EntityPlayer player;
     public ContainerFluidMonitor container;
 
@@ -84,13 +81,15 @@ public class GuiFluidTerminal extends GuiFluidMonitor {
             if (stack == null) return true;
             FluidStack fluidStack = ItemFluidDrop.getFluidStack(slot.getStack());
             this.drawWidget(slot.xDisplayPosition, slot.yDisplayPosition, fluidStack.getFluid());
-            stackSizeRenderer.setAeStack(stack);
-            stackSizeRenderer.renderItemOverlayIntoGUI(
+            aeRenderItem.setAeStack(stack);
+            GL11.glTranslatef(0.0f, 0.0f, 200.0f);
+            aeRenderItem.renderItemOverlayIntoGUI(
                     fontRendererObj,
                     mc.getTextureManager(),
                     stack.getItemStack(),
                     slot.xDisplayPosition,
                     slot.yDisplayPosition);
+            GL11.glTranslatef(0.0f, 0.0f, -200.0f);
             return false;
         }
         return true;
