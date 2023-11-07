@@ -4,6 +4,8 @@ import java.text.NumberFormat;
 import java.util.EnumSet;
 import java.util.List;
 
+import com.glodblock.github.common.storage.FluidCellInventory;
+import com.glodblock.github.common.storage.FluidCellInventoryHandler;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
@@ -96,7 +98,7 @@ public abstract class FCBaseItemCell extends AEBaseItem implements IStorageFluid
         final IMEInventoryHandler<?> inventory = AEApi.instance().registries().cell()
                 .getCellInventory(stack, null, StorageChannel.FLUIDS);
 
-        if (inventory instanceof final IFluidCellInventoryHandler handler) {
+        if (inventory instanceof final FluidCellInventoryHandler handler) {
             final IFluidCellInventory cellInventory = handler.getCellInv();
 
             if (cellInventory != null) {
@@ -155,6 +157,9 @@ public abstract class FCBaseItemCell extends AEBaseItem implements IStorageFluid
                     } else {
                         lines.add(StatCollector.translateToLocal(NameConst.TT_SHIFT_FOR_MORE));
                     }
+                    if (handler.getSticky()) {
+                        lines.add(GuiText.Sticky.getLocal());
+                    }
                 }
             }
         }
@@ -187,7 +192,7 @@ public abstract class FCBaseItemCell extends AEBaseItem implements IStorageFluid
 
     @Override
     public IInventory getUpgradesInventory(ItemStack is) {
-        return new CellUpgrades(is, 0);
+        return new CellUpgrades(is, 2);
     }
 
     @Override
