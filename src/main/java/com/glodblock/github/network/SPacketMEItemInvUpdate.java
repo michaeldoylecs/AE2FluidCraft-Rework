@@ -10,6 +10,7 @@ import net.minecraft.client.gui.GuiScreen;
 import com.glodblock.github.client.gui.GuiFluidCraftConfirm;
 import com.glodblock.github.client.gui.GuiItemMonitor;
 import com.glodblock.github.client.gui.GuiLevelMaintainer;
+import com.glodblock.github.proxy.ClientProxy;
 
 import appeng.api.storage.data.IAEItemStack;
 import appeng.util.item.AEItemStack;
@@ -93,6 +94,9 @@ public class SPacketMEItemInvUpdate implements IMessage {
         @Override
         public IMessage onMessage(SPacketMEItemInvUpdate message, MessageContext ctx) {
             final GuiScreen gs = Minecraft.getMinecraft().currentScreen;
+            if (gs == null && message.ref != 0) {
+                ClientProxy.postUpdate(message.list, message.ref);
+            }
             if (gs instanceof GuiItemMonitor) {
                 ((GuiItemMonitor) gs).postUpdate(message.list, message.resort);
             } else if (gs instanceof GuiFluidCraftConfirm) {

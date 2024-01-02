@@ -16,9 +16,9 @@ import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 
 import com.glodblock.github.FluidCraft;
-import com.glodblock.github.client.gui.FCGuiTextField;
 import com.glodblock.github.client.gui.GuiItemMonitor;
 import com.glodblock.github.client.gui.container.base.FCContainerMonitor;
+import com.glodblock.github.client.gui.widget.FCGuiTextField;
 import com.glodblock.github.inventory.InventoryHandler;
 import com.glodblock.github.inventory.gui.GuiType;
 import com.glodblock.github.network.CPacketInventoryAction;
@@ -782,5 +782,9 @@ public abstract class FCGuiMonitor<T extends IAEStack<T>> extends FCBaseMEGui
             this.repo.updateView();
             hasShiftKeyDown = false;
         }
+    }
+
+    public IDisplayRepo getRepo() {
+        return this.repo;
     }
 }

@@ -1,57 +1,11 @@
 package com.glodblock.github.loader;
 
 import static com.glodblock.github.common.storage.CellType.Cell16384kPart;
-import static com.glodblock.github.loader.ItemAndBlockHolder.BUFFER;
-import static com.glodblock.github.loader.ItemAndBlockHolder.CELL1024K;
-import static com.glodblock.github.loader.ItemAndBlockHolder.CELL1024KM;
-import static com.glodblock.github.loader.ItemAndBlockHolder.CELL16384K;
-import static com.glodblock.github.loader.ItemAndBlockHolder.CELL16384KM;
-import static com.glodblock.github.loader.ItemAndBlockHolder.CELL16K;
-import static com.glodblock.github.loader.ItemAndBlockHolder.CELL16KM;
-import static com.glodblock.github.loader.ItemAndBlockHolder.CELL1K;
-import static com.glodblock.github.loader.ItemAndBlockHolder.CELL1KM;
-import static com.glodblock.github.loader.ItemAndBlockHolder.CELL256K;
-import static com.glodblock.github.loader.ItemAndBlockHolder.CELL256KM;
-import static com.glodblock.github.loader.ItemAndBlockHolder.CELL4096K;
-import static com.glodblock.github.loader.ItemAndBlockHolder.CELL4096KM;
-import static com.glodblock.github.loader.ItemAndBlockHolder.CELL4K;
-import static com.glodblock.github.loader.ItemAndBlockHolder.CELL4KM;
-import static com.glodblock.github.loader.ItemAndBlockHolder.CELL64K;
-import static com.glodblock.github.loader.ItemAndBlockHolder.CELL64KM;
-import static com.glodblock.github.loader.ItemAndBlockHolder.CELL_HOUSING;
-import static com.glodblock.github.loader.ItemAndBlockHolder.CERTUS_QUARTZ_TANK;
-import static com.glodblock.github.loader.ItemAndBlockHolder.DECODER;
-import static com.glodblock.github.loader.ItemAndBlockHolder.DISCRETIZER;
-import static com.glodblock.github.loader.ItemAndBlockHolder.ENCODER;
-import static com.glodblock.github.loader.ItemAndBlockHolder.FLUID_AUTO_FILLER;
-import static com.glodblock.github.loader.ItemAndBlockHolder.FLUID_BUFFER;
-import static com.glodblock.github.loader.ItemAndBlockHolder.FLUID_CONVERSION_MONITOR;
-import static com.glodblock.github.loader.ItemAndBlockHolder.FLUID_EXPORT_BUS;
-import static com.glodblock.github.loader.ItemAndBlockHolder.FLUID_IMPORT_BUS;
-import static com.glodblock.github.loader.ItemAndBlockHolder.FLUID_INTERFACE;
-import static com.glodblock.github.loader.ItemAndBlockHolder.FLUID_INTERFACE_P2P;
-import static com.glodblock.github.loader.ItemAndBlockHolder.FLUID_LEVEL_EMITTER;
-import static com.glodblock.github.loader.ItemAndBlockHolder.FLUID_STORAGE_BUS;
-import static com.glodblock.github.loader.ItemAndBlockHolder.FLUID_STORAGE_MONITOR;
-import static com.glodblock.github.loader.ItemAndBlockHolder.FLUID_TERM;
-import static com.glodblock.github.loader.ItemAndBlockHolder.FLUID_TERMINAL;
-import static com.glodblock.github.loader.ItemAndBlockHolder.FLUID_TERMINAL_EX;
-import static com.glodblock.github.loader.ItemAndBlockHolder.INTERFACE;
-import static com.glodblock.github.loader.ItemAndBlockHolder.LARGE_BUFFER;
-import static com.glodblock.github.loader.ItemAndBlockHolder.LEVEL_MAINTAINER;
-import static com.glodblock.github.loader.ItemAndBlockHolder.LEVEL_TERMINAL;
-import static com.glodblock.github.loader.ItemAndBlockHolder.OC_EDITOR;
-import static com.glodblock.github.loader.ItemAndBlockHolder.PATTERN;
-import static com.glodblock.github.loader.ItemAndBlockHolder.PORTABLE_FLUID_CELL;
-import static com.glodblock.github.loader.ItemAndBlockHolder.QUANTUM_CELL;
-import static com.glodblock.github.loader.ItemAndBlockHolder.SINGULARITY_CELL;
-import static com.glodblock.github.loader.ItemAndBlockHolder.WALRUS;
-import static com.glodblock.github.loader.ItemAndBlockHolder.WIRELESS_FLUID_TERM;
-import static com.glodblock.github.loader.ItemAndBlockHolder.WIRELESS_INTERFACE_TERM;
-import static com.glodblock.github.loader.ItemAndBlockHolder.WIRELESS_LEVEL_TERM;
-import static com.glodblock.github.loader.ItemAndBlockHolder.WIRELESS_PATTERN_TERM;
-import static com.glodblock.github.loader.ItemAndBlockHolder.WIRELESS_ULTRA_TERM;
-import static net.minecraft.init.Blocks.redstone_torch;
+import static com.glodblock.github.loader.ItemAndBlockHolder.*;
+import static com.glodblock.github.loader.recipe.WirelessTerminalEnergyRecipe.energyCards;
+import static com.glodblock.github.loader.recipe.WirelessTerminalInfinityBoosterRecipe.infCards;
+import static com.glodblock.github.loader.recipe.WirelessTerminalMagnetRecipe.magnetCards;
+import static net.minecraft.init.Blocks.*;
 import static net.minecraft.init.Items.fish;
 
 import java.util.Arrays;
@@ -67,7 +21,9 @@ import net.minecraftforge.oredict.ShapelessOreRecipe;
 import com.glodblock.github.common.Config;
 import com.glodblock.github.common.item.FCBaseItemCell;
 import com.glodblock.github.common.storage.CellType;
-import com.glodblock.github.loader.recipe.WirelessTerminalRecipe;
+import com.glodblock.github.loader.recipe.WirelessTerminalEnergyRecipe;
+import com.glodblock.github.loader.recipe.WirelessTerminalInfinityBoosterRecipe;
+import com.glodblock.github.loader.recipe.WirelessTerminalMagnetRecipe;
 import com.glodblock.github.util.ModAndClassUtil;
 
 import appeng.api.AEApi;
@@ -165,10 +121,29 @@ public class RecipeLoader implements Runnable {
             .findItemStack("appliedenergistics2", "tile.BlockDenseEnergyCell", 1);
     public static final ItemStack THE_WIRELESS_TERM = GameRegistry
             .findItemStack("thaumicenergistics", "wireless.essentia.terminal", 1);
+    public static final ItemStack AE2_ANNIHILATION_PLANE = new ItemStack(
+            GameRegistry.findItem("appliedenergistics2", "item.ItemMultiPart"),
+            1,
+            301);
+    public static final ItemStack AE2_ADVANCED_CARD = new ItemStack(
+            GameRegistry.findItem("appliedenergistics2", "item.ItemMultiMaterial"),
+            1,
+            28);
+    public static final ItemStack AE2_FLUIX_PEARL = new ItemStack(
+            GameRegistry.findItem("appliedenergistics2", "item.ItemMultiMaterial"),
+            1,
+            9);
+    public static final ItemStack AE2_WIRELESS_RECEIVER = new ItemStack(
+            GameRegistry.findItem("appliedenergistics2", "item.ItemMultiMaterial"),
+            1,
+            41);
     private static final ItemStack WCT_WIRELESS_TERM = GameRegistry
             .findItemStack("ae2wct", "wirelessCraftingTerminal", 1);
     public static final ItemStack BUCKET = new ItemStack(Items.bucket, 1);
     public static final ItemStack IRON_BAR = new ItemStack(Blocks.iron_bars, 1);
+    public static final ItemStack REDSTONE_BLOCK = new ItemStack(redstone_block, 1);
+    public static final ItemStack LAPIS_BLOCK = new ItemStack(lapis_block, 1);
+    public static final ItemStack IRON_BLOCK = new ItemStack(iron_block, 1);
 
     @Override
     public void run() {
@@ -639,13 +614,57 @@ public class RecipeLoader implements Runnable {
         }
     }
 
+    public static void addTestItem() {
+        GameRegistry.addRecipe(
+                new ShapedOreRecipe(
+                        ENERGY_CARD.stack(),
+                        "EEE",
+                        "EAE",
+                        "EEE",
+                        'E',
+                        AE2_DENSE_ENERGY_CELL,
+                        'A',
+                        AE2_ADVANCED_CARD));
+        GameRegistry.addRecipe(
+                new ShapedOreRecipe(
+                        MAGNET_CARD.stack(),
+                        "RBL",
+                        "IAI",
+                        "III",
+                        'I',
+                        IRON_BLOCK,
+                        'R',
+                        REDSTONE_BLOCK,
+                        'B',
+                        AE2_ANNIHILATION_PLANE,
+                        'L',
+                        LAPIS_BLOCK,
+                        'A',
+                        AE2_ADVANCED_CARD));
+        GameRegistry.addRecipe(
+                new ShapedOreRecipe(
+                        QUANTUM_BRIDGE_CARD.stack(),
+                        "   ",
+                        "P P",
+                        " R ",
+                        'P',
+                        AE2_FLUIX_PEARL,
+                        'R',
+                        AE2_WIRELESS_RECEIVER));
+    }
+
     public static void runTerminalRecipe() {
-        if (ModAndClassUtil.WCT) {
-            GameRegistry.addRecipe(new WirelessTerminalRecipe(WIRELESS_PATTERN_TERM.stack()));
-            GameRegistry.addRecipe(new WirelessTerminalRecipe(WIRELESS_FLUID_TERM.stack()));
-            GameRegistry.addRecipe(new WirelessTerminalRecipe(WIRELESS_ULTRA_TERM.stack()));
-            GameRegistry.addRecipe(new WirelessTerminalRecipe(WIRELESS_INTERFACE_TERM.stack()));
-            GameRegistry.addRecipe(new WirelessTerminalRecipe(WIRELESS_LEVEL_TERM.stack()));
+        for (ItemStack c : infCards) {
+            GameRegistry.addRecipe(new WirelessTerminalInfinityBoosterRecipe(WIRELESS_PATTERN_TERM.stack(), c));
+            GameRegistry.addRecipe(new WirelessTerminalInfinityBoosterRecipe(WIRELESS_FLUID_TERM.stack(), c));
+            GameRegistry.addRecipe(new WirelessTerminalInfinityBoosterRecipe(WIRELESS_ULTRA_TERM.stack(), c));
+            GameRegistry.addRecipe(new WirelessTerminalInfinityBoosterRecipe(WIRELESS_INTERFACE_TERM.stack(), c));
+        }
+        for (ItemStack m : magnetCards) {
+            GameRegistry.addRecipe(new WirelessTerminalMagnetRecipe(WIRELESS_ULTRA_TERM.stack(), m));
+        }
+        for (ItemStack e : energyCards) {
+            GameRegistry.addRecipe(new WirelessTerminalEnergyRecipe(WIRELESS_ULTRA_TERM.stack(), e));
         }
 
         ItemStack[] term = { AE2_WIRELESS_TERMINAL, WIRELESS_FLUID_TERM.stack(), WIRELESS_PATTERN_TERM.stack(),

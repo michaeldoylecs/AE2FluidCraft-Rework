@@ -51,6 +51,7 @@ public abstract class FCContainerMonitor<T extends IAEStack<T>> extends FCBaseCo
 
     @GuiSync(98)
     public boolean hasPower = false;
+    protected boolean forceSync = true;
 
     protected IConfigManagerHost gui;
     protected IConfigManager serverCM;
@@ -105,7 +106,10 @@ public abstract class FCContainerMonitor<T extends IAEStack<T>> extends FCBaseCo
                     }
                 }
             }
-            processItemList();
+            if (sync || forceSync) {
+                forceSync = false;
+                processItemList();
+            }
             this.updatePowerStatus();
             final boolean oldAccessible = this.canAccessViewCells;
             this.canAccessViewCells = this.host instanceof WirelessTerminalGuiObject
@@ -230,7 +234,4 @@ public abstract class FCContainerMonitor<T extends IAEStack<T>> extends FCBaseCo
         }
     }
 
-    public ITerminalHost getHost() {
-        return this.host;
-    }
 }

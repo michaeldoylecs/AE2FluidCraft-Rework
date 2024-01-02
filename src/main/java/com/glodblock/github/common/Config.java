@@ -15,6 +15,7 @@ public class Config {
     public static boolean noFluidPacket;
     public static boolean fluidIOBus;
     public static boolean removeRecipe;
+    public static boolean enableTestItemRecipe = true;
     public static double portableCellBattery;
     public static boolean fluidP2PInterface;
     public static int packetSize;
