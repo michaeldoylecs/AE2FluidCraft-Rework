@@ -651,6 +651,8 @@ public class RecipeLoader implements Runnable {
                         AE2_FLUIX_PEARL,
                         'R',
                         AE2_WIRELESS_RECEIVER));
+        GameRegistry.addRecipe(
+                new ShapelessOreRecipe(INFINITY_WATER_CELL, CELL_HOUSING.stack(1, 1), CellType.Cell64kPart.stack(1)));
     }
 
     public static void runTerminalRecipe() {

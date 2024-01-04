@@ -10,6 +10,7 @@ import java.util.Map;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
+import net.minecraft.init.Items;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemPotion;
@@ -499,7 +500,9 @@ public final class Util {
 
     public static class FluidUtil {
 
-        private static final ItemStack glassBottle = new ItemStack(glass_bottle, 1);
+        public static final ItemStack glassBottle = new ItemStack(glass_bottle, 1);
+        public static final ItemStack water_bucket = new ItemStack(Items.water_bucket, 1);
+        public static final ItemStack lava_bucket = new ItemStack(Items.lava_bucket, 1);
 
         public static ItemStack getPotion(FluidStack fs) {
             if (fs == null) return null;
