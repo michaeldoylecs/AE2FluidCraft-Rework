@@ -31,6 +31,7 @@ import appeng.api.config.Upgrades;
 import appeng.api.networking.IGridNode;
 import appeng.api.storage.data.IAEItemStack;
 import appeng.api.storage.data.IItemList;
+import appeng.core.AELog;
 import appeng.util.Platform;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
@@ -93,7 +94,7 @@ public class CommonProxy {
             }
 
         } catch (NullPointerException ex) {
-            ex.printStackTrace();
+            AELog.error(ex);
         }
     }
 

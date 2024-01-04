@@ -17,7 +17,7 @@ public abstract class FCBaseContainer extends AEBaseContainer {
 
     private int ticks;
     private final double powerMultiplier = 0.5;
-    private ITerminalHost host;
+    protected ITerminalHost host;
     private int slot = -1;
     private final InventoryPlayer ip;
     @GuiSync(105)
@@ -40,8 +40,8 @@ public abstract class FCBaseContainer extends AEBaseContainer {
 
     private int lockSlot() {
         if (isWirelessTerminal()) {
-            if (this.host instanceof IFluidPortableCell) {
-                final int slotIndex = ((IFluidPortableCell) this.host).getInventorySlot();
+            if (this.host instanceof IFluidPortableCell ifpc) {
+                final int slotIndex = ifpc.getInventorySlot();
                 if (Util.GuiHelper.decodeInvType(slotIndex).getLeft() == Util.GuiHelper.InvType.PLAYER_INV) {
                     this.lockPlayerInventorySlot(slotIndex);
                 }
@@ -66,12 +66,12 @@ public abstract class FCBaseContainer extends AEBaseContainer {
                     ((IFluidPortableCell) this.host));
         }
         if (Platform.isServer()) {
-            if (this.host instanceof IWirelessExtendCard) {
-                this.mode = ((IWirelessExtendCard) this.host).getMagnetCardMode();
-                this.restock = ((IWirelessExtendCard) this.host).isRestock();
+            if (this.host instanceof IWirelessExtendCard iwec) {
+                this.mode = iwec.getMagnetCardMode();
+                this.restock = iwec.isRestock();
             }
-            if (this.host != null && this.host instanceof IItemTerminal) {
-                this.sync = ((IItemTerminal) this.host).getSyncData();
+            if (this.host != null && this.host instanceof IItemTerminal iwt) {
+                this.sync = iwt.getSyncData();
             }
         }
         super.detectAndSendChanges();
@@ -86,8 +86,8 @@ public abstract class FCBaseContainer extends AEBaseContainer {
     }
 
     public IFluidPortableCell getPortableCell() {
-        if (this.host instanceof IFluidPortableCell) {
-            return (IFluidPortableCell) this.host;
+        if (this.host instanceof IFluidPortableCell ifpc) {
+            return ifpc;
         } else {
             return null;
         }

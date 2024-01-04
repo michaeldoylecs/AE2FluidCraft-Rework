@@ -45,12 +45,12 @@ public class GuiMagnet extends AEBaseMEGui {
         private GuiFCImgButton disable;
         private String action;
 
-        private boolean var;
+        private boolean value;
 
-        public Component(int x, int y, boolean var, String action) {
+        public Component(int x, int y, boolean value, String action) {
             this.enable = new GuiFCImgButton(x, y, "ENABLE_12x", "ENABLE", false);
             this.disable = new GuiFCImgButton(x, y, "DISABLE_12x", "DISABLE", false);
-            this.var = var;
+            this.value = value;
             this.action = action;
             buttonList.add(this.enable);
             buttonList.add(this.disable);
@@ -60,20 +60,20 @@ public class GuiMagnet extends AEBaseMEGui {
             return btn == this.enable || btn == this.disable;
         }
 
-        public boolean getVar() {
-            return this.var;
+        public boolean getValue() {
+            return this.value;
         }
 
-        public void setVar(boolean var) {
-            this.var = var;
+        public void setValue(boolean value) {
+            this.value = value;
         }
 
         public void send() {
-            FluidCraft.proxy.netHandler.sendToServer(new CPacketFluidTerminalBtns(this.action, !this.getVar()));
+            FluidCraft.proxy.netHandler.sendToServer(new CPacketFluidTerminalBtns(this.action, !this.getValue()));
         }
 
         public void draw() {
-            if (var) {
+            if (value) {
                 this.enable.visible = true;
                 this.disable.visible = false;
             } else {
@@ -138,9 +138,9 @@ public class GuiMagnet extends AEBaseMEGui {
                 .drawString(getGuiDisplayName(NameConst.i18n(NameConst.GUI_MAGNET_CARD_META)), 61, 34, 0x404040);
         this.fontRendererObj
                 .drawString(getGuiDisplayName(NameConst.i18n(NameConst.GUI_MAGNET_CARD_ORE)), 61, 46, 0x404040);
-        this.components[0].setVar(this.cont.nbt);
-        this.components[1].setVar(this.cont.meta);
-        this.components[2].setVar(this.cont.ore);
+        this.components[0].setValue(this.cont.nbt);
+        this.components[1].setValue(this.cont.meta);
+        this.components[2].setValue(this.cont.ore);
         for (Component c : components) {
             c.draw();
         }

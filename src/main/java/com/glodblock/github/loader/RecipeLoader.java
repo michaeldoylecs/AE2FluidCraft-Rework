@@ -661,6 +661,7 @@ public class RecipeLoader implements Runnable {
             GameRegistry.addRecipe(new WirelessTerminalInfinityBoosterRecipe(WIRELESS_FLUID_TERM.stack(), c));
             GameRegistry.addRecipe(new WirelessTerminalInfinityBoosterRecipe(WIRELESS_ULTRA_TERM.stack(), c));
             GameRegistry.addRecipe(new WirelessTerminalInfinityBoosterRecipe(WIRELESS_INTERFACE_TERM.stack(), c));
+            GameRegistry.addRecipe(new WirelessTerminalInfinityBoosterRecipe(WIRELESS_LEVEL_TERM.stack(), c));
         }
         for (ItemStack m : magnetCards) {
             GameRegistry.addRecipe(new WirelessTerminalMagnetRecipe(WIRELESS_ULTRA_TERM.stack(), m));

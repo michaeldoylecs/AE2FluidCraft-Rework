@@ -63,17 +63,17 @@ public abstract class FCBaseMEGui extends AEBaseMEGui {
     protected boolean drawSwitchGuiBtn;
     private boolean hasMagnetCard = false;
     private StorageChannel channel = null;
+    private final FCBaseContainer container;
+    protected final int buttonOffset = 18;
 
     public FCBaseMEGui(final InventoryPlayer inventoryPlayer, Container container) {
         super(container);
-        if (container instanceof FCBaseContainer) {
-            Object target = ((FCBaseContainer) container).getTarget();
-            if (target instanceof IWirelessTerminal
-                    && ((IWirelessTerminal) target).getItemStack().getItem() instanceof ItemWirelessUltraTerminal) {
-                this.drawSwitchGuiBtn = true;
-                this.hasMagnetCard = Util.Wireless.hasMagnetCard(((IWirelessTerminal) target).getItemStack());
-                this.channel = ((IWirelessTerminal) target).getChannel();
-            }
+        this.container = (FCBaseContainer) container;
+        if (this.container.getTarget() instanceof IWirelessTerminal iwt
+                && iwt.getItemStack().getItem() instanceof ItemWirelessUltraTerminal) {
+            this.drawSwitchGuiBtn = true;
+            this.hasMagnetCard = Util.Wireless.hasMagnetCard(iwt.getItemStack());
+            this.channel = iwt.getChannel();
         }
     }
 
@@ -112,17 +112,17 @@ public abstract class FCBaseMEGui extends AEBaseMEGui {
 
     protected ItemMagnetCard.Mode getMagnetMode() {
         if (this.hasMagnetCard) {
-            return ((FCBaseContainer) this.inventorySlots).mode;
+            return this.container.mode;
         }
         return null;
     }
 
     protected boolean isRestock() {
-        return ((FCBaseContainer) this.inventorySlots).restock;
+        return this.container.restock;
     }
 
     protected boolean isSyncData() {
-        return ((FCBaseContainer) this.inventorySlots).sync;
+        return this.container.sync;
     }
 
     @Override
@@ -131,16 +131,16 @@ public abstract class FCBaseMEGui extends AEBaseMEGui {
     }
 
     protected void setSyncState() {
-        if (this.inventorySlots instanceof FCContainerMonitor && !isPortableCell()) {
+        if (this.container instanceof FCContainerMonitor && !isPortableCell()) {
             this.buttonList.add(
                     this.dataSyncEnableBtn = new GuiFCImgButton(
-                            this.guiLeft + this.xSize - 18,
+                            this.guiLeft + this.xSize - buttonOffset,
                             this.guiTop + this.ySize - 44,
                             "DATA_SYNC",
                             "ENABLE"));
             this.buttonList.add(
                     this.dataSyncDisableBtn = new GuiFCImgButton(
-                            this.guiLeft + this.xSize - 18,
+                            this.guiLeft + this.xSize - buttonOffset,
                             this.guiTop + this.ySize - 44,
                             "DATA_SYNC",
                             "DISABLE"));
@@ -167,25 +167,25 @@ public abstract class FCBaseMEGui extends AEBaseMEGui {
         if (this.getMagnetMode() != null && this.channel == StorageChannel.ITEMS) {
             this.buttonList.add(
                     this.magnetOff = new GuiFCImgButton(
-                            this.guiLeft + this.xSize - 18,
+                            this.guiLeft + this.xSize - buttonOffset,
                             this.guiTop + this.ySize - 124,
                             "MAGNET_CARD",
                             "OFF"));
             this.buttonList.add(
                     this.magnetInv = new GuiFCImgButton(
-                            this.guiLeft + this.xSize - 18,
+                            this.guiLeft + this.xSize - buttonOffset,
                             this.guiTop + this.ySize - 124,
                             "MAGNET_CARD",
                             "INV"));
             this.buttonList.add(
                     this.magnetME = new GuiFCImgButton(
-                            this.guiLeft + this.xSize - 18,
+                            this.guiLeft + this.xSize - buttonOffset,
                             this.guiTop + this.ySize - 124,
                             "MAGNET_CARD",
                             "ME"));
             this.buttonList.add(
                     this.magnetFilter = new GuiFCImgButton(
-                            this.guiLeft + this.xSize - 18,
+                            this.guiLeft + this.xSize - buttonOffset,
                             this.guiTop + this.ySize - 104,
                             "MAGNET_CARD",
                             "FILTER"));
@@ -193,13 +193,13 @@ public abstract class FCBaseMEGui extends AEBaseMEGui {
         if (this.channel == StorageChannel.ITEMS) {
             this.buttonList.add(
                     this.restockEnableBtn = new GuiFCImgButton(
-                            this.guiLeft + this.xSize - 18,
+                            this.guiLeft + this.xSize - buttonOffset,
                             this.guiTop + this.ySize - 84,
                             "RESTOCK",
                             "ENABLE"));
             this.buttonList.add(
                     this.restockDisableBtn = new GuiFCImgButton(
-                            this.guiLeft + this.xSize - 18,
+                            this.guiLeft + this.xSize - buttonOffset,
                             this.guiTop + this.ySize - 84,
                             "RESTOCK",
                             "DISABLE"));
@@ -207,7 +207,7 @@ public abstract class FCBaseMEGui extends AEBaseMEGui {
         if (!(this instanceof GuiFluidCraftingWireless)) {
             this.buttonList.add(
                     this.CraftingTerminal = new GuiFCImgButton(
-                            this.guiLeft - 18,
+                            this.guiLeft - buttonOffset,
                             this.getOffsetY(),
                             "CRAFT_TEM",
                             "YES"));
@@ -217,7 +217,7 @@ public abstract class FCBaseMEGui extends AEBaseMEGui {
         if (!(this instanceof GuiFluidPatternWireless)) {
             this.buttonList.add(
                     this.PatternTerminal = new GuiFCImgButton(
-                            this.guiLeft - 18,
+                            this.guiLeft - buttonOffset,
                             this.getOffsetY(),
                             "PATTERN_TEM",
                             "YES"));
@@ -227,7 +227,7 @@ public abstract class FCBaseMEGui extends AEBaseMEGui {
         if (!(this instanceof GuiFluidPatternExWireless)) {
             this.buttonList.add(
                     this.PatternTerminalEx = new GuiFCImgButton(
-                            this.guiLeft - 18,
+                            this.guiLeft - buttonOffset,
                             this.getOffsetY(),
                             "PATTERN_EX_TEM",
                             "YES"));
@@ -236,14 +236,18 @@ public abstract class FCBaseMEGui extends AEBaseMEGui {
         }
         if (!(this instanceof GuiFluidPortableCell)) {
             this.buttonList.add(
-                    this.FluidTerminal = new GuiFCImgButton(this.guiLeft - 18, this.getOffsetY(), "FLUID_TEM", "YES"));
+                    this.FluidTerminal = new GuiFCImgButton(
+                            this.guiLeft - buttonOffset,
+                            this.getOffsetY(),
+                            "FLUID_TEM",
+                            "YES"));
             this.setOffsetY(this.getOffsetY() + 20);
             termBtns.add(this.FluidTerminal);
         }
         if (!(this instanceof GuiInterfaceWireless)) {
             this.buttonList.add(
                     this.InterfaceTerminal = new GuiFCImgButton(
-                            this.guiLeft - 18,
+                            this.guiLeft - buttonOffset,
                             this.getOffsetY(),
                             "INTERFACE_TEM",
                             "YES"));
@@ -252,14 +256,18 @@ public abstract class FCBaseMEGui extends AEBaseMEGui {
         }
         if (!(this instanceof GuiLevelWireless)) {
             this.buttonList.add(
-                    this.LevelTerminal = new GuiFCImgButton(this.guiLeft - 18, this.getOffsetY(), "LEVEL_TEM", "YES"));
+                    this.LevelTerminal = new GuiFCImgButton(
+                            this.guiLeft - buttonOffset,
+                            this.getOffsetY(),
+                            "LEVEL_TEM",
+                            "YES"));
             this.setOffsetY(this.getOffsetY() + 20);
             termBtns.add(this.LevelTerminal);
         }
         if (ModAndClassUtil.ThE && !(this instanceof GuiEssentiaTerminal)) {
             this.buttonList.add(
                     this.EssentiaTerminal = new GuiFCImgButton(
-                            this.guiLeft - 18,
+                            this.guiLeft - buttonOffset,
                             this.getOffsetY(),
                             "ESSENTIA_TEM",
                             "YES"));
@@ -283,10 +291,8 @@ public abstract class FCBaseMEGui extends AEBaseMEGui {
                 magnetButtons[i].visible = getMagnetMode().ordinal() == i;
             }
         }
-        if (this.inventorySlots instanceof FCBaseContainer) {
-            this.dataSyncDisableBtn.visible = !isSyncData();
-            this.dataSyncEnableBtn.visible = isSyncData();
-        }
+        this.dataSyncDisableBtn.visible = !isSyncData();
+        this.dataSyncEnableBtn.visible = isSyncData();
         if (this.drawSwitchGuiBtn && this.channel == StorageChannel.ITEMS) { // Only ultra terminal
             this.restockDisableBtn.visible = !this.isRestock();
             this.restockEnableBtn.visible = this.isRestock();
