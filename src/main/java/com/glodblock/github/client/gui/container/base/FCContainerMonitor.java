@@ -11,7 +11,6 @@ import net.minecraft.inventory.ICrafting;
 import net.minecraft.item.ItemStack;
 
 import com.glodblock.github.inventory.item.IWirelessTerminal;
-import com.glodblock.github.network.SPacketMEUpdateBuffer;
 
 import appeng.api.config.Actionable;
 import appeng.api.config.PowerMultiplier;
@@ -170,10 +169,6 @@ public abstract class FCContainerMonitor<T extends IAEStack<T>> extends FCBaseCo
         super.onContainerClosed(player);
         if (this.monitor != null) {
             this.monitor.removeListener(this);
-            if (player instanceof EntityPlayerMP && Platform.isServer()) {
-                SPacketMEUpdateBuffer.clear((EntityPlayerMP) player);
-            }
-
         }
     }
 

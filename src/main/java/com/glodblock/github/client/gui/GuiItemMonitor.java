@@ -23,13 +23,11 @@ public class GuiItemMonitor extends FCGuiMonitor<IAEItemStack> {
     }
 
     @Override
-    public void postUpdate(final List<IAEItemStack> list, boolean resort) {
+    public void postUpdate(final List<IAEItemStack> list) {
         for (final IAEItemStack is : list) {
             this.repo.postUpdate(is);
         }
-        if (resort) {
-            this.repo.updateView();
-        }
+        this.repo.updateView();
         this.setScrollBar();
     }
 
