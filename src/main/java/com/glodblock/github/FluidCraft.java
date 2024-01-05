@@ -73,7 +73,7 @@ public class FluidCraft {
         if (!Config.removeRecipe) {
             RecipeLoader.INSTANCE.run();
         }
-        if (Config.enableTestItemRecipe) {
+        if (Config.testItemRecipe) {
             RecipeLoader.addTestItem();
         }
         RecipeLoader.runTerminalRecipe();

@@ -54,9 +54,6 @@ public class ItemAndBlockHolder {
 
     public static void init() {}
 
-    public static ItemEnergyCard ENERGY_CARD = new ItemEnergyCard().register();
-    public static ItemQuantumBridgeCard QUANTUM_BRIDGE_CARD = new ItemQuantumBridgeCard().register();
-    public static ItemMagnetCard MAGNET_CARD = new ItemMagnetCard().register();
     public static BlockCertusQuartzTank CERTUS_QUARTZ_TANK = new BlockCertusQuartzTank().register();
     public static BlockFluidAutoFiller FLUID_AUTO_FILLER = new BlockFluidAutoFiller().register();
     public static BlockFluidDiscretizer DISCRETIZER = new BlockFluidDiscretizer().register();
@@ -144,6 +141,9 @@ public class ItemAndBlockHolder {
     public static ItemInfinityLavaStorageCell INFINITY_LAVA_CELL = new ItemInfinityLavaStorageCell().register();
     public static ItemBasicFluidStoragePart CELL_PART = new ItemBasicFluidStoragePart().register();
     public static ItemFluidStorageHousing CELL_HOUSING = new ItemFluidStorageHousing().register();
+    public static ItemEnergyCard ENERGY_CARD = new ItemEnergyCard().register();
+    public static ItemQuantumBridgeCard QUANTUM_BRIDGE_CARD = new ItemQuantumBridgeCard().register();
+    public static ItemMagnetCard MAGNET_CARD = new ItemMagnetCard().register();
 
     public static void loadSetting() {
         if (!Config.fluidCells) return;

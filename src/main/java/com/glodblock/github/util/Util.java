@@ -1,6 +1,9 @@
 package com.glodblock.github.util;
 
-import static com.glodblock.github.common.item.ItemBaseWirelessTerminal.*;
+import static com.glodblock.github.common.item.ItemBaseWirelessTerminal.infinityBoosterCard;
+import static com.glodblock.github.common.item.ItemBaseWirelessTerminal.infinityEnergyCard;
+import static com.glodblock.github.common.item.ItemBaseWirelessTerminal.magnetCard;
+import static com.glodblock.github.common.item.ItemBaseWirelessTerminal.restockItems;
 import static net.minecraft.init.Items.glass_bottle;
 
 import java.io.IOException;

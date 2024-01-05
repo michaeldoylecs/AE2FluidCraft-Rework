@@ -3,7 +3,9 @@ package com.glodblock.github.common.item;
 import static com.glodblock.github.loader.recipe.WirelessTerminalEnergyRecipe.getEnergyCard;
 import static com.glodblock.github.loader.recipe.WirelessTerminalInfinityBoosterRecipe.getInfinityBoosterCard;
 import static com.glodblock.github.loader.recipe.WirelessTerminalMagnetRecipe.getMagnetCard;
-import static com.glodblock.github.util.Util.Wireless.*;
+import static com.glodblock.github.util.Util.Wireless.hasEnergyCard;
+import static com.glodblock.github.util.Util.Wireless.hasInfinityBoosterCard;
+import static com.glodblock.github.util.Util.Wireless.hasMagnetCard;
 
 import java.util.List;
 
