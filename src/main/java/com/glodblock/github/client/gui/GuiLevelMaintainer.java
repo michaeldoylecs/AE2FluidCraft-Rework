@@ -318,19 +318,18 @@ public class GuiLevelMaintainer extends AEBaseGui implements INEIGuiHandler {
         }
     }
 
-    public GuiType getOriginalGui() {
-        return originalGui;
-    }
-
     public void switchGui() {
-        FluidCraft.proxy.netHandler.sendToServer(
-                new CPacketLevelTerminalCommands(
-                        CPacketLevelTerminalCommands.Action.BACK,
-                        originalBlockPos.x,
-                        originalBlockPos.y,
-                        originalBlockPos.z,
-                        originalBlockPos.getDimension(),
-                        originalBlockPos.getSide()));
+        CPacketLevelTerminalCommands message = new CPacketLevelTerminalCommands(
+                CPacketLevelTerminalCommands.Action.BACK,
+                originalBlockPos.x,
+                originalBlockPos.y,
+                originalBlockPos.z,
+                originalBlockPos.getDimension(),
+                originalBlockPos.getSide());
+        if (originalGui != null) {
+            message.setOriginalGui(originalGui.ordinal());
+        }
+        FluidCraft.proxy.netHandler.sendToServer(message);
     }
 
     @Override
@@ -538,7 +537,7 @@ public class GuiLevelMaintainer extends AEBaseGui implements INEIGuiHandler {
             this.textField = textField;
             this.textField.setEnableBackgroundDrawing(false);
             this.textField.setText("0");
-            this.textField.setMaxStringLength(10); // this length is enough to useful
+            this.textField.setMaxStringLength(16); // this length is enough to be useful
             this.idx = idx;
             this.action = action;
             this.tooltip = tooltip;
