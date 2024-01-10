@@ -1,7 +1,5 @@
 package com.glodblock.github.common.storage;
 
-import appeng.api.config.Upgrades;
-import appeng.api.implementations.items.IUpgradeModule;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 
@@ -10,6 +8,8 @@ import com.glodblock.github.util.Util;
 
 import appeng.api.AEApi;
 import appeng.api.config.IncludeExclude;
+import appeng.api.config.Upgrades;
+import appeng.api.implementations.items.IUpgradeModule;
 import appeng.api.storage.ICellCacheRegistry;
 import appeng.api.storage.IMEInventory;
 import appeng.api.storage.StorageChannel;

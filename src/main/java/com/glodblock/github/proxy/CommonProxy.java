@@ -1,6 +1,5 @@
 package com.glodblock.github.proxy;
 
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 
 import com.glodblock.github.FluidCraft;

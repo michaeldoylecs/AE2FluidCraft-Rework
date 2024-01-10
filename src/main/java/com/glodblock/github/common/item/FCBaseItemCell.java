@@ -4,8 +4,6 @@ import java.text.NumberFormat;
 import java.util.EnumSet;
 import java.util.List;
 
-import com.glodblock.github.common.storage.FluidCellInventory;
-import com.glodblock.github.common.storage.FluidCellInventoryHandler;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
@@ -18,8 +16,8 @@ import net.minecraftforge.common.util.ForgeDirection;
 
 import com.glodblock.github.api.FluidCraftAPI;
 import com.glodblock.github.common.storage.CellType;
+import com.glodblock.github.common.storage.FluidCellInventoryHandler;
 import com.glodblock.github.common.storage.IFluidCellInventory;
-import com.glodblock.github.common.storage.IFluidCellInventoryHandler;
 import com.glodblock.github.common.storage.IStorageFluidCell;
 import com.glodblock.github.loader.ItemAndBlockHolder;
 import com.glodblock.github.util.NameConst;
