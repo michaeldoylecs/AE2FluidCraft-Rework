@@ -8,6 +8,8 @@ import com.glodblock.github.util.Util;
 
 import appeng.api.AEApi;
 import appeng.api.config.IncludeExclude;
+import appeng.api.config.Upgrades;
+import appeng.api.implementations.items.IUpgradeModule;
 import appeng.api.storage.ICellCacheRegistry;
 import appeng.api.storage.IMEInventory;
 import appeng.api.storage.StorageChannel;
@@ -38,6 +40,25 @@ public class FluidCellInventoryHandler extends MEInventoryHandler<IAEFluidStack>
             }
             if (!priorityList.isEmpty()) {
                 this.setPartitionList(new PrecisePriorityList<>(priorityList));
+            }
+
+            final IInventory upgrades = ci.getUpgradesInventory();
+            boolean hasSticky = false;
+
+            for (int x = 0; x < upgrades.getSizeInventory(); x++) {
+                final ItemStack is = upgrades.getStackInSlot(x);
+                if (is != null && is.getItem() instanceof IUpgradeModule) {
+                    final Upgrades u = ((IUpgradeModule) is.getItem()).getType(is);
+                    if (u != null) {
+                        if (u == Upgrades.STICKY) {
+                            hasSticky = true;
+                        }
+                    }
+                }
+            }
+
+            if (hasSticky) {
+                setSticky(true);
             }
         }
     }
