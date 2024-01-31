@@ -17,9 +17,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
-import net.minecraftforge.fluids.FluidContainerRegistry;
 import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.IFluidContainerItem;
 
 import com.glodblock.github.client.gui.container.ContainerItemMonitor;
 import com.glodblock.github.common.item.ItemFluidDrop;
