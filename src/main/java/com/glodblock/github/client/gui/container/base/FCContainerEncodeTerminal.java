@@ -133,17 +133,19 @@ public abstract class FCContainerEncodeTerminal extends ContainerItemMonitor
         }
         Slot slot = getSlot(slotId);
         ItemStack stack = player.inventory.getItemStack();
-        if (Util.getFluidFromItem(stack) == null || Util.getFluidFromItem(stack).amount <= 0) {
+        FluidStack fluid = Util.getFluidFromItem(stack);
+
+        if (fluid == null || fluid.amount <= 0) {
             super.doAction(player, action, slotId, id);
             return;
         }
-        if (validPatternSlot(slot)
-                && (stack.getItem() instanceof IFluidContainerItem || FluidContainerRegistry.isContainer(stack))) {
-            FluidStack fluid = null;
+
+        if (validPatternSlot(slot)) {
+
             switch (action) {
                 case PICKUP_OR_SET_DOWN -> {
-                    fluid = Util.getFluidFromItem(stack);
                     slot.putStack(ItemFluidPacket.newStack(fluid));
+                    return;
                 }
                 case SPLIT_OR_PLACE_SINGLE -> {
                     fluid = Util.getFluidFromItem(Util.copyStackWithSize(stack, 1));
@@ -153,13 +155,10 @@ public abstract class FCContainerEncodeTerminal extends ContainerItemMonitor
                         if (fluid.amount <= 0) fluid = null;
                     }
                     slot.putStack(ItemFluidPacket.newStack(fluid));
+                    return;
                 }
             }
-            if (fluid == null) {
-                super.doAction(player, action, slotId, id);
-                return;
-            }
-            return;
+
         }
         super.doAction(player, action, slotId, id);
     }
