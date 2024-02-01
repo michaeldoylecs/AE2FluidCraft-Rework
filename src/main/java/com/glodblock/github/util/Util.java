@@ -55,6 +55,7 @@ import appeng.tile.networking.TileWireless;
 import appeng.util.Platform;
 import appeng.util.item.AEFluidStack;
 import baubles.api.BaublesApi;
+import codechicken.nei.recipe.StackInfo;
 import cpw.mods.fml.common.ModContainer;
 import cpw.mods.fml.common.registry.GameData;
 import io.netty.buffer.ByteBuf;
@@ -230,21 +231,10 @@ public final class Util {
 
     public static AEFluidStack getAEFluidFromItem(ItemStack stack) {
         if (stack != null) {
-            if (stack.getItem() instanceof IFluidContainerItem) {
-                FluidStack fluid = ((IFluidContainerItem) stack.getItem()).getFluid(stack);
-                if (fluid != null) {
-                    AEFluidStack fluid0 = AEFluidStack.create(fluid.copy());
-                    fluid0.setStackSize(fluid0.getStackSize() * stack.stackSize);
-                    return fluid0;
-                }
-            }
-            if (FluidContainerRegistry.isContainer(stack)) {
-                FluidStack fluid = FluidContainerRegistry.getFluidForFilledItem(stack);
-                if (fluid != null) {
-                    AEFluidStack fluid0 = AEFluidStack.create(fluid.copy());
-                    fluid0.setStackSize(fluid0.getStackSize() * stack.stackSize);
-                    return fluid0;
-                }
+            FluidStack fluid = getFluidFromItem(stack);
+
+            if (fluid != null) {
+                return AEFluidStack.create(fluid.copy());
             }
         }
         return null;
@@ -252,21 +242,26 @@ public final class Util {
 
     public static FluidStack getFluidFromItem(ItemStack stack) {
         if (stack != null) {
+            FluidStack fluid = null;
+
             if (stack.getItem() instanceof IFluidContainerItem) {
-                FluidStack fluid = ((IFluidContainerItem) stack.getItem()).getFluid(stack);
-                if (fluid != null) {
-                    FluidStack fluid0 = fluid.copy();
-                    fluid0.amount *= stack.stackSize;
-                    return fluid0;
-                }
+                fluid = ((IFluidContainerItem) stack.getItem()).getFluid(stack);
+            } else if (FluidContainerRegistry.isContainer(stack)) {
+                fluid = FluidContainerRegistry.getFluidForFilledItem(stack);
+            } else if (stack.getItem() instanceof ItemFluidPacket) {
+                fluid = ItemFluidPacket.getFluidStack(stack);
+            } else if (stack.getItem() instanceof ItemFluidDrop) {
+                fluid = ItemFluidDrop.getFluidStack(Util.copyStackWithSize(stack, 1));
             }
-            if (FluidContainerRegistry.isContainer(stack)) {
-                FluidStack fluid = FluidContainerRegistry.getFluidForFilledItem(stack);
-                if (fluid != null) {
-                    FluidStack fluid0 = fluid.copy();
-                    fluid0.amount *= stack.stackSize;
-                    return fluid0;
-                }
+
+            if (fluid == null) {
+                fluid = StackInfo.getFluid(Util.copyStackWithSize(stack, 1));
+            }
+
+            if (fluid != null) {
+                FluidStack fluid0 = fluid.copy();
+                fluid0.amount *= stack.stackSize;
+                return fluid0;
             }
         }
         return null;

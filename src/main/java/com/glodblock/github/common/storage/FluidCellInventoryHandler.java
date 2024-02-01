@@ -2,6 +2,7 @@ package com.glodblock.github.common.storage;
 
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
+import net.minecraftforge.fluids.FluidStack;
 
 import com.glodblock.github.util.Ae2Reflect;
 import com.glodblock.github.util.Util;
@@ -34,8 +35,9 @@ public class FluidCellInventoryHandler extends MEInventoryHandler<IAEFluidStack>
             final IItemList<IAEFluidStack> priorityList = AEApi.instance().storage().createFluidList();
             for (int x = 0; x < config.getSizeInventory(); x++) {
                 final ItemStack is = config.getStackInSlot(x);
-                if (Util.getFluidFromItem(is) != null) {
-                    priorityList.add(AEFluidStack.create(Util.getFluidFromItem(is)));
+                final FluidStack fluid = Util.getFluidFromItem(is);
+                if (fluid != null) {
+                    priorityList.add(AEFluidStack.create(fluid));
                 }
             }
             if (!priorityList.isEmpty()) {
@@ -49,10 +51,9 @@ public class FluidCellInventoryHandler extends MEInventoryHandler<IAEFluidStack>
                 final ItemStack is = upgrades.getStackInSlot(x);
                 if (is != null && is.getItem() instanceof IUpgradeModule) {
                     final Upgrades u = ((IUpgradeModule) is.getItem()).getType(is);
-                    if (u != null) {
-                        if (u == Upgrades.STICKY) {
-                            hasSticky = true;
-                        }
+                    if (u == Upgrades.STICKY) {
+                        hasSticky = true;
+                        break;
                     }
                 }
             }
