@@ -54,6 +54,7 @@ public class FluidRepo implements IDisplayRepo {
     protected IPartitionList<IAEItemStack> myPartitionList;
     private String NEIWord = null;
     private boolean hasPower;
+    private boolean paused = false;
 
     public FluidRepo(final IScrollSource src, final ISortSource sortSrc) {
         this.src = src;
@@ -244,5 +245,22 @@ public class FluidRepo implements IDisplayRepo {
 
     public void setSearchString(@Nonnull final String searchString) {
         this.searchString = searchString;
+    }
+
+    @Override
+    public boolean isPaused() {
+        return this.paused;
+    }
+
+    @Override
+    public void setPaused(boolean paused) {
+        if (this.paused != paused) {
+            this.paused = paused;
+
+            // Update view when un-paused
+            if (!paused) {
+                updateView();
+            }
+        }
     }
 }
