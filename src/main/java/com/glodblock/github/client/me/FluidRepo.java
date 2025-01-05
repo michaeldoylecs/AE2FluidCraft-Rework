@@ -54,9 +54,9 @@ public class FluidRepo implements IDisplayRepo {
 
     protected String searchString = "";
     protected IPartitionList<IAEItemStack> myPartitionList;
+    protected boolean paused = false;
     private String NEIWord = null;
     private boolean hasPower;
-    private boolean paused = false;
 
     public FluidRepo(final IScrollSource src, final ISortSource sortSrc) {
         this.src = src;
