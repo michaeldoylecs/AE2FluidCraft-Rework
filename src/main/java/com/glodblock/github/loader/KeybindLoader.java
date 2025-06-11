@@ -4,6 +4,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityClientPlayerMP;
 import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.MovingObjectPosition;
 
 import org.apache.commons.lang3.tuple.ImmutablePair;
@@ -102,11 +103,13 @@ public class KeybindLoader implements Runnable {
         // Ensure the player has the wireless terminal
         ImmutablePair<Integer, ItemStack> terminalAndInventorySlot = Util.getUltraWirelessTerm(player);
         if (terminalAndInventorySlot == null) {
+            player.addChatMessage(new ChatComponentText("Could not find wireless terminal."));
             return;
         }
 
         ItemStack terminal = terminalAndInventorySlot.getRight();
         if (terminal == null || !(terminal.getItem() instanceof ItemWirelessUltraTerminal)) {
+            player.addChatMessage(new ChatComponentText("Terminal must be universal version."));
             return;
         }
 
