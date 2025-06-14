@@ -18,6 +18,7 @@ import com.glodblock.github.inventory.item.WirelessCraftingTerminalInventory;
 import com.glodblock.github.util.Util;
 
 import appeng.api.AEApi;
+import appeng.api.networking.IGridNode;
 import appeng.api.storage.data.IAEItemStack;
 import appeng.api.storage.data.IAEStack;
 import cpw.mods.fml.common.network.simpleimpl.IMessage;
@@ -76,11 +77,16 @@ public class CPacketSelectBlockWithdraw implements IMessage {
                 return null;
             }
 
+            IGridNode wirelessGrid = Util.getWirelessGrid(terminalStack);
+            if (wirelessGrid == null) {
+                return null;
+            }
+
             // Create the terminal inventory handler
             WirelessCraftingTerminalInventory terminalInventory = new WirelessCraftingTerminalInventory(
                     terminalStack,
                     terminalAndInventorySlot.getLeft(),
-                    Util.getWirelessGrid(terminalStack), // This provides the IGrid
+                    wirelessGrid,
                     player);
 
             // Get the target block
@@ -146,6 +152,15 @@ public class CPacketSelectBlockWithdraw implements IMessage {
                     swapInventorySlots(player.inventory, consolidatedStackSlot, player.inventory.currentItem);
                     return null;
                 }
+            }
+
+            // Ensure the wireless terminal is within network range,
+            // if not, move consolidated stack to the active slot and return
+            if (!Util.rangeCheck(terminalStack, player, wirelessGrid)) {
+                swapInventorySlots(player.inventory, consolidatedStackSlot, player.inventory.currentItem);
+
+                // TODO: Return out of network range player message.
+                return null;
             }
 
             // 5. Calculate withdrawal amount
