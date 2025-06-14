@@ -205,6 +205,10 @@ public class CPacketSelectBlockWithdraw implements IMessage {
          * @param slot2     The index of the second ItemStack to move.
          */
         private void swapInventorySlots(InventoryPlayer inventory, int slot1, int slot2) {
+            if (slot1 == slot2) {
+                return;
+            }
+
             // Get the stacks from both slots
             ItemStack sourceStack = inventory.getStackInSlot(slot1);
             ItemStack destinationStack = inventory.getStackInSlot(slot2);
