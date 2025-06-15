@@ -186,13 +186,17 @@ public class CPacketSelectBlockWithdraw implements IMessage {
                 if (itemsToGive != null && itemsToGive.stackSize > 0) {
                     if (consolidatedStack == null) {
                         player.inventory.setInventorySlotContents(nextEmptySlot, itemsToGive);
-                        swapInventorySlots(player.inventory, player.inventory.currentItem, nextEmptySlot);
                     } else {
                         consolidatedStack.stackSize += itemsToGive.stackSize;
-                        swapInventorySlots(player.inventory, player.inventory.currentItem, consolidatedStackSlot);
                     }
+                    player.inventory.markDirty();
                 }
             }
+
+            // Put the target item stack in the player's active slot.
+            int slotToSwap = consolidatedStack == null ? nextEmptySlot : consolidatedStackSlot;
+            swapInventorySlots(player.inventory, player.inventory.currentItem, slotToSwap);
+
             return null; // No reply packet needed
         }
 
