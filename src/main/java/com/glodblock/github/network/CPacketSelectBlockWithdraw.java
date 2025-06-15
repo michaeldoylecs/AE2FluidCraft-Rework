@@ -9,6 +9,7 @@ import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.network.play.server.S09PacketHeldItemChange;
 import net.minecraft.world.World;
 
 import org.apache.commons.lang3.tuple.ImmutablePair;
@@ -123,13 +124,13 @@ public class CPacketSelectBlockWithdraw implements IMessage {
 
             // 2. If a full stack already exists, put in active slot and return.
             if (fullStackSlot >= 0) {
-                swapInventorySlots(player.inventory, fullStackSlot, player.inventory.currentItem);
+                setSlotAsActiveSlot(player, fullStackSlot);
                 return null;
             }
 
             // 3. If there are no partial stacks and the player's inventory is full,
             // then return since we cannot add a retrieved stack to a full inventory
-            int nextEmptySlot = player.inventory.getFirstEmptyStack();
+            int nextEmptySlot = getFirstEmptyStackReverse(player.inventory);
             if (partialStackSlotsList.isEmpty() && nextEmptySlot == -1) {
                 return null;
             }
@@ -157,7 +158,7 @@ public class CPacketSelectBlockWithdraw implements IMessage {
             // Ensure the wireless terminal is within network range,
             // if not, move consolidated stack to the active slot and return
             if (!Util.rangeCheck(terminalStack, player, wirelessGrid)) {
-                swapInventorySlots(player.inventory, consolidatedStackSlot, player.inventory.currentItem);
+                setSlotAsActiveSlot(player, consolidatedStackSlot);
 
                 // TODO: Return out of network range player message.
                 return null;
@@ -193,11 +194,32 @@ public class CPacketSelectBlockWithdraw implements IMessage {
                 }
             }
 
-            // Put the target item stack in the player's active slot.
+            // If the target stack is already in the player's hotbar, set that as the active slot.
+            // Otherwise, move the target stack to the active slot.
             int slotToSwap = consolidatedStack == null ? nextEmptySlot : consolidatedStackSlot;
-            swapInventorySlots(player.inventory, player.inventory.currentItem, slotToSwap);
+            setSlotAsActiveSlot(player, slotToSwap);
 
             return null; // No reply packet needed
+        }
+
+        private int getFirstEmptyStackReverse(InventoryPlayer inventory) {
+            for (int i = inventory.mainInventory.length - 1; i >= 0; --i) {
+                if (inventory.mainInventory[i] == null) {
+                    return i;
+                }
+            }
+
+            return -1;
+        }
+
+        private void setSlotAsActiveSlot(EntityPlayerMP player, int slot) {
+            if (slot >= 0 && slot <= 8) {
+                player.inventory.currentItem = slot;
+                player.playerNetServerHandler.sendPacket(new S09PacketHeldItemChange(slot));
+            } else {
+                swapInventorySlots(player.inventory, player.inventory.currentItem, slot);
+            }
+            player.inventory.markDirty();
         }
 
         /**
