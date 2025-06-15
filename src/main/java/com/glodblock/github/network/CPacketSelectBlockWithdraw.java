@@ -138,9 +138,7 @@ public class CPacketSelectBlockWithdraw implements IMessage {
             // 4. Consolidate if multiple partial stacks exist.
             ItemStack consolidatedStack = null;
             int consolidatedStackSlot = -1;
-            for (int i = partialStackSlotsList.size() - 1; i >= 0; --i) {
-                Integer partialStackSlot = partialStackSlotsList.get(i);
-
+            for (Integer partialStackSlot : partialStackSlotsList) {
                 if (consolidatedStack == null) {
                     consolidatedStack = player.inventory.getStackInSlot(partialStackSlot);
                     consolidatedStackSlot = partialStackSlot;
